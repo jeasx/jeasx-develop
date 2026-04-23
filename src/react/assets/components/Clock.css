@@ -1,0 +1,44 @@
+.clock {
+  margin: 5vh auto;
+  border: 5px solid #e0e1dd;
+  border-radius: 50%;
+  padding: 10px;
+  width: 200px;
+  max-width: 90vw;
+  height: 200px;
+  max-height: 90vh;
+
+  section {
+    transform: translateY(-3px);
+    width: 100%;
+    height: 100%;
+  }
+
+  section span:nth-child(1) {
+    background: #e63946;
+    width: 50%;
+    height: 2px;
+  }
+
+  section span:nth-child(2) {
+    left: 5%;
+    width: 45%;
+    height: 3px;
+  }
+
+  section span:nth-child(3) {
+    left: 10%;
+    width: 40%;
+    height: 4px;
+  }
+
+  span {
+    position: absolute;
+    top: 50%;
+    transform: rotate(90deg);
+    transform-origin: 100%;
+    transition: all 0.05s;
+    transition-timing-function: cubic-bezier(0.1, 2.5, 0.55, 1);
+    background: #e0e1dd;
+  }
+}

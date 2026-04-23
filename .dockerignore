@@ -1,0 +1,14 @@
+**
+!/public/
+!/src/
+!.env
+!.env.js
+!cli.js
+!env.js
+!esbuild.config.js
+!package-lock.json
+!package.json
+!server.js
+!serverless.js
+!serverless.js.map
+!tsconfig.json

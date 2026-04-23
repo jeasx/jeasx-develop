@@ -1,0 +1,69 @@
+[
+  {
+    "title": "Dynamic websites",
+    "description": "Jeasx excels in creating dynamic websites, seamlessly integrating content from headless CMS or content APIs.",
+    "links": [
+      { "path": "/blog", "title": "Blog" },
+      { "path": "/products", "title": "Products" },
+      { "path": "/repositories", "title": "GitHub Repos" },
+      { "path": "/mdx", "title": "MDX support" }
+    ]
+  },
+  {
+    "title": "Web applications without client-side JavaScript",
+    "description": "Jeasx enables the creation of web applications with enhanced UX, thanks to browser support for view transitions.",
+    "links": [
+      { "path": "/lottery", "title": "Lottery" },
+      { "path": "/todos", "title": "Todos" },
+      { "path": "/jokes", "title": "Jokes" },
+      { "path": "/wizard", "title": "Wizard" }
+    ]
+  },
+  {
+    "title": "HTMX - Taking HTML Seriously",
+    "description": "Jeasx seamlessly integrates with HTMX, enabling UI updates with server-rendered HTML fragments.",
+    "links": [
+      { "path": "/htmx", "title": "Simple form" },
+      { "path": "/nominatim", "title": "Active search" },
+      { "path": "/fragments", "title": "Template Fragments" },
+      { "path": "/fixi", "title": "Fixi.js" }
+    ]
+  },
+  {
+    "title": "Islands of client side JavaScript",
+    "description": "Jeasx integrates smoothly with established JavaScript libraries to enhance UX through islands of interaction.",
+    "links": [
+      { "path": "/alpine", "title": "Alpine" },
+      { "path": "/arrowjs", "title": "ArrowJS" },
+      { "path": "/lit", "title": "Lit" },
+      { "path": "/preact", "title": "Preact" },
+      { "path": "/react", "title": "React" },
+      { "path": "/svelte", "title": "Svelte" },
+      { "path": "/cap", "title": "Cap.js" }
+    ]
+  },
+  {
+    "title": "Generating non-HTML Content-Types",
+    "description": "Jeasx is not limited to rendering HTML — it can generate various content types with the power of server-side JavaScript.",
+    "links": [
+      { "path": "/upload", "title": "Binary Upload" },
+      { "path": "/sharp", "title": "Image Scaler" },
+      { "path": "/svg", "title": "SVG generator" },
+      { "path": "/json/request.json?foo=bar", "title": "JSON Response" },
+      { "path": "/sitemap.xml", "title": "XML-Sitemap" }
+    ]
+  },
+  {
+    "title": "Advanced features",
+    "description": "Jeasx offers advanced features that delight web developers.",
+    "links": [
+      { "path": "/error-handler", "title": "Catch errors" },
+      { "path": "/prettier", "title": "Prettify HTML" },
+      { "path": "/cheerio", "title": "Extract styles" },
+      { "path": "/context", "title": "'this' as context" },
+      { "path": "/interceptor", "title": "Intercept JSX" },
+      { "path": "/head", "title": "Helmet for Head" },
+      { "path": "/client-jsx", "title": "Client-Side JSX" }
+    ]
+  }
+]

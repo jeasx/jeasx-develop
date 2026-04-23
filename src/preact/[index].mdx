@@ -1,0 +1,52 @@
+import Layout from "../Layout";
+import Preact from "./assets/Preact";
+
+<Layout title="Integrate Preact into Jeasx" description="Enhance your application with Preact" script="./assets/index.js">
+# Preact in Jeasx with state & signals
+
+[Preact](https://preactjs.com) empowers you to enhance your server-rendered JSX application by embedding interactive islands of UI. With support for state management and reactive signals, your components can efficiently communicate and synchronize across the page, delivering a fast and dynamic user experience.
+
+<details>
+<summary>How to integrate Preact with Jeasx?</summary>
+First you have to install the required dependencies for Preact via npm:
+
+```bash
+npm install @preact/signals preact preact-render-to-string
+```
+
+As Preact requires a dedicated JSX runtime, you have to configure it via a `tsconfig.json` for the directories where you want to compile Preact to JavaScript:
+
+```json
+{
+  "extends": "jeasx/tsconfig.json",
+  "compilerOptions": {
+    "jsxImportSource": "preact"
+  },
+  "include": ["**/*"]
+}
+```
+
+Please visit the [source code at GitHub](https://github.com/jeasx/jeasx-expo) to see how to setup Preact in detail.
+
+</details>
+
+<article>
+## Jokes
+
+The widget below handles reactivity via manipulating state.
+
+<Preact component="Jokes" api="/jokes/api" initial={3} />
+</article>
+
+<article>
+## Clocks
+
+Both clocks are synchronized via a common signal. You can use this pattern to create interactive islands which share a common state.
+
+<div style="display:flex; flex-direction:row; gap:2rem; justify-content: center;">
+  <Preact component="Clock" locale="en-US" />
+  <Preact component="Clock" locale="de-DE" />
+</div>
+</article>
+
+</Layout>

@@ -1,0 +1,62 @@
+import Layout from "../Layout";
+import Svelte from "./Svelte";
+
+<Layout title="Svelte" description="Svelte integration in Jeasx" script="./index.js">
+
+# Svelte and Jeasx
+
+[Svelte](https://svelte.dev) is a UI framework that employs a compiler, enabling you to create impressively compact components that perform minimal processing in the browser, all while using familiar languages like HTML, CSS, and JavaScript.
+
+<details>
+<summary>How to integrate Svelte with Jeasx?</summary>
+To integrate Svelte into Jeasx, you must install two additional packages:
+
+```bash
+npm install svelte esbuild-svelte
+```
+
+Now you have to register Svelte as esbuild plugin by adding the following configurations to `.env.js`:
+
+```js
+import sveltePlugin from "esbuild-svelte";
+
+export default {
+  ESBUILD_SERVER_OPTIONS: () => ({
+    plugins: [sveltePlugin({ compilerOptions: { generate: "server", css: "injected" } })],
+  }),
+
+  ESBUILD_BROWSER_OPTIONS: () => ({
+    plugins: [sveltePlugin({ compilerOptions: { generate: "client", css: "injected" } })],
+  }),
+};
+```
+
+View the [source code of this page](https://github.com/jeasx/jeasx-expo/tree/main/src/svelte) for an implementation of a Svelte integration with hydration support. Feel free to improve it as you like.
+
+</details>
+
+---
+
+## Counter example
+
+<Svelte component="Counter" init={5} />
+
+---
+
+## Crud example
+
+<Svelte
+  component="Crud"
+  data={[
+    { first: "Hans", last: "Emil" },
+    { first: "Max", last: "Mustermann" },
+    { first: "Roman", last: "Tisch" },
+  ]}
+/>
+
+---
+
+## Todos example
+
+<Svelte component="Todos" />
+</Layout>

@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "types": ["*"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "target": "esnext",
+    "strict": false,
+    "rootDirs": [".", "./src"],
+    "outDir": "./dist",
+    "allowJs": true,
+    "checkJs": true,
+    "jsx": "react-jsx",
+    "jsxImportSource": "jsx-async-runtime",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "resolveJsonModule": true
+  },
+  "include": ["./src"],
+  "exclude": ["./dist"]
+}

@@ -1,0 +1,19 @@
+@import "../node_modules/@digicreon/mucss/dist/mu.fuchsia.css";
+@import "../node_modules/prismjs/themes/prism-okaidia.css";
+
+@view-transition {
+  navigation: auto;
+}
+
+h1,
+h2 {
+  text-align: center;
+}
+
+.center {
+  text-align: center;
+}
+
+summary {
+  color: var(--mu-secondary) !important;
+}

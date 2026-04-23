@@ -1,0 +1,17 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "devCommand": "node cli.js dev",
+  "trailingSlash": false,
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/api/vercel.js"
+    }
+  ],
+  "functions": {
+    "api/vercel.js": {
+      "includeFiles": "./**/*"
+    }
+  },
+  "outputDirectory": "output"
+}

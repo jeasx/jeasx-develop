@@ -1,0 +1,1 @@
+import "@cap.js/widget";
