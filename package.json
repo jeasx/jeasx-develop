@@ -11,7 +11,7 @@
   "dependencies": {
     "@arrow-js/core": "1.0.6",
     "@cap.js/server": "4.0.5",
-    "@cap.js/widget": "0.1.45",
+    "@cap.js/widget": "0.1.46",
     "@digicreon/mucss": "1.4.6",
     "@fastify/cookie": "11.0.2",
     "@fastify/formbody": "8.0.2",
