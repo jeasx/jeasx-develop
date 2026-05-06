@@ -7,6 +7,7 @@ const NODE_ENV_IS_DEVELOPMENT = process.env.NODE_ENV === "development";
 export default {
   /** @type {() => import("esbuild").BuildOptions} */
   ESBUILD_SERVER_OPTIONS: () => ({
+    loader: { ".svg": "file" },
     plugins: [
       sveltePlugin({ compilerOptions: { generate: "server", css: "injected" } }),
       mdxPlugin({
@@ -21,6 +22,7 @@ export default {
 
   /** @type {() => import("esbuild").BuildOptions} */
   ESBUILD_BROWSER_OPTIONS: () => ({
+    target: ["chrome130", "edge130", "firefox130", "safari18"],
     plugins: [sveltePlugin({ compilerOptions: { generate: "client", css: "injected" } })],
   }),
 

@@ -1,3 +1,5 @@
+import GithubIcon from "./github.svg";
+
 /**
  * @this {import("./types").ThisContext}
  */
@@ -45,7 +47,7 @@ export default function Layout({
                       href={`https://github.com/jeasx/jeasx-expo/tree/main/src/${path.split("/")[1]}`}
                     >
                       <img
-                        src="/icons/github.svg"
+                        src={GithubIcon}
                         width="24"
                         height="24"
                         alt="GitHub Logo"

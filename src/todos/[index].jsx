@@ -1,4 +1,5 @@
 import Layout from "../Layout";
+import TrashIcon from "./trash.svg";
 
 export default function ({ todos, status, autofocus }) {
   return (
@@ -25,7 +26,7 @@ export default function ({ todos, status, autofocus }) {
                 </button>
                 <label>{todo.label}</label>
                 <button class="destroy" name="removeTodo" value={todos.indexOf(todo)}>
-                  <img src="/icons/trash.svg" alt="Delete" />
+                  <img src={TrashIcon} alt="Delete" />
                 </button>
               </li>
             ))}

@@ -1,25 +1,30 @@
 import Layout from "../Layout";
+import styles from "./index.module.css";
 
 export default function ({ number, delta, numbers, submit }) {
   return (
-    <Layout title={`Lottery ${numbers.join(", ")}`} description="A fake lottery" css="./index.css">
-      <main class="lottery">
+    <Layout
+      title={`Lottery ${numbers.join(", ")}`}
+      description="A fake lottery"
+      css="./index.module.css"
+    >
+      <main class={styles.lottery}>
         <h1>Lottery (6 out of 49)</h1>
         <form method="post">
           <input type="hidden" name="numbers" value={JSON.stringify(numbers)} />
           <div
-            class="progressbar"
+            class={styles.progressbar}
             style={`--currentValue: ${numbers.length}; --previousValue: ${
               numbers.length - delta
             }; --maxValue: 6`}
           />
-          <div class="grid">
+          <div class={styles.grid}>
             {Array.from({ length: 49 }, (_, index) => (
               <button
                 class={{
-                  box: true,
-                  checked: numbers.includes(index + 1),
-                  last: number === index + 1,
+                  [styles.box]: true,
+                  [styles.checked]: numbers.includes(index + 1),
+                  [styles.last]: number === index + 1,
                 }}
                 type="submit"
                 name="number"
