@@ -13,5 +13,5 @@
       "includeFiles": "./**/*"
     }
   },
-  "outputDirectory": "output"
+  "outputDirectory": "api/public"
 }
