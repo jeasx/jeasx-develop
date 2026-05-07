@@ -22,7 +22,6 @@ export default {
 
   /** @type {() => import("esbuild").BuildOptions} */
   ESBUILD_BROWSER_OPTIONS: () => ({
-    target: ["chrome130", "edge130", "firefox130", "safari18"],
     plugins: [sveltePlugin({ compilerOptions: { generate: "client", css: "injected" } })],
   }),
 
