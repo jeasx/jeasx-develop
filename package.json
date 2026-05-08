@@ -11,7 +11,7 @@
   "dependencies": {
     "@arrow-js/core": "1.0.6",
     "@cap.js/server": "4.0.5",
-    "@cap.js/widget": "0.1.46",
+    "@cap.js/widget": "0.1.47",
     "@digicreon/mucss": "1.4.8",
     "@fastify/cookie": "11.0.2",
     "@fastify/formbody": "8.0.2",
@@ -40,7 +40,7 @@
     "svelte": "5.55.5"
   },
   "devDependencies": {
-    "@types/node": "25.6.0",
+    "@types/node": "25.6.2",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3"
   }
