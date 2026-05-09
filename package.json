@@ -11,7 +11,7 @@
   "dependencies": {
     "@arrow-js/core": "1.0.6",
     "@cap.js/server": "4.0.5",
-    "@cap.js/widget": "0.1.48",
+    "@cap.js/widget": "0.1.49",
     "@digicreon/mucss": "1.4.8",
     "@fastify/cookie": "11.0.2",
     "@fastify/formbody": "8.0.2",
@@ -23,7 +23,7 @@
     "alpinejs": "3.15.12",
     "cheerio": "1.2.0",
     "esbuild": "0.28.0",
-    "esbuild-svelte": "0.9.4",
+    "esbuild-svelte": "0.9.5",
     "fastify": "5.8.5",
     "fixi-js": "0.9.4",
     "htmx.org": "4.0.0-beta3",
