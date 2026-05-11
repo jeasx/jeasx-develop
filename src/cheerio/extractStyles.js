@@ -1,5 +1,8 @@
 import * as cheerio from "cheerio";
 
+/**
+ * @param {string} html
+ */
 export default function extractStyles(html) {
   const $ = cheerio.load(html);
 
