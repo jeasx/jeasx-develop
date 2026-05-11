@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "types": ["*"],
     "module": "esnext",
     "moduleResolution": "bundler",
     "target": "esnext",
