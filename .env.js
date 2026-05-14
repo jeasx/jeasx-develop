@@ -7,6 +7,7 @@ const NODE_ENV_IS_DEVELOPMENT = process.env.NODE_ENV === "development";
 export default {
   /** @type {() => import("esbuild").BuildOptions} */
   ESBUILD_SERVER_OPTIONS: () => ({
+    sourcemap: NODE_ENV_IS_DEVELOPMENT ? "inline" : false,
     loader: { ".svg": "file" },
     plugins: [
       sveltePlugin({ compilerOptions: { generate: "server", css: "injected" } }),
