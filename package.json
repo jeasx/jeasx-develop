@@ -2,10 +2,10 @@
   "name": "jeasx-develop",
   "type": "module",
   "scripts": {
-    "start": "./cli.js start",
-    "build": "./cli.js build",
-    "dev": "./cli.js dev",
-    "clean": "./cli.js clean",
+    "start": "node ./cli.js start",
+    "build": "node ./cli.js build",
+    "dev": "node ./cli.js dev",
+    "clean": "node ./cli.js clean",
     "compile": "esbuild --platform=node --format=esm --sourcemap=linked --outdir=. serverless.ts"
   },
   "dependencies": {
