@@ -28,7 +28,7 @@
     "fixi-js": "0.9.4",
     "htmx.org": "4.0.0-beta3",
     "jsx-async-runtime": "2.1.2",
-    "lit": "3.3.2",
+    "lit": "3.3.3",
     "preact": "10.29.1",
     "preact-render-to-string": "6.6.7",
     "prettier": "3.8.3",
