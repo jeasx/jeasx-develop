@@ -6,9 +6,9 @@ import GithubIcon from "./github.svg";
 export default function Layout({
   title = "",
   description = "",
-  css = undefined,
-  script = undefined,
-  robots = undefined,
+  css = "",
+  script = "",
+  robots = "",
   children,
 }) {
   const path = this.request.path;
@@ -21,7 +21,7 @@ export default function Layout({
           <meta charset="utf-8" />
           <meta name="description" content={description} />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <meta name="robots" content={robots} />
+          {robots && <meta name="robots" content={robots} />}
           <link rel="stylesheet" href={`/index.css?${process.env.BUILD_TIME}`} />
           {css && <link rel="stylesheet" href={`${css}?${process.env.BUILD_TIME}`} />}
           <link
