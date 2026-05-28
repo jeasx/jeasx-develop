@@ -1,6 +1,14 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 
+// Global cache for resolved asset paths
+if (!globalThis.$filePathCache) {
+  globalThis.$filePathCache = new Set();
+}
+
+/** @type Set<string> */
+const cache = globalThis.$filePathCache;
+
 /**
  * @param {import("./types").RouteProps} props
  */
@@ -14,29 +22,21 @@ export default async function ({ request, reply }) {
     Requires {"serve": false} for FastifyStaticOptions.
   */
 
-  // Global cache for resolved asset paths
-  if (!globalThis.$filePathCache) {
-    globalThis.$filePathCache = new Set();
-  }
-
-  /** @type Set<string> */
-  const cache = globalThis.$filePathCache;
-
   // Check if file exists
   if (!cache.has(request.path)) {
     for (const folder of ["dist", "public"]) {
       try {
         const filepath = path.join(process.cwd(), folder, request.path);
-        await fs.access(filepath, fs.constants.R_OK);
-        cache.add(request.path);
-        break;
+        if ((await fs.stat(filepath)).isFile()) {
+          cache.add(request.path);
+          break;
+        }
       } catch {}
     }
   }
 
   // If path exists, serve asset
   if (cache.has(request.path)) {
-    reply.code(200);
     return reply.sendFile(request.path);
   }
 }
