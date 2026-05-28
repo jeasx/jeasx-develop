@@ -1,11 +1,11 @@
-import fs from "node:fs/promises";
+import { glob } from "node:fs/promises";
 
 const ASSET_PATHS = new Set(
   (
     await Promise.all([
-      Array.fromAsync(fs.glob("**/*.*", { cwd: "public" })),
+      Array.fromAsync(glob("**/*.*", { cwd: "public" })),
       Array.fromAsync(
-        fs.glob("**/*.*", {
+        glob("**/*.*", {
           cwd: "dist",
           exclude: (name) => /\[.*\]/.test(name),
         }),
@@ -24,9 +24,15 @@ export default async function ({ request, reply }) {
   this.request = request;
   this.reply = reply;
 
-  // Example for serving static assets from root guard.
+  // Example for serving static assets from responseHandler.
   // Requires {"serve": false} for FastifyStaticOptions.
-  if (ASSET_PATHS.has(request.path)) {
-    return reply.sendFile(request.path);
-  }
+  this.responseHandler = (payload) => {
+    if (reply.statusCode === 404) {
+      if (ASSET_PATHS.has(request.path)) {
+        reply.status(200);
+        return reply.sendFile(request.path);
+      }
+    }
+    return payload;
+  };
 }
