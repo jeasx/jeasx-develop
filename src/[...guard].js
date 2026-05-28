@@ -3,7 +3,7 @@ import { glob } from "node:fs/promises";
 const ASSET_PATHS = new Set(
   (
     await Array.fromAsync(glob("{dist,public}/**/*.*", { exclude: (name) => /\[.*\]/.test(name) }))
-  ).map((filepath) => filepath.replace(/^(dist|public)/, "")),
+  ).map((filepath) => filepath.replace(/^(dist|public)/, "").replaceAll("\\", "/")),
 );
 
 /**
