@@ -1,13 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 
-if (!globalThis.assetPathCache) {
-  globalThis.assetPathCache = new Set();
-}
-
-/** @type Set<string> */
-const assetPathCache = globalThis.assetPathCache;
-
 /**
  * @param {import("./types").RouteProps} props
  */
@@ -18,16 +11,25 @@ export default function ({ request, reply }) {
 
   this.responseHandler = async (payload) => {
     if (reply.statusCode === 404) {
-      if (!assetPathCache.has(request.path)) {
-        for (const prefix of ["dist", "public"]) {
+      if (!globalThis.$filePathCache) {
+        globalThis.$filePathCache = new Set();
+      }
+
+      /** @type Set<string> */
+      const cache = globalThis.$filePathCache;
+
+      if (!cache.has(request.path)) {
+        for (const folder of ["dist", "public"]) {
           try {
-            await fs.access(path.join(process.cwd(), prefix, request.path), fs.constants.R_OK);
-            assetPathCache.add(request.path);
+            const filepath = path.join(process.cwd(), folder, request.path);
+            await fs.access(filepath, fs.constants.R_OK);
+            cache.add(request.path);
             break;
           } catch {}
         }
       }
-      if (assetPathCache.has(request.path)) {
+
+      if (cache.has(request.path)) {
         reply.code(200);
         return reply.sendFile(request.path);
       }
