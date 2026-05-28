@@ -2,18 +2,8 @@ import { glob } from "node:fs/promises";
 
 const ASSET_PATHS = new Set(
   (
-    await Promise.all([
-      Array.fromAsync(glob("**/*.*", { cwd: "public" })),
-      Array.fromAsync(
-        glob("**/*.*", {
-          cwd: "dist",
-          exclude: (name) => /\[.*\]/.test(name),
-        }),
-      ),
-    ])
-  )
-    .flat()
-    .map((filepath) => `/${filepath}`),
+    await Array.fromAsync(glob("{dist,public}/**/*.*", { exclude: (name) => /\[.*\]/.test(name) }))
+  ).map((filepath) => filepath.replace(/^(dist|public)/, "")),
 );
 
 /**
