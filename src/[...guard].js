@@ -1,13 +1,8 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 
-// Global cache for resolved asset paths
-if (!globalThis.$filePathCache) {
-  globalThis.$filePathCache = new Set();
-}
-
-/** @type Set<string> */
-const cache = globalThis.$filePathCache;
+const CWD = process.cwd();
+const STATIC_PATH_CACHE = new Map();
 
 /**
  * @param {import("./types").RouteProps} props
@@ -17,26 +12,28 @@ export default async function ({ request, reply }) {
   this.request = request;
   this.reply = reply;
 
-  /*
-    Serve static assets from root guard.
-    Requires {"serve": false} for FastifyStaticOptions.
-  */
+  // Example for serving static assets from root guard.
+  // Requires {"serve": false} for FastifyStaticOptions.
 
-  // Check if file exists
-  if (!cache.has(request.path)) {
-    for (const folder of ["dist", "public"]) {
-      try {
-        const filepath = path.join(process.cwd(), folder, request.path);
-        if ((await fs.stat(filepath)).isFile()) {
-          cache.add(request.path);
-          break;
-        }
-      } catch {}
+  if (!request.path.endsWith("/")) {
+    // Check if file exists
+    if (!STATIC_PATH_CACHE.has(request.path)) {
+      let isFile = false;
+      for (const folder of ["dist", "public"]) {
+        try {
+          const filepath = path.join(CWD, folder, request.path);
+          if ((await fs.stat(filepath)).isFile()) {
+            isFile = true;
+            break;
+          }
+        } catch {}
+      }
+      STATIC_PATH_CACHE.set(request.path, isFile);
     }
-  }
 
-  // If path exists, serve asset
-  if (cache.has(request.path)) {
-    return reply.sendFile(request.path);
+    // If path exists, serve asset
+    if (STATIC_PATH_CACHE.get(request.path)) {
+      return reply.sendFile(request.path);
+    }
   }
 }
