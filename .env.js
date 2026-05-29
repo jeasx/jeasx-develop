@@ -36,7 +36,6 @@ export default {
   FASTIFY_STATIC_OPTIONS: () => ({
     immutable: !NODE_ENV_IS_DEVELOPMENT,
     maxAge: NODE_ENV_IS_DEVELOPMENT ? 0 : "365d",
-    serve: false,
   }),
 
   /** @type {() => import("@fastify/cookie").FastifyCookieOptions} */
