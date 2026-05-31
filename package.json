@@ -37,11 +37,15 @@
     "react-dom": "19.2.6",
     "rehype-prism-plus": "2.0.2",
     "sharp": "0.34.5",
-    "svelte": "5.55.10"
+    "svelte": "5.56.0"
   },
   "devDependencies": {
     "@types/node": "25.9.1",
     "@types/react": "19.2.15",
     "@types/react-dom": "19.2.3"
+  },
+  "allowScripts": {
+    "esbuild@0.28.0": true,
+    "sharp@0.34.5": true
   }
 }
