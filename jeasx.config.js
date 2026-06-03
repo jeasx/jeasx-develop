@@ -26,6 +26,9 @@ export default {
     plugins: [sveltePlugin({ compilerOptions: { generate: "client", css: "injected" } })],
   }),
 
+  /** @type {(fastify: import("fastify").FastifyInstance) => import("fastify").FastifyInstance} */
+  // FASTIFY_SERVER: (fastify) => fastify,
+
   /** @type {() => import("fastify").FastifyServerOptions} */
   FASTIFY_SERVER_OPTIONS: () => ({
     logger: { level: NODE_ENV_IS_DEVELOPMENT ? "error" : "info" },
