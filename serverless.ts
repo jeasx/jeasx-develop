@@ -11,7 +11,7 @@ import fastify, {
 import { jsxToString } from "jsx-async-runtime";
 import { stat } from "node:fs/promises";
 import { freemem } from "node:os";
-import { join, resolve } from "node:path";
+import { join } from "node:path";
 import env from "./env.js";
 
 env();
@@ -109,9 +109,7 @@ async function handler(request: FastifyRequest, reply: FastifyReply) {
       // Module was not loaded yet?
       if (module === undefined) {
         try {
-          // Resolving the route ensures secure path normalization,
-          // preventing 'modulePath' from escaping the 'dist' directory.
-          const modulePath = join(process.cwd(), "dist", `${resolve(route)}.js`);
+          const modulePath = join(process.cwd(), "dist", `${route}.js`);
           if (NODE_ENV_IS_DEVELOPMENT) {
             if (typeof require === "function") {
               // Bun: Remove module from cache before importing
