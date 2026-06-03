@@ -6,7 +6,7 @@ import fastify from "fastify";
 import { jsxToString } from "jsx-async-runtime";
 import { stat } from "node:fs/promises";
 import { freemem } from "node:os";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 import env from "./env.js";
 env();
 const CONFIG = (await import(`file://${join(process.cwd(), "jeasx.config.js")}`)).default;
@@ -59,7 +59,7 @@ async function handler(request, reply) {
       }
       if (module === void 0) {
         try {
-          const modulePath = join(process.cwd(), "dist", `${route}.js`);
+          const modulePath = join(process.cwd(), "dist", `${resolve(route)}.js`);
           if (NODE_ENV_IS_DEVELOPMENT) {
             if (typeof require === "function") {
               if (require.cache[modulePath]) {
