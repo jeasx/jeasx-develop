@@ -83,7 +83,7 @@ const modules = new Map<string, { default: Function }>();
 
 // Initialize cache with "null" for all existing modules.
 if (!NODE_ENV_IS_DEVELOPMENT) {
-  const isServerRoute = new RegExp(/\[.+\]\.js$/);
+  const isServerRoute = /\[.+\]\.js$/;
   for await (const route of glob("**/*.js", {
     cwd: join(process.cwd(), "dist"),
   })) {

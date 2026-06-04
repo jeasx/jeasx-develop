@@ -46,7 +46,7 @@ var serverless_default = FASTIFY_SERVER(
 });
 const modules = /* @__PURE__ */ new Map();
 if (!NODE_ENV_IS_DEVELOPMENT) {
-  const isServerRoute = new RegExp(/\[.+\]\.js$/);
+  const isServerRoute = /\[.+\]\.js$/;
   for await (const route of glob("**/*.js", {
     cwd: join(process.cwd(), "dist")
   })) {
