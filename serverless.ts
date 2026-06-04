@@ -18,24 +18,6 @@ env();
 const CONFIG = (await import(`file://${join(process.cwd(), "jeasx.config.js")}`)).default;
 const NODE_ENV_IS_DEVELOPMENT = process.env.NODE_ENV === "development";
 
-// Cache for server modules (used for non-development)
-const MODULE_BY_ROUTE = new Map<string, { default: Function }>();
-
-// Glob all server modules and add them to cache
-if (!NODE_ENV_IS_DEVELOPMENT) {
-  for await (const route of glob("**/*.js", {
-    cwd: join(process.cwd(), "dist"),
-  })) {
-    if (/\[.+\]\.js$/.test(route)) {
-      MODULE_BY_ROUTE.set(
-        // Normalize path separators for Windows
-        `/${route.replaceAll(sep, "/")}`,
-        await import(`file://${join(process.cwd(), "dist", route)}`),
-      );
-    }
-  }
-}
-
 declare module "fastify" {
   interface FastifyRequest {
     path: string; // Path without query parameters
@@ -96,6 +78,22 @@ export default FASTIFY_SERVER(
       });
   });
 
+// Cache for server modules (used for non-development)
+const modules = new Map<string, { default: Function }>();
+
+// Initialize cache with "null" for all existing modules.
+if (!NODE_ENV_IS_DEVELOPMENT) {
+  const isServerRoute = new RegExp(/\[.+\]\.js$/);
+  for await (const route of glob("**/*.js", {
+    cwd: join(process.cwd(), "dist"),
+  })) {
+    if (isServerRoute.test(route)) {
+      // Normalize path separators for Windows
+      modules.set(`/${route.replaceAll(sep, "/")}`, null);
+    }
+  }
+}
+
 /**
  * Resolves route module based on the request path and execute it.
  */
@@ -112,22 +110,33 @@ async function handler(request: FastifyRequest, reply: FastifyReply) {
     // Execute route handlers for current request
     for (const route of generateRoutes(request.path)) {
       // Resolve module via cache
-      let module = MODULE_BY_ROUTE.get(`${route}.js`);
+      let module = modules.get(`${route}.js`);
 
-      if (NODE_ENV_IS_DEVELOPMENT) {
+      if (module === undefined && !NODE_ENV_IS_DEVELOPMENT) {
+        continue;
+      }
+
+      // Module was not loaded yet?
+      if (module === null || module === undefined) {
         try {
           const modulePath = join(process.cwd(), "dist", `${route}.js`);
-          if (typeof require === "function") {
-            // Bun: Remove module from cache before importing
-            // as query parameter for import is ignored (see Node).
-            if (require.cache[modulePath]) {
-              delete require.cache[modulePath];
+          if (NODE_ENV_IS_DEVELOPMENT) {
+            if (typeof require === "function") {
+              // Bun: Remove module from cache before importing
+              // as query parameter for import is ignored (see Node).
+              if (require.cache[modulePath]) {
+                delete require.cache[modulePath];
+              }
+              module = await import(`file://${modulePath}`);
+            } else {
+              // Node: Use timestamp as query parameter to update modules.
+              const mtime = (await stat(modulePath)).mtime.getTime();
+              module = await import(`file://${modulePath}?${mtime}`);
             }
-            module = await import(`file://${modulePath}`);
           } else {
-            // Node: Use timestamp as query parameter to update modules.
-            const mtime = (await stat(modulePath)).mtime.getTime();
-            module = await import(`file://${modulePath}?${mtime}`);
+            // Load and cache module for non-development
+            module = await import(`file://${modulePath}`);
+            modules.set(`${route}.js`, module);
           }
         } catch (e) {
           switch (e.code) {
@@ -140,8 +149,6 @@ async function handler(request: FastifyRequest, reply: FastifyReply) {
               throw e;
           }
         }
-      } else if (module === undefined) {
-        continue;
       }
 
       // Store current route in request

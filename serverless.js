@@ -10,20 +10,6 @@ import env from "./env.js";
 env();
 const CONFIG = (await import(`file://${join(process.cwd(), "jeasx.config.js")}`)).default;
 const NODE_ENV_IS_DEVELOPMENT = process.env.NODE_ENV === "development";
-const MODULE_BY_ROUTE = /* @__PURE__ */ new Map();
-if (!NODE_ENV_IS_DEVELOPMENT) {
-  for await (const route of glob("**/*.js", {
-    cwd: join(process.cwd(), "dist")
-  })) {
-    if (/\[.+\]\.js$/.test(route)) {
-      MODULE_BY_ROUTE.set(
-        // Normalize path separators for Windows
-        `/${route.replaceAll(sep, "/")}`,
-        await import(`file://${join(process.cwd(), "dist", route)}`)
-      );
-    }
-  }
-}
 const FASTIFY_SERVER = CONFIG.FASTIFY_SERVER ?? ((fastify2) => fastify2);
 var serverless_default = FASTIFY_SERVER(
   fastify({
@@ -58,24 +44,43 @@ var serverless_default = FASTIFY_SERVER(
     }
   });
 });
+const modules = /* @__PURE__ */ new Map();
+if (!NODE_ENV_IS_DEVELOPMENT) {
+  const isServerRoute = new RegExp(/\[.+\]\.js$/);
+  for await (const route of glob("**/*.js", {
+    cwd: join(process.cwd(), "dist")
+  })) {
+    if (isServerRoute.test(route)) {
+      modules.set(`/${route.replaceAll(sep, "/")}`, null);
+    }
+  }
+}
 async function handler(request, reply) {
   let response;
   const context = {};
   const props = { request, reply };
   try {
     for (const route of generateRoutes(request.path)) {
-      let module = MODULE_BY_ROUTE.get(`${route}.js`);
-      if (NODE_ENV_IS_DEVELOPMENT) {
+      let module = modules.get(`${route}.js`);
+      if (module === void 0 && !NODE_ENV_IS_DEVELOPMENT) {
+        continue;
+      }
+      if (module === null || module === void 0) {
         try {
           const modulePath = join(process.cwd(), "dist", `${route}.js`);
-          if (typeof require === "function") {
-            if (require.cache[modulePath]) {
-              delete require.cache[modulePath];
+          if (NODE_ENV_IS_DEVELOPMENT) {
+            if (typeof require === "function") {
+              if (require.cache[modulePath]) {
+                delete require.cache[modulePath];
+              }
+              module = await import(`file://${modulePath}`);
+            } else {
+              const mtime = (await stat(modulePath)).mtime.getTime();
+              module = await import(`file://${modulePath}?${mtime}`);
             }
-            module = await import(`file://${modulePath}`);
           } else {
-            const mtime = (await stat(modulePath)).mtime.getTime();
-            module = await import(`file://${modulePath}?${mtime}`);
+            module = await import(`file://${modulePath}`);
+            modules.set(`${route}.js`, module);
           }
         } catch (e) {
           switch (e.code) {
@@ -87,8 +92,6 @@ async function handler(request, reply) {
               throw e;
           }
         }
-      } else if (module === void 0) {
-        continue;
       }
       request.route = route;
       response = // Call functions with 'this' context and props as parameters
