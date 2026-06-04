@@ -9,17 +9,32 @@ import fastify, {
   FastifyServerOptions,
 } from "fastify";
 import { jsxToString } from "jsx-async-runtime";
-import { stat } from "node:fs/promises";
-import { freemem } from "node:os";
-import { join } from "node:path";
+import { glob, stat } from "node:fs/promises";
+import { join, sep } from "node:path";
 import env from "./env.js";
 
 env();
 
 const CONFIG = (await import(`file://${join(process.cwd(), "jeasx.config.js")}`)).default;
 const NODE_ENV_IS_DEVELOPMENT = process.env.NODE_ENV === "development";
-const ROUTE_CACHE_LIMIT = Math.floor(freemem() / 1024 / 1024);
-const DIST_PATH = join(process.cwd(), "dist", "/");
+
+// Cache for server modules (used for non-development)
+const MODULE_BY_ROUTE = new Map<string, { default: Function }>();
+
+// Glob all server modules and add them to cache
+if (!NODE_ENV_IS_DEVELOPMENT) {
+  for await (const route of glob("**/*.js", {
+    cwd: join(process.cwd(), "dist"),
+  })) {
+    if (/\[.+\]\.js$/.test(route)) {
+      MODULE_BY_ROUTE.set(
+        // Normalize path separators for Windows
+        `/${route.replaceAll(sep, "/")}`,
+        await import(`file://${join(process.cwd(), "dist", route)}`),
+      );
+    }
+  }
+}
 
 declare module "fastify" {
   interface FastifyRequest {
@@ -81,9 +96,6 @@ export default FASTIFY_SERVER(
       });
   });
 
-// Cache for resolved route modules, 'null' means no module exists.
-const modules = new Map<string, { default: Function }>();
-
 /**
  * Resolves route module based on the request path and execute it.
  */
@@ -100,61 +112,36 @@ async function handler(request: FastifyRequest, reply: FastifyReply) {
     // Execute route handlers for current request
     for (const route of generateRoutes(request.path)) {
       // Resolve module via cache
-      let module = modules.get(route);
+      let module = MODULE_BY_ROUTE.get(`${route}.js`);
 
-      // Module was cached as not found?
-      if (module === null) {
-        continue;
-      }
-
-      // Module was not loaded yet?
-      if (module === undefined) {
+      if (NODE_ENV_IS_DEVELOPMENT) {
         try {
-          const modulePath = join(DIST_PATH, `${route}.js`);
-          if (!modulePath.startsWith(DIST_PATH)) {
-            // Skip import if module path does not point to a location under 'dist'.
-            // Although this case should theoretically never happen,
-            // it is handled explicitly for enhanced security.
-            continue;
-          }
-          if (NODE_ENV_IS_DEVELOPMENT) {
-            if (typeof require === "function") {
-              // Bun: Remove module from cache before importing
-              // as query parameter for import is ignored (see Node).
-              if (require.cache[modulePath]) {
-                delete require.cache[modulePath];
-              }
-              module = await import(`file://${modulePath}`);
-            } else {
-              // Node: Use timestamp as query parameter to update modules.
-              const mtime = (await stat(modulePath)).mtime.getTime();
-              module = await import(`file://${modulePath}?${mtime}`);
+          const modulePath = join(process.cwd(), "dist", `${route}.js`);
+          if (typeof require === "function") {
+            // Bun: Remove module from cache before importing
+            // as query parameter for import is ignored (see Node).
+            if (require.cache[modulePath]) {
+              delete require.cache[modulePath];
             }
-          } else {
-            // Load and cache module for non-development
             module = await import(`file://${modulePath}`);
-            modules.set(route, module);
+          } else {
+            // Node: Use timestamp as query parameter to update modules.
+            const mtime = (await stat(modulePath)).mtime.getTime();
+            module = await import(`file://${modulePath}?${mtime}`);
           }
         } catch (e) {
           switch (e.code) {
             case "ENOENT":
             case "ENOTDIR":
             case "ERR_MODULE_NOT_FOUND":
-              if (!NODE_ENV_IS_DEVELOPMENT) {
-                // Cache module as not found
-                modules.set(route, null);
-              }
               continue;
             default:
               // Module exists, but fails to load.
               throw e;
           }
-        } finally {
-          // Remove oldest entry from cache if limit is reached
-          if (modules.size > ROUTE_CACHE_LIMIT) {
-            modules.delete(modules.keys().next().value);
-          }
         }
+      } else if (module === undefined) {
+        continue;
       }
 
       // Store current route in request
