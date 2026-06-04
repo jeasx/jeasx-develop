@@ -117,7 +117,8 @@ async function handler(request: FastifyRequest, reply: FastifyReply) {
       }
 
       // Module was not loaded yet?
-      if (module === null || module === undefined) {
+      // Loose equality (==) covers 'undefined' for development.
+      if (module == null) {
         try {
           const modulePath = join(process.cwd(), "dist", `${route}.js`);
           if (NODE_ENV_IS_DEVELOPMENT) {
