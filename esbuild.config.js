@@ -19,7 +19,7 @@ const BROWSER_PUBLIC_ENV = Object.keys(process.env)
   );
 
 /** @type esbuild.BuildOptions */
-const serverBuildOptions = {
+const SERVER_OPTIONS = {
   entryPoints: ["src/**/[*].*"],
   define: { "process.env.BUILD_TIME": BUILD_TIME },
   minify: process.env.NODE_ENV !== "development",
@@ -37,7 +37,7 @@ const serverBuildOptions = {
 };
 
 /** @type esbuild.BuildOptions */
-const browserBuildOptions = {
+const BROWSER_OPTIONS = {
   entryPoints: ["src/**/index.*"],
   define: BROWSER_PUBLIC_ENV,
   minify: process.env.NODE_ENV !== "development",
@@ -52,19 +52,23 @@ const browserBuildOptions = {
   ...CONFIG.ESBUILD_BROWSER_OPTIONS?.(),
 };
 
-[serverBuildOptions, browserBuildOptions].forEach(async (options) => {
+[SERVER_OPTIONS, BROWSER_OPTIONS].forEach(async (options) => {
   if (process.env.NODE_ENV === "development") {
     (await esbuild.context(options)).watch();
   } else {
-    const buildResult = await esbuild.build(options);
-    if (options === serverBuildOptions) {
+    const result = await esbuild.build(options);
+    if (options === SERVER_OPTIONS) {
       // Create metafile with existing server routes
-      if (buildResult.metafile?.outputs) {
-        const routes = Object.keys(buildResult.metafile.outputs)
-          .filter((output) => output.endsWith(".js"))
-          .map((output) => output.slice("dist".length));
+      if (result.metafile?.outputs) {
+        const routes = Object.keys(result.metafile.outputs)
+          // Filter server routes
+          .filter((path) => /\[.+\]\.js$/.test(path))
+          // Remove 'dist' from path
+          .map((path) => path.slice("dist".length));
+
+        // Export routes as JavaScript file
         await writeFile(
-          join(process.cwd(), "dist", `[jeasx.routes].js`),
+          join(process.cwd(), "dist", `[--jeasx-server-routes--].js`),
           `export default ${JSON.stringify(routes)};`,
         );
       }

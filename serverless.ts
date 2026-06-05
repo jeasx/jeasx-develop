@@ -18,6 +18,19 @@ env();
 const CONFIG = (await import(`file://${join(process.cwd(), "jeasx.config.js")}`)).default;
 const NODE_ENV_IS_DEVELOPMENT = process.env.NODE_ENV === "development";
 
+// Cache for server modules (used for non-development)
+const MODULE_BY_ROUTE = new Map<string, { default: Function }>();
+
+// Initialize cache with "null" for all existing modules.
+if (!NODE_ENV_IS_DEVELOPMENT) {
+  const routes = (
+    await import(`file://${join(process.cwd(), "dist", `[--jeasx-server-routes--].js`)}`)
+  ).default;
+  for (const route of routes) {
+    MODULE_BY_ROUTE.set(route, null);
+  }
+}
+
 declare module "fastify" {
   interface FastifyRequest {
     path: string; // Path without query parameters
@@ -78,18 +91,6 @@ export default FASTIFY_SERVER(
       });
   });
 
-// Cache for server modules (used for non-development)
-const modules = new Map<string, { default: Function }>();
-
-// Initialize cache with "null" for all existing modules.
-if (!NODE_ENV_IS_DEVELOPMENT) {
-  const routes = (await import(`file://${join(process.cwd(), "dist", `[jeasx.routes].js`)}`))
-    .default;
-  for (const route of routes) {
-    modules.set(route, null);
-  }
-}
-
 /**
  * Resolves route module based on the request path and execute it.
  */
@@ -106,9 +107,9 @@ async function handler(request: FastifyRequest, reply: FastifyReply) {
     // Execute route handlers for current request
     for (const route of generateRoutes(request.path)) {
       // Resolve module via cache
-      let module = modules.get(`${route}.js`);
+      let module = MODULE_BY_ROUTE.get(`${route}.js`);
 
-      if (module === undefined && !NODE_ENV_IS_DEVELOPMENT) {
+      if (!NODE_ENV_IS_DEVELOPMENT && module === undefined) {
         continue;
       }
 
@@ -132,7 +133,7 @@ async function handler(request: FastifyRequest, reply: FastifyReply) {
           } else {
             // Load and cache module for non-development
             module = await import(`file://${modulePath}`);
-            modules.set(`${route}.js`, module);
+            MODULE_BY_ROUTE.set(`${route}.js`, module);
           }
         } catch (e) {
           switch (e.code) {

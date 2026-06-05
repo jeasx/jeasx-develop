@@ -10,6 +10,13 @@ import env from "./env.js";
 env();
 const CONFIG = (await import(`file://${join(process.cwd(), "jeasx.config.js")}`)).default;
 const NODE_ENV_IS_DEVELOPMENT = process.env.NODE_ENV === "development";
+const MODULE_BY_ROUTE = /* @__PURE__ */ new Map();
+if (!NODE_ENV_IS_DEVELOPMENT) {
+  const routes = (await import(`file://${join(process.cwd(), "dist", `[--jeasx-server-routes--].js`)}`)).default;
+  for (const route of routes) {
+    MODULE_BY_ROUTE.set(route, null);
+  }
+}
 const FASTIFY_SERVER = CONFIG.FASTIFY_SERVER ?? ((fastify2) => fastify2);
 var serverless_default = FASTIFY_SERVER(
   fastify({
@@ -44,21 +51,14 @@ var serverless_default = FASTIFY_SERVER(
     }
   });
 });
-const modules = /* @__PURE__ */ new Map();
-if (!NODE_ENV_IS_DEVELOPMENT) {
-  const routes = (await import(`file://${join(process.cwd(), "dist", `[jeasx.routes].js`)}`)).default;
-  for (const route of routes) {
-    modules.set(route, null);
-  }
-}
 async function handler(request, reply) {
   let response;
   const context = {};
   const props = { request, reply };
   try {
     for (const route of generateRoutes(request.path)) {
-      let module = modules.get(`${route}.js`);
-      if (module === void 0 && !NODE_ENV_IS_DEVELOPMENT) {
+      let module = MODULE_BY_ROUTE.get(`${route}.js`);
+      if (!NODE_ENV_IS_DEVELOPMENT && module === void 0) {
         continue;
       }
       if (module === null || module === void 0) {
@@ -76,7 +76,7 @@ async function handler(request, reply) {
             }
           } else {
             module = await import(`file://${modulePath}`);
-            modules.set(`${route}.js`, module);
+            MODULE_BY_ROUTE.set(`${route}.js`, module);
           }
         } catch (e) {
           switch (e.code) {
