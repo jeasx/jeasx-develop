@@ -18,14 +18,14 @@ env();
 const CONFIG = (await import(`file://${join(process.cwd(), "jeasx.config.js")}`)).default;
 const NODE_ENV_IS_DEVELOPMENT = process.env.NODE_ENV === "development";
 
-// Cache for server modules (used for non-development)
+// Cache for route modules used in non-development environments.
 const MODULE_BY_ROUTE = new Map<string, { default: Function }>();
 
-// Initialize cache with "null" for all existing modules.
+// Initialize the cache with `null` for all existing modules.
+// On the first request for a given route, the module is lazily loaded,
+// replacing its `null` value in the cache.
 if (!NODE_ENV_IS_DEVELOPMENT) {
-  const routes = (
-    await import(`file://${join(process.cwd(), "dist", `[--jeasx-server-routes--].js`)}`)
-  ).default;
+  const routes = (await import(`file://${join(process.cwd(), "dist", `[--routes].js`)}`)).default;
   for (const route of routes) {
     MODULE_BY_ROUTE.set(route, null);
   }
@@ -109,6 +109,7 @@ async function handler(request: FastifyRequest, reply: FastifyReply) {
       // Resolve module via cache
       let module = MODULE_BY_ROUTE.get(`${route}.js`);
 
+      // Skip loading the module if the route path is not initialized.
       if (!NODE_ENV_IS_DEVELOPMENT && module === undefined) {
         continue;
       }

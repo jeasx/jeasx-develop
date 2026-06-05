@@ -68,7 +68,7 @@ const BROWSER_OPTIONS = {
 
         // Export routes as JavaScript file
         await writeFile(
-          join(process.cwd(), "dist", `[--jeasx-server-routes--].js`),
+          join(process.cwd(), "dist", `[--routes].js`),
           `export default ${JSON.stringify(routes)};`,
         );
       }
