@@ -9,8 +9,8 @@ import fastify, {
   FastifyServerOptions,
 } from "fastify";
 import { jsxToString } from "jsx-async-runtime";
-import { glob, stat } from "node:fs/promises";
-import { join, sep } from "node:path";
+import { stat } from "node:fs/promises";
+import { join } from "node:path";
 import env from "./env.js";
 
 env();
@@ -83,14 +83,10 @@ const modules = new Map<string, { default: Function }>();
 
 // Initialize cache with "null" for all existing modules.
 if (!NODE_ENV_IS_DEVELOPMENT) {
-  const isServerRoute = /\[.+\]\.js$/;
-  for await (const route of glob("**/*.js", {
-    cwd: join(process.cwd(), "dist"),
-  })) {
-    if (isServerRoute.test(route)) {
-      // Normalize path separators for Windows
-      modules.set(`/${route.replaceAll(sep, "/")}`, null);
-    }
+  const routes = (await import(`file://${join(process.cwd(), "dist", `[jeasx.routes].js`)}`))
+    .default;
+  for (const route of routes) {
+    modules.set(route, null);
   }
 }
 
@@ -117,8 +113,7 @@ async function handler(request: FastifyRequest, reply: FastifyReply) {
       }
 
       // Module was not loaded yet?
-      // Loose equality (==) covers 'undefined' for development.
-      if (module == null) {
+      if (module === null || module === undefined) {
         try {
           const modulePath = join(process.cwd(), "dist", `${route}.js`);
           if (NODE_ENV_IS_DEVELOPMENT) {

@@ -4,8 +4,8 @@ import fastifyMultipart from "@fastify/multipart";
 import fastifyStatic from "@fastify/static";
 import fastify from "fastify";
 import { jsxToString } from "jsx-async-runtime";
-import { glob, stat } from "node:fs/promises";
-import { join, sep } from "node:path";
+import { stat } from "node:fs/promises";
+import { join } from "node:path";
 import env from "./env.js";
 env();
 const CONFIG = (await import(`file://${join(process.cwd(), "jeasx.config.js")}`)).default;
@@ -46,13 +46,9 @@ var serverless_default = FASTIFY_SERVER(
 });
 const modules = /* @__PURE__ */ new Map();
 if (!NODE_ENV_IS_DEVELOPMENT) {
-  const isServerRoute = /\[.+\]\.js$/;
-  for await (const route of glob("**/*.js", {
-    cwd: join(process.cwd(), "dist")
-  })) {
-    if (isServerRoute.test(route)) {
-      modules.set(`/${route.replaceAll(sep, "/")}`, null);
-    }
+  const routes = (await import(`file://${join(process.cwd(), "dist", `[jeasx.routes].js`)}`)).default;
+  for (const route of routes) {
+    modules.set(route, null);
   }
 }
 async function handler(request, reply) {
@@ -65,7 +61,7 @@ async function handler(request, reply) {
       if (module === void 0 && !NODE_ENV_IS_DEVELOPMENT) {
         continue;
       }
-      if (module == null) {
+      if (module === null || module === void 0) {
         try {
           const modulePath = join(process.cwd(), "dist", `${route}.js`);
           if (NODE_ENV_IS_DEVELOPMENT) {

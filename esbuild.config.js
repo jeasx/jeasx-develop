@@ -1,4 +1,5 @@
 import * as esbuild from "esbuild";
+import { writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import env from "./env.js";
 
@@ -26,6 +27,7 @@ const buildOptions = [
     logLevel: "info",
     color: true,
     bundle: true,
+    metafile: true,
     outdir: "dist",
     publicPath: "/",
     assetNames: "[dir]/[name]-[hash]",
@@ -54,6 +56,16 @@ buildOptions.forEach(async (options) => {
   if (process.env.NODE_ENV === "development") {
     (await esbuild.context(options)).watch();
   } else {
-    await esbuild.build(options);
+    const buildResult = await esbuild.build(options);
+    // Create metafile with existing server routes
+    if (options.platform === "neutral" && buildResult.metafile?.outputs) {
+      const routes = Object.keys(buildResult.metafile.outputs)
+        .filter((output) => output.endsWith(".js"))
+        .map((output) => output.slice("dist".length));
+      await writeFile(
+        join(process.cwd(), "dist", `[jeasx.routes].js`),
+        `export default ${JSON.stringify(routes)};`,
+      );
+    }
   }
 });
