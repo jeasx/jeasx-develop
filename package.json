@@ -36,7 +36,7 @@
     "react": "19.2.7",
     "react-dom": "19.2.7",
     "rehype-prism-plus": "2.0.2",
-    "sharp": "0.35.1",
+    "sharp": "0.35.2",
     "svelte": "5.56.3"
   },
   "devDependencies": {
