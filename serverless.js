@@ -82,8 +82,17 @@ async function handler(request, reply) {
             throw e;
         }
       }
+      if (typeof module !== "object" || module === null) {
+        continue;
+      }
       request.route = route;
-      response = typeof module === "object" && (typeof module.default === "function" ? await module.default.call(context, props) : module.default);
+      response = typeof module.default === "function" ? (
+        // Call functions with context as `this` and props as parameters,
+        await module.default.call(context, props)
+      ) : (
+        // otherwise return default export.
+        module.default
+      );
       if (reply.sent) {
         return;
       } else if (route.endsWith("/[404]")) {

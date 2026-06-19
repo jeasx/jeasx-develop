@@ -150,16 +150,20 @@ async function handler(request: FastifyRequest, reply: FastifyReply) {
         }
       }
 
-      // Store current route in request
+      // Ensure module is a valid object before processing.
+      if (typeof module !== "object" || module === null) {
+        continue;
+      }
+
+      // Store current route in request.
       request.route = route;
 
-      // Call functions with 'this' context and props as parameters
-      // otherwise return default export
       response =
-        typeof module === "object" &&
-        (typeof module.default === "function"
-          ? await module.default.call(context, props)
-          : module.default);
+        typeof module.default === "function"
+          ? // Call functions with context as `this` and props as parameters,
+            await module.default.call(context, props)
+          : // otherwise return default export.
+            module.default;
 
       if (reply.sent) {
         return;
@@ -218,6 +222,7 @@ function generateRoutes(path: string): string[] {
   const segments = [""];
   let current = "";
   for (const segment of path.split("/")) {
+    // Ignore redundant slashes.
     if (segment !== "") {
       current += `/${segment}`;
       segments.push(current);
