@@ -32,7 +32,9 @@ export default {
   /** @type {() => import("fastify").FastifyServerOptions} */
   FASTIFY_SERVER_OPTIONS: () => ({
     logger: { level: NODE_ENV_IS_DEVELOPMENT ? "error" : "info" },
-    bodyLimit: 4 * 1024 * 1024,
+    bodyLimit: 2 * 1024 * 1024,
+    // Strip consecutive slashes
+    rewriteUrl: (req) => String(req.url).replace(/\/+/g, "/"),
   }),
 
   /** @type {() => import("@fastify/static").FastifyStaticOptions} */
