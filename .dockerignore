@@ -8,7 +8,7 @@
 !jeasx.config.js
 !package-lock.json
 !package.json
-!server.js
 !serverless.js
 !serverless.js.map
+!start.js
 !tsconfig.json
