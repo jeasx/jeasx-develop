@@ -35,8 +35,8 @@ export default {
     bodyLimit: 2 * 1024 * 1024,
   }),
 
-  /** @type {() => import("@fastify/static").FastifyStaticOptions} */
-  FASTIFY_STATIC_OPTIONS: () => ({
+  /** @type {() => import("@fastify/send").SendOptions} */
+  FASTIFY_SEND_OPTIONS: () => ({
     immutable: !NODE_ENV_IS_DEVELOPMENT,
     maxAge: NODE_ENV_IS_DEVELOPMENT ? 0 : "365d",
   }),

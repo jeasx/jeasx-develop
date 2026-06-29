@@ -1,7 +1,7 @@
 import fastifyCookie from "@fastify/cookie";
 import fastifyFormbody from "@fastify/formbody";
 import fastifyMultipart from "@fastify/multipart";
-import fastifyStatic from "@fastify/static";
+import fastifySend from "@fastify/send";
 import fastify from "fastify";
 import { jsxToString } from "jsx-async-runtime";
 import { stat } from "node:fs/promises";
@@ -11,13 +11,11 @@ env();
 const CWD = process.cwd();
 const CONFIG = (await import(`file://${join(CWD, "jeasx.config.js")}`)).default;
 const NODE_ENV_IS_DEVELOPMENT = process.env.NODE_ENV === "development";
-const MODULE_BY_ROUTE = {};
-if (!NODE_ENV_IS_DEVELOPMENT) {
-  const { routes } = (await import(`file://${join(CWD, "dist", "[--metadata--].js")}`)).default;
-  for (const route of routes) {
-    MODULE_BY_ROUTE[route] = join(CWD, "dist", `${route}.js`);
-  }
-}
+const { routes: MODULE_BY_ROUTE, assets: ASSET_BY_PATH } = NODE_ENV_IS_DEVELOPMENT ? { routes: {}, assets: {} } : (await import(`file://${join(CWD, "dist", "[--metadata--].js")}`)).default;
+const FASTIFY_SEND_OPTIONS = {
+  root: CWD,
+  ...CONFIG.FASTIFY_SEND_OPTIONS?.()
+};
 const FASTIFY_SERVER = CONFIG.FASTIFY_SERVER ?? ((fastify2) => fastify2);
 var serverless_default = FASTIFY_SERVER(
   fastify({
@@ -30,11 +28,6 @@ var serverless_default = FASTIFY_SERVER(
     ...CONFIG.FASTIFY_FORMBODY_OPTIONS?.()
   }).register(fastifyMultipart, {
     ...CONFIG.FASTIFY_MULTIPART_OPTIONS?.()
-  }).register(fastifyStatic, {
-    root: ["public", "dist"].map((dir) => join(CWD, dir)),
-    wildcard: false,
-    globIgnore: ["/**/\\[*\\].js?(.map)"],
-    ...CONFIG.FASTIFY_STATIC_OPTIONS?.()
   }).decorateRequest("route", "").decorateRequest("path", "").addHook("onRequest", async (request) => {
     const index = request.url.indexOf("?");
     request.path = index === -1 ? request.url : request.url.slice(0, index);
@@ -63,7 +56,7 @@ async function handler(request, reply) {
       }
       try {
         if (typeof module === "string") {
-          module = MODULE_BY_ROUTE[route] = await import(`file://${module}`);
+          module = MODULE_BY_ROUTE[route] = await import(`file://${join(CWD, module)}`);
         } else if (module === void 0 && NODE_ENV_IS_DEVELOPMENT) {
           const modulePath = join(CWD, "dist", `${route}.js`);
           if (typeof require === "function" && require.cache[modulePath]) {
@@ -109,6 +102,14 @@ async function handler(request, reply) {
         continue;
       } else {
         break;
+      }
+    }
+    if (reply.statusCode === 404) {
+      const result = await getAssetStream(request);
+      if (result) {
+        reply.status(result.statusCode);
+        reply.headers(result.headers);
+        response = result.stream;
       }
     }
     return await renderJSX(context, response);
@@ -158,6 +159,24 @@ async function renderJSX(context, response) {
   const payload = isJSX(response) ? await jsxToString.call(context, response) : response;
   const responseHandler = context["responseHandler"];
   return typeof responseHandler === "function" ? await responseHandler.call(context, payload) : payload;
+}
+async function getAssetStream(request) {
+  const asset = ASSET_BY_PATH[request.path];
+  if (asset) {
+    return await fastifySend(request.raw, asset, FASTIFY_SEND_OPTIONS);
+  }
+  if (NODE_ENV_IS_DEVELOPMENT) {
+    for (const folder of ["dist", "public"]) {
+      try {
+        if ((await stat(join(CWD, folder, request.path))).isFile()) {
+          const asset2 = `${folder}${request.path}`;
+          return await fastifySend(request.raw, asset2, FASTIFY_SEND_OPTIONS);
+        }
+      } catch {
+        continue;
+      }
+    }
+  }
 }
 export {
   serverless_default as default

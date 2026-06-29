@@ -1,7 +1,7 @@
 import fastifyCookie, { FastifyCookieOptions } from "@fastify/cookie";
 import fastifyFormbody, { FastifyFormbodyOptions } from "@fastify/formbody";
 import fastifyMultipart, { FastifyMultipartOptions } from "@fastify/multipart";
-import fastifyStatic, { FastifyStaticOptions } from "@fastify/static";
+import fastifySend, { SendOptions } from "@fastify/send";
 import fastify, {
   FastifyInstance,
   FastifyReply,
@@ -19,20 +19,15 @@ const CWD = process.cwd();
 const CONFIG = (await import(`file://${join(CWD, "jeasx.config.js")}`)).default;
 const NODE_ENV_IS_DEVELOPMENT = process.env.NODE_ENV === "development";
 
-// Mapping for route modules used in non-development environments.
-const MODULE_BY_ROUTE: Record<string, { default: Function } | string> = {};
-
-// Initialize the mapping with absolute paths for all known modules.
-// Modules are lazily loaded on their first request for a specific route.
-if (!NODE_ENV_IS_DEVELOPMENT) {
-  const { routes } = (await import(`file://${join(CWD, "dist", "[--metadata--].js")}`)).default as {
-    routes: string[];
-  };
-  // Map route identifiers to their absolute file system paths in the build directory.
-  for (const route of routes) {
-    MODULE_BY_ROUTE[route] = join(CWD, "dist", `${route}.js`);
-  }
-}
+// Maps routes and assets for non-development environments.
+// Module paths are initialized at startup but overwritten
+// with resolved modules upon the first request.
+const { routes: MODULE_BY_ROUTE, assets: ASSET_BY_PATH } = NODE_ENV_IS_DEVELOPMENT
+  ? { routes: {}, assets: {} }
+  : ((await import(`file://${join(CWD, "dist", "[--metadata--].js")}`)).default as {
+      routes: Record<string, string | { default: Function }>;
+      assets: Record<string, string>;
+    });
 
 declare module "fastify" {
   interface FastifyRequest {
@@ -40,6 +35,11 @@ declare module "fastify" {
     route: string; // Path to resolved route handler
   }
 }
+
+const FASTIFY_SEND_OPTIONS = {
+  root: CWD,
+  ...(CONFIG.FASTIFY_SEND_OPTIONS?.() as SendOptions),
+};
 
 // Enhance Fastify server from userland
 const FASTIFY_SERVER = (CONFIG.FASTIFY_SERVER ?? ((fastify) => fastify)) as (
@@ -63,12 +63,6 @@ export default FASTIFY_SERVER(
       })
       .register(fastifyMultipart, {
         ...(CONFIG.FASTIFY_MULTIPART_OPTIONS?.() as FastifyMultipartOptions),
-      })
-      .register(fastifyStatic, {
-        root: ["public", "dist"].map((dir) => join(CWD, dir)),
-        wildcard: false,
-        globIgnore: ["/**/\\[*\\].js?(.map)"],
-        ...(CONFIG.FASTIFY_STATIC_OPTIONS?.() as FastifyStaticOptions),
       })
       .decorateRequest("route", "")
       .decorateRequest("path", "")
@@ -123,7 +117,7 @@ async function handler(request: FastifyRequest, reply: FastifyReply) {
           // Production: Load and cache module only via pre-calculated path.
           // This avoids potential path traversal vulnerabilities caused
           // by unexpected `route` values.
-          module = MODULE_BY_ROUTE[route] = await import(`file://${module}`);
+          module = MODULE_BY_ROUTE[route] = await import(`file://${join(CWD, module)}`);
         } else if (module === undefined && NODE_ENV_IS_DEVELOPMENT) {
           // Only map module paths depending on `route` during development.
           const modulePath = join(CWD, "dist", `${route}.js`);
@@ -189,6 +183,16 @@ async function handler(request: FastifyRequest, reply: FastifyReply) {
         break;
       }
     }
+
+    if (reply.statusCode === 404) {
+      const result = await getAssetStream(request);
+      if (result) {
+        reply.status(result.statusCode);
+        reply.headers(result.headers);
+        response = result.stream;
+      }
+    }
+
     return await renderJSX(context, response);
   } catch (error) {
     const errorHandler = context["errorHandler"];
@@ -272,4 +276,32 @@ async function renderJSX(context: object, response: unknown) {
   return typeof responseHandler === "function"
     ? await responseHandler.call(context, payload)
     : payload;
+}
+
+/**
+ * Returns {stream, headers, statusCode} for requested asset or `undefined`.
+ */
+async function getAssetStream(request: FastifyRequest) {
+  // Production: Retrieve assets only from pre-initialized mapping.
+  // This avoids potential path traversal vulnerabilities caused
+  // by unexpected `request.path` values.
+  const asset = ASSET_BY_PATH[request.path];
+  if (asset) {
+    return await fastifySend(request.raw, asset, FASTIFY_SEND_OPTIONS);
+  }
+
+  if (NODE_ENV_IS_DEVELOPMENT) {
+    for (const folder of ["dist", "public"]) {
+      try {
+        if ((await stat(join(CWD, folder, request.path))).isFile()) {
+          // Dynamic path loading is restricted to development environments;
+          // therefore, production-level path validation is not required here.
+          const asset = `${folder}${request.path}`;
+          return await fastifySend(request.raw, asset, FASTIFY_SEND_OPTIONS);
+        }
+      } catch {
+        continue;
+      }
+    }
+  }
 }
