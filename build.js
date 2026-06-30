@@ -54,40 +54,40 @@ const BROWSER_OPTIONS = {
   ...CONFIG.ESBUILD_BROWSER_OPTIONS?.(),
 };
 
-[SERVER_OPTIONS, BROWSER_OPTIONS].forEach(async (options) => {
+for (const options of [SERVER_OPTIONS, BROWSER_OPTIONS]) {
   if (NODE_ENV_IS_DEVELOPMENT) {
     (await esbuild.context(options)).watch();
   } else {
     await esbuild.build(options);
-    if (options === SERVER_OPTIONS) {
-      await exportMetadata();
-    }
   }
-});
+}
 
-async function exportMetadata() {
+// Export metadata for routes and assets
+if (!NODE_ENV_IS_DEVELOPMENT) {
   /** @type Record<string,string> */
   const routes = {};
   /** @type Record<string,string> */
   const assets = {};
 
+  const isServerRoute = /^dist\/.*\[.+\]\.js$/;
+  const isServerSourcemap = /^dist\/.*\[.+\]\.js\.map$/;
+  const isAssetDirectory = /^(dist|public)\//;
+
   for await (const entry of glob("{public,dist}/**/*")) {
     const path = entry.split(sep).join("/");
 
-    // Handle server-side routes.
-    if (/^dist\/.*\[.+\]\.js$/.test(path)) {
+    if (isServerRoute.test(path)) {
       routes[path.slice(4 /* "dist".length */, -3 /* ".js".length */)] = path;
       continue;
     }
 
-    // Omit sourcemaps for server-side routes.
-    if (/^dist\/.*\[.+\]\.js\.map$/.test(path)) {
+    if (isServerSourcemap.test(path)) {
       continue;
     }
 
-    // Remaining entries are handled as assets.
+    // Treat all other files as static assets.
     if ((await stat(join(CWD, path))).isFile()) {
-      const match = path.match(/^(dist|public)\//);
+      const match = path.match(isAssetDirectory);
       if (match) {
         assets[path.slice(match[1].length)] = path;
       }
