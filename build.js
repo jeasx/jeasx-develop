@@ -62,35 +62,30 @@ for (const options of [SERVER_OPTIONS, BROWSER_OPTIONS]) {
   }
 }
 
-// Export metadata for routes and assets
+// Export path mappings for routes and files
 if (!NODE_ENV_IS_DEVELOPMENT) {
   /** @type Record<string,string> */
   const routes = {};
   /** @type Record<string,string> */
   const files = {};
 
-  const isServerRoute = /^dist\/.*\[.+\]\.js$/;
-  const isServerSourcemap = /^dist\/.*\[.+\]\.js\.map$/;
-  const isAssetDirectory = /^(dist|public)\//;
-
   for await (const entry of glob("{public,dist}/**/*")) {
     const path = entry.split(sep).join("/");
 
-    if (isServerRoute.test(path)) {
+    // Handle server routes.
+    if (/^dist\/.*\[.+\]\.js$/.test(path)) {
       routes[path.slice(4 /* "dist".length */, -3 /* ".js".length */)] = path;
       continue;
     }
 
-    if (isServerSourcemap.test(path)) {
+    // Skip sourcemaps for server routes.
+    if (/^dist\/.*\[.+\]\.js\.map$/.test(path)) {
       continue;
     }
 
     // Treat all other entries as static files.
     if ((await stat(join(CWD, path))).isFile()) {
-      const match = path.match(isAssetDirectory);
-      if (match) {
-        files[path.slice(match[1].length)] = path;
-      }
+      files[path.slice(path.indexOf("/"))] = path;
     }
   }
 
