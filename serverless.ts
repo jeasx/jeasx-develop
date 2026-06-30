@@ -37,7 +37,6 @@ declare module "fastify" {
 }
 
 const FASTIFY_SEND_OPTIONS = {
-  root: CWD,
   ...(CONFIG.FASTIFY_SEND_OPTIONS?.() as SendOptions),
 };
 

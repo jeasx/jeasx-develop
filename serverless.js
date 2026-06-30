@@ -13,7 +13,6 @@ const CONFIG = (await import(`file://${join(CWD, "jeasx.config.js")}`)).default;
 const NODE_ENV_IS_DEVELOPMENT = process.env.NODE_ENV === "development";
 const { routes: MODULE_BY_ROUTE, files: FILE_BY_PATH } = NODE_ENV_IS_DEVELOPMENT ? { routes: {}, files: {} } : (await import(`file://${join(CWD, "dist", "[--metadata--].js")}`)).default;
 const FASTIFY_SEND_OPTIONS = {
-  root: CWD,
   ...CONFIG.FASTIFY_SEND_OPTIONS?.()
 };
 const FASTIFY_SERVER = CONFIG.FASTIFY_SERVER ?? ((fastify2) => fastify2);
@@ -163,7 +162,6 @@ async function renderJSX(context, response) {
 async function tryFile(request) {
   const file = FILE_BY_PATH[request.path];
   if (file) {
-    console.log(file);
     return await fastifySend(request.raw, file, FASTIFY_SEND_OPTIONS);
   }
   if (NODE_ENV_IS_DEVELOPMENT) {
