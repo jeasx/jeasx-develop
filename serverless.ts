@@ -19,7 +19,7 @@ const CWD = process.cwd();
 const CONFIG = (await import(`file://${join(CWD, "jeasx.config.js")}`)).default;
 const NODE_ENV_IS_DEVELOPMENT = process.env.NODE_ENV === "development";
 
-// Maps routes and files for non-development environments.
+// Map routes and files for non-development environments from metadata export.
 // Module paths are initialized at startup but overwritten
 // with resolved modules upon the first request.
 const { routes: MODULE_BY_ROUTE, files: FILE_BY_PATH } = NODE_ENV_IS_DEVELOPMENT
