@@ -111,13 +111,13 @@ async function handler(request, reply) {
         response = result.stream;
       }
     }
-    return await renderJSX(context, response);
+    return await renderResponse(context, response);
   } catch (error) {
     const errorHandler = context["errorHandler"];
     if (typeof errorHandler === "function") {
       reply.status(500);
       response = await errorHandler.call(context, error);
-      return await renderJSX(context, response);
+      return await renderResponse(context, response);
     } else {
       throw error;
     }
@@ -154,7 +154,7 @@ function generateRoutes(path) {
 function isJSX(obj) {
   return !!obj && typeof obj === "object" && "type" in obj && "props" in obj;
 }
-async function renderJSX(context, response) {
+async function renderResponse(context, response) {
   const payload = isJSX(response) ? await jsxToString.call(context, response) : response;
   const responseHandler = context["responseHandler"];
   return typeof responseHandler === "function" ? await responseHandler.call(context, payload) : payload;

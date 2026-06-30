@@ -193,13 +193,13 @@ async function handler(request: FastifyRequest, reply: FastifyReply) {
       }
     }
 
-    return await renderJSX(context, response);
+    return await renderResponse(context, response);
   } catch (error) {
     const errorHandler = context["errorHandler"];
     if (typeof errorHandler === "function") {
       reply.status(500);
       response = await errorHandler.call(context, error);
-      return await renderJSX(context, response);
+      return await renderResponse(context, response);
     } else {
       throw error;
     }
@@ -268,7 +268,7 @@ function isJSX(obj: unknown): boolean {
 /**
  * Renders JSX to string and applies optional response handler.
  */
-async function renderJSX(context: object, response: unknown) {
+async function renderResponse(context: object, response: unknown) {
   const payload = isJSX(response) ? await jsxToString.call(context, response) : response;
 
   // Post-process the payload with an optional response handler
