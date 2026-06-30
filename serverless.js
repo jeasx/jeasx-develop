@@ -11,7 +11,7 @@ env();
 const CWD = process.cwd();
 const CONFIG = (await import(`file://${join(CWD, "jeasx.config.js")}`)).default;
 const NODE_ENV_IS_DEVELOPMENT = process.env.NODE_ENV === "development";
-const { routes: MODULE_BY_ROUTE, assets: ASSET_BY_PATH } = NODE_ENV_IS_DEVELOPMENT ? { routes: {}, assets: {} } : (await import(`file://${join(CWD, "dist", "[--metadata--].js")}`)).default;
+const { routes: MODULE_BY_ROUTE, files: FILE_BY_PATH } = NODE_ENV_IS_DEVELOPMENT ? { routes: {}, files: {} } : (await import(`file://${join(CWD, "dist", "[--metadata--].js")}`)).default;
 const FASTIFY_SEND_OPTIONS = {
   root: CWD,
   ...CONFIG.FASTIFY_SEND_OPTIONS?.()
@@ -105,7 +105,7 @@ async function handler(request, reply) {
       }
     }
     if (reply.statusCode === 404) {
-      const result = await getAssetStream(request);
+      const result = await tryFile(request);
       if (result) {
         reply.status(result.statusCode);
         reply.headers(result.headers);
@@ -160,17 +160,21 @@ async function renderJSX(context, response) {
   const responseHandler = context["responseHandler"];
   return typeof responseHandler === "function" ? await responseHandler.call(context, payload) : payload;
 }
-async function getAssetStream(request) {
-  const asset = ASSET_BY_PATH[request.path];
-  if (asset) {
-    return await fastifySend(request.raw, asset, FASTIFY_SEND_OPTIONS);
+async function tryFile(request) {
+  const file = FILE_BY_PATH[request.path];
+  if (file) {
+    console.log(file);
+    return await fastifySend(request.raw, file, FASTIFY_SEND_OPTIONS);
   }
   if (NODE_ENV_IS_DEVELOPMENT) {
-    for (const folder of ["dist", "public"]) {
+    for (const directory of ["dist", "public"]) {
       try {
-        if ((await stat(join(CWD, folder, request.path))).isFile()) {
-          const asset2 = `${folder}${request.path}`;
-          return await fastifySend(request.raw, asset2, FASTIFY_SEND_OPTIONS);
+        if ((await stat(join(CWD, directory, request.path))).isFile()) {
+          return await fastifySend(
+            request.raw,
+            `${directory}${request.path}`,
+            FASTIFY_SEND_OPTIONS
+          );
         }
       } catch {
         continue;

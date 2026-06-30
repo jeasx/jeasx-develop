@@ -67,7 +67,7 @@ if (!NODE_ENV_IS_DEVELOPMENT) {
   /** @type Record<string,string> */
   const routes = {};
   /** @type Record<string,string> */
-  const assets = {};
+  const files = {};
 
   const isServerRoute = /^dist\/.*\[.+\]\.js$/;
   const isServerSourcemap = /^dist\/.*\[.+\]\.js\.map$/;
@@ -85,17 +85,17 @@ if (!NODE_ENV_IS_DEVELOPMENT) {
       continue;
     }
 
-    // Treat all other files as static assets.
+    // Treat all other entries as static files.
     if ((await stat(join(CWD, path))).isFile()) {
       const match = path.match(isAssetDirectory);
       if (match) {
-        assets[path.slice(match[1].length)] = path;
+        files[path.slice(match[1].length)] = path;
       }
     }
   }
 
   await writeFile(
     join(CWD, "dist", "[--metadata--].js"),
-    `export default ${JSON.stringify({ routes, assets })};`,
+    `export default ${JSON.stringify({ routes, files })};`,
   );
 }

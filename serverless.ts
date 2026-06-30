@@ -19,14 +19,14 @@ const CWD = process.cwd();
 const CONFIG = (await import(`file://${join(CWD, "jeasx.config.js")}`)).default;
 const NODE_ENV_IS_DEVELOPMENT = process.env.NODE_ENV === "development";
 
-// Maps routes and assets for non-development environments.
+// Maps routes and files for non-development environments.
 // Module paths are initialized at startup but overwritten
 // with resolved modules upon the first request.
-const { routes: MODULE_BY_ROUTE, assets: ASSET_BY_PATH } = NODE_ENV_IS_DEVELOPMENT
-  ? { routes: {}, assets: {} }
+const { routes: MODULE_BY_ROUTE, files: FILE_BY_PATH } = NODE_ENV_IS_DEVELOPMENT
+  ? { routes: {}, files: {} }
   : ((await import(`file://${join(CWD, "dist", "[--metadata--].js")}`)).default as {
       routes: Record<string, string | { default: Function }>;
-      assets: Record<string, string>;
+      files: Record<string, string>;
     });
 
 declare module "fastify" {
@@ -184,8 +184,9 @@ async function handler(request: FastifyRequest, reply: FastifyReply) {
       }
     }
 
+    // Attempt to serve a static file if no route is matched.
     if (reply.statusCode === 404) {
-      const result = await getAssetStream(request);
+      const result = await tryFile(request);
       if (result) {
         reply.status(result.statusCode);
         reply.headers(result.headers);
@@ -279,25 +280,28 @@ async function renderJSX(context: object, response: unknown) {
 }
 
 /**
- * Returns {stream, headers, statusCode} for requested asset or `undefined`.
+ * Returns {stream, headers, statusCode} for requested file or `undefined`.
  */
-async function getAssetStream(request: FastifyRequest) {
-  // Production: Retrieve assets only from pre-initialized mapping.
+async function tryFile(request: FastifyRequest) {
+  // Production: Retrieve files only from pre-initialized mapping.
   // This avoids potential path traversal vulnerabilities caused
   // by unexpected `request.path` values.
-  const asset = ASSET_BY_PATH[request.path];
-  if (asset) {
-    return await fastifySend(request.raw, asset, FASTIFY_SEND_OPTIONS);
+  const file = FILE_BY_PATH[request.path];
+  if (file) {
+    return await fastifySend(request.raw, file, FASTIFY_SEND_OPTIONS);
   }
 
   if (NODE_ENV_IS_DEVELOPMENT) {
-    for (const folder of ["dist", "public"]) {
+    for (const directory of ["dist", "public"]) {
       try {
-        if ((await stat(join(CWD, folder, request.path))).isFile()) {
+        if ((await stat(join(CWD, directory, request.path))).isFile()) {
           // Dynamic path loading is restricted to development environments;
           // therefore, production-level path validation is not required here.
-          const asset = `${folder}${request.path}`;
-          return await fastifySend(request.raw, asset, FASTIFY_SEND_OPTIONS);
+          return await fastifySend(
+            request.raw,
+            `${directory}${request.path}`,
+            FASTIFY_SEND_OPTIONS,
+          );
         }
       } catch {
         continue;
