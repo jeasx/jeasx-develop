@@ -179,6 +179,7 @@ async function tryFile(request) {
       }
     }
   }
+  return void 0;
 }
 export {
   serverless_default as default

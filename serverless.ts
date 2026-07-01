@@ -1,7 +1,7 @@
 import fastifyCookie, { FastifyCookieOptions } from "@fastify/cookie";
 import fastifyFormbody, { FastifyFormbodyOptions } from "@fastify/formbody";
 import fastifyMultipart, { FastifyMultipartOptions } from "@fastify/multipart";
-import fastifySend, { SendOptions } from "@fastify/send";
+import fastifySend, { SendOptions, SendResult } from "@fastify/send";
 import fastify, {
   FastifyInstance,
   FastifyReply,
@@ -279,9 +279,9 @@ async function renderResponse(context: object, response: unknown) {
 }
 
 /**
- * Returns {stream, headers, statusCode} for requested file or `undefined`.
+ * Returns stream and metadata for requested file.
  */
-async function tryFile(request: FastifyRequest) {
+async function tryFile(request: FastifyRequest): Promise<SendResult> | undefined {
   // Production: Retrieve files only from pre-initialized mapping.
   // This avoids potential path traversal vulnerabilities caused
   // by unexpected `request.path` values.
@@ -307,4 +307,6 @@ async function tryFile(request: FastifyRequest) {
       }
     }
   }
+
+  return undefined;
 }
