@@ -11,6 +11,7 @@ import fastify, {
 import { jsxToString } from "jsx-async-runtime";
 import { stat } from "node:fs/promises";
 import { join } from "node:path";
+import { Readable } from "node:stream";
 import env from "./env.js";
 
 env();
@@ -102,6 +103,18 @@ async function handler(request: FastifyRequest, reply: FastifyReply) {
   try {
     // Execute route handlers for current request
     for (const route of generateRoutes(request.path)) {
+      // Try to serve static files when route matches path.
+      if (route === request.path) {
+        const result = await tryFile(request);
+        if (result) {
+          reply.status(result.statusCode);
+          reply.headers(result.headers);
+          response = result.stream;
+          break;
+        }
+        continue;
+      }
+
       // Resolve module or path to module
       let module = MODULE_BY_ROUTE[route];
 
@@ -143,20 +156,18 @@ async function handler(request: FastifyRequest, reply: FastifyReply) {
         }
       }
 
-      // Ensure module is a valid object before processing.
-      if (!module || typeof module !== "object") {
-        continue;
-      }
-
       // Store current route in request.
       request.route = route;
 
-      response =
-        typeof module.default === "function"
-          ? // Call functions with context as `this` and props as parameters,
-            await module.default.call(context, props)
-          : // otherwise return default export.
-            module.default;
+      // Ensure module is a valid object before processing.
+      if (module && typeof module === "object") {
+        response =
+          typeof module.default === "function"
+            ? // Call functions with context as `this` and props as parameters,
+              await module.default.call(context, props)
+            : // otherwise return default export.
+              module.default;
+      }
 
       if (reply.sent) {
         return;
@@ -167,7 +178,12 @@ async function handler(request: FastifyRequest, reply: FastifyReply) {
           reply.status(404);
         }
         break;
-      } else if (typeof response === "string" || Buffer.isBuffer(response) || isJSX(response)) {
+      } else if (
+        typeof response === "string" ||
+        response instanceof Readable ||
+        Buffer.isBuffer(response) ||
+        isJSX(response)
+      ) {
         break;
       } else if (
         route.endsWith("/[...guard]") &&
@@ -180,16 +196,6 @@ async function handler(request: FastifyRequest, reply: FastifyReply) {
         continue;
       } else {
         break;
-      }
-    }
-
-    // Attempt to serve a static file if no route is matched.
-    if (reply.statusCode === 404) {
-      const result = await tryFile(request);
-      if (result) {
-        reply.status(result.statusCode);
-        reply.headers(result.headers);
-        response = result.stream;
       }
     }
 
@@ -215,6 +221,7 @@ async function handler(request: FastifyRequest, reply: FastifyReply) {
  *  "/[...guard]","/a/[...guard]","/a/b/[...guard]","/a/b/c/[...guard]",
  *  "/a/b/[c]","/a/b/c/[index]",
  *  "/a/b/c/[...path]","/a/b/[...path]","/a/[...path]","/[...path]",
+ *  "/a/b/c",
  *  "/a/b/c/[404]","/a/b/[404]","/a/[404]","/[404]"
  * ]
  */
@@ -250,6 +257,9 @@ function generateRoutes(path: string): string[] {
   for (let i = 0; i < segments.length; i++) {
     routes.push(`${segments[i]}/[...path]`);
   }
+
+  // Append the verbatim path for static file serving.
+  routes.push(path);
 
   for (let i = 0; i < segments.length; i++) {
     routes.push(`${segments[i]}/[404]`);

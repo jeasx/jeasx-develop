@@ -6,6 +6,7 @@ import fastify from "fastify";
 import { jsxToString } from "jsx-async-runtime";
 import { stat } from "node:fs/promises";
 import { join } from "node:path";
+import { Readable } from "node:stream";
 import env from "./env.js";
 env();
 const CWD = process.cwd();
@@ -49,6 +50,16 @@ async function handler(request, reply) {
   const props = { request, reply };
   try {
     for (const route of generateRoutes(request.path)) {
+      if (route === request.path) {
+        const result = await tryFile(request);
+        if (result) {
+          reply.status(result.statusCode);
+          reply.headers(result.headers);
+          response = result.stream;
+          break;
+        }
+        continue;
+      }
       let module = MODULE_BY_ROUTE[route];
       if (module === void 0 && !NODE_ENV_IS_DEVELOPMENT) {
         continue;
@@ -74,17 +85,16 @@ async function handler(request, reply) {
             throw e;
         }
       }
-      if (!module || typeof module !== "object") {
-        continue;
-      }
       request.route = route;
-      response = typeof module.default === "function" ? (
-        // Call functions with context as `this` and props as parameters,
-        await module.default.call(context, props)
-      ) : (
-        // otherwise return default export.
-        module.default
-      );
+      if (module && typeof module === "object") {
+        response = typeof module.default === "function" ? (
+          // Call functions with context as `this` and props as parameters,
+          await module.default.call(context, props)
+        ) : (
+          // otherwise return default export.
+          module.default
+        );
+      }
       if (reply.sent) {
         return;
       } else if (route.endsWith("/[404]")) {
@@ -92,7 +102,7 @@ async function handler(request, reply) {
           reply.status(404);
         }
         break;
-      } else if (typeof response === "string" || Buffer.isBuffer(response) || isJSX(response)) {
+      } else if (typeof response === "string" || response instanceof Readable || Buffer.isBuffer(response) || isJSX(response)) {
         break;
       } else if (route.endsWith("/[...guard]") && (response === void 0 || typeof response === "object")) {
         Object.assign(props, response);
@@ -101,14 +111,6 @@ async function handler(request, reply) {
         continue;
       } else {
         break;
-      }
-    }
-    if (reply.statusCode === 404) {
-      const result = await tryFile(request);
-      if (result) {
-        reply.status(result.statusCode);
-        reply.headers(result.headers);
-        response = result.stream;
       }
     }
     return await renderResponse(context, response);
@@ -146,6 +148,7 @@ function generateRoutes(path) {
   for (let i = 0; i < segments.length; i++) {
     routes.push(`${segments[i]}/[...path]`);
   }
+  routes.push(path);
   for (let i = 0; i < segments.length; i++) {
     routes.push(`${segments[i]}/[404]`);
   }
