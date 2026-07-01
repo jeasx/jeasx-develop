@@ -51,11 +51,11 @@ async function handler(request, reply) {
   try {
     for (const route of generateRoutes(request.path)) {
       if (route === request.path) {
-        const result = await tryFile(request);
-        if (result) {
-          reply.status(result.statusCode);
-          reply.headers(result.headers);
-          response = result.stream;
+        const sendResult = await tryFile(request);
+        if (sendResult) {
+          reply.status(sendResult.statusCode);
+          reply.headers(sendResult.headers);
+          response = sendResult.stream;
           break;
         }
         continue;
