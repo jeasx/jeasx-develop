@@ -69,7 +69,7 @@ if (!NODE_ENV_IS_DEVELOPMENT) {
   /** @type Record<string,string> */
   const files = {};
 
-  for await (const entry of glob("{public,dist}/**/*")) {
+  for await (const entry of glob("{dist,public}/**/*")) {
     const path = entry.split(sep).join("/");
 
     // Handle server routes.
