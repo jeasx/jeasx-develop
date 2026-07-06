@@ -1,7 +1,7 @@
 import fastifyCookie, { FastifyCookieOptions } from "@fastify/cookie";
 import fastifyFormbody, { FastifyFormbodyOptions } from "@fastify/formbody";
 import fastifyMultipart, { FastifyMultipartOptions } from "@fastify/multipart";
-import fastifySend, { SendOptions, SendResult } from "@fastify/send";
+import fastifySend, { BaseSendResult, SendOptions } from "@fastify/send";
 import fastify, {
   FastifyInstance,
   FastifyReply,
@@ -35,6 +35,10 @@ declare module "fastify" {
     path: string; // Path without query parameters
     route: string; // Path to resolved route handler
   }
+
+  interface FastifyReply {
+    file: BaseSendResult; // Stream for static files
+  }
 }
 
 const FASTIFY_SEND_OPTIONS = {
@@ -66,6 +70,7 @@ export default FASTIFY_SERVER(
       })
       .decorateRequest("route", "")
       .decorateRequest("path", "")
+      .decorateReply("file", undefined)
       .addHook("onRequest", async (request) => {
         // Extract path from url
         const index = request.url.indexOf("?");
@@ -101,15 +106,17 @@ async function handler(request: FastifyRequest, reply: FastifyReply) {
   const props = { request, reply };
 
   try {
+    // Check for static file and store result for later processing.
+    reply.file = await tryFile(request);
+
     // Execute route handlers for current request
     for (const route of generateRoutes(request.path)) {
       // Try to serve static file when route matches path.
       if (route === request.path) {
-        const sendResult = await tryFile(request);
-        if (sendResult) {
-          reply.status(sendResult.statusCode);
-          reply.headers(sendResult.headers);
-          response = sendResult.stream;
+        if (reply.file) {
+          reply.status(reply.file.statusCode);
+          reply.headers(reply.file.headers);
+          response = reply.file.stream;
           break;
         }
         continue;
@@ -288,7 +295,7 @@ async function renderResponse(context: object, response: unknown) {
 /**
  * Returns stream and metadata for requested file.
  */
-async function tryFile(request: FastifyRequest): Promise<SendResult> | undefined {
+async function tryFile(request: FastifyRequest): Promise<BaseSendResult> | undefined {
   // Production: Retrieve files only from pre-initialized mapping.
   // This avoids potential path traversal vulnerabilities caused
   // by unexpected `request.path` values.
