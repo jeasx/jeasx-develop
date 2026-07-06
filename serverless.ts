@@ -37,7 +37,7 @@ declare module "fastify" {
   }
 
   interface FastifyReply {
-    file: BaseSendResult; // Stream for static files
+    file: BaseSendResult | undefined; // Stream for static files
   }
 }
 
