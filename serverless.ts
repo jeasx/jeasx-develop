@@ -295,7 +295,7 @@ async function renderResponse(context: object, response: unknown) {
 /**
  * Returns stream and metadata for requested file.
  */
-async function tryFile(request: FastifyRequest): Promise<BaseSendResult> | undefined {
+async function tryFile(request: FastifyRequest): Promise<BaseSendResult | undefined> {
   // Production: Retrieve files only from pre-initialized mapping.
   // This avoids potential path traversal vulnerabilities caused
   // by unexpected `request.path` values.
