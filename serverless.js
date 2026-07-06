@@ -76,7 +76,7 @@ async function handler(request, reply) {
           module = await import(`file://${modulePath}?${mtime}`);
         }
       } catch (e) {
-        switch (e.code) {
+        switch (e?.code) {
           case "ENOENT":
           case "ENOTDIR":
           case "ERR_MODULE_NOT_FOUND":

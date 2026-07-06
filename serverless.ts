@@ -100,7 +100,7 @@ async function handler(request: FastifyRequest, reply: FastifyReply) {
   let response: unknown;
 
   // Global context object for route handlers
-  const context = {};
+  const context: any = {};
 
   // Default props for route handlers
   const props = { request, reply };
@@ -152,7 +152,7 @@ async function handler(request: FastifyRequest, reply: FastifyReply) {
           module = await import(`file://${modulePath}?${mtime}`);
         }
       } catch (e) {
-        switch (e.code) {
+        switch ((e as any)?.code) {
           case "ENOENT":
           case "ENOTDIR":
           case "ERR_MODULE_NOT_FOUND":
@@ -282,8 +282,10 @@ function isJSX(obj: unknown): boolean {
 /**
  * Renders JSX to string and applies optional response handler.
  */
-async function renderResponse(context: object, response: unknown) {
-  const payload = isJSX(response) ? await jsxToString.call(context, response) : response;
+async function renderResponse(context: any, response: unknown) {
+  const payload = isJSX(response)
+    ? await jsxToString.call(context, response as JSX.Element)
+    : response;
 
   // Post-process the payload with an optional response handler
   const responseHandler = context["responseHandler"];
