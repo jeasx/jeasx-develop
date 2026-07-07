@@ -17,8 +17,6 @@ export default function () {
       </p>
       <p>
         <a href="protected">Access forbidden area</a>
-        <br />
-        Login: demo / demo
       </p>
     </Layout>
   );

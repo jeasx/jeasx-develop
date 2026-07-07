@@ -20,18 +20,21 @@ export default function ({ request, reply }) {
     reply.status(401);
     return (
       <Layout title="Error 401" css="./index.css">
-        <section class="center access-denied">
-          <h1>Error 401</h1>
+        <section class="center">
+          <h1 class="access-denied">Error 401</h1>
           <p>You are not allowed to view the protected content.</p>
+          <p>
+            Please <a href="">reload page</a> and enter correct credentials (demo / demo).
+          </p>
         </section>
       </Layout>
     );
   } else {
     return (
       <Layout title="Access granted" css="./index.css">
-        <section class="center access-granted">
-          <h1>Access granted</h1>
-          <p>You are allowed to view the protecded content.</p>
+        <section class="center">
+          <h1 class="access-granted">Access granted</h1>
+          <p>You are allowed to view the protected content.</p>
         </section>
       </Layout>
     );
