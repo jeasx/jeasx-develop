@@ -1,0 +1,7 @@
+.access-granted {
+  background-color: green;
+}
+
+.access-denied {
+  background-color: red;
+}

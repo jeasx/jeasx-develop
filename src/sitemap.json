@@ -63,6 +63,7 @@
       { "path": "/context", "title": "'this' as context" },
       { "path": "/interceptor", "title": "Intercept JSX" },
       { "path": "/head", "title": "Helmet for Head" },
+      { "path": "/basic-auth", "title": "Authentication" },
       { "path": "/client-jsx", "title": "Client-Side JSX" }
     ]
   }
