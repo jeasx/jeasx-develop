@@ -8,6 +8,5 @@ To get started with this repository, just run the following commands:
 
 ```bash
 npm install
-npm run build
 npm run dev
 ```
