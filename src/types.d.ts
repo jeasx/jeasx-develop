@@ -1,8 +1,8 @@
+import "@fastify/cookie";
+import "@fastify/multipart";
 import { FastifyReply } from "fastify/types/reply";
 import { FastifyRequest } from "fastify/types/request";
-import serverless from "../serverless";
-
-type FastifyServer = typeof serverless;
+import "../serverless";
 
 type RouteProps = {
   request?: FastifyRequest;

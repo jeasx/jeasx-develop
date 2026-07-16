@@ -26,8 +26,11 @@ export default {
     plugins: [sveltePlugin({ compilerOptions: { generate: "client", css: "injected" } })],
   }),
 
-  /** @type {(fastify: import("fastify").FastifyInstance) => import("fastify").FastifyInstance} */
-  // FASTIFY_SERVER: (fastify) => fastify,
+  /** @type {() => import("@fastify/send").SendOptions} */
+  FASTIFY_SEND_OPTIONS: () => ({
+    immutable: !NODE_ENV_IS_DEVELOPMENT,
+    maxAge: NODE_ENV_IS_DEVELOPMENT ? 0 : "365d",
+  }),
 
   /** @type {() => import("fastify").FastifyServerOptions} */
   FASTIFY_SERVER_OPTIONS: () => ({
@@ -35,27 +38,24 @@ export default {
     bodyLimit: 2 * 1024 * 1024,
   }),
 
-  /** @type {() => import("@fastify/send").SendOptions} */
-  FASTIFY_SEND_OPTIONS: () => ({
-    immutable: !NODE_ENV_IS_DEVELOPMENT,
-    maxAge: NODE_ENV_IS_DEVELOPMENT ? 0 : "365d",
-  }),
-
-  /** @type {() => import("@fastify/cookie").FastifyCookieOptions} */
-  FASTIFY_COOKIE_OPTIONS: () => ({
-    parseOptions: {
-      path: "/",
-      httpOnly: true,
-      secure: "auto",
-      sameSite: "strict",
-    },
-  }),
-
-  /** @type {() => import("@fastify/formbody").FastifyFormbodyOptions} */
-  // FASTIFY_FORMBODY_OPTIONS: () => ({}),
-
-  /** @type {() => import("@fastify/multipart").FastifyMultipartAttachFieldsToBodyOptions} */
-  FASTIFY_MULTIPART_OPTIONS: () => ({
-    attachFieldsToBody: "keyValues",
-  }),
+  /** @type {(fastify: import("fastify").FastifyInstance) => import("fastify").FastifyInstance} */
+  FASTIFY_SERVER: (fastify) =>
+    fastify
+      .register(import("@fastify/formbody"))
+      // .addContentTypeParser(
+      //   "application/x-www-form-urlencoded",
+      //   { parseAs: "string" },
+      //   async (_request, body) => querystring.parse(body),
+      // ),
+      .register(import("@fastify/multipart"), {
+        attachFieldsToBody: "keyValues",
+      })
+      .register(import("@fastify/cookie"), {
+        parseOptions: {
+          path: "/",
+          httpOnly: true,
+          secure: "auto",
+          sameSite: "strict",
+        },
+      }),
 };
