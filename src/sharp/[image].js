@@ -22,7 +22,7 @@ export default async function ({ request, reply }) {
     ? "avif"
     : accept.includes("image/webp")
       ? "webp"
-      : "jpg";
+      : "jpeg";
 
   reply.type(`image/${format}`);
   reply.header("cache-control", "public, max-age=31536000, s-maxage=31536000, immutable");
