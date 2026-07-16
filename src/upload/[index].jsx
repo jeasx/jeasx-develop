@@ -13,7 +13,7 @@ export default async function () {
         userland with the help of the <a href="https://sharp.pixelplumbing.com">Sharp</a> image
         processor.
       </p>
-      <form action="./image" method="post" enctype="multipart/form-data" target="_blank">
+      <form action="./image" method="post" enctype="multipart/form-data">
         <label>
           Convert to format
           <select name="format">
