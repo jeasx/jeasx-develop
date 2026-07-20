@@ -9,7 +9,6 @@ export default async function ({ request, reply }) {
   const product = await (await fetch(`https://dummyjson.com/product/${id}`)).json();
 
   if (product.message) {
-    reply.status(404);
     return;
   }
 

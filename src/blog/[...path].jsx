@@ -7,8 +7,8 @@ import Layout from "../Layout";
 export default function ({ request, reply }) {
   const slug = request.path.slice(request.path.lastIndexOf("/") + 1);
   const blog = JSON.parse(request.cookies["posts"] || "[]").find((post) => post.slug === slug);
+
   if (!blog) {
-    reply.status(404);
     return;
   }
 
