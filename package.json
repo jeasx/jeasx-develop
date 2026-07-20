@@ -14,7 +14,6 @@
     "@cap.js/widget": "0.1.56",
     "@digicreon/mucss": "1.4.9",
     "@fastify/cookie": "11.1.2",
-    "@fastify/formbody": "8.0.2",
     "@fastify/multipart": "10.1.0",
     "@fastify/send": "4.1.0",
     "@lit-labs/motion": "1.1.0",
@@ -37,7 +36,7 @@
     "react-dom": "19.2.7",
     "rehype-prism-plus": "2.0.2",
     "sharp": "0.35.3",
-    "svelte": "5.56.5"
+    "svelte": "5.56.6"
   },
   "devDependencies": {
     "@types/node": "26.1.1",

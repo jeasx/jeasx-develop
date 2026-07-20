@@ -1,5 +1,6 @@
 import mdxPlugin from "@mdx-js/esbuild";
 import sveltePlugin from "esbuild-svelte";
+import querystring from "node:querystring";
 import rehypePrismPlus from "rehype-prism-plus";
 
 const NODE_ENV_IS_DEVELOPMENT = process.env.NODE_ENV === "development";
@@ -41,12 +42,6 @@ export default {
   /** @type {(fastify: import("fastify").FastifyInstance) => import("fastify").FastifyInstance} */
   FASTIFY_SERVER: (fastify) =>
     fastify
-      .register(import("@fastify/formbody"))
-      // .addContentTypeParser(
-      //   "application/x-www-form-urlencoded",
-      //   { parseAs: "string" },
-      //   async (_request, body) => querystring.parse(body),
-      // ),
       .register(import("@fastify/multipart"), {
         attachFieldsToBody: "keyValues",
       })
@@ -57,5 +52,10 @@ export default {
           secure: "auto",
           sameSite: "strict",
         },
-      }),
+      })
+      .addContentTypeParser(
+        "application/x-www-form-urlencoded",
+        { parseAs: "string" },
+        async (_request, body) => querystring.parse(body),
+      ),
 };
