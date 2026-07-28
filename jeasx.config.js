@@ -1,16 +1,9 @@
 import mdxPlugin from "@mdx-js/esbuild";
 import sveltePlugin from "esbuild-svelte";
-import { join } from "node:path";
 import querystring from "node:querystring";
 import rehypePrismPlus from "rehype-prism-plus";
 
 const NODE_ENV_IS_DEVELOPMENT = process.env.NODE_ENV === "development";
-
-process.env.BUILD_TIME ??= (
-  await import(`file://${join(process.cwd(), "dist", "[--build--].js")}`)
-).default;
-
-const CACHE_BUSTER = `.${process.env.BUILD_TIME}.`;
 
 export default {
   /** @type {() => import("esbuild").BuildOptions} */
@@ -44,7 +37,7 @@ export default {
   FASTIFY_SERVER_OPTIONS: () => ({
     logger: { level: NODE_ENV_IS_DEVELOPMENT ? "error" : "info" },
     bodyLimit: 2 * 1024 * 1024,
-    rewriteUrl: (req) => req.url.replace(CACHE_BUSTER, "."),
+    rewriteUrl: (req) => req.url.replace(/~[a-z0-9]*\./, "."),
   }),
 
   /** @type {(fastify: import("fastify").FastifyInstance) => import("fastify").FastifyInstance} */

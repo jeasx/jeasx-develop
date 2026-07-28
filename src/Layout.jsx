@@ -1,5 +1,7 @@
 import GithubIcon from "./github.svg";
 
+const BUILD_TIME = process.env.BUILD_TIME;
+
 /**
  * @this {import("./types").ThisContext}
  */
@@ -79,9 +81,7 @@ export default function Layout({
 }
 
 /** @param {string} path  */
-function addCacheBuster(path) {
+function addCacheBuster(path, seperator = "~") {
   const index = path.lastIndexOf(".");
-  return index !== -1
-    ? path.slice(0, index + 1) + process.env.BUILD_TIME + path.slice(index)
-    : path;
+  return index !== -1 ? path.slice(0, index) + seperator + BUILD_TIME + path.slice(index) : path;
 }
