@@ -10,7 +10,7 @@
   ],
   "functions": {
     "api/vercel.js": {
-      "includeFiles": "**/*"
+      "includeFiles": "./**/*"
     }
   },
   "outputDirectory": "api/public"

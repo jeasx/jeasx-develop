@@ -19,4 +19,4 @@ pnpm-debug.log*
 # Vercel-specific files
 .vercel
 
-.env.local
+.BUILD_TIME
