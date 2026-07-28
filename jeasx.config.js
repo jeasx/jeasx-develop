@@ -10,6 +10,8 @@ process.env.BUILD_TIME ??= (
   await import(`file://${join(process.cwd(), "dist", "[--build--].js")}`)
 ).default;
 
+const CACHE_BUSTER = `.${process.env.BUILD_TIME}.`;
+
 export default {
   /** @type {() => import("esbuild").BuildOptions} */
   ESBUILD_SERVER_OPTIONS: () => ({
@@ -42,7 +44,7 @@ export default {
   FASTIFY_SERVER_OPTIONS: () => ({
     logger: { level: NODE_ENV_IS_DEVELOPMENT ? "error" : "info" },
     bodyLimit: 2 * 1024 * 1024,
-    rewriteUrl: (req) => req.url.replace(`.${process.env.BUILD_TIME}.`, "."),
+    rewriteUrl: (req) => req.url.replace(CACHE_BUSTER, "."),
   }),
 
   /** @type {(fastify: import("fastify").FastifyInstance) => import("fastify").FastifyInstance} */
