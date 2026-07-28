@@ -1,9 +1,14 @@
 import mdxPlugin from "@mdx-js/esbuild";
 import sveltePlugin from "esbuild-svelte";
+import fs from "node:fs";
 import querystring from "node:querystring";
 import rehypePrismPlus from "rehype-prism-plus";
 
 const NODE_ENV_IS_DEVELOPMENT = process.env.NODE_ENV === "development";
+
+if (process.env.BUILD_TIME) {
+  fs.writeFileSync(".env.local", `BUILD_TIME=${process.env.BUILD_TIME}`);
+}
 
 export default {
   /** @type {() => import("esbuild").BuildOptions} */
@@ -37,6 +42,7 @@ export default {
   FASTIFY_SERVER_OPTIONS: () => ({
     logger: { level: NODE_ENV_IS_DEVELOPMENT ? "error" : "info" },
     bodyLimit: 2 * 1024 * 1024,
+    rewriteUrl: (req) => req.url.replace(`.${process.env.BUILD_TIME}.`, "."),
   }),
 
   /** @type {(fastify: import("fastify").FastifyInstance) => import("fastify").FastifyInstance} */

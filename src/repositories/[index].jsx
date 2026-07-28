@@ -14,7 +14,9 @@ export default async function ({ request }) {
         )}+in:name&sort=updated`,
       )
     ).json()
-  ).items.filter(({ full_name }) => full_name.includes(q));
+  ).items.filter(({ full_name }) =>
+    q === "jeasx" ? full_name.startsWith(q) : full_name.includes(q),
+  );
 
   return (
     <Layout title="Search GitHub Repositories" description="A list of repositiories at GitHub.">

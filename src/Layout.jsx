@@ -22,14 +22,14 @@ export default function Layout({
           <meta name="description" content={description} />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           {robots && <meta name="robots" content={robots} />}
-          <link rel="stylesheet" href={`/index.css?${process.env.BUILD_TIME}`} />
-          {css && <link rel="stylesheet" href={`${css}?${process.env.BUILD_TIME}`} />}
+          <link rel="stylesheet" href={addCacheBuster("/index.css")} />
+          {css && <link rel="stylesheet" href={addCacheBuster(css)} />}
           <link
             rel="canonical"
             href={`https://expo.jeasx.dev${path.endsWith("/") ? path.slice(0, -1) : path}`}
           ></link>
-          <script type="module" src={`/index.js?${process.env.BUILD_TIME}`}></script>
-          {script && <script type="module" src={`${script}?${process.env.BUILD_TIME}`}></script>}
+          <script type="module" src={addCacheBuster("/index.js")}></script>
+          {script && <script type="module" src={addCacheBuster(script)}></script>}
           <title>{title} &raquo; Jeasx - JSX with Ease</title>
         </head>
         <body>
@@ -76,4 +76,12 @@ export default function Layout({
       </html>
     </>
   );
+}
+
+/** @param {string} path  */
+function addCacheBuster(path) {
+  const index = path.lastIndexOf(".");
+  return index !== -1
+    ? path.slice(0, index + 1) + process.env.BUILD_TIME + path.slice(index)
+    : path;
 }
