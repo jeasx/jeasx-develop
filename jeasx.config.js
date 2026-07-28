@@ -1,16 +1,14 @@
 import mdxPlugin from "@mdx-js/esbuild";
 import sveltePlugin from "esbuild-svelte";
-import fs from "node:fs";
+import { join } from "node:path";
 import querystring from "node:querystring";
 import rehypePrismPlus from "rehype-prism-plus";
 
 const NODE_ENV_IS_DEVELOPMENT = process.env.NODE_ENV === "development";
 
-if (process.env.BUILD_TIME) {
-  fs.writeFileSync(".BUILD_TIME", process.env.BUILD_TIME);
-} else {
-  process.env.BUILD_TIME = fs.readFileSync(".BUILD_TIME", "utf8");
-}
+process.env.BUILD_TIME ??= (
+  await import(`file://${join(process.cwd(), "dist", "[--build--].js")}`)
+).default;
 
 export default {
   /** @type {() => import("esbuild").BuildOptions} */
