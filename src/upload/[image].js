@@ -20,8 +20,5 @@ export default async function ({ request, reply }) {
       .rotate(rotate)
       .toFormat(format, { quality: 70 })
       .toBuffer();
-  } else {
-    reply.status(404);
-    return;
   }
 }

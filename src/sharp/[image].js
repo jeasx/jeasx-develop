@@ -9,7 +9,6 @@ export default async function ({ request, reply }) {
   const src = request.query["src"];
 
   if (!ALLOWED_IMAGE_SRC.find((url) => src.startsWith(url))) {
-    reply.status(404);
     return;
   }
 
