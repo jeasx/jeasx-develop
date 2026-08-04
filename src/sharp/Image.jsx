@@ -17,8 +17,8 @@ export default function Image({
 }
 
 export function imagePath({ src, width, height, position = "", immutable = false }) {
-  const version = !immutable ? `&version=${process.env.VERSION}` : "";
+  const revision = !immutable ? `&revision=${process.env.BUILD_ID}` : "";
   return `/sharp/image?src=${src}&width=${width || ""}&height=${
     height || ""
-  }&position=${position || ""}${version}`;
+  }&position=${position || ""}${revision}`;
 }

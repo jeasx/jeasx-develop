@@ -78,10 +78,10 @@ export default function Layout({
   );
 }
 
-const VERSION = process.env.VERSION;
+const BUILD_ID = process.env.BUILD_ID;
 
 /** @param {string} path  */
 function addCacheBuster(path, seperator = "~") {
   const index = path.lastIndexOf(".");
-  return index !== -1 ? path.slice(0, index) + seperator + VERSION + path.slice(index) : path;
+  return index !== -1 ? path.slice(0, index) + seperator + BUILD_ID + path.slice(index) : path;
 }
