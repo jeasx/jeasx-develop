@@ -26,6 +26,7 @@
       { "path": "/htmx", "title": "Simple form" },
       { "path": "/nominatim", "title": "Active search" },
       { "path": "/fragments", "title": "Template Fragments" },
+      { "path": "/hx-live", "title": "Reactive Scripting" },
       { "path": "/fixi", "title": "Fixi.js" }
     ]
   },
