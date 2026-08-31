@@ -19,7 +19,7 @@
     "@lit-labs/motion": "1.1.0",
     "@mdx-js/esbuild": "3.1.1",
     "@preact/signals": "2.11.1",
-    "alpinejs": "3.16.3",
+    "alpinejs": "3.17.0",
     "cheerio": "1.2.0",
     "esbuild": "0.28.2",
     "esbuild-svelte": "0.9.5",
