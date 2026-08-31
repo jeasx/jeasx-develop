@@ -50,7 +50,7 @@ export default async function () {
             name="category"
             x-on:click="load('programming')"
           >
-            Tell me <span x-text="counter === 1 ? `a joke` : `${counter} jokes`" />
+            <span x-text="counter === 1 ? `Tell me a joke` : `Tell me ${counter} jokes`" />
           </button>
         </div>
         <div class="grid">
@@ -60,7 +60,7 @@ export default async function () {
             name="category"
             x-on:click="load('general')"
           >
-            Tell me <span x-text="counter === 1 ? `a pun` : `${counter} puns`" />
+            <span x-text="counter === 1 ? `Tell me a pun` : `Tell me ${counter} puns`" />
           </button>
         </div>
         <template x-if="jokes.length">
