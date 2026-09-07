@@ -19,7 +19,7 @@
     "@lit-labs/motion": "1.1.0",
     "@mdx-js/esbuild": "3.1.1",
     "@preact/signals": "2.11.2",
-    "alpinejs": "3.17.1",
+    "alpinejs": "3.17.2",
     "cheerio": "1.2.0",
     "esbuild": "0.28.2",
     "esbuild-svelte": "0.9.5",
@@ -39,7 +39,7 @@
     "svelte": "5.57.0"
   },
   "devDependencies": {
-    "@types/node": "26.4.1",
+    "@types/node": "26.5.0",
     "@types/react": "19.2.18",
     "@types/react-dom": "19.2.7"
   },
