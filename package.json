@@ -29,7 +29,7 @@
     "jsx-async-runtime": "2.2.1",
     "lit": "3.3.3",
     "preact": "11.0.0",
-    "preact-render-to-string": "6.7.0",
+    "preact-render-to-string": "6.8.0",
     "prettier": "3.9.9",
     "prismjs": "1.30.0",
     "react": "19.3.0",
