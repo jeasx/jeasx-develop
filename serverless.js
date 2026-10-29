@@ -1,6 +1,6 @@
 import fastifySend from "@fastify/send";
 import fastify from "fastify";
-import { jsxToString } from "jsx-async-runtime";
+import { isJsxNode, jsxToStream, jsxToString } from "jsx-async-runtime";
 import { stat } from "node:fs/promises";
 import { join } from "node:path";
 import { Readable } from "node:stream";
@@ -23,7 +23,7 @@ var serverless_default = FASTIFY_SERVER(
     let payload;
     try {
       payload = await handler(request, reply);
-      if (reply.getHeader("content-type") === void 0 && (typeof payload === "string" || Buffer.isBuffer(payload))) {
+      if (reply.getHeader("content-type") === void 0 && (typeof payload === "string" || payload instanceof ReadableStream || Buffer.isBuffer(payload))) {
         reply.type("text/html; charset=utf-8");
       }
       return payload;
@@ -97,7 +97,7 @@ async function handler(request, reply) {
           reply.status(404);
         }
         break;
-      } else if (typeof response === "string" || response instanceof Response || response instanceof Readable || response instanceof ReadableStream || Buffer.isBuffer(response) || isJSX(response)) {
+      } else if (typeof response === "string" || response instanceof Response || response instanceof Readable || response instanceof ReadableStream || Buffer.isBuffer(response) || isJsxNode(response)) {
         break;
       } else if (typeof response === "object" && route.endsWith("/[...guard]")) {
         Object.assign(props, response);
@@ -145,11 +145,15 @@ function* generateRoutes(path) {
     yield `${segments[i]}/[404]`;
   }
 }
-function isJSX(obj) {
-  return !!obj && typeof obj === "object" && "type" in obj && "props" in obj;
-}
 async function renderResponse(context, response) {
-  const payload = isJSX(response) ? await jsxToString.call(context, response) : response;
+  let payload = response;
+  if (isJsxNode(response)) {
+    if (context["jsxStream"]) {
+      payload = await jsxToStream.call(context, response);
+    } else {
+      payload = await jsxToString.call(context, response);
+    }
+  }
   const responseHandler = context["responseHandler"];
   return typeof responseHandler === "function" ? await responseHandler.call(context, payload) : payload;
 }

@@ -5,7 +5,7 @@ import fastify, {
   FastifyRequest,
   FastifyServerOptions,
 } from "fastify";
-import { jsxToString } from "jsx-async-runtime";
+import { isJsxNode, jsxToStream, jsxToString } from "jsx-async-runtime";
 import { stat } from "node:fs/promises";
 import { join } from "node:path";
 import { Readable } from "node:stream";
@@ -68,7 +68,9 @@ export default FASTIFY_SERVER(
         payload = await handler(request, reply);
         if (
           reply.getHeader("content-type") === undefined &&
-          (typeof payload === "string" || Buffer.isBuffer(payload))
+          (typeof payload === "string" ||
+            payload instanceof ReadableStream ||
+            Buffer.isBuffer(payload))
         ) {
           reply.type("text/html; charset=utf-8");
         }
@@ -188,7 +190,7 @@ async function handler(request: FastifyRequest, reply: FastifyReply) {
         response instanceof Readable ||
         response instanceof ReadableStream ||
         Buffer.isBuffer(response) ||
-        isJSX(response)
+        isJsxNode(response)
       ) {
         break;
       } else if (typeof response === "object" && route.endsWith("/[...guard]")) {
@@ -267,19 +269,17 @@ function* generateRoutes(path: string): Generator<string | typeof STATIC_FILE_RO
 }
 
 /**
- * Determines if a given object is a JSX element.
- */
-function isJSX(obj: unknown): boolean {
-  return !!obj && typeof obj === "object" && "type" in obj && "props" in obj;
-}
-
-/**
  * Renders JSX to string and applies optional response handler.
  */
 async function renderResponse(context: any, response: unknown) {
-  const payload = isJSX(response)
-    ? await jsxToString.call(context, response as JSX.Element)
-    : response;
+  let payload = response;
+  if (isJsxNode(response)) {
+    if (context["jsxStream"]) {
+      payload = await jsxToStream.call(context, response as JSX.Element);
+    } else {
+      payload = await jsxToString.call(context, response as JSX.Element);
+    }
+  }
 
   // Post-process the payload with an optional response handler
   const responseHandler = context["responseHandler"];

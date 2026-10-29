@@ -1,3 +1,4 @@
+import { html } from "jsx-async-runtime";
 import GithubIcon from "./github.svg";
 
 /**
@@ -14,7 +15,7 @@ export default function Layout({
   const path = this.request.path;
   return (
     <>
-      {{ html: "<!DOCTYPE html>" }}
+      {html("<!DOCTYPE html>")}
       <html lang="en" data-theme="dark">
         <head>
           <base href={path.endsWith("/") ? path : `${path}/`} />

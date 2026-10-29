@@ -55,12 +55,24 @@
     ]
   },
   {
+    "title": "Streaming and Web Standards",
+    "description": "Jeasx speaks the language of the web platform — return a Response or ReadableStream to stream HTML, push live updates or proxy APIs.",
+    "links": [
+      { "path": "/streaming", "title": "Streaming HTML" },
+      { "path": "/async-iterable", "title": "Async iterables" },
+      { "path": "/readable-stream", "title": "ReadableStreams" },
+      { "path": "/response", "title": "Response objects" },
+      { "path": "/sse", "title": "Server-Sent Events" }
+    ]
+  },
+  {
     "title": "Advanced features",
     "description": "Jeasx offers advanced features that delight web developers.",
     "links": [
       { "path": "/error-handler", "title": "Catch errors" },
       { "path": "/prettier", "title": "Prettify HTML" },
       { "path": "/cheerio", "title": "Extract styles" },
+      { "path": "/parallel", "title": "Parallel loading" },
       { "path": "/context", "title": "'this' as context" },
       { "path": "/interceptor", "title": "Intercept JSX" },
       { "path": "/head", "title": "Helmet for Head" },

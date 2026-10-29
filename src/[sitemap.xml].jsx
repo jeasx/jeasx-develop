@@ -1,3 +1,4 @@
+import { html } from "jsx-async-runtime";
 import sitemap from "./sitemap.json";
 
 /**
@@ -7,7 +8,7 @@ export default function ({ reply }) {
   reply.type("text/xml; charset=utf-8");
   return (
     <>
-      {{ html: /* xml */ `<?xml version="1.0" encoding="UTF-8"?>` }}
+      {html(/* xml */ `<?xml version="1.0" encoding="UTF-8"?>`)}
       <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
         {sitemap.map(({ links }) =>
           links

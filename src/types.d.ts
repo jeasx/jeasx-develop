@@ -9,4 +9,9 @@ type RouteProps = {
   reply?: FastifyReply;
 };
 
-type ThisContext = RouteProps & {};
+type ThisContext = RouteProps & {
+  jsxStream?: boolean;
+  jsxToString?: (this: ThisContext, jsxElement: JSX.Element) => string | Promise<string>;
+  responseHandler?: (this: ThisContext, payload: any) => unknown;
+  errorHandler?: (this: ThisContext, error: unknown) => unknown;
+};

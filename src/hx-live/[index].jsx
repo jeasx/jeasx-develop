@@ -1,3 +1,4 @@
+import { html } from "jsx-async-runtime";
 import Layout from "../Layout";
 
 export default async function () {
@@ -14,9 +15,9 @@ export default async function () {
       </p>
       <form data-counter="3" data-jokes="[]">
         <script>
-          {{
-            html: `async function load(category, count) {return await (await fetch(\`/jokes/api/\${category}?amount=\${count}\`)).json();}`,
-          }}
+          {html(
+            /*js*/ `async function load(category, count) {return await (await fetch(\`/jokes/api/\${category}?amount=\${count}\`)).json();}`,
+          )}
         </script>
         <div class="grid">
           <button

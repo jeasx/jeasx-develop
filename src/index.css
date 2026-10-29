@@ -17,3 +17,9 @@ h2 {
 summary {
   color: var(--mu-secondary) !important;
 }
+
+/* Show a loading indicator until streamed content arrives after it.
+   Don't use :last-child here: browsers don't match it while the parent is still being parsed. */
+.loader > [aria-busy="true"]:has(~ *) {
+  display: none;
+}
