@@ -1,4 +1,4 @@
-import { jsxToString } from "jsx-async-runtime";
+import { isJsxNode, jsxToString } from "jsx-async-runtime";
 import Layout from "../Layout";
 
 /**
@@ -37,14 +37,15 @@ export default function ({ request }) {
 
 function HouseKeeper({ children }) {
   this.jsxToString = (jsxElement) => {
-    // Rewrite className to class
-    if (jsxElement?.props?.className) {
-      jsxElement.props.class = jsxElement.props.className;
-      delete jsxElement.props.className;
-    }
-    // Delete all inline styles
-    if (jsxElement?.props?.style) {
-      delete jsxElement.props.style;
+    // The override also receives text, arrays etc., so check for elements first.
+    if (isJsxNode(jsxElement) && jsxElement.props) {
+      // Rewrite className to class and delete all inline styles
+      // on a copy, so the original element stays untouched.
+      const { className, style, ...props } = jsxElement.props;
+      if (className !== undefined || style !== undefined) {
+        props.class ??= className;
+        return jsxToString.call(this, { ...jsxElement, props });
+      }
     }
     return jsxToString.call(this, jsxElement);
   };
@@ -53,7 +54,7 @@ function HouseKeeper({ children }) {
 
 function ThirdPartyComponent() {
   return (
-    <div className={{ third: true, party: false }} style="border: 4px dashed var(--mu-accent);">
+    <div className="third-party" style="border: 4px dashed var(--mu-accent);">
       {["red", "green", "blue", "orange"].map((color) => (
         <>
           <span style={`background-color: ${color}`}>{color}</span>

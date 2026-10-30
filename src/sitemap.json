@@ -69,6 +69,9 @@
     "title": "Advanced features",
     "description": "Jeasx offers advanced features that delight web developers.",
     "links": [
+      { "path": "/render-props", "title": "Render props" },
+      { "path": "/values", "title": "Values in JSX" },
+
       { "path": "/error-handler", "title": "Catch errors" },
       { "path": "/prettier", "title": "Prettify HTML" },
       { "path": "/cheerio", "title": "Extract styles" },
