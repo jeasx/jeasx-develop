@@ -18,13 +18,13 @@ export default function extractStyles(html) {
     for (const declaration of $(element)
       .attr("style")
       .split(";")
-      .map((item) =>
-        item
-          .trim()
-          .split(":", 2)
-          .map((item) => item.trim())
-          .join(":"),
-      )) {
+      .map((item) => {
+        // Split at the first colon only, so values like url(https://…) stay intact.
+        const index = item.indexOf(":");
+        return index === -1
+          ? item.trim()
+          : `${item.slice(0, index).trim()}:${item.slice(index + 1).trim()}`;
+      })) {
       if (!declaration) {
         continue;
       }
