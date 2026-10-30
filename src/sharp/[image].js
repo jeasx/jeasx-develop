@@ -4,7 +4,10 @@ import sharp from "sharp";
 
 const LOCAL_IMAGE_DIR = join(process.cwd(), "public", "images");
 const ALLOWED_REMOTE_HOSTS = ["cdn.dummyjson.com"];
-const MAX_DIMENSION = 4000;
+const MAX_DIMENSION = 2000;
+// Converting is expensive, so keep recent results and limit parallel work.
+const MAX_CACHE_ENTRIES = 100;
+const MAX_PARALLEL_CONVERSIONS = 2;
 const POSITIONS = new Set([
   ...Object.keys(sharp.strategy),
   ...Object.keys(sharp.gravity),
@@ -24,11 +27,6 @@ const POSITIONS = new Set([
 export default async function ({ request, reply }) {
   const query = /** @type {Record<string, string | undefined>} */ (request.query);
 
-  const input = await loadImage(query["src"]);
-  if (!input) {
-    return;
-  }
-
   const position = query["position"] || undefined;
   if (position && !POSITIONS.has(position)) {
     return;
@@ -41,14 +39,21 @@ export default async function ({ request, reply }) {
       ? "webp"
       : "jpeg";
 
-  const image = await sharp(input)
-    .resize({
-      width: toDimension(query["width"]),
-      height: toDimension(query["height"]),
-      position,
-    })
-    .toFormat(format, { quality: 70 })
-    .toBuffer();
+  const width = toDimension(query["width"]);
+  const height = toDimension(query["height"]);
+  const key = JSON.stringify([query["src"], width, height, position, format]);
+
+  let image = cacheGet(key);
+  if (!image) {
+    const input = await loadImage(query["src"]);
+    if (!input) {
+      return;
+    }
+    image = await limit(() =>
+      sharp(input).resize({ width, height, position }).toFormat(format, { quality: 70 }).toBuffer(),
+    );
+    cacheSet(key, image);
+  }
 
   reply.type(`image/${format}`);
   // The format depends on the Accept header, so caches must store one copy per value.
@@ -93,6 +98,61 @@ async function loadImage(src) {
 
   const response = await fetch(url);
   return response.ok ? await response.arrayBuffer() : undefined;
+}
+
+/** @type {Map<string, Buffer>} Least recently used entries come first. */
+const cache = new Map();
+
+/** @param {string} key */
+function cacheGet(key) {
+  const value = cache.get(key);
+  if (value) {
+    // Move to the end, so it is evicted last.
+    cache.delete(key);
+    cache.set(key, value);
+  }
+  return value;
+}
+
+/**
+ * @param {string} key
+ * @param {Buffer} value
+ */
+function cacheSet(key, value) {
+  cache.set(key, value);
+  if (cache.size > MAX_CACHE_ENTRIES) {
+    cache.delete(cache.keys().next().value);
+  }
+}
+
+let running = 0;
+/** @type {(() => void)[]} */
+const waiting = [];
+
+/**
+ * Runs the task once fewer than MAX_PARALLEL_CONVERSIONS tasks are running.
+ *
+ * @template T
+ * @param {() => Promise<T>} task
+ * @returns {Promise<T>}
+ */
+async function limit(task) {
+  if (running < MAX_PARALLEL_CONVERSIONS) {
+    running++;
+  } else {
+    // Wait until a finished task hands over its slot.
+    await new Promise((resolve) => waiting.push(() => resolve(undefined)));
+  }
+  try {
+    return await task();
+  } finally {
+    const next = waiting.shift();
+    if (next) {
+      next();
+    } else {
+      running--;
+    }
+  }
 }
 
 /**
