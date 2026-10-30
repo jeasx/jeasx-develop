@@ -16,7 +16,7 @@ export default function ({ request, reply }) {
   // Check and send authorization headers.
   const authorization = request.headers["authorization"];
   if (authorization !== BASIC_AUTH) {
-    reply.header("WWW-Authenticate", 'Basic realm="Restricted Area');
+    reply.header("WWW-Authenticate", 'Basic realm="Restricted Area"');
     reply.status(401);
     return (
       <Layout title="Error 401" css="./index.css">

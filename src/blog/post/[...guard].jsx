@@ -8,7 +8,7 @@ const BASIC_AUTH = `Basic ${Buffer.from("demo:demo").toString("base64")}`;
 export default function ({ request, reply }) {
   const authorization = request.headers["authorization"];
   if (authorization !== BASIC_AUTH) {
-    reply.header("WWW-Authenticate", 'Basic realm="Restricted Area');
+    reply.header("WWW-Authenticate", 'Basic realm="Restricted Area"');
     reply.status(401);
     return (
       <Layout title="Error 401">
