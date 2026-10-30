@@ -1,7 +1,5 @@
-/**
- * @param {import("../types").RouteProps} props
- */
-export default function ({ request }) {
-  // Response.redirect requires an absolute URL.
-  return Response.redirect(`${request.protocol}://${request.host}/response`, 303);
+export default function () {
+  // Response.redirect() requires an absolute URL, but building one from the
+  // Host header lets clients pick the target. A relative Location is enough.
+  return new Response(null, { status: 303, headers: { location: "/response" } });
 }
