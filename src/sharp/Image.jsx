@@ -17,8 +17,14 @@ export default function Image({
 }
 
 export function imagePath({ src, width, height, position = "", immutable = false }) {
-  const revision = !immutable ? `&revision=${process.env.BUILD_ID}` : "";
-  return `/sharp/image?src=${src}&width=${width || ""}&height=${
-    height || ""
-  }&position=${position || ""}${revision}`;
+  const params = new URLSearchParams({
+    src,
+    width: width || "",
+    height: height || "",
+    position: position || "",
+  });
+  if (!immutable) {
+    params.set("revision", process.env.BUILD_ID);
+  }
+  return `/sharp/image?${params}`;
 }
