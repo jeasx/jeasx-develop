@@ -17,8 +17,8 @@ if (!globalThis.cap) {
         },
         deleteExpired: async () => {
           const now = Date.now();
-          cache.challenges.entries().forEach(([key, expires]) => {
-            if (expires < now) {
+          cache.challenges.entries().forEach(([key, data]) => {
+            if (data.expires < now) {
               cache.challenges.delete(key);
             }
           });
