@@ -37,9 +37,11 @@ function Subcomponent() {
       </div>
       <hr />
       <div
-        style={{
-          "background-color": this.theme === "dark" ? "var(--mu-secondary)" : "var(--mu-primary)",
-        }}
+        style={
+          this.theme === "dark"
+            ? "background-color: var(--mu-secondary)"
+            : "background-color: var(--mu-primary)"
+        }
       >
         <Subsubcomponent />
       </div>
@@ -49,12 +51,7 @@ function Subcomponent() {
 
 function Subsubcomponent() {
   return (
-    <div
-      style={{
-        color: this.theme === "dark" ? "white" : "black",
-        "text-align": "center",
-      }}
-    >
+    <div style={`text-align: center; ${this.theme === "dark" ? "color:white" : "color:black"}`}>
       {this.theme}
     </div>
   );

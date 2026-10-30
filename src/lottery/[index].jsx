@@ -21,11 +21,7 @@ export default function ({ number, delta, numbers, submit }) {
           <div class={styles.grid}>
             {Array.from({ length: 49 }, (_, index) => (
               <button
-                class={{
-                  [styles.box]: true,
-                  [styles.checked]: numbers.includes(index + 1),
-                  [styles.last]: number === index + 1,
-                }}
+                class={`${styles.box}${numbers.includes(index + 1) ? " " + styles.checked : ""}${number === index + 1 ? " " + styles.last : ""}`}
                 type="submit"
                 name="number"
                 value={index + 1}
@@ -45,7 +41,7 @@ export default function ({ number, delta, numbers, submit }) {
             {submit && (
               <p>
                 {Array(6)
-                  .fill()
+                  .fill(0)
                   .map(() => (Math.random() > 0.8 ? "🎉" : "❌"))
                   .join(" ")}
               </p>

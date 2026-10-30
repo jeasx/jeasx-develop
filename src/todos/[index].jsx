@@ -15,10 +15,7 @@ export default function ({ todos, status, autofocus }) {
             .map((todo) => (
               <li class={todo.status}>
                 <button
-                  class={{
-                    toggle: true,
-                    checked: todo.status === "completed",
-                  }}
+                  class={`toggle${todo.status === "completed" ? " checked" : ""}`}
                   name="toogleTodo"
                   value={todos.indexOf(todo)}
                 >
@@ -34,13 +31,13 @@ export default function ({ todos, status, autofocus }) {
       </form>
       <ul class="filters">
         <li>
-          <a href="" class={{ selected: !status }}>
+          <a href="" class={!status ? "selected" : ""}>
             all
           </a>
         </li>
         {["active", "completed"].map((value) => (
           <li>
-            <a href={`?status=${value}`} class={{ selected: status === value }}>
+            <a href={`?status=${value}`} class={status === value ? "selected" : ""}>
               {value}
             </a>
           </li>
