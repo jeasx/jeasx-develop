@@ -33,7 +33,7 @@ function unifyHead(jsxElements) {
     const jsxElement = jsxElements[i];
     switch (jsxElement?.["tag"]) {
       case "title":
-        if (lastIndex["title"]) {
+        if (lastIndex["title"] !== undefined) {
           delete jsxElements[lastIndex["title"]];
         }
         lastIndex["title"] = i;
@@ -44,7 +44,7 @@ function unifyHead(jsxElements) {
           case "keywords":
           case "description":
             const name = jsxElement["props"]["name"];
-            if (lastIndex[name]) {
+            if (lastIndex[name] !== undefined) {
               delete jsxElements[lastIndex[name]];
             }
             lastIndex[name] = i;
