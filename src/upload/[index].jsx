@@ -43,7 +43,7 @@ export default async function () {
         </label>
         <label>
           Choose a picture (jpg only)
-          <input type="file" name="upload" accept="jpg" required />
+          <input type="file" name="upload" accept=".jpg,.jpeg,image/jpeg" required />
         </label>
         <button class="btn btn-primary" type="submit">
           Submit

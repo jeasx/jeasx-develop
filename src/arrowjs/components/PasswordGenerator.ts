@@ -24,9 +24,11 @@ function generate(
   if (symbols) pool += CHARS.symbols;
   if (!pool) pool = CHARS.lower;
 
+  // Use a cryptographically secure source, Math.random() is predictable.
+  const random = crypto.getRandomValues(new Uint32Array(length));
   let result = "";
   for (let i = 0; i < length; i++) {
-    result += pool[Math.floor(Math.random() * pool.length)];
+    result += pool[random[i] % pool.length];
   }
   return result;
 }
@@ -87,7 +89,7 @@ export const PasswordGenerator = component(() => {
     regenerate();
   };
 
-  return html /*html*/ `<main class="gen">
+  return html /*html*/ `<div class="gen">
     <section class="gen-display">
       <code class="gen-password"
         >${() =>
@@ -117,7 +119,14 @@ export const PasswordGenerator = component(() => {
     <section class="gen-options">
       <label class="gen-length">
         <span>Length: <strong>${() => state.length}</strong></span>
-        <input type="range" min="4" max="64" class="gen-range" @input="${handleLengthChange}" />
+        <input
+          type="range"
+          min="4"
+          max="64"
+          value="${() => state.length}"
+          class="gen-range"
+          @input="${handleLengthChange}"
+        />
       </label>
       <div class="gen-toggles">
         <label class="gen-sw">
@@ -170,5 +179,5 @@ export const PasswordGenerator = component(() => {
         </label>
       </div>
     </section>
-  </main>`;
+  </div>`;
 });

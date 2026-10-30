@@ -12,11 +12,13 @@ export default async function ({ request }) {
   return (
     <table>
       <thead>
-        <td>Country</td>
-        <td>Postcode</td>
-        <td>City</td>
-        <td>Road</td>
-        <td>Type</td>
+        <tr>
+          <th>Country</th>
+          <th>Postcode</th>
+          <th>City</th>
+          <th>Road</th>
+          <th>Type</th>
+        </tr>
       </thead>
       <tbody>
         {json.map(({ addresstype, address }) => (

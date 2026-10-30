@@ -18,7 +18,7 @@ export default function () {
         <Input
           label="If you want to continue an already started damage report:"
           name="$hash"
-          placeholder="ID-XVYZ9SH"
+          placeholder="ID-1A2B3C4D"
         />
         <Submit label="Start damage report" />
       </Form>

@@ -60,7 +60,7 @@ export const PomodoroTimer = component(() => {
     state.remaining = mode === "work" ? WORK_SECONDS : BREAK_SECONDS;
   };
 
-  return html /*html*/ `<main class="timer" data-mode="${() => state.mode}">
+  return html /*html*/ `<div class="timer" data-mode="${() => state.mode}">
     <nav class="timer-tabs">
       <button
         class="${() => `timer-tab${state.mode === "work" ? " timer-tab--on" : ""}`}"
@@ -111,5 +111,5 @@ export const PomodoroTimer = component(() => {
     <p class="timer-sessions">
       ${() => state.sessions} ${() => (state.sessions === 1 ? "session" : "sessions")} completed
     </p>
-  </main>`;
+  </div>`;
 });

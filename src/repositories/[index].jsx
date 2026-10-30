@@ -30,15 +30,15 @@ export default async function ({ request }) {
 }
 
 async function Repositories({ search }) {
-  const repositories = (
-    await (
-      await fetch(
-        `https://api.github.com/search/repositories?q=${encodeURIComponent(
-          search,
-        )}+in:name&sort=updated`,
-      )
-    ).json()
-  ).items.filter(({ full_name }) =>
+  const response = await fetch(
+    `https://api.github.com/search/repositories?q=${encodeURIComponent(search)}+in:name&sort=updated`,
+  );
+  const { items } = await response.json();
+  if (!response.ok || !Array.isArray(items)) {
+    // E.g. GitHub's rate limit for unauthenticated requests was hit.
+    return <p>GitHub couldn't be reached right now. Please try again later.</p>;
+  }
+  const repositories = items.filter(({ full_name }) =>
     search === "jeasx" ? full_name.startsWith(search) : full_name.includes(search),
   );
   return (

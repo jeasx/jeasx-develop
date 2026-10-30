@@ -23,12 +23,12 @@ export default function validator(path, form) {
 
   if (
     form?.["phone"] &&
-    !/^(\(?([\d \-)–+(]+\/?){6,}\)?([ .\-–/]?)([\d]+))$/im.test(form?.["phone"])
+    !/^(\(?([\d \-)–+(]+\/?){6,}\)?([ .\-–/]?)([\d]+))$/.test(form?.["phone"])
   ) {
     errors["phone"] = "Please enter a valid phone number.";
   }
 
-  if (form?.["zip"] && !/^\d{5}$/im.test(form?.["zip"])) {
+  if (form?.["zip"] && !/^\d{5}$/.test(form?.["zip"])) {
     errors["zip"] = "Please enter a valid zip code.";
   }
 

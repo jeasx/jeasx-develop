@@ -18,18 +18,18 @@ export default function ({ request, reply }) {
       <article>
         <header>
           <time>
-            {new Date(blog.date).toLocaleDateString("en-EN", {
+            {new Date(blog.date).toLocaleDateString("en-US", {
               day: "numeric",
               month: "long",
               year: "numeric",
             })}
           </time>
         </header>
-        <main>
+        <div>
           <h1>{blog.title}</h1>
           <p>{blog.description}</p>
           <p>{blog.body}</p>
-        </main>
+        </div>
       </article>
       <section class="center">
         <a href="..">Show all articles</a>

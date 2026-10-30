@@ -35,12 +35,13 @@
 	}
 
 	function remove() {
-		// Remove selected person from the source array (people), not the filtered array
+		// Remove selected person from the source array (people), not the filtered array.
+		// filteredPeople is derived, so it already reflects the removal below.
 		const index = people.indexOf(selected);
 		people = [...people.slice(0, index), ...people.slice(index + 1)];
 
 		first = last = "";
-		i = Math.min(i, filteredPeople.length - 2);
+		i = Math.min(i, filteredPeople.length - 1);
 	}
 
 	function reset_inputs(person) {

@@ -28,13 +28,34 @@ export default function ({ request }) {
   );
 }
 
-const entries = (await (await fetch(`https://dummyjson.com/recipes`)).json()).recipes.slice(0, 5);
+const MAX_ENTRIES = 20;
+
+/** Shared by all visitors, so keep it small. */
+const entries = await loadRecipes();
+
+/** Loads some recipes; starts with an empty list if the API is unavailable. */
+async function loadRecipes() {
+  try {
+    const response = await fetch("https://dummyjson.com/recipes?limit=5");
+    const { recipes } = await response.json();
+    return Array.isArray(recipes) ? recipes : [];
+  } catch {
+    return [];
+  }
+}
 
 function Fragment({ request }) {
   const body = request?.body || {};
 
-  if (["save", "create"].includes(body["action"])) {
-    entries[body["id"]] = {
+  // Only allow existing entries or appending a new one.
+  const id = Number(body["id"]);
+  const isValidId =
+    Number.isInteger(id) &&
+    id >= 0 &&
+    (id < entries.length || (id === entries.length && entries.length < MAX_ENTRIES));
+
+  if (["save", "create"].includes(body["action"]) && isValidId) {
+    entries[id] = {
       name: body["name"],
       cuisine: body["cuisine"],
       difficulty: body["difficulty"],

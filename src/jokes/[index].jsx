@@ -7,7 +7,11 @@ import jokes from "./jokes";
 export default function ({ request, reply }) {
   const body = request.body || {};
   const category = body["category"];
-  const counter = Number(body["counter"] || request.cookies["counter"] || "3");
+  // Keep the counter between 1 and 5, even for tampered form data or cookies.
+  const counter = Math.min(
+    Math.max(Math.trunc(Number(body["counter"] || request.cookies["counter"])) || 3, 1),
+    5,
+  );
   const data = category ? jokes(category, counter) : [];
   reply.setCookie("counter", String(counter));
 

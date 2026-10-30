@@ -8,7 +8,7 @@ import Layout from "./Layout";
 
 export default function ({ data, form, errors }) {
   return (
-    <Layout title="Claimant" data={data}>
+    <Layout title="Injured Party" data={data}>
       <Form>
         <Legend>Who was harmed by you?</Legend>
         <RadioGroup

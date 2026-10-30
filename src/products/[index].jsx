@@ -23,12 +23,12 @@ export default async function () {
               <hr />
               <b>{price} €</b>
             </header>
-            <main>
+            <div>
               <h3>
                 <a href={id}>{title}</a>
               </h3>
               <p>{description}</p>
-            </main>
+            </div>
           </article>
         ))}
       </div>

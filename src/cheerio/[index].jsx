@@ -23,7 +23,7 @@ export default function ({ request, reply }) {
 
   return (
     <Layout title="Extract inline styles with Cheerio in Jeasx">
-      <div style="--pico-h1-color:orange; text-align: center">
+      <div style="--mu-h1-color:orange; text-align: center">
         <h1>Extract inline styles with cheerio.js</h1>
       </div>
       <p style="color:green; text-align:left">

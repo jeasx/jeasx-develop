@@ -9,12 +9,12 @@ export default function ({ request }) {
   const numbers = !submit ? parseNumbers(body["numbers"]) : [];
   let delta = 0;
 
-  if (number) {
+  if (isValidNumber(number)) {
     const index = numbers.indexOf(number);
-    if (index === -1) {
+    if (index === -1 && numbers.length < 6) {
       numbers.push(number);
       delta = 1;
-    } else {
+    } else if (index !== -1) {
       numbers.splice(index, 1);
       delta = -1;
     }
@@ -32,8 +32,16 @@ export default function ({ request }) {
 function parseNumbers(value) {
   try {
     const numbers = JSON.parse(String(value));
-    return Array.isArray(numbers) ? numbers.filter(Number.isInteger) : [];
+    return Array.isArray(numbers) ? [...new Set(numbers.filter(isValidNumber))].slice(0, 6) : [];
   } catch {
     return [];
   }
+}
+
+/**
+ * @param {unknown} value
+ * @returns {value is number}
+ */
+function isValidNumber(value) {
+  return Number.isInteger(value) && value >= 1 && value <= 49;
 }

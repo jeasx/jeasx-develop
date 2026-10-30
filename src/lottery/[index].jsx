@@ -8,7 +8,7 @@ export default function ({ number, delta, numbers, submit }) {
       description="A fake lottery"
       css="./index.module.css"
     >
-      <main class={styles.lottery}>
+      <div class={styles.lottery}>
         <h1>Lottery (6 out of 49)</h1>
         <form method="post">
           <input type="hidden" name="numbers" value={JSON.stringify(numbers)} />
@@ -48,7 +48,7 @@ export default function ({ number, delta, numbers, submit }) {
             )}
           </div>
         </form>
-      </main>
+      </div>
     </Layout>
   );
 }

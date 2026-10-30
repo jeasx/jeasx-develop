@@ -12,7 +12,8 @@ import { compress } from "./utils/zip";
 export default function ({ reply, data }) {
   const token =
     "ID-" + createHash("sha1").update(JSON.stringify(data)).digest("hex").slice(0, 8).toUpperCase();
-  reply.setCookie(token, compress(data));
+  // Keep the saved report for 10 days, as promised on the start page.
+  reply.setCookie(token, compress(data), { maxAge: 10 * 24 * 60 * 60 });
   reply.clearCookie("data");
 
   return (

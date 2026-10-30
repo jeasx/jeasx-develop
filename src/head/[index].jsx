@@ -22,7 +22,7 @@ function Subcomponent() {
       <p>If you want to add something to your head, just go ahead...</p>
       <head>
         <title>Use Helmet in Jeasx</title>
-        <meta name="description" value="Move head tags to the head of a document." />
+        <meta name="description" content="Move head tags to the head of a document." />
         <style>{
           /* css */ `.highlight { background-color: var(--mu-accent); text-align: center; padding: 1rem;}`
         }</style>

@@ -30,18 +30,18 @@ export default function ({ request, reply }) {
         <article>
           <header>
             <time>
-              {new Date(date).toLocaleDateString("en-EN", {
+              {new Date(date).toLocaleDateString("en-US", {
                 day: "numeric",
                 month: "long",
                 year: "numeric",
               })}
             </time>
           </header>
-          <main>
+          <div>
             <h2 style="text-align: left">
               <a href={slug}>{title}</a>
             </h2>
-          </main>
+          </div>
           <footer>{author}</footer>
         </article>
       ))}
