@@ -38,7 +38,8 @@ export default {
   FASTIFY_SERVER_OPTIONS: () => ({
     logger: { level: NODE_ENV_IS_DEVELOPMENT ? "error" : "info" },
     bodyLimit: 2 * 1024 * 1024,
-    rewriteUrl: (req) => req.url.replace(/~[a-z0-9]*\./, "."),
+    // Strip cache busters like "/index~abc123.css" from the path, but leave the query string alone.
+    rewriteUrl: (req) => req.url.replace(/^([^?]*?)~[a-z0-9]*\./, "$1."),
   }),
 
   /** @type {(fastify: import("fastify").FastifyInstance) => import("fastify").FastifyInstance} */
