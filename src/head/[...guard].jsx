@@ -21,8 +21,13 @@ export default async function () {
 
   // Use response handler to replace HEAD_MARK with unified head.
   this.responseHandler = async (payload) => {
+    // Only rendered strings contain the mark (not streams, JSON etc.).
+    if (typeof payload !== "string") {
+      return payload;
+    }
     const htmlHead = await $jsxToString.call(this, <head>{unifyHead(headTags.flat())}</head>);
-    return payload.replace(HEAD_MARK, htmlHead);
+    // Use a function, so "$&" or "$'" in the head isn't treated as a replacement pattern.
+    return payload.replace(HEAD_MARK, () => htmlHead);
   };
 }
 
