@@ -21,7 +21,7 @@ export default function ({ data, form, errors }) {
         <Textarea
           name="description"
           value={form.description}
-          placeholder="e.g., country road between village A and village B"
+          placeholder="e.g. I backed into a parked car while leaving a parking space"
         />
         <Actions />
         <Error message={errors} />

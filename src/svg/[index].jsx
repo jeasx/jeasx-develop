@@ -10,7 +10,7 @@ export default async function ({ request }) {
       <h1>Create SVG images with Jeasx</h1>
       <p>
         Jeasx allows you to create various content types besides HTML. This example demonstrates how
-        to create a SVG image at runtime.
+        to create an SVG image at runtime.
       </p>
       <form action="" method="get">
         <label>

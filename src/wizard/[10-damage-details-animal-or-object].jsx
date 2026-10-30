@@ -15,13 +15,13 @@ export default function ({ data, form, errors }) {
         </Legend>
         <Input
           name="label"
-          label="Label of the object or animal?"
+          label="Which object or animal was it?"
           value={form.label}
           placeholder="e.g. glasses, bike, dog"
         />
         <Textarea
           name="description"
-          label="What was exactly damaged on the object or animal?"
+          label="What exactly was damaged on the object or animal?"
           value={form.description}
           placeholder="e.g. the pole was knocked over"
         />

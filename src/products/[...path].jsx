@@ -6,7 +6,9 @@ import Image from "../sharp/Image";
  */
 export default async function ({ request, reply }) {
   const id = request.path.slice(request.path.lastIndexOf("/") + 1);
-  const product = await (await fetch(`https://dummyjson.com/product/${encodeURIComponent(id)}`)).json();
+  const product = await (
+    await fetch(`https://dummyjson.com/product/${encodeURIComponent(id)}`)
+  ).json();
 
   if (product.message) {
     return;

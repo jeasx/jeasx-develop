@@ -11,10 +11,7 @@ export default async function ({ request }) {
       return (
         <Layout title="Internal Server Error">
           <h1>Internal Server Error</h1>
-          <p>
-            We're sorry, but something went wrong with your request. Our team has been notified and
-            is working to resolve the issue. Please try again later.
-          </p>
+          <p>We're sorry, but something went wrong with your request. Please try again later.</p>
           <p>
             <code>{error.toString()}</code>
           </p>
@@ -30,8 +27,8 @@ export default async function ({ request }) {
       <p>
         Jeasx allows you to catch errors with a dynamic{" "}
         <a href="https://www.jeasx.dev/faq#error-handler">error handler</a>, so you can provide a
-        user-friendly response when something goes wrong. Have a look at the source how things are
-        wired up.
+        user-friendly response when something goes wrong. Have a look at the source to see how
+        things are wired up.
       </p>
       <p>
         <a href={`${request.path}?errorHandler=true`}>Force error with error handler</a>

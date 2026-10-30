@@ -12,10 +12,10 @@ export default function ({ data, form, errors }) {
     <Layout title="Damage Details for Person" data={data}>
       <Form>
         <Legend>
-          You have indicated that a person was damaged. Do you have any additional details?
+          You have indicated that a person was injured. Do you have any additional details?
         </Legend>
         <RadioGroup
-          label="Is the person who was damaged the same as the person you already entered?"
+          label="Is the injured person the same as the person you already entered?"
           options={["Yes", "No"]}
           name="additional_person"
           value={form.additional_person}
@@ -35,7 +35,7 @@ export default function ({ data, form, errors }) {
           placeholder="e.g. broken arm, broken leg"
         />
         <RadioGroup
-          label="Have any other persons been damaged?"
+          label="Has anyone else been injured?"
           options={["Yes", "No"]}
           name="any_other_persons_hurt"
           value={form.any_other_persons_hurt}

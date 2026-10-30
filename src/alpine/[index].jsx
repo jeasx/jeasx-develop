@@ -10,7 +10,7 @@ export default async function () {
       <h1>Use Alpine.js with Jeasx</h1>
       <p>
         <a href="https://alpinejs.dev">Alpine.js</a> is a minimal tool for composing behavior
-        directly in your markup. Jeasx allows to use Alpine.js by simply importing it as browser
+        directly in your markup. Jeasx lets you use Alpine.js by simply importing it as a browser
         bundle.
       </p>
       <form

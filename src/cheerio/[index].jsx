@@ -31,7 +31,7 @@ export default function ({ request, reply }) {
         <a href="https://www.jeasx.dev/faq#response-handler">response handler</a>. Have a look at
         the source to see how things are wired up. This is an example for how to use{" "}
         <a href="https://cheerio.js.org">cheerio.js</a> to extract styles from resulting HTML and
-        insert them to the head of your page.
+        insert them into the head of your page.
       </p>
       <div style="display: flex; flex-direction: row; gap: 1rem; justify-content: center;">
         <IFrame title="Original source" src="?text=plain&source=raw" />

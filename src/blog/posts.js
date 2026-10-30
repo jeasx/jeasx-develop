@@ -11,7 +11,9 @@ const FIELDS = { slug: 100, title: 100, author: 100, description: 200, body: 100
 export function readPosts(request, fallback = []) {
   try {
     const posts = JSON.parse(request.cookies["posts"]);
-    return Array.isArray(posts) ? posts.filter((post) => post && typeof post === "object") : fallback;
+    return Array.isArray(posts)
+      ? posts.filter((post) => post && typeof post === "object")
+      : fallback;
   } catch {
     return fallback;
   }

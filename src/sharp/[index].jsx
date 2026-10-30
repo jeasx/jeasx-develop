@@ -9,7 +9,7 @@ export default function () {
     >
       <h1>Image transformation with Sharp</h1>
       <p>
-        Jeasx allows to easily create a image component and converter in userland based on the
+        Jeasx lets you easily create an image component and converter in userland based on the
         fantastic <a href="https://sharp.pixelplumbing.com">sharp</a> library. Here you see a simple
         example with static images. The image converter is also used in the{" "}
         <a href="/products">products</a> example.

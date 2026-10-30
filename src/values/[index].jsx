@@ -12,9 +12,9 @@ export default function () {
     >
       <h1>What JSX can render</h1>
       <p>
-        Besides strings, numbers and elements, Jeasx renders many JavaScript values directly, so
-        you rarely have to convert data before putting it into markup. Each sample shows the
-        rendered result and the generated HTML.
+        Besides strings, numbers and elements, Jeasx renders many JavaScript values directly, so you
+        rarely have to convert data before putting it into markup. Each sample shows the rendered
+        result and the generated HTML.
       </p>
 
       <h2>Children</h2>
@@ -71,7 +71,14 @@ export default function () {
         with <code>fs.readFile()</code> or a <code>fetch()</code> response body.
       </Sample>
 
-      <Sample title="BigInts and zero" render={() => <p>{2n ** 64n} / {0}</p>}>
+      <Sample
+        title="BigInts and zero"
+        render={() => (
+          <p>
+            {2n ** 64n} / {0}
+          </p>
+        )}
+      >
         BigInts render as numbers, and <code>0</code> isn't swallowed like in other templating
         languages.
       </Sample>
@@ -97,9 +104,7 @@ export default function () {
 
       <Sample
         title="Promise attributes"
-        render={() => (
-          <img src={loadAvatarUrl()} alt={loadAvatarAlt()} width="64" height="64" />
-        )}
+        render={() => <img src={loadAvatarUrl()} alt={loadAvatarAlt()} width="64" height="64" />}
       >
         A promise as attribute value is awaited. All promise attributes of a tag are loaded in
         parallel.
@@ -124,8 +129,8 @@ export default function () {
           </a>
         )}
       >
-        Values with their own <code>toString</code> use their string form, <code>true</code>{" "}
-        renders the attribute name only.
+        Values with their own <code>toString</code> use their string form, <code>true</code> renders
+        the attribute name only.
       </Sample>
 
       <Sample

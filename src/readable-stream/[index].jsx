@@ -38,7 +38,7 @@ export default function () {
   );
 }
 
-/** Rendered after both async iterables are finished. */
+/** Rendered after the stream is finished. */
 function Done({ start }) {
   return (
     <p class="center">

@@ -33,6 +33,7 @@ export default {
   }),
 };
 ```
+
 </details>
 
 ---
@@ -50,7 +51,9 @@ The current url is **{props.request.url}**. In MDX all props can be accessed via
 ### Dynamic content in MDX
 
 <ul>
-  {(await Recipes()).slice(0, 5).map(({ name }) => (<li>{name}</li>))}
+  {(await Recipes()).slice(0, 5).map(({ name }) => (
+    <li>{name}</li>
+  ))}
 </ul>
 
 </Layout>

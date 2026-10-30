@@ -54,7 +54,6 @@ export default function () {
 
 /**
  * Loads the data and calls the render prop with it.
- * A spinner is shown until the result is streamed in.
  */
 async function Jokes({ category, amount, children }) {
   const data = await loadJokes(category, amount);

@@ -8,7 +8,7 @@ function init(components) {
       const props = el.dataset.props ? JSON.parse(el.dataset.props) : {};
       if (Component) {
         // Using render instead of hydrate to avoid hydration mismatches.
-        // For single components it is fast und avoids lots of headaches.
+        // For single components it is fast and avoids lots of headaches.
         render(<Component {...props} />, el);
       }
     }

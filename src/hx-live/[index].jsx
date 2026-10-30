@@ -10,7 +10,7 @@ export default async function () {
     >
       <h1>Use hx-live in Jeasx</h1>
       <p>
-        <a href="https://four.htmx.org/extensions/hx-live">hx-live</a> is a HTMX extension to ease
+        <a href="https://four.htmx.org/extensions/hx-live">hx-live</a> is an HTMX extension to ease
         reactive scripting for the web. It is inspired by Alpine, jQuery and hyperscript.
       </p>
       <form data-counter="3" data-jokes="[]">

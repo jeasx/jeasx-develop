@@ -50,7 +50,7 @@ export default function () {
   );
 }
 
-/** Rendered after both async iterables are finished. */
+/** Rendered after the async iterable is finished. */
 function Done({ start }) {
   return (
     <p class="center">

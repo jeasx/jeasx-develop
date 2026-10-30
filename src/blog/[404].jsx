@@ -5,8 +5,8 @@ export default function () {
     <Layout title="Page not found">
       <section class="center">
         <h1>Error 404</h1>
-        <p>The page you are looking for was moved, removed or might never existed.</p>
-        <a href="/blog">Go to homepage</a>
+        <p>The page you are looking for was moved, removed or might never have existed.</p>
+        <a href="/blog">Back to blog</a>
       </section>
     </Layout>
   );

@@ -9,13 +9,13 @@ export default function ({ request }) {
 
   return (
     <Layout
-      title="Override JSX renderer to modifiy markup"
-      description="Overriding #jsxToString allows to modify existing jsx components"
+      title="Override JSX renderer to modify markup"
+      description="Overriding #jsxToString lets you modify existing JSX components"
     >
       <h1>Intercept and modify JSX at runtime</h1>
       <p>
         The underlying <a href="https://github.com/jeasx/jsx-async-runtime">jsx-async-runtime</a>{" "}
-        allows you to intercept the rendering of jsx elements. This allows you to modify or replace
+        allows you to intercept the rendering of JSX elements. This allows you to modify or replace
         existing markup.
       </p>
       <section class="center">
