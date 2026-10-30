@@ -34,7 +34,7 @@ export default function ({ request, reply }) {
         delete props.data[path];
       }
 
-      reply.setCookie("data", compress({ ...props.data, path }));
+      reply.setCookie("data", compress(props.data));
 
       switch (request.body["$action"] || "") {
         case "":

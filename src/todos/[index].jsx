@@ -16,7 +16,7 @@ export default function ({ todos, status, autofocus }) {
               <li class={todo.status}>
                 <button
                   class={`toggle${todo.status === "completed" ? " checked" : ""}`}
-                  name="toogleTodo"
+                  name="toggleTodo"
                   value={todos.indexOf(todo)}
                 >
                   [{todo.status}]

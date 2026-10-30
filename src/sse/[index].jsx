@@ -1,7 +1,6 @@
 import Layout from "../Layout";
 
-export default function ({ request, reply }) {
-  reply.type("text/html; charset=utf-8");
+export default function () {
   return (
     <Layout
       title="Server-Sent Events with Jeasx"

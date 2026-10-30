@@ -1,4 +1,4 @@
-import { isJsxNode, jsxToString } from "jsx-async-runtime";
+import { html, isJsxNode, jsxToString } from "jsx-async-runtime";
 import Layout from "../Layout";
 
 /**
@@ -35,8 +35,15 @@ export default function ({ request }) {
   );
 }
 
-function HouseKeeper({ children }) {
-  this.jsxToString = (jsxElement) => {
+/**
+ * Renders its children without inline styles.
+ * The override lives on a child context, so markup outside of HouseKeeper stays untouched.
+ *
+ * @this {import("../types").ThisContext}
+ */
+async function HouseKeeper({ children }) {
+  const context = Object.create(this);
+  context.jsxToString = (jsxElement) => {
     // The override also receives text, arrays etc., so check for elements first.
     if (isJsxNode(jsxElement) && jsxElement.props) {
       // Rewrite className to class and delete all inline styles
@@ -44,12 +51,12 @@ function HouseKeeper({ children }) {
       const { className, style, ...props } = jsxElement.props;
       if (className !== undefined || style !== undefined) {
         props.class ??= className;
-        return jsxToString.call(this, { ...jsxElement, props });
+        return jsxToString.call(context, { ...jsxElement, props });
       }
     }
-    return jsxToString.call(this, jsxElement);
+    return jsxToString.call(context, jsxElement);
   };
-  return <>{children}</>;
+  return html(await jsxToString.call(context, <>{children}</>));
 }
 
 function ThirdPartyComponent() {

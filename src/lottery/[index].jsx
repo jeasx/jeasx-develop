@@ -34,7 +34,7 @@ export default function ({ number, delta, numbers, submit }) {
           </div>
           <div>
             {numbers.length === 6 && (
-              <button type="submit" name="submit" value="submit" disabled={numbers.length < 6}>
+              <button type="submit" name="submit" value="submit">
                 Reveal results
               </button>
             )}

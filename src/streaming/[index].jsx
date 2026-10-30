@@ -10,7 +10,7 @@ const SOURCES = [
 /**
  * @this {import("../types").ThisContext}
  */
-export default async function ({ request, reply }) {
+export default async function () {
   this.jsxStream = true;
   const start = Date.now();
 

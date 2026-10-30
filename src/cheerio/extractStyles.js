@@ -20,10 +20,10 @@ export default function extractStyles(html) {
       .split(";")
       .map((item) => {
         // Split at the first colon only, so values like url(https://…) stay intact.
-        const index = item.indexOf(":");
-        return index === -1
+        const colon = item.indexOf(":");
+        return colon === -1
           ? item.trim()
-          : `${item.slice(0, index).trim()}:${item.slice(index + 1).trim()}`;
+          : `${item.slice(0, colon).trim()}:${item.slice(colon + 1).trim()}`;
       })) {
       if (!declaration) {
         continue;

@@ -21,8 +21,8 @@ export default function ({ request, reply }) {
     todos.unshift({ label: String(body["newTodo"]).slice(0, MAX_LABEL_LENGTH), status: "active" });
   }
 
-  if (body["toogleTodo"]) {
-    const todo = todos[Number(body["toogleTodo"])];
+  if (body["toggleTodo"]) {
+    const todo = todos[Number(body["toggleTodo"])];
     if (todo) {
       todo.status = todo.status === "active" ? "completed" : "active";
     }

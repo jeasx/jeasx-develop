@@ -15,9 +15,8 @@ export default async function () {
       </p>
       <form data-counter="3" data-jokes="[]">
         <script>
-          {html(
-            /*js*/ `async function load(category, count) {return await (await fetch(\`/jokes/api/\${category}?amount=\${count}\`)).json();}`,
-          )}
+          {html(/*js*/ `async function load(category, count) {return await (await fetch(\`/jokes/api/\${category}?amount=\${count}\`)).json();}
+            function toListItem(text) {const li = document.createElement("li"); li.textContent = text; return li.outerHTML;}`)}
         </script>
         <div class="grid">
           <button
@@ -58,7 +57,7 @@ export default async function () {
             <span hx-live:text="data.counter === 1 ? `Tell me a pun` : `Tell me ${data.counter} puns`" />
           </button>
         </div>
-        <ul hx-live:html="data.jokes.map(joke => `<li>${joke}</li>`).join('')"></ul>
+        <ul hx-live:html="data.jokes.map(toListItem).join('')"></ul>
       </form>
     </Layout>
   );

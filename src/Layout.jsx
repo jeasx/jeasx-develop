@@ -78,9 +78,9 @@ export default function Layout({
 }
 
 /** @param {string} path  */
-function addCacheBuster(path, seperator = "~") {
+function addCacheBuster(path, separator = "~") {
   const index = path.lastIndexOf(".");
   return index !== -1
-    ? path.slice(0, index) + seperator + process.env.BUILD_ID + path.slice(index)
+    ? path.slice(0, index) + separator + process.env.BUILD_ID + path.slice(index)
     : path;
 }
