@@ -101,6 +101,7 @@ async function handler(request, reply) {
         break;
       } else if (typeof response === "object" && route.endsWith("/[...guard]")) {
         Object.assign(props, response);
+        response = void 0;
         continue;
       } else if (response === void 0 || reply.statusCode === 404) {
         continue;

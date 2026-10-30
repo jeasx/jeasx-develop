@@ -196,6 +196,8 @@ async function handler(request: FastifyRequest, reply: FastifyReply) {
       } else if (typeof response === "object" && route.endsWith("/[...guard]")) {
         // Add object entries from guard to props
         Object.assign(props, response);
+        // Props are not a response: never send them if no other route answers.
+        response = undefined;
         continue;
       } else if (response === undefined || reply.statusCode === 404) {
         continue;
