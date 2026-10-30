@@ -1,3 +1,4 @@
+import { stat } from "node:fs/promises";
 import { join, sep } from "node:path";
 import sharp from "sharp";
 
@@ -70,7 +71,12 @@ async function loadImage(src) {
   // Local image: resolve the path and make sure it stays inside the image folder.
   if (src.startsWith("/")) {
     const path = join(LOCAL_IMAGE_DIR, src.replace(/^\/images\//, "/"));
-    return src.startsWith("/images/") && path.startsWith(LOCAL_IMAGE_DIR + sep) ? path : undefined;
+    if (!src.startsWith("/images/") || !path.startsWith(LOCAL_IMAGE_DIR + sep)) {
+      return;
+    }
+    // Missing files end up as 404 instead of failing in sharp.
+    const file = await stat(path).catch(() => undefined);
+    return file?.isFile() ? path : undefined;
   }
 
   // Remote image: only https and exact hostnames from the allowlist.

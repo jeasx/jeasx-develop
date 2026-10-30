@@ -44,7 +44,7 @@ export default function ({ request, reply }) {
   return {
     todos,
     status: query["status"],
-    autofocus: request.method === "GET" || body["newTodo"],
+    autofocus: request.method === "GET" || Boolean(body["newTodo"]),
   };
 }
 

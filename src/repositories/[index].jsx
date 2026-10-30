@@ -33,8 +33,9 @@ async function Repositories({ search }) {
   const response = await fetch(
     `https://api.github.com/search/repositories?q=${encodeURIComponent(search)}+in:name&sort=updated`,
   );
-  const { items } = await response.json();
-  if (!response.ok || !Array.isArray(items)) {
+  // Error responses may not be JSON, so only parse successful ones.
+  const { items } = response.ok ? await response.json() : {};
+  if (!Array.isArray(items)) {
     // E.g. GitHub's rate limit for unauthenticated requests was hit.
     return <p>GitHub couldn't be reached right now. Please try again later.</p>;
   }

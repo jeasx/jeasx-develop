@@ -17,11 +17,8 @@ export default function ({ request, reply }) {
     };
 
     const path = request.path;
-    const { previous, next } = navigate(path, props.data);
 
-    props.previous = previous;
-    props.next = next;
-
+    // Apply loaded and submitted data first, so navigation reflects the latest answers.
     if (request.body) {
       if (request.body["$hash"]) {
         props.data = decompress(request.cookies[request.body["$hash"]]) || {};
@@ -35,7 +32,13 @@ export default function ({ request, reply }) {
       }
 
       reply.setCookie("data", compress(props.data));
+    }
 
+    const { previous, next } = navigate(path, props.data);
+    props.previous = previous;
+    props.next = next;
+
+    if (request.body) {
       switch (request.body["$action"] || "") {
         case "":
           break;

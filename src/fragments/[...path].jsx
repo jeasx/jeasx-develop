@@ -5,7 +5,8 @@ import { Product } from "./Product";
  * @param {import("../types").RouteProps} props
  */
 export default function ({ request }) {
-  const id = request.query["id"] || 1;
+  // Keep the product id between 1 and 10, even for tampered query parameters.
+  const id = Math.min(Math.max(Math.trunc(Number(request.query["id"])) || 1, 1), 10);
 
   return (
     <Fragments
@@ -41,8 +42,8 @@ export default function ({ request }) {
               class="btn btn-primary"
               name="id"
               type="submit"
-              value={Number(id) - 1}
-              disabled={Number(id) === 1}
+              value={id - 1}
+              disabled={id === 1}
             >
               &laquo;
             </button>
@@ -50,8 +51,8 @@ export default function ({ request }) {
               class="btn btn-primary"
               name="id"
               type="submit"
-              value={Number(id) + 1}
-              disabled={Number(id) === 10}
+              value={id + 1}
+              disabled={id === 10}
             >
               &raquo;
             </button>
