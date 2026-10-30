@@ -70,6 +70,7 @@ export default FASTIFY_SERVER(
     })
     .all("*", async (request: FastifyRequest, reply: FastifyReply) => {
       let payload: unknown;
+      // Errors aren't caught and logged here, as Fastify's error handler already logs them.
       try {
         payload = await handler(request, reply);
         if (
@@ -81,9 +82,6 @@ export default FASTIFY_SERVER(
           reply.type("text/html; charset=utf-8");
         }
         return payload;
-      } catch (error) {
-        request.log.error(error);
-        throw error;
       } finally {
         // Close file stream if it isn't sent and nobody started reading it,
         // otherwise its file handle leaks.
@@ -211,11 +209,19 @@ async function handler(request: FastifyRequest, reply: FastifyReply) {
         break;
       }
     }
+    // No route answered and no [404] exists: don't reply with an empty 200.
+    if (response === undefined && reply.statusCode === 200) {
+      reply.status(404);
+    }
     return await renderResponse(context, response);
   } catch (error) {
     const errorHandler = context["errorHandler"];
     if (typeof errorHandler === "function") {
-      reply.status(500);
+      // Keep the status of the error (e.g. 403) like Fastify does, otherwise use 500.
+      const statusCode = (error as any)?.statusCode ?? (error as any)?.status;
+      reply.status(
+        Number.isInteger(statusCode) && statusCode >= 400 && statusCode <= 599 ? statusCode : 500,
+      );
       response = await errorHandler.call(context, error);
       return await renderResponse(context, response);
     } else {

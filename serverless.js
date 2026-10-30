@@ -33,9 +33,6 @@ var serverless_default = FASTIFY_SERVER(
         reply.type("text/html; charset=utf-8");
       }
       return payload;
-    } catch (error) {
-      request.log.error(error);
-      throw error;
     } finally {
       const stream = reply.file?.stream;
       if (stream && stream !== payload && stream.readableFlowing === null) {
@@ -115,11 +112,17 @@ async function handler(request, reply) {
         break;
       }
     }
+    if (response === void 0 && reply.statusCode === 200) {
+      reply.status(404);
+    }
     return await renderResponse(context, response);
   } catch (error) {
     const errorHandler = context["errorHandler"];
     if (typeof errorHandler === "function") {
-      reply.status(500);
+      const statusCode = error?.statusCode ?? error?.status;
+      reply.status(
+        Number.isInteger(statusCode) && statusCode >= 400 && statusCode <= 599 ? statusCode : 500
+      );
       response = await errorHandler.call(context, error);
       return await renderResponse(context, response);
     } else {
