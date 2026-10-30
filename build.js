@@ -1,5 +1,5 @@
 import * as esbuild from "esbuild";
-import { glob, stat, writeFile } from "node:fs/promises";
+import { glob, rm, stat, writeFile } from "node:fs/promises";
 import { join, sep } from "node:path";
 import env from "./env.js";
 
@@ -41,6 +41,10 @@ const BROWSER_OPTIONS = {
   ...CONFIG.ESBUILD_BROWSER_OPTIONS?.(),
 };
 
+// Start from an empty output directory, so stale routes, assets and metadata
+// from previous builds are never served.
+await rm(join(CWD, "dist"), { recursive: true, force: true, maxRetries: 3 });
+
 for (const options of [SERVER_OPTIONS, BROWSER_OPTIONS]) {
   if (NODE_ENV_IS_DEVELOPMENT) {
     (await esbuild.context(options)).watch();
@@ -71,8 +75,12 @@ if (!NODE_ENV_IS_DEVELOPMENT) {
     }
 
     // Treat all other entries as static files.
+    // If a file exists in both directories, "dist" wins like in development.
     if ((await stat(join(CWD, path))).isFile()) {
-      files[path.slice(path.indexOf("/"))] = path;
+      const key = path.slice(path.indexOf("/"));
+      if (!(path.startsWith("public/") && key in files)) {
+        files[key] = path;
+      }
     }
   }
 
