@@ -6,7 +6,7 @@ export default function ({ request }) {
 
   const number = +body["number"];
   const submit = body["submit"];
-  const numbers = !submit && body["numbers"] ? JSON.parse(body["numbers"]) : [];
+  const numbers = !submit ? parseNumbers(body["numbers"]) : [];
   let delta = 0;
 
   if (number) {
@@ -21,4 +21,19 @@ export default function ({ request }) {
   }
 
   return { number, delta, numbers, submit };
+}
+
+/**
+ * Parses the submitted numbers; returns an empty list for invalid input.
+ *
+ * @param {unknown} value
+ * @returns {number[]}
+ */
+function parseNumbers(value) {
+  try {
+    const numbers = JSON.parse(String(value));
+    return Array.isArray(numbers) ? numbers.filter(Number.isInteger) : [];
+  } catch {
+    return [];
+  }
 }

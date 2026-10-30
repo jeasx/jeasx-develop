@@ -1,13 +1,14 @@
 import Layout from "../../Layout";
+import { createPost, readPosts, writePosts } from "../posts";
 
 /**
  * @param {import("../../types").RouteProps} props
  */
 export default function ({ request, reply }) {
-  if (request.method === "POST" && typeof request.body === "object") {
-    const posts = JSON.parse(request.cookies["posts"] || "[]");
-    posts.unshift({ ...request.body, date: new Date().toISOString() });
-    reply.setCookie("posts", JSON.stringify(posts));
+  if (request.method === "POST" && request.body && typeof request.body === "object") {
+    const posts = readPosts(request);
+    posts.unshift(createPost(request.body));
+    writePosts(reply, posts);
     return reply.redirect("/blog");
   }
 

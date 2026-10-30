@@ -1,12 +1,13 @@
 import Layout from "../Layout";
 import data from "./data.json";
+import { readPosts, writePosts } from "./posts";
 
 /**
  * @param {import("../types").RouteProps} props
  */
 export default function ({ request, reply }) {
-  const posts = request.cookies["posts"] ? JSON.parse(request.cookies["posts"]) : data;
-  reply.setCookie("posts", JSON.stringify(posts));
+  const posts = readPosts(request, data);
+  writePosts(reply, posts);
 
   return (
     <Layout title="Blog example with Jeasx">

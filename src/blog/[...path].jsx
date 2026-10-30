@@ -1,4 +1,5 @@
 import Layout from "../Layout";
+import { readPosts } from "./posts";
 
 /**
  * @this {import("../types").ThisContext}
@@ -6,7 +7,7 @@ import Layout from "../Layout";
  */
 export default function ({ request, reply }) {
   const slug = request.path.slice(request.path.lastIndexOf("/") + 1);
-  const blog = JSON.parse(request.cookies["posts"] || "[]").find((post) => post.slug === slug);
+  const blog = readPosts(request).find((post) => post.slug === slug);
 
   if (!blog) {
     return;
