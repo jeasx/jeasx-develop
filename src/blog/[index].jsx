@@ -20,7 +20,7 @@ export default function ({ request, reply }) {
       <section class="center">
         <article class="card-primary">
           <a href="/blog/post" rel="nofollow">
-            Submit New Post
+            Submit new post
           </a>
           <br />
           Login: demo/demo

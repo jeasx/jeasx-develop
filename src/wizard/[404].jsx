@@ -5,7 +5,7 @@ export default function () {
     <Layout title="404 - Page not found">
       <h2>Error 404</h2>
       <p>The page does not exist.</p>
-      <a href="/wizard">To the homepage</a>
+      <a href="/wizard">Back to the wizard</a>
     </Layout>
   );
 }

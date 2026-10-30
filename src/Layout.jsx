@@ -31,7 +31,7 @@ export default function Layout({
           ></link>
           <script type="module" src={addCacheBuster("/index.js")}></script>
           {script && <script type="module" src={addCacheBuster(script)}></script>}
-          <title>{title} &raquo; Jeasx - JSX with Ease</title>
+          <title>{title ? `${title} » Jeasx - JSX with Ease` : "Jeasx - JSX with Ease"}</title>
         </head>
         <body>
           {path !== "/" && (
