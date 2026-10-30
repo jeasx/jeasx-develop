@@ -29,7 +29,8 @@ var serverless_default = FASTIFY_SERVER(
     let payload;
     try {
       payload = await handler(request, reply);
-      if (reply.getHeader("content-type") === void 0 && (typeof payload === "string" || payload instanceof ReadableStream || Buffer.isBuffer(payload))) {
+      if (reply.getHeader("content-type") === void 0 && (typeof payload === "string" || payload instanceof ReadableStream || // Static files bring their own content type (or none, e.g. for 304).
+      payload instanceof Readable && payload !== reply.file?.stream || Buffer.isBuffer(payload))) {
         reply.type("text/html; charset=utf-8");
       }
       return payload;

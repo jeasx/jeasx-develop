@@ -77,6 +77,8 @@ export default FASTIFY_SERVER(
           reply.getHeader("content-type") === undefined &&
           (typeof payload === "string" ||
             payload instanceof ReadableStream ||
+            // Static files bring their own content type (or none, e.g. for 304).
+            (payload instanceof Readable && payload !== reply.file?.stream) ||
             Buffer.isBuffer(payload))
         ) {
           reply.type("text/html; charset=utf-8");
