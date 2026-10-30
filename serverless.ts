@@ -32,7 +32,7 @@ const {
 
 declare module "fastify" {
   interface FastifyRequest {
-    /** Path without query parameters */
+    /** Decoded path without query parameters */
     path: string;
     /** Path to resolved route handler */
     route: string;
@@ -57,10 +57,16 @@ export default FASTIFY_SERVER(
     .decorateRequest("route", "")
     .decorateRequest("path", "")
     .decorateReply("file", undefined)
-    .addHook("onRequest", async (request) => {
-      // Extract path from url
+    .addHook("onRequest", async (request, reply) => {
+      // Extract and decode path from url
       const index = request.url.indexOf("?");
-      request.path = index === -1 ? request.url : request.url.slice(0, index);
+      const path = decodePath(index === -1 ? request.url : request.url.slice(0, index));
+      if (path === undefined) {
+        reply.code(400).send();
+        return reply;
+      } else {
+        request.path = path;
+      }
     })
     .all("*", async (request: FastifyRequest, reply: FastifyReply) => {
       let payload: unknown;
@@ -271,6 +277,23 @@ function* generateRoutes(path: string): Generator<string | typeof STATIC_FILE_RO
 }
 
 /**
+ * Decodes an url-encoded path.
+ * Returns undefined for malformed encodings, null bytes and ".." segments,
+ * as browsers never send them and they could escape the project directory.
+ */
+function decodePath(rawPath: string): string | undefined {
+  try {
+    const path = decodeURIComponent(rawPath);
+    if (path.includes("\0") || /(^|[\\/])\.\.([\\/]|$)/.test(path)) {
+      return undefined;
+    }
+    return path;
+  } catch {
+    return undefined;
+  }
+}
+
+/**
  * Renders JSX to string and applies optional response handler.
  */
 async function renderResponse(context: any, response: unknown) {
@@ -299,7 +322,8 @@ async function tryFile(request: FastifyRequest): Promise<BaseSendResult | undefi
   // by unexpected `request.path` values.
   const file = FILE_BY_PATH[request.path];
   if (file) {
-    return await fastifySend(request.raw, file, FASTIFY_SEND_OPTIONS);
+    // fastifySend decodes the path, so it must be encoded.
+    return await fastifySend(request.raw, encodeURI(file), FASTIFY_SEND_OPTIONS);
   }
 
   if (NODE_ENV_IS_DEVELOPMENT) {
@@ -314,7 +338,7 @@ async function tryFile(request: FastifyRequest): Promise<BaseSendResult | undefi
           // therefore, production-level path validation is not required here.
           return await fastifySend(
             request.raw,
-            `${directory}${request.path}`,
+            encodeURI(`${directory}${request.path}`),
             FASTIFY_SEND_OPTIONS,
           );
         }

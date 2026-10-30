@@ -16,9 +16,15 @@ const {
 const FASTIFY_SEND_OPTIONS = CONFIG.FASTIFY_SEND_OPTIONS?.();
 const FASTIFY_SERVER = CONFIG.FASTIFY_SERVER ?? ((fastify2) => fastify2);
 var serverless_default = FASTIFY_SERVER(
-  fastify(CONFIG.FASTIFY_SERVER_OPTIONS?.()).decorateRequest("route", "").decorateRequest("path", "").decorateReply("file", void 0).addHook("onRequest", async (request) => {
+  fastify(CONFIG.FASTIFY_SERVER_OPTIONS?.()).decorateRequest("route", "").decorateRequest("path", "").decorateReply("file", void 0).addHook("onRequest", async (request, reply) => {
     const index = request.url.indexOf("?");
-    request.path = index === -1 ? request.url : request.url.slice(0, index);
+    const path = decodePath(index === -1 ? request.url : request.url.slice(0, index));
+    if (path === void 0) {
+      reply.code(400).send();
+      return reply;
+    } else {
+      request.path = path;
+    }
   }).all("*", async (request, reply) => {
     let payload;
     try {
@@ -146,6 +152,17 @@ function* generateRoutes(path) {
     yield `${segments[i]}/[404]`;
   }
 }
+function decodePath(rawPath) {
+  try {
+    const path = decodeURIComponent(rawPath);
+    if (path.includes("\0") || /(^|[\\/])\.\.([\\/]|$)/.test(path)) {
+      return void 0;
+    }
+    return path;
+  } catch {
+    return void 0;
+  }
+}
 async function renderResponse(context, response) {
   let payload = response;
   if (isJsxNode(response)) {
@@ -161,7 +178,7 @@ async function renderResponse(context, response) {
 async function tryFile(request) {
   const file = FILE_BY_PATH[request.path];
   if (file) {
-    return await fastifySend(request.raw, file, FASTIFY_SEND_OPTIONS);
+    return await fastifySend(request.raw, encodeURI(file), FASTIFY_SEND_OPTIONS);
   }
   if (NODE_ENV_IS_DEVELOPMENT) {
     for (const directory of ["dist", "public"]) {
@@ -172,7 +189,7 @@ async function tryFile(request) {
         if ((await stat(join(CWD, directory, request.path))).isFile()) {
           return await fastifySend(
             request.raw,
-            `${directory}${request.path}`,
+            encodeURI(`${directory}${request.path}`),
             FASTIFY_SEND_OPTIONS
           );
         }
