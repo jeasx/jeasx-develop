@@ -1,6 +1,8 @@
 // Browsers silently drop cookies larger than about 4 KB (name, value and attributes).
 const MAX_COOKIE_SIZE = 3800;
 const FIELDS = { slug: 100, title: 100, author: 100, description: 200, body: 1000 };
+// Slugs end up in links, so only allow safe characters (no "javascript:" etc.).
+const SLUG_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 
 /**
  * Reads posts from the cookie; falls back if it is missing or malformed.
@@ -11,8 +13,11 @@ const FIELDS = { slug: 100, title: 100, author: 100, description: 200, body: 100
 export function readPosts(request, fallback = []) {
   try {
     const posts = JSON.parse(request.cookies["posts"]);
+    // The cookie can be edited by the client, so drop posts with invalid slugs.
     return Array.isArray(posts)
-      ? posts.filter((post) => post && typeof post === "object")
+      ? posts.filter(
+          (post) => post && typeof post === "object" && SLUG_PATTERN.test(String(post.slug)),
+        )
       : fallback;
   } catch {
     return fallback;
@@ -44,5 +49,21 @@ export function createPost(body) {
   for (const [name, maxLength] of Object.entries(FIELDS)) {
     post[name] = String(body[name] ?? "").slice(0, maxLength);
   }
+  post["slug"] = slugify(post["slug"] || post["title"]) || `post-${Date.now()}`;
   return { ...post, date: new Date().toISOString() };
+}
+
+/**
+ * Turns any text into a slug matching SLUG_PATTERN, e.g. "Hello World!" => "hello-world".
+ *
+ * @param {string} text
+ */
+function slugify(text) {
+  return text
+    .normalize("NFKD")
+    .replace(/[̀-ͯ]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "")
+    .slice(0, FIELDS.slug);
 }
