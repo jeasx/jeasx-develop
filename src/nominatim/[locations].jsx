@@ -4,7 +4,7 @@
 export default async function ({ request }) {
   const json = await (
     await fetch(
-      `https://nominatim.openstreetmap.org/search?q=${request.body["search"]}&addressdetails=1&format=jsonv2`,
+      `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(request.body?.["search"] ?? "")}&addressdetails=1&format=jsonv2`,
       { headers: { "user-agent": "jeasx.dev (mail@jeasx.dev)" } },
     )
   ).json();
