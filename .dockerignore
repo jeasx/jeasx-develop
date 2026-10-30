@@ -1,7 +1,6 @@
 **
 !/public/
 !/src/
-!.env
 !build.js
 !cli.js
 !env.js
