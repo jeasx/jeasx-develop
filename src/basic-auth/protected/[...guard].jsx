@@ -7,7 +7,7 @@ import Layout from "../../Layout";
 export default function ({ request, reply }) {
   // If a static file is requested, the 'reply.file' property is pre-populated with a file stream.
   // Only stylesheets bypass authentication, so the error page is styled.
-  // Every other file (e.g. a PDF placed next to them) stays protected.
+  // Every other file (e.g. a PDF placed next to them) is only served after signing in.
   if (reply.file && request.path.endsWith(".css")) {
     return;
   }
@@ -29,6 +29,9 @@ export default function ({ request, reply }) {
         </section>
       </Layout>
     );
+  } else if (reply.file) {
+    // Signed in: serve the requested file.
+    return;
   } else {
     return (
       <Layout title="Access granted" css="/basic-auth/protected/index.css">
