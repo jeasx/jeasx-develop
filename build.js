@@ -74,7 +74,7 @@ if (!NODE_ENV_IS_DEVELOPMENT) {
     const path = entry.split(sep).join("/");
 
     // Handle server routes.
-    if (/^dist\/.*\[.+\]\.js$/.test(path)) {
+    if (/^dist\/.*\[[^/]+\]\.js$/.test(path)) {
       routes[path.slice("dist".length, -".js".length)] = path;
       continue;
     }
