@@ -7,6 +7,7 @@ switch (process.argv[2]) {
     break;
 
   case "build":
+    await fs.rm("dist", { recursive: true, force: true, maxRetries: 3 });
     await import("./build.js");
     break;
 

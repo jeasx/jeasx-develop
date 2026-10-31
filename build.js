@@ -1,5 +1,5 @@
 import * as esbuild from "esbuild";
-import { readdir, rm, stat, writeFile } from "node:fs/promises";
+import { readdir, stat, writeFile } from "node:fs/promises";
 import { join, relative, sep } from "node:path";
 import { pathToFileURL } from "node:url";
 import env from "./env.js";
@@ -40,10 +40,6 @@ const BROWSER_OPTIONS = {
   packages: "bundle",
   ...(await CONFIG.ESBUILD_BROWSER_OPTIONS?.()),
 };
-
-// Start from an empty output directory, so stale routes, assets and metadata
-// from previous builds are never served.
-await rm(join(CWD, "dist"), { recursive: true, force: true, maxRetries: 3 });
 
 for (const options of [SERVER_OPTIONS, BROWSER_OPTIONS]) {
   if (NODE_ENV_IS_DEVELOPMENT) {
