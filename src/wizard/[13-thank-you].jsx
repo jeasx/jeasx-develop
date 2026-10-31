@@ -13,9 +13,7 @@ export default function () {
     <Layout title="Thank you">
       <Form>
         <Headline>Thank you</Headline>
-        <Paragraph>
-          You have successfully reported your claim to your car insurance.
-        </Paragraph>
+        <Paragraph>You have successfully reported your claim to your car insurance.</Paragraph>
         <Paragraph>
           If you have any further questions, please contact us via chat or phone.
         </Paragraph>

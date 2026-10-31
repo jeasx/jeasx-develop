@@ -107,9 +107,7 @@ export const PasswordGenerator = component(() => {
             .map((ch) => html /*html*/ `<span class="${charClass(ch)}">${ch}</span>`)}</code
       >
       <div class="gen-actions">
-        <button class="gen-copy" @click="${copy}">
-          ${() => state.copyLabel}
-        </button>
+        <button class="gen-copy" @click="${copy}">${() => state.copyLabel}</button>
         <button class="gen-new" @click="${regenerate}">Regenerate</button>
       </div>
     </section>

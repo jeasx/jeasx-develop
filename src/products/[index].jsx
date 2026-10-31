@@ -28,7 +28,11 @@ export default async function ({ reply }) {
   }
 
   return (
-    <Layout title="Products" description="Browse products loaded from a remote API and rendered on the server." robots="index,nofollow">
+    <Layout
+      title="Products"
+      description="Browse products loaded from a remote API and rendered on the server."
+      robots="index,nofollow"
+    >
       <h1>Product overview</h1>
       <div class="row center">
         {products.map(({ id, title, price, description, thumbnail }) => (

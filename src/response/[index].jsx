@@ -22,8 +22,7 @@ export default function () {
           <code>Response.json(data)</code> sets body and content type in one go.
         </Card>
         <Card href="./redirect" title="Redirect">
-          <code>new Response(null, {"{ status: 303, headers }"})</code> sends the browser back
-          here.
+          <code>new Response(null, {"{ status: 303, headers }"})</code> sends the browser back here.
         </Card>
         <Card href="./teapot" title="Custom status">
           <code>new Response(body, {"{ status: 418 }"})</code> for any status code.

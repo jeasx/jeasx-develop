@@ -21,12 +21,12 @@ export default async function ({ request }) {
       <h1>Catch errors at runtime</h1>
       <p>
         Jeasx streams markup by default. Errors that happen before the first chunk is sent are
-        handled by Fastify's error handler, which answers with the right status code. By default,
-        it responds with JSON; register your own via <code>setErrorHandler()</code> in{" "}
+        handled by Fastify's error handler, which answers with the right status code. By default, it
+        responds with JSON; register your own via <code>setErrorHandler()</code> in{" "}
         <code>FASTIFY_SERVER</code> of <code>jeasx.config.js</code> to render a user-friendly error
-        page. Once streaming has started, status and headers are already sent: wrap risky
-        components in an error boundary to render a fallback instead. Have a look at the source to
-        see how things are wired up.
+        page. Once streaming has started, status and headers are already sent: wrap risky components
+        in an error boundary to render a fallback instead. Have a look at the source to see how
+        things are wired up.
       </p>
       <ul>
         <li>
