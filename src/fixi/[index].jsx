@@ -100,7 +100,8 @@ async function Fragment({ request, reply }) {
   let entries = await readEntries(request.cookies["recipes"]);
 
   // Only allow existing entries or appending a new one.
-  const id = Number(body["id"]);
+  // Only digits count as id, as Number("") would be 0 and overwrite the first entry.
+  const id = /^\d+$/.test(String(body["id"] ?? "")) ? Number(body["id"]) : NaN;
   const isValidId =
     Number.isInteger(id) &&
     id >= 0 &&
