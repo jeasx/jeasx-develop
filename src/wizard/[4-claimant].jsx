@@ -4,6 +4,7 @@ import Form from "./components/Form";
 import Input from "./components/Input";
 import Legend from "./components/Legend";
 import RadioGroup from "./components/RadioGroup";
+import { SLUGS } from "./domain/constants";
 import Layout from "./Layout";
 
 export default function ({ form, errors, data }) {
@@ -32,7 +33,7 @@ export default function ({ form, errors, data }) {
         <Input name="email" label="E-Mail" value={form.email} type="email" />
         <Input name="phone" label="Phone" value={form.phone} type="tel" />
         <Legend>Other details</Legend>
-        {data["/3-claim-report"]?.["claim_report"] === "Insured" && (
+        {data[SLUGS.CLAIM_REPORT]?.["claim_report"] === "Insured" && (
           <Input name="policy_number" label="Insurance policy number" value={form.policy_number} />
         )}
         <Input name="license_plate" label="Official license plate" value={form.license_plate} />
