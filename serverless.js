@@ -172,7 +172,7 @@ function decodePath(url) {
     const index = url.indexOf("?");
     const rawPath = index === -1 ? url : url.slice(0, index);
     const path = decodeURIComponent(rawPath).replace(/[\\/]+/g, "/");
-    if (path.includes("\0") || /(^|\/)\.\.(\/|$)/.test(path)) {
+    if (path.includes("\0") || /(^|\/)\.\.?(\/|$)/.test(path)) {
       return void 0;
     }
     return path;

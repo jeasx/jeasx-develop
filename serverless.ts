@@ -323,15 +323,16 @@ function* generateRoutes(path: string): Generator<string | typeof STATIC_FILE_RO
  * Extracts the path from a request url (dropping the query string) and decodes it.
  * Backslashes become slashes (as in browsers) and repeated slashes are collapsed,
  * so a path like "//evil.com" can't be mistaken for another host, e.g. in a <base> tag.
- * Returns undefined for malformed encodings, null bytes and ".." segments,
- * as browsers never send them and they could escape the project directory.
+ * Returns undefined for malformed encodings, null bytes and "." or ".." segments,
+ * as browsers never send them: ".." could escape the project directory, and "."
+ * would be resolved by the file system in development, but not in production.
  */
 function decodePath(url: string): string | undefined {
   try {
     const index = url.indexOf("?");
     const rawPath = index === -1 ? url : url.slice(0, index);
     const path = decodeURIComponent(rawPath).replace(/[\\/]+/g, "/");
-    if (path.includes("\0") || /(^|\/)\.\.(\/|$)/.test(path)) {
+    if (path.includes("\0") || /(^|\/)\.\.?(\/|$)/.test(path)) {
       return undefined;
     }
     return path;
