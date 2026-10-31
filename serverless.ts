@@ -287,13 +287,15 @@ function* generateRoutes(path: string): Generator<string | typeof STATIC_FILE_RO
 
 /**
  * Decodes an url-encoded path.
+ * Backslashes become slashes (as in browsers) and repeated slashes are collapsed,
+ * so a path like "//evil.com" can't be mistaken for another host, e.g. in a <base> tag.
  * Returns undefined for malformed encodings, null bytes and ".." segments,
  * as browsers never send them and they could escape the project directory.
  */
 function decodePath(rawPath: string): string | undefined {
   try {
-    const path = decodeURIComponent(rawPath);
-    if (path.includes("\0") || /(^|[\\/])\.\.([\\/]|$)/.test(path)) {
+    const path = decodeURIComponent(rawPath).replace(/[\\/]+/g, "/");
+    if (path.includes("\0") || /(^|\/)\.\.(\/|$)/.test(path)) {
       return undefined;
     }
     return path;
@@ -338,7 +340,9 @@ async function tryFile(request: FastifyRequest): Promise<BaseSendResult | undefi
   if (NODE_ENV_IS_DEVELOPMENT) {
     for (const directory of ["dist", "public"]) {
       // Don't expose compiled server routes and their sourcemaps.
-      if (directory === "dist" && /\[.+\]\.js(\.map)?$/.test(request.path)) {
+      // Case-insensitive and not anchored at the end, as some file systems ignore case
+      // (macOS, Windows) or trailing dots and stream names (Windows: "[index].js.", "[index].js::$DATA").
+      if (directory === "dist" && /\]\.js/iu.test(request.path)) {
         continue;
       }
       try {

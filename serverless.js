@@ -158,8 +158,8 @@ function* generateRoutes(path) {
 }
 function decodePath(rawPath) {
   try {
-    const path = decodeURIComponent(rawPath);
-    if (path.includes("\0") || /(^|[\\/])\.\.([\\/]|$)/.test(path)) {
+    const path = decodeURIComponent(rawPath).replace(/[\\/]+/g, "/");
+    if (path.includes("\0") || /(^|\/)\.\.(\/|$)/.test(path)) {
       return void 0;
     }
     return path;
@@ -186,7 +186,7 @@ async function tryFile(request) {
   }
   if (NODE_ENV_IS_DEVELOPMENT) {
     for (const directory of ["dist", "public"]) {
-      if (directory === "dist" && /\[.+\]\.js(\.map)?$/.test(request.path)) {
+      if (directory === "dist" && /\]\.js/iu.test(request.path)) {
         continue;
       }
       try {
