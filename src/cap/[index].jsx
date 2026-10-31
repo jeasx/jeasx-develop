@@ -50,7 +50,7 @@ export default async function ({ request }) {
       <form action="" method="post">
         <label>
           Enter your name:
-          <input type="text" name="name" value={request?.body?.["name"]} />
+          <input type="text" name="name" value={request.body?.["name"]} />
         </label>
         <label>
           <cap-widget data-cap-api-endpoint={`${request.path.replace(/\/$/, "")}/`}></cap-widget>

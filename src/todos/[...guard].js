@@ -18,7 +18,8 @@ export default function ({ request, reply }) {
     request.body && typeof request.body === "object" ? request.body : {}
   );
 
-  let todos = readListCookie(request.cookies["todos"]) ?? structuredClone(DEFAULT_TODOS);
+  let todos =
+    readListCookie(request.cookies["todos"])?.map(toTodo) ?? structuredClone(DEFAULT_TODOS);
 
   // Ignore todos without any text, e.g. only spaces.
   const newTodo = String(body["newTodo"] ?? "")
@@ -53,5 +54,18 @@ export default function ({ request, reply }) {
     todos,
     status: query["status"],
     autofocus: request.method === "GET" || "newTodo" in body,
+  };
+}
+
+/**
+ * The cookie can be edited by the client, so turn the label into a string of limited length
+ * and only allow known states.
+ *
+ * @param {Record<string, unknown>} item
+ */
+function toTodo({ label, status }) {
+  return {
+    label: String(label ?? "").slice(0, MAX_LABEL_LENGTH),
+    status: status === "completed" ? "completed" : "active",
   };
 }

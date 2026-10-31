@@ -102,7 +102,7 @@ export default function ({ request, reply }) {
     props.form = props.data[path] || {};
     return props;
   } catch (error) {
-    console.error(error);
+    request.log.error(error);
     reply.clearCookie("data", COOKIE_OPTIONS);
     return reply.redirect(SLUGS.START);
   }

@@ -3,6 +3,9 @@ import COMPONENTS from "./components/$index";
 
 document.querySelectorAll("[data-arrowjs]").forEach((el) => {
   if (el instanceof HTMLElement) {
-    html`${COMPONENTS[el.dataset.arrowjs]()}`(el);
+    const component = COMPONENTS[el.dataset.arrowjs];
+    if (component) {
+      html`${component()}`(el);
+    }
   }
 });
