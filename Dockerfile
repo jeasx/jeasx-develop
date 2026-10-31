@@ -10,4 +10,5 @@ COPY --chown=node:node . ./
 
 RUN node --run build
 
-CMD ["node","--run","start"]
+# Start node directly: "node --run" doesn't forward SIGTERM, so the server couldn't shut down gracefully.
+CMD ["node","cli.js","start"]
