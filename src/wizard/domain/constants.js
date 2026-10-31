@@ -15,4 +15,7 @@ const SLUGS = {
   THANK_YOU: "/wizard/13-thank-you",
 };
 
-export { SLUGS };
+/** Token of a saved claim, e.g. "ID-1A2B3C4D". It is also the name of its cookie. */
+const TOKEN_PATTERN = /^ID-[0-9A-F]{8}$/;
+
+export { SLUGS, TOKEN_PATTERN };

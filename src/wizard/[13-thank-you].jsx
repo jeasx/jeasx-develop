@@ -5,11 +5,10 @@ import Submit from "./components/Submit";
 import Layout from "./Layout";
 
 /**
- * @param {import("../types").RouteProps} props
+ * The answers are cleared when the last step is submitted (see [...guard].js),
+ * so opening this page never deletes anything.
  */
-export default function ({ reply }) {
-  reply.clearCookie("data");
-
+export default function () {
   return (
     <Layout title="Thank you">
       <Form>

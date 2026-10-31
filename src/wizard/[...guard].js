@@ -1,5 +1,6 @@
+import { createHash } from "node:crypto";
 import { fitsCookie } from "../cookies";
-import { SLUGS } from "./domain/constants";
+import { SLUGS, TOKEN_PATTERN } from "./domain/constants";
 import navigate from "./domain/navigate";
 import validator from "./domain/validator";
 import { compress, decompress } from "./utils/zip";
@@ -71,14 +72,20 @@ export default function ({ request, reply }) {
       switch (request.body["$action"] || "") {
         case "":
           break;
+        // Saving and finishing delete the current answers. This only happens on form submissions,
+        // so a plain GET (e.g. a link prefetch or a reload) never loses any answers.
         case "Save":
-          return reply.redirect(SLUGS.SAVE);
+          return reply.redirect(`${SLUGS.SAVE}?token=${save(request, reply, props.data)}`);
         case "Back":
           // Steps outside of the current flow have no previous step.
           return reply.redirect(props.previous || SLUGS.START);
         default:
           props.errors = validator(path, props.data[path]);
           if (Object.keys(props.errors).length === 0) {
+            if (props.next === SLUGS.THANK_YOU) {
+              // The claim is complete, so its answers aren't needed anymore.
+              reply.clearCookie("data");
+            }
             return reply.redirect(props.next);
           }
       }
@@ -101,7 +108,7 @@ export default function ({ request, reply }) {
  * @param {string} token
  */
 function loadSaved(cookies, token) {
-  if (!/^ID-[0-9A-F]{8}$/.test(token)) {
+  if (!TOKEN_PATTERN.test(token)) {
     return;
   }
   try {
@@ -110,6 +117,31 @@ function loadSaved(cookies, token) {
   } catch {
     return;
   }
+}
+
+/**
+ * Saves the answers in a cookie of their own and returns its token.
+ * The current answers are cleared, so the next claim starts empty.
+ *
+ * @param {import("fastify").FastifyRequest} request
+ * @param {import("fastify").FastifyReply} reply
+ * @param {unknown} data
+ */
+function save(request, reply, data) {
+  const token =
+    "ID-" + createHash("sha1").update(JSON.stringify(data)).digest("hex").slice(0, 8).toUpperCase();
+  // Keep only the latest saved claim. Each one takes up to 4 KB, so piling them up
+  // would push the Cookie header beyond the server's limit and every request would fail.
+  for (const name of Object.keys(request.cookies)) {
+    if (name !== token && TOKEN_PATTERN.test(name)) {
+      reply.clearCookie(name);
+    }
+  }
+  // Keep the saved claim for 10 days, as promised on the start page.
+  reply.setCookie(token, compress(data), { maxAge: 10 * 24 * 60 * 60 });
+  // Replaces the "data" cookie set above for the submitted answers.
+  reply.clearCookie("data");
+  return token;
 }
 
 function convertBodyToData(body) {
