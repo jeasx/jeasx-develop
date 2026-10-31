@@ -1,7 +1,7 @@
-import jokes from "../jokes.js";
+import jokes from "../jokes";
 
 /**
- * @param {import("../../types.js").RouteProps} props
+ * @param {import("../../types").RouteProps} props
  */
 export default function ({ request, reply }) {
   const category = request.path.slice(request.path.lastIndexOf("/") + 1);

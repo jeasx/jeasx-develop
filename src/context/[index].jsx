@@ -1,6 +1,7 @@
 import Layout from "../Layout";
 
 /**
+ * @this {import("../types").ThisContext & { theme?: string }}
  * @param {import("../types").RouteProps} props
  */
 export default function ({ request }) {
@@ -24,14 +25,17 @@ export default function ({ request }) {
   );
 }
 
+/**
+ * @this {import("../types").ThisContext & { theme?: string }}
+ */
 function Subcomponent() {
   return (
     <>
       <div style="display: flex; justify-content: space-evenly; align-items: center;">
-        <a href="?theme=light" role="button" disabled={this.theme === "light"}>
+        <a href="?theme=light" role="button" aria-disabled={String(this.theme === "light")}>
           Light
         </a>
-        <a href="?theme=dark" role="button" disabled={this.theme === "dark"}>
+        <a href="?theme=dark" role="button" aria-disabled={String(this.theme === "dark")}>
           Dark
         </a>
       </div>
@@ -49,6 +53,9 @@ function Subcomponent() {
   );
 }
 
+/**
+ * @this {import("../types").ThisContext & { theme?: string }}
+ */
 function Subsubcomponent() {
   return (
     <div style={`text-align: center; ${this.theme === "dark" ? "color:white" : "color:black"}`}>

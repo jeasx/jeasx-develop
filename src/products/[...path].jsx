@@ -18,17 +18,19 @@ export default async function ({ request, reply }) {
   } catch {
     // Network errors and timeouts aren't a missing product, so don't answer with 404.
     reply.status(504);
-    return (
-      <Layout title="Product" robots="noindex">
-        <p>The product couldn't be loaded right now. Please try again later.</p>
-      </Layout>
-    );
+    return <Unavailable />;
   }
-  const product = response.ok ? await response.json().catch(() => undefined) : undefined;
 
-  // Unknown ids and unexpected responses get a 404.
-  if (!Array.isArray(product?.images)) {
+  // Only a 404 from upstream means the product doesn't exist: let [404] answer.
+  if (response.status === 404) {
     return;
+  }
+
+  // Other error responses and unexpected data aren't a missing product either.
+  const product = response.ok ? await response.json().catch(() => undefined) : undefined;
+  if (!Array.isArray(product?.images)) {
+    reply.status(502);
+    return <Unavailable />;
   }
 
   return (
@@ -51,6 +53,14 @@ export default async function ({ request, reply }) {
       <section class="center">
         <a href="..">Show all products</a>
       </section>
+    </Layout>
+  );
+}
+
+function Unavailable() {
+  return (
+    <Layout title="Product" robots="noindex">
+      <p>The product couldn't be loaded right now. Please try again later.</p>
     </Layout>
   );
 }

@@ -1,18 +1,26 @@
 import Layout from "../Layout";
 import Image from "../sharp/Image";
 
-export default async function () {
+/**
+ * @param {import("../types").RouteProps} props
+ */
+export default async function ({ reply }) {
   let products;
   try {
     const response = await fetch("https://dummyjson.com/products", {
       signal: AbortSignal.timeout(5000),
     });
-    ({ products } = response.ok ? await response.json() : {});
+    ({ products } = response.ok ? await response.json().catch(() => ({})) : {});
   } catch {
-    // Network errors and timeouts end up in the message below.
+    // Network errors and timeouts: the upstream server didn't answer in time.
+    reply.status(504);
   }
 
   if (!Array.isArray(products)) {
+    // Error responses and unexpected data: the upstream server answered, but not usefully.
+    if (reply.statusCode === 200) {
+      reply.status(502);
+    }
     return (
       <Layout title="Products" robots="noindex">
         <h1>Product overview</h1>

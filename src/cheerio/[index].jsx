@@ -3,6 +3,7 @@ import Layout from "../Layout";
 import extractStyles from "./extractStyles";
 
 /**
+ * @this {import("../types").ThisContext}
  * @param {import("../types").RouteProps} props
  */
 export default function ({ request, reply }) {

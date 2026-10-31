@@ -1,5 +1,5 @@
 import Actions from "./components/Actions";
-import Error from "./components/Error";
+import ErrorMessage from "./components/ErrorMessage";
 import Form from "./components/Form";
 import Input from "./components/Input";
 import Legend from "./components/Legend";
@@ -38,7 +38,7 @@ export default function ({ form, errors, data }) {
         )}
         <Input name="license_plate" label="Official license plate" value={form.license_plate} />
         <Actions />
-        <Error message={errors} />
+        <ErrorMessage message={errors} />
       </Form>
     </Layout>
   );

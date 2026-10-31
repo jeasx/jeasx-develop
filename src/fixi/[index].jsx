@@ -1,3 +1,4 @@
+import { fitsCookie, readListCookie } from "../cookies";
 import Layout from "../Layout";
 
 /**
@@ -30,23 +31,44 @@ export default function ({ request, reply }) {
 
 const MAX_ENTRIES = 10;
 const MAX_LENGTH = 50;
-// Browsers silently drop cookies larger than about 4 KB (name, value and attributes).
-const MAX_COOKIE_SIZE = 3800;
+// If the recipes couldn't be loaded, wait this long before trying again.
+const RETRY_DELAY = 60_000;
 
-/** Starting point for every visitor; changes are stored per visitor in a cookie. */
-const DEFAULT_ENTRIES = await loadRecipes();
+/** @type {Promise<ReturnType<typeof toEntry>[]> | undefined} */
+let defaultEntries;
+let failedAt = 0;
 
-/** Loads some recipes; starts with an empty list if the API is unavailable. */
+/**
+ * Returns the starting point for every visitor; changes are stored per visitor in a cookie.
+ * The recipes are loaded once and kept. If the API is unavailable, the list starts empty
+ * and loading is tried again after RETRY_DELAY, so a short outage isn't kept until a restart.
+ */
+function getDefaultEntries() {
+  if (!defaultEntries && Date.now() - failedAt >= RETRY_DELAY) {
+    defaultEntries = loadRecipes().then((entries) => {
+      if (!entries) {
+        defaultEntries = undefined;
+        failedAt = Date.now();
+      }
+      return entries ?? [];
+    });
+  }
+  return defaultEntries ?? Promise.resolve([]);
+}
+
+// Start loading right away, so the first visitor doesn't have to wait as long.
+getDefaultEntries();
+
+/** Loads some recipes; returns undefined if the API is unavailable. */
 async function loadRecipes() {
   try {
-    // Runs while the module loads, so a hanging server would block the first request.
     const response = await fetch("https://dummyjson.com/recipes?limit=5", {
       signal: AbortSignal.timeout(5000),
     });
-    const { recipes } = await response.json();
-    return Array.isArray(recipes) ? recipes.slice(0, MAX_ENTRIES).map(toEntry) : [];
+    const { recipes } = response.ok ? await response.json() : {};
+    return Array.isArray(recipes) ? recipes.slice(0, MAX_ENTRIES).map(toEntry) : undefined;
   } catch {
-    return [];
+    return undefined;
   }
 }
 
@@ -56,18 +78,8 @@ async function loadRecipes() {
  *
  * @param {string | undefined} cookie
  */
-function readEntries(cookie) {
-  try {
-    const entries = JSON.parse(cookie);
-    // The cookie can be edited by the client, so check its content.
-    if (Array.isArray(entries)) {
-      return entries
-        .filter((entry) => entry && typeof entry === "object")
-        .slice(0, MAX_ENTRIES)
-        .map(toEntry);
-    }
-  } catch {}
-  return DEFAULT_ENTRIES;
+async function readEntries(cookie) {
+  return readListCookie(cookie)?.slice(0, MAX_ENTRIES).map(toEntry) ?? (await getDefaultEntries());
 }
 
 /** @param {Record<string, unknown>} value */
@@ -83,9 +95,9 @@ function toText(value) {
 /**
  * @param {import("../types").RouteProps} props
  */
-function Fragment({ request, reply }) {
+async function Fragment({ request, reply }) {
   const body = request?.body || {};
-  let entries = readEntries(request.cookies["recipes"]);
+  let entries = await readEntries(request.cookies["recipes"]);
 
   // Only allow existing entries or appending a new one.
   const id = Number(body["id"]);
@@ -99,7 +111,7 @@ function Fragment({ request, reply }) {
     changed[id] = toEntry(body);
     const cookie = JSON.stringify(changed);
     // Ignore changes which don't fit into the cookie (e.g. lots of emojis).
-    if (encodeURIComponent(cookie).length <= MAX_COOKIE_SIZE) {
+    if (fitsCookie(cookie)) {
       entries = changed;
       reply.setCookie("recipes", cookie);
     }
@@ -159,21 +171,27 @@ function Fragment({ request, reply }) {
           </form>
         );
       })}
-      <form
-        class="row"
-        action="."
-        method="post"
-        fx-action="."
-        fx-method="post"
-        fx-target="#entries"
-      >
-        <div class="offset-md-9 col-md-3 col-sm-12">
-          <input type="hidden" name="id" value={entries.length} />
-          <button class="btn btn-primary" type="submit" name="action" value="create">
-            Add
-          </button>
-        </div>
-      </form>
+      {entries.length < MAX_ENTRIES ? (
+        <form
+          class="row"
+          action="."
+          method="post"
+          fx-action="."
+          fx-method="post"
+          fx-target="#entries"
+        >
+          <div class="offset-md-9 col-md-3 col-sm-12">
+            <input type="hidden" name="id" value={entries.length} />
+            <button class="btn btn-primary" type="submit" name="action" value="create">
+              Add
+            </button>
+          </div>
+        </form>
+      ) : (
+        <p class="center">
+          <small>The list is full: at most {MAX_ENTRIES} recipes can be stored.</small>
+        </p>
+      )}
     </article>
   );
 }

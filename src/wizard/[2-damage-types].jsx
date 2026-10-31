@@ -1,5 +1,5 @@
 import Actions from "./components/Actions";
-import Error from "./components/Error";
+import ErrorMessage from "./components/ErrorMessage";
 import Form from "./components/Form";
 import Input from "./components/Input";
 import Legend from "./components/Legend";
@@ -11,7 +11,7 @@ export default function ({ data, form, errors }) {
       <Form>
         <Legend>Please select from the following options (multiple selections possible):</Legend>
         {[
-          "I had a traffic accident with another person, who is known to me",
+          "I had a traffic accident with another person who is known to me",
           "I had a traffic accident with or caused by an animal",
           "My vehicle has been damaged",
           "The other person's vehicle is damaged",
@@ -28,7 +28,7 @@ export default function ({ data, form, errors }) {
           />
         ))}
         <Actions />
-        <Error message={errors} />
+        <ErrorMessage message={errors} />
       </Form>
     </Layout>
   );

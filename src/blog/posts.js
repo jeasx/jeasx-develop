@@ -1,7 +1,6 @@
+import { readListCookie, writeListCookie } from "../cookies";
 import data from "./data.json";
 
-// Browsers silently drop cookies larger than about 4 KB (name, value and attributes).
-const MAX_COOKIE_SIZE = 3800;
 const FIELDS = { slug: 100, title: 100, author: 100, description: 200, body: 1000 };
 // Slugs end up in links, so only allow safe characters (no "javascript:" etc.).
 const SLUG_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/;
@@ -14,17 +13,13 @@ const RESERVED_SLUGS = new Set(["post"]);
  * @param {import("fastify").FastifyRequest} request
  */
 export function readPosts(request) {
-  try {
-    const posts = JSON.parse(request.cookies["posts"]);
-    // The cookie can be edited by the client, so drop posts with invalid slugs.
-    if (Array.isArray(posts)) {
-      return posts.filter(
-        (post) => post && typeof post === "object" && SLUG_PATTERN.test(String(post.slug)),
-      );
-    }
-  } catch {}
-  // Return a copy, so callers can add posts without changing the shared example data.
-  return [...data];
+  // The cookie can be edited by the client, so drop posts with invalid slugs.
+  // Return a copy of the example data, so callers can add posts without changing it.
+  return (
+    readListCookie(request.cookies["posts"])?.filter((post) =>
+      SLUG_PATTERN.test(String(post.slug)),
+    ) ?? [...data]
+  );
 }
 
 /**
@@ -34,11 +29,7 @@ export function readPosts(request) {
  * @param {any[]} posts
  */
 export function writePosts(reply, posts) {
-  const kept = [...posts];
-  while (kept.length > 1 && encodeURIComponent(JSON.stringify(kept)).length > MAX_COOKIE_SIZE) {
-    kept.pop();
-  }
-  reply.setCookie("posts", JSON.stringify(kept));
+  writeListCookie(reply, "posts", posts);
 }
 
 /**
@@ -63,12 +54,14 @@ export function createPost(body) {
  * @param {string} text
  */
 function slugify(text) {
-  return text
-    .normalize("NFKD")
-    .replace(/\p{M}/gu, "")
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    // Shorten before trimming, so the cut never leaves a dash at the end.
-    .slice(0, FIELDS.slug)
-    .replace(/^-|-$/g, "");
+  return (
+    text
+      .normalize("NFKD")
+      .replace(/\p{M}/gu, "")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      // Shorten before trimming, so the cut never leaves a dash at the end.
+      .slice(0, FIELDS.slug)
+      .replace(/^-|-$/g, "")
+  );
 }

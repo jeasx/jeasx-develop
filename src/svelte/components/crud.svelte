@@ -32,7 +32,6 @@
 	function update() {
 		selected.first = first;
 		selected.last = last;
-		people = people;
 	}
 
 	function remove() {

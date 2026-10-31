@@ -1,5 +1,5 @@
 import Actions from "./components/Actions";
-import Error from "./components/Error";
+import ErrorMessage from "./components/ErrorMessage";
 import Form from "./components/Form";
 import Input from "./components/Input";
 import Legend from "./components/Legend";
@@ -17,8 +17,8 @@ export default function ({ data, form, errors }) {
         <RadioGroup
           label="Is the injured person the same as the person you already entered?"
           options={["Yes", "No"]}
-          name="additional_person"
-          value={form.additional_person}
+          name="same_person"
+          value={form.same_person}
         />
         <RadioGroup
           name="salutation"
@@ -41,7 +41,7 @@ export default function ({ data, form, errors }) {
           value={form.any_other_persons_hurt}
         />
         <Actions />
-        <Error message={errors} />
+        <ErrorMessage message={errors} />
       </Form>
     </Layout>
   );

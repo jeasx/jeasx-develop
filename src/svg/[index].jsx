@@ -18,7 +18,7 @@ export default async function ({ request }) {
         </label>
         <input type="submit" value="Submit" />
       </form>
-      {text && <img src={`/svg/logo.svg?text=${encodeURIComponent(text)}`} />}
+      {text && <img src={`/svg/logo.svg?text=${encodeURIComponent(text)}`} alt={String(text)} />}
     </Layout>
   );
 }

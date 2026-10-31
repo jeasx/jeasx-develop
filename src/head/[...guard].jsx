@@ -2,6 +2,9 @@ import { jsxToString } from "jsx-async-runtime";
 
 const HEAD_MARK = "[[HEAD]]";
 
+/**
+ * @this {import("../types").ThisContext}
+ */
 export default async function () {
   const headTags = [];
 

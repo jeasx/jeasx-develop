@@ -2,6 +2,7 @@ import Layout from "../Layout";
 import { Product } from "./Product";
 
 /**
+ * @this {import("../types").ThisContext & { fragment?: string }}
  * @param {import("../types").RouteProps} props
  */
 export default function ({ request }) {

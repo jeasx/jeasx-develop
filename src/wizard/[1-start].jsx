@@ -1,4 +1,4 @@
-import Error from "./components/Error";
+import ErrorMessage from "./components/ErrorMessage";
 import Form from "./components/Form";
 import Input from "./components/Input";
 import Paragraph from "./components/Paragraph";
@@ -14,17 +14,17 @@ export default function ({ form, errors }) {
           reported damage.
         </Paragraph>
         <Paragraph>
-          You can save your damage report at any time and retrieve it in this browser within 10 days
-          using the token. Saving again replaces the previously saved report.
+          You can save your claim at any time and retrieve it in this browser within 10 days using
+          the token. Saving again replaces the previously saved claim.
         </Paragraph>
         <Input
-          label="If you want to continue an already started damage report:"
+          label="If you want to continue a claim you already started:"
           name="$hash"
           placeholder="ID-1A2B3C4D"
           value={form["$hash"]}
         />
-        <Submit label="Start damage report" />
-        <Error message={errors} />
+        <Submit label="Start claim" />
+        <ErrorMessage message={errors} />
       </Form>
     </Layout>
   );

@@ -43,7 +43,8 @@ export default {
     forceCloseConnections: true,
     // Strip cache busters like "/index~mhe4k2x1.css" from the last path segment, but leave
     // the query string alone. The buster is the BUILD_ID (Date.now() in base 36, 8 characters
-    // until 2059), so other names with a tilde like "/my~notes.txt" stay untouched.
+    // until 2059). Only a tilde followed by exactly 8 lowercase letters or digits and an extension
+    // is stripped: "/my~notes.txt" stays untouched, but "/backup~20240101.tar" becomes "/backup.tar".
     rewriteUrl: (req) => req.url.replace(/^([^?]*\/[^/?]*)~[a-z0-9]{8}(\.[^/?]*)(?=\?|$)/, "$1$2"),
   }),
 

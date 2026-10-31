@@ -13,8 +13,7 @@ export default async function () {
         directly in your markup. Jeasx lets you use Alpine.js by simply importing it as a browser
         bundle.
       </p>
-      <form
-        method="post"
+      <div
         x-data="{
               jokes:[],
               counter: +(sessionStorage.getItem('counter') || 3),
@@ -36,7 +35,6 @@ export default async function () {
           <button
             class="btn btn-secondary"
             type="button"
-            name="counter"
             x-on:click="counter++"
             x-bind:disabled="counter === 5"
           >
@@ -44,22 +42,12 @@ export default async function () {
           </button>
         </div>
         <div class="grid">
-          <button
-            class="btn btn-primary"
-            type="button"
-            name="category"
-            x-on:click="load('programming')"
-          >
-            <span x-text="counter === 1 ? `Tell me a joke` : `Tell me ${counter} jokes`" />
+          <button class="btn btn-primary" type="button" x-on:click="load('programming')">
+            <span x-text="counter === 1 ? `Tell me a nerd joke` : `Tell me ${counter} nerd jokes`" />
           </button>
         </div>
         <div class="grid">
-          <button
-            class="btn btn-primary"
-            type="button"
-            name="category"
-            x-on:click="load('general')"
-          >
+          <button class="btn btn-primary" type="button" x-on:click="load('general')">
             <span x-text="counter === 1 ? `Tell me a pun` : `Tell me ${counter} puns`" />
           </button>
         </div>
@@ -70,7 +58,7 @@ export default async function () {
             </template>
           </ul>
         </template>
-      </form>
+      </div>
     </Layout>
   );
 }

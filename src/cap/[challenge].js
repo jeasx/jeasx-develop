@@ -1,4 +1,4 @@
-import cap from "./cap.js";
+import cap from "./cap";
 
 /**
  * @param {import("../types").RouteProps} props

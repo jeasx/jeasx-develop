@@ -23,3 +23,9 @@ summary {
 .loader > [aria-busy="true"]:has(~ *) {
   display: none;
 }
+
+/* µCSS dims [role=button][disabled], but "disabled" isn't valid on links: use aria-disabled. */
+[role="button"][aria-disabled="true"] {
+  opacity: 0.5;
+  pointer-events: none;
+}

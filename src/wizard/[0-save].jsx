@@ -32,7 +32,7 @@ export default function ({ request, reply, data }) {
           readonly
           value={token}
         />
-        <Submit label="Start new claim report" />
+        <Submit label="Start new claim" />
       </Form>
     </Layout>
   );

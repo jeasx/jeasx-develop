@@ -1,4 +1,4 @@
-export default function Error({ message }) {
+export default function ErrorMessage({ message }) {
   return (
     Object.keys(message).length > 0 && (
       <section role="alert">

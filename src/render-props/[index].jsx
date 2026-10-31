@@ -26,9 +26,9 @@ export default function () {
 
       <h2>As a list</h2>
       <Jokes category="programming" amount={3}>
-        {(jokes) => (
+        {(items) => (
           <ul>
-            {jokes.map((joke) => (
+            {items.map((joke) => (
               <li>{joke}</li>
             ))}
           </ul>
@@ -37,8 +37,8 @@ export default function () {
 
       <h2>As cards</h2>
       <Jokes category="general" amount={2}>
-        {(jokes) =>
-          jokes.map((joke, index) => (
+        {(items) =>
+          items.map((joke, index) => (
             <article>
               <header>
                 <strong>Joke #{index + 1}</strong>

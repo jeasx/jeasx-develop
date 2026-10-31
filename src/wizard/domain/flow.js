@@ -15,7 +15,7 @@ export default function flow(data) {
   steps.push(SLUGS.CLAIMANT);
 
   if (data?.[SLUGS.CLAIM_REPORT]?.["claim_report"] === "Insured") {
-    steps.push(SLUGS.INSURED);
+    steps.push(SLUGS.INJURED_PARTY);
   } else {
     steps.push(SLUGS.PERPETRATOR);
   }

@@ -1,5 +1,5 @@
 import Actions from "./components/Actions";
-import Error from "./components/Error";
+import ErrorMessage from "./components/ErrorMessage";
 import Form from "./components/Form";
 import Legend from "./components/Legend";
 import RadioGroup from "./components/RadioGroup";
@@ -26,7 +26,7 @@ export default function ({ data, form, errors }) {
           value={form.was_rented_hired_or_leased}
         />
         <Actions />
-        <Error message={errors} />
+        <ErrorMessage message={errors} />
       </Form>
     </Layout>
   );

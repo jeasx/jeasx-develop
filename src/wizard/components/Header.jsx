@@ -5,7 +5,7 @@ const groups = [
   { label: "Start", links: [SLUGS.DAMAGE_TYPES] },
   {
     label: "Claim Report",
-    links: [SLUGS.CLAIM_REPORT, SLUGS.CLAIMANT, SLUGS.INSURED, SLUGS.PERPETRATOR],
+    links: [SLUGS.CLAIM_REPORT, SLUGS.CLAIMANT, SLUGS.INJURED_PARTY, SLUGS.PERPETRATOR],
   },
   {
     label: "Damage Details",

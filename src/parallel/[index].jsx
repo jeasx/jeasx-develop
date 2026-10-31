@@ -3,6 +3,7 @@ import Layout from "../Layout";
 const DELAY = 1000;
 
 /**
+ * @this {import("../types").ThisContext}
  * @param {import("../types").RouteProps} props
  */
 export default async function ({ request }) {
@@ -28,11 +29,11 @@ export default async function ({ request }) {
         order stays the same.
       </p>
       <div class="row center">
-        <a href="?mode=sequential" role="button" disabled={mode === "sequential"}>
+        <a href="?mode=sequential" role="button" aria-disabled={String(mode === "sequential")}>
           Sequential
         </a>
         &nbsp;
-        <a href="?mode=parallel" role="button" disabled={mode === "parallel"}>
+        <a href="?mode=parallel" role="button" aria-disabled={String(mode === "parallel")}>
           Parallel
         </a>
       </div>

@@ -6,6 +6,7 @@ const PRINT_WIDTH = { min: 20, max: 200, fallback: 80 };
 const TAB_WIDTH = { min: 1, max: 8, fallback: 2 };
 
 /**
+ * @this {import("../types").ThisContext}
  * @param {import("../types").RouteProps} props
  */
 export default function ({ request, reply }) {

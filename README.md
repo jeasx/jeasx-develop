@@ -10,3 +10,9 @@ To get started with this repository, just run the following commands:
 npm install
 npm run dev
 ```
+
+The server lives in `serverless.ts`, but Node runs the compiled `serverless.js` (and `serverless.js.map`), which are committed to the repository. After changing `serverless.ts`, recompile both and commit them together:
+
+```bash
+npm run compile
+```

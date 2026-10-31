@@ -1,11 +1,8 @@
+import { fitsCookie } from "../cookies";
 import { SLUGS } from "./domain/constants";
 import navigate from "./domain/navigate";
 import validator from "./domain/validator";
 import { compress, decompress } from "./utils/zip";
-
-// Browsers silently drop cookies larger than about 4 KB (name, value and attributes),
-// which would lose all answers.
-const MAX_COOKIE_SIZE = 3800;
 
 /**
  * @param {import("../types").RouteProps} props
@@ -39,7 +36,7 @@ export default function ({ request, reply }) {
         if (!saved) {
           // Keep the current answers instead of starting over with nothing.
           props.errors = {
-            hash: "No saved damage report was found for this token. Please check the token or start a new report.",
+            hash: "No saved claim was found for this token. Please check the token or start a new claim.",
           };
           props.form = { $hash: token };
           return props;
@@ -54,8 +51,10 @@ export default function ({ request, reply }) {
         delete props.data[path];
       }
 
+      // A cookie which doesn't fit would be dropped by the browser and lose all answers.
+      // The check includes the encoding of "+", "/" and "=" in the base64 value.
       const cookie = compress(props.data);
-      tooLarge = cookie.length > MAX_COOKIE_SIZE;
+      tooLarge = !fitsCookie(cookie);
       if (!tooLarge) {
         reply.setCookie("data", cookie);
       }
