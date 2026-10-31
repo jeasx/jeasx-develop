@@ -3,9 +3,9 @@ import Layout from "../Layout";
 /**
  * @param {import("../types").RouteProps} props
  */
-export default function ({ request }) {
+export default function ({ request, reply }) {
   if (request.headers["fx-request"] === "true") {
-    return <Fragment request={request} />;
+    return <Fragment request={request} reply={reply} />;
   }
 
   return (
@@ -23,16 +23,18 @@ export default function ({ request }) {
         without it.
       </p>
       <h2>Recipe editor</h2>
-      <Fragment request={request} />
+      <Fragment request={request} reply={reply} />
     </Layout>
   );
 }
 
-const MAX_ENTRIES = 20;
-const MAX_LENGTH = 100;
+const MAX_ENTRIES = 10;
+const MAX_LENGTH = 50;
+// Browsers silently drop cookies larger than about 4 KB (name, value and attributes).
+const MAX_COOKIE_SIZE = 3800;
 
-/** Shared by all visitors, so keep it small. */
-const entries = await loadRecipes();
+/** Starting point for every visitor; changes are stored per visitor in a cookie. */
+const DEFAULT_ENTRIES = await loadRecipes();
 
 /** Loads some recipes; starts with an empty list if the API is unavailable. */
 async function loadRecipes() {
@@ -42,10 +44,35 @@ async function loadRecipes() {
       signal: AbortSignal.timeout(5000),
     });
     const { recipes } = await response.json();
-    return Array.isArray(recipes) ? recipes : [];
+    return Array.isArray(recipes) ? recipes.slice(0, MAX_ENTRIES).map(toEntry) : [];
   } catch {
     return [];
   }
+}
+
+/**
+ * Reads the visitor's recipes from the cookie; falls back to the defaults
+ * if it is missing or malformed.
+ *
+ * @param {string | undefined} cookie
+ */
+function readEntries(cookie) {
+  try {
+    const entries = JSON.parse(cookie);
+    // The cookie can be edited by the client, so check its content.
+    if (Array.isArray(entries)) {
+      return entries
+        .filter((entry) => entry && typeof entry === "object")
+        .slice(0, MAX_ENTRIES)
+        .map(toEntry);
+    }
+  } catch {}
+  return DEFAULT_ENTRIES;
+}
+
+/** @param {Record<string, unknown>} value */
+function toEntry({ name, cuisine, difficulty }) {
+  return { name: toText(name), cuisine: toText(cuisine), difficulty: toText(difficulty) };
 }
 
 /** @param {unknown} value */
@@ -53,8 +80,12 @@ function toText(value) {
   return String(value ?? "").slice(0, MAX_LENGTH);
 }
 
-function Fragment({ request }) {
+/**
+ * @param {import("../types").RouteProps} props
+ */
+function Fragment({ request, reply }) {
   const body = request?.body || {};
+  let entries = readEntries(request.cookies["recipes"]);
 
   // Only allow existing entries or appending a new one.
   const id = Number(body["id"]);
@@ -64,12 +95,14 @@ function Fragment({ request }) {
     (id < entries.length || (id === entries.length && entries.length < MAX_ENTRIES));
 
   if (["save", "create"].includes(body["action"]) && isValidId) {
-    // Every visitor sees these entries, so store only short texts.
-    entries[id] = {
-      name: toText(body["name"]),
-      cuisine: toText(body["cuisine"]),
-      difficulty: toText(body["difficulty"]),
-    };
+    const changed = [...entries];
+    changed[id] = toEntry(body);
+    const cookie = JSON.stringify(changed);
+    // Ignore changes which don't fit into the cookie (e.g. lots of emojis).
+    if (encodeURIComponent(cookie).length <= MAX_COOKIE_SIZE) {
+      entries = changed;
+      reply.setCookie("recipes", cookie);
+    }
   }
 
   return (
