@@ -193,6 +193,9 @@ async function renderResponse(context, response) {
   return typeof responseHandler === "function" ? await responseHandler.call(context, payload) : payload;
 }
 async function tryFile(request) {
+  if (request.method !== "GET" && request.method !== "HEAD") {
+    return void 0;
+  }
   const file = FILE_BY_PATH[request.path];
   if (file) {
     return await sendFile(request, file);

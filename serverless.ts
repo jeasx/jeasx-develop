@@ -365,6 +365,11 @@ async function renderResponse(context: any, response: unknown) {
  * Returns stream and metadata for requested file.
  */
 async function tryFile(request: FastifyRequest): Promise<BaseSendResult | undefined> {
+  // Files can only be fetched; other methods (e.g. a POST to "/index.css") are left to the routes.
+  if (request.method !== "GET" && request.method !== "HEAD") {
+    return undefined;
+  }
+
   // Production: Retrieve files only from pre-initialized mapping.
   // This avoids potential path traversal vulnerabilities caused
   // by unexpected `request.path` values.
