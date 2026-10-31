@@ -7,21 +7,19 @@ import extractStyles from "./extractStyles";
  * @param {import("../types").RouteProps} props
  */
 export default function ({ request, reply }) {
-  this.jsxStream = false;
-
   if (request.query["text"] === "plain") {
     reply.type("text/plain; charset=utf-8");
   }
 
   this.responseHandler = async (payload) => {
-    return typeof payload === "string"
-      ? await prettier.format(
-          request.query["source"] === "raw" ? payload : extractStyles(payload),
-          {
-            parser: "html",
-          },
-        )
-      : payload;
+    // Cheerio and Prettier need the complete markup, so a streamed payload is collected first.
+    const html = await toText(payload);
+    if (html === undefined) {
+      return payload;
+    }
+    return await prettier.format(request.query["source"] === "raw" ? html : extractStyles(html), {
+      parser: "html",
+    });
   };
 
   return (
@@ -63,4 +61,25 @@ function IFrame({ title, src }) {
       </div>
     </>
   );
+}
+
+/**
+ * Returns the payload as string; collects streams (Node or Web) into a string.
+ * Returns undefined for anything else.
+ *
+ * @param {unknown} payload
+ */
+async function toText(payload) {
+  if (typeof payload === "string") {
+    return payload;
+  }
+  if (payload && typeof payload[Symbol.asyncIterator] === "function") {
+    const decoder = new TextDecoder();
+    let text = "";
+    for await (const chunk of payload) {
+      text += typeof chunk === "string" ? chunk : decoder.decode(chunk, { stream: true });
+    }
+    return text + decoder.decode();
+  }
+  return undefined;
 }
