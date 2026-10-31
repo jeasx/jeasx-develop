@@ -9,12 +9,13 @@ import { isJsxNode, jsxToStream, jsxToString } from "jsx-async-runtime";
 import { stat } from "node:fs/promises";
 import { join } from "node:path";
 import { Readable } from "node:stream";
+import { pathToFileURL } from "node:url";
 import env from "./env.js";
 
 env();
 
 const CWD = process.cwd();
-const CONFIG = (await import(`file://${join(CWD, "jeasx.config.js")}`)).default;
+const CONFIG = (await import(pathToFileURL(join(CWD, "jeasx.config.js")).href)).default;
 const NODE_ENV_IS_DEVELOPMENT = process.env.NODE_ENV === "development";
 
 // Map routes and files for non-development environments from metadata export.
@@ -25,7 +26,7 @@ const METADATA: {
   files: Record<string, string>;
 } = NODE_ENV_IS_DEVELOPMENT
   ? { routes: {}, files: {} }
-  : (await import(`file://${join(CWD, "dist", "[--metadata--].js")}`)).default;
+  : (await import(pathToFileURL(join(CWD, "dist", "[--metadata--].js")).href)).default;
 
 // Without a prototype, lookups never return inherited keys like "constructor".
 const MODULE_BY_ROUTE = Object.assign(
@@ -48,7 +49,11 @@ declare module "fastify" {
   }
 }
 
-const FASTIFY_SEND_OPTIONS = CONFIG.FASTIFY_SEND_OPTIONS?.() as SendOptions;
+// Files are passed relative to CWD, so the root must always be CWD.
+const FASTIFY_SEND_OPTIONS: SendOptions = {
+  ...(CONFIG.FASTIFY_SEND_OPTIONS?.() as SendOptions),
+  root: CWD,
+};
 
 // Enhance Fastify server from userland
 const FASTIFY_SERVER = (CONFIG.FASTIFY_SERVER ?? ((fastify) => fastify)) as (
@@ -150,7 +155,7 @@ async function handler(request: FastifyRequest, reply: FastifyReply) {
           // Production: Load and cache module only via pre-calculated path.
           // This avoids potential path traversal vulnerabilities caused
           // by unexpected `route` values.
-          module = MODULE_BY_ROUTE[route] = await import(`file://${join(CWD, module)}`);
+          module = MODULE_BY_ROUTE[route] = await import(pathToFileURL(join(CWD, module)).href);
         } else if (module === undefined && NODE_ENV_IS_DEVELOPMENT) {
           // Only map module paths depending on `route` during development.
           const modulePath = join(CWD, "dist", `${route}.js`);
@@ -163,13 +168,15 @@ async function handler(request: FastifyRequest, reply: FastifyReply) {
           const mtime = (await stat(modulePath)).mtime.getTime();
           // Dynamic imports are restricted to development environments;
           // therefore, production-level path validation is not required here.
-          module = await import(`file://${modulePath}?${mtime}`);
+          module = await import(`${pathToFileURL(modulePath).href}?${mtime}`);
         }
       } catch (e) {
+        // Only stat() reports a missing route module (development).
+        // ERR_MODULE_NOT_FOUND isn't ignored, as it is also thrown
+        // for missing imports of an existing module.
         switch ((e as any)?.code) {
           case "ENOENT":
           case "ENOTDIR":
-          case "ERR_MODULE_NOT_FOUND":
             continue;
           default:
             // Module exists, but fails to load.
@@ -218,7 +225,7 @@ async function handler(request: FastifyRequest, reply: FastifyReply) {
         // Props are not a response: never send them if no other route answers.
         response = undefined;
         continue;
-      } else if (response === undefined || reply.statusCode === 404) {
+      } else if (response === undefined) {
         continue;
       } else {
         break;

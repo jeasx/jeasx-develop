@@ -4,18 +4,22 @@ import { isJsxNode, jsxToStream, jsxToString } from "jsx-async-runtime";
 import { stat } from "node:fs/promises";
 import { join } from "node:path";
 import { Readable } from "node:stream";
+import { pathToFileURL } from "node:url";
 import env from "./env.js";
 env();
 const CWD = process.cwd();
-const CONFIG = (await import(`file://${join(CWD, "jeasx.config.js")}`)).default;
+const CONFIG = (await import(pathToFileURL(join(CWD, "jeasx.config.js")).href)).default;
 const NODE_ENV_IS_DEVELOPMENT = process.env.NODE_ENV === "development";
-const METADATA = NODE_ENV_IS_DEVELOPMENT ? { routes: {}, files: {} } : (await import(`file://${join(CWD, "dist", "[--metadata--].js")}`)).default;
+const METADATA = NODE_ENV_IS_DEVELOPMENT ? { routes: {}, files: {} } : (await import(pathToFileURL(join(CWD, "dist", "[--metadata--].js")).href)).default;
 const MODULE_BY_ROUTE = Object.assign(
   /* @__PURE__ */ Object.create(null),
   METADATA.routes
 );
 const FILE_BY_PATH = Object.assign(/* @__PURE__ */ Object.create(null), METADATA.files);
-const FASTIFY_SEND_OPTIONS = CONFIG.FASTIFY_SEND_OPTIONS?.();
+const FASTIFY_SEND_OPTIONS = {
+  ...CONFIG.FASTIFY_SEND_OPTIONS?.(),
+  root: CWD
+};
 const FASTIFY_SERVER = CONFIG.FASTIFY_SERVER ?? ((fastify2) => fastify2);
 var serverless_default = FASTIFY_SERVER(
   fastify(CONFIG.FASTIFY_SERVER_OPTIONS?.()).decorateRequest("route", "").decorateRequest("path", "").decorateReply("file", void 0).addHook("onRequest", async (request, reply) => {
@@ -69,20 +73,19 @@ async function handler(request, reply) {
       }
       try {
         if (typeof module === "string") {
-          module = MODULE_BY_ROUTE[route] = await import(`file://${join(CWD, module)}`);
+          module = MODULE_BY_ROUTE[route] = await import(pathToFileURL(join(CWD, module)).href);
         } else if (module === void 0 && NODE_ENV_IS_DEVELOPMENT) {
           const modulePath = join(CWD, "dist", `${route}.js`);
           if (typeof require === "function" && require.cache[modulePath]) {
             delete require.cache[modulePath];
           }
           const mtime = (await stat(modulePath)).mtime.getTime();
-          module = await import(`file://${modulePath}?${mtime}`);
+          module = await import(`${pathToFileURL(modulePath).href}?${mtime}`);
         }
       } catch (e) {
         switch (e?.code) {
           case "ENOENT":
           case "ENOTDIR":
-          case "ERR_MODULE_NOT_FOUND":
             continue;
           default:
             throw e;
@@ -111,7 +114,7 @@ async function handler(request, reply) {
         Object.assign(props, response);
         response = void 0;
         continue;
-      } else if (response === void 0 || reply.statusCode === 404) {
+      } else if (response === void 0) {
         continue;
       } else {
         break;
