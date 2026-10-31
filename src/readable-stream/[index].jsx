@@ -21,9 +21,8 @@ export default function () {
       <h1>ReadableStream as children</h1>
       <p>
         Besides promises, JSX children can be a <code>ReadableStream</code>. Items are rendered in
-        order as they arrive. With <code>this.jsxStream = true</code> the markup rendered so far is
-        sent to the browser while waiting for the next item. <a href="">Reload</a> to watch it
-        again.
+        order as they arrive. The markup rendered so far is sent to the browser while waiting for
+        the next item. <a href="">Reload</a> to watch it again.
       </p>
       <p>
         A <code>ReadableStream</code> of strings or JSX can be used as children directly, e.g. a
