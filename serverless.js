@@ -183,10 +183,10 @@ function decodePath(url) {
 async function renderResponse(context, response) {
   let payload = response;
   if (isJsxNode(response)) {
-    if (context["jsxStream"] === true) {
-      payload = await jsxToStream.call(context, response);
-    } else {
+    if (context["jsxStream"] === false) {
       payload = await jsxToString.call(context, response);
+    } else {
+      payload = await jsxToStream.call(context, response);
     }
   }
   const responseHandler = context["responseHandler"];
