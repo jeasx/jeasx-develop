@@ -13,7 +13,11 @@ export default function ({ request, reply }) {
 
   // Answers are stored per path, so "/wizard/4-claimant/" must not become a separate step.
   if (path.length > 1 && path.endsWith("/") && request.method === "GET") {
-    return reply.redirect(path.replace(/\/+$/, ""), 301);
+    // The path is decoded, so encode it again: characters like "✓" or a line break
+    // aren't allowed in the Location header. "?" and "#" would end the path, so encode them too.
+    const location = encodeURI(path.replace(/\/+$/, "")).replace(/[?#]/g, encodeURIComponent);
+    const index = request.url.indexOf("?");
+    return reply.redirect(location + (index === -1 ? "" : request.url.slice(index)), 301);
   }
 
   try {

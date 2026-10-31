@@ -1,7 +1,8 @@
-import { readListCookie, writeListCookie } from "../cookies";
+import { fitsCookie, readListCookie, writeListCookie } from "../cookies";
 import data from "./data.json";
 
-const FIELDS = { slug: 100, title: 100, author: 100, description: 200, body: 1000 };
+/** Fields of a post and their maximum length. */
+export const FIELDS = { slug: 100, title: 100, author: 100, description: 200, body: 1000 };
 // Slugs end up in links, so only allow safe characters (no "javascript:" etc.).
 const SLUG_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 // "/blog/post" is the form for new posts, so posts with these slugs could never be opened.
@@ -23,7 +24,18 @@ export function readPosts(request) {
 }
 
 /**
+ * Checks if a post fits into the cookie on its own. Even within the field limits it may not,
+ * as characters like "ü" or emojis grow to 6 or 12 characters once URL-encoded.
+ *
+ * @param {object} post
+ */
+export function canStore(post) {
+  return fitsCookie(JSON.stringify([post]));
+}
+
+/**
  * Stores posts in the cookie, dropping the oldest ones until it fits.
+ * The newest post must pass canStore(), otherwise the browser drops the cookie.
  *
  * @param {import("fastify").FastifyReply} reply
  * @param {any[]} posts

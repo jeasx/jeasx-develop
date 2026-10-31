@@ -17,7 +17,9 @@ export default function ({ request, reply }) {
     reply.header("WWW-Authenticate", 'Basic realm="Restricted Area"');
     reply.status(401);
     return (
-      <Layout title="Error 401" css="./index.css">
+      // An absolute path, as this guard answers deeper paths like "/basic-auth/protected/a/b" too,
+      // where "./index.css" would point to a file that doesn't exist.
+      <Layout title="Error 401" css="/basic-auth/protected/index.css">
         <section class="center">
           <h1 class="access-denied">Error 401</h1>
           <p>You are not allowed to view the protected content.</p>
@@ -29,7 +31,7 @@ export default function ({ request, reply }) {
     );
   } else {
     return (
-      <Layout title="Access granted" css="./index.css">
+      <Layout title="Access granted" css="/basic-auth/protected/index.css">
         <section class="center">
           <h1 class="access-granted">Access granted</h1>
           <p>You are allowed to view the protected content.</p>

@@ -12,7 +12,9 @@ export default {
     sourcemap: NODE_ENV_IS_DEVELOPMENT && "inline",
     loader: { ".svg": "file" },
     plugins: [
-      sveltePlugin({ compilerOptions: { generate: "server", css: "injected" } }),
+      // Component styles end up in a CSS file (e.g. "/svelte/index.css" from the browser build),
+      // so they apply before hydration and without JavaScript. The server build's copy is unused.
+      sveltePlugin({ compilerOptions: { generate: "server", css: "external" } }),
       mdxPlugin({
         development: NODE_ENV_IS_DEVELOPMENT,
         jsxImportSource: "jsx-async-runtime",
@@ -25,7 +27,7 @@ export default {
 
   /** @type {() => import("esbuild").BuildOptions} */
   ESBUILD_BROWSER_OPTIONS: () => ({
-    plugins: [sveltePlugin({ compilerOptions: { generate: "client", css: "injected" } })],
+    plugins: [sveltePlugin({ compilerOptions: { generate: "client", css: "external" } })],
   }),
 
   /** @type {() => import("@fastify/send").SendOptions} */

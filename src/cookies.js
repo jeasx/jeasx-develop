@@ -31,6 +31,7 @@ export function readListCookie(cookie) {
 
 /**
  * Stores a list as JSON in a cookie, dropping items from the end until it fits.
+ * The first item is always kept, so callers must make sure it fits on its own.
  * Returns the stored items.
  *
  * @template T

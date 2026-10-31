@@ -1,7 +1,7 @@
 import Layout from "../Layout";
 import Svelte from "./Svelte";
 
-<Layout title="Svelte" description="Svelte integration in Jeasx" script="./index.js">
+<Layout title="Svelte" description="Svelte integration in Jeasx" css="/svelte/index.css" script="/svelte/index.js">
 
 # Svelte and Jeasx
 
@@ -22,14 +22,16 @@ import sveltePlugin from "esbuild-svelte";
 
 export default {
   ESBUILD_SERVER_OPTIONS: () => ({
-    plugins: [sveltePlugin({ compilerOptions: { generate: "server", css: "injected" } })],
+    plugins: [sveltePlugin({ compilerOptions: { generate: "server", css: "external" } })],
   }),
 
   ESBUILD_BROWSER_OPTIONS: () => ({
-    plugins: [sveltePlugin({ compilerOptions: { generate: "client", css: "injected" } })],
+    plugins: [sveltePlugin({ compilerOptions: { generate: "client", css: "external" } })],
   }),
 };
 ```
+
+With `css: "external"`, the styles of all components imported by a browser bundle end up in a CSS file next to it (e.g. `index.css` next to `index.js`). Link it in your page, so the components are styled right away, even before hydration and without JavaScript.
 
 View the [source code of this page](https://github.com/jeasx/jeasx-expo/tree/main/src/svelte) for an implementation of a Svelte integration with hydration support. Feel free to improve it as you like.
 
