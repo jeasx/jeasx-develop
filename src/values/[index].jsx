@@ -5,8 +5,6 @@ import Layout from "../Layout";
  * @this {import("../types").ThisContext}
  */
 export default function () {
-  this.jsxStream = true;
-
   return (
     <Layout
       title="What JSX can render"

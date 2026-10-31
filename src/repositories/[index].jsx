@@ -9,8 +9,6 @@ const cached = cache({ ttl: 5 * 60_000 });
  * @param {import("../types").RouteProps} props
  */
 export default async function ({ request }) {
-  this.jsxStream = true;
-
   // A repeated parameter arrives as array, so always work with a string.
   // GitHub rejects queries longer than 256 characters.
   const search = String(request.query["search"] || "jeasx").slice(0, 100);
@@ -22,10 +20,10 @@ export default async function ({ request }) {
     >
       <h1 class="center">Search GitHub Repositories</h1>
       <p>
-        The page is streamed with <code>this.jsxStream = true</code>: the page shell and a loading
-        indicator are sent to the browser right away, while the repositories are still fetched from
-        the GitHub API. As soon as the results arrive, they are streamed in after the indicator,
-        which is then hidden by a single CSS rule. No client-side JavaScript is involved.
+        The page is rendered as a stream: the page shell and a loading indicator are sent to the
+        browser right away, while the repositories are still fetched from the GitHub API. As soon as
+        the results arrive, they are streamed in after the indicator, which is then hidden by a
+        single CSS rule. No client-side JavaScript is involved.
       </p>
       <form method="get">
         <input type="search" name="search" placeholder="Search..." maxlength={100} value={search} />

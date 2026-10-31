@@ -8,7 +8,6 @@ const PAGE_DELAY = 700;
  * @this {import("../types").ThisContext}
  */
 export default function () {
-  this.jsxStream = true;
   const start = Date.now();
 
   return (

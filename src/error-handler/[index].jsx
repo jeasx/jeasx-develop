@@ -5,6 +5,8 @@ import Layout from "../Layout";
  * @param {import("../types").RouteProps} props
  */
 export default async function ({ request }) {
+  this.jsxStream = false;
+
   if (request.query["errorHandler"] === "true") {
     this.errorHandler = async (error) => {
       // You can decide if you want to create a log entry.

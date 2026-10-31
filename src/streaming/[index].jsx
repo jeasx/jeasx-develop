@@ -11,7 +11,6 @@ const SOURCES = [
  * @this {import("../types").ThisContext}
  */
 export default async function () {
-  this.jsxStream = true;
   const start = Date.now();
 
   // Start all requests at once; the markup just awaits the pending promises.
@@ -32,10 +31,10 @@ export default async function () {
     >
       <h1>Stream HTML to the browser</h1>
       <p>
-        Set <code>this.jsxStream = true</code> in a route and the rendered markup is sent in chunks:
-        whenever rendering waits for an async component, everything rendered so far is flushed. The
-        browser shows the page shell right away and renders slow parts as they arrive. No
-        client-side JavaScript is involved.
+        Set <code>this.jsxStream = true</code> in a route (or a guard) and the rendered markup is
+        sent in chunks: whenever rendering waits for an async component, everything rendered so far
+        is flushed. The browser shows the page shell right away and renders slow parts as they
+        arrive. No client-side JavaScript is involved.
       </p>
       <p>
         Four slow data sources are queried in parallel. Each result is flushed as soon as it and all

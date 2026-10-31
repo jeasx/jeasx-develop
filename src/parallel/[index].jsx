@@ -7,8 +7,6 @@ const DELAY = 1000;
  * @param {import("../types").RouteProps} props
  */
 export default async function ({ request }) {
-  this.jsxStream = true;
-
   const mode = request.query["mode"] === "parallel" ? "parallel" : "sequential";
   const start = Date.now();
 

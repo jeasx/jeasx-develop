@@ -11,7 +11,6 @@ response.body.pipeThrough(new TextDecoderStream()).`.replace(/\s+/g, " ");
  * @this {import("../types").ThisContext}
  */
 export default function () {
-  this.jsxStream = true;
   const start = Date.now();
 
   return (

@@ -10,6 +10,8 @@ const TAB_WIDTH = { min: 1, max: 8, fallback: 2 };
  * @param {import("../types").RouteProps} props
  */
 export default function ({ request, reply }) {
+  this.jsxStream = false;
+
   const body = request.body || {};
   const form = {
     printWidth: toOption(body["printWidth"], PRINT_WIDTH),

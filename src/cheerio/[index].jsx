@@ -7,6 +7,8 @@ import extractStyles from "./extractStyles";
  * @param {import("../types").RouteProps} props
  */
 export default function ({ request, reply }) {
+  this.jsxStream = false;
+
   if (request.query["text"] === "plain") {
     reply.type("text/plain; charset=utf-8");
   }
