@@ -36,12 +36,13 @@ export default async function ({ request }) {
 }
 
 async function Repositories({ search }) {
-  const items = await cached(search, () => searchRepositories(search));
+  // GitHub ignores case when searching, so the cache and the filter do too:
+  // "Jeasx" and "jeasx" share one cache entry and one request to GitHub.
+  const term = search.toLowerCase();
+  const items = await cached(term, () => searchRepositories(term));
   if (!items) {
     return <p>GitHub couldn't be reached right now. Please try again later.</p>;
   }
-  // GitHub ignores case when searching, so the filter does too.
-  const term = search.toLowerCase();
   const repositories = items.filter(({ full_name }) => {
     const name = String(full_name).toLowerCase();
     return term === "jeasx" ? name.startsWith(term + "/") : name.includes(term);

@@ -15,7 +15,7 @@ export default function ({ request, reply }) {
   }
 
   return (
-    <Layout title={blog.title} robots={"noindex,nofollow"}>
+    <Layout title={blog.title} robots="noindex,nofollow">
       <article>
         <header>
           <time>

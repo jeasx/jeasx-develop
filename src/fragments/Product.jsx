@@ -1,11 +1,10 @@
-import cache from "../cache";
+import { loadProduct } from "../products/products";
 import Image from "../sharp/Image";
 
-// Keep the products for a while, so browsing back and forth doesn't wait for the API.
-const cached = cache({ ttl: 5 * 60_000 });
-
 export async function Product({ id }) {
-  const product = await cached(String(id), () => loadProduct(id));
+  // A fragment replaces part of the page, so every failure (missing product, error response,
+  // network error or timeout) ends up in the same message instead of an error status.
+  const product = await loadProduct(id).catch(() => undefined);
   if (!product) {
     return <p>The product couldn't be loaded right now. Please try again later.</p>;
   }
@@ -28,21 +27,4 @@ export async function Product({ id }) {
       <p>{product.description}</p>
     </article>
   );
-}
-
-/**
- * Loads a product; returns undefined if it can't be loaded right now.
- *
- * @param {number} id
- */
-async function loadProduct(id) {
-  try {
-    const response = await fetch(`https://dummyjson.com/products/${id}`, {
-      signal: AbortSignal.timeout(5000),
-    });
-    return response.ok ? await response.json() : undefined;
-  } catch {
-    // Network errors and timeouts end up in the message of the component.
-    return undefined;
-  }
 }

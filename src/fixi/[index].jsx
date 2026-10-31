@@ -1,5 +1,6 @@
 import { fitsCookie, readListCookie } from "../cookies";
 import Layout from "../Layout";
+import { loadRecipes } from "../mdx/recipes";
 
 /**
  * @param {import("../types").RouteProps} props
@@ -31,55 +32,18 @@ export default function ({ request, reply }) {
 
 const MAX_ENTRIES = 10;
 const MAX_LENGTH = 50;
-// If the recipes couldn't be loaded, wait this long before trying again.
-const RETRY_DELAY = 60_000;
-
-/** @type {Promise<ReturnType<typeof toEntry>[]> | undefined} */
-let defaultEntries;
-let failedAt = 0;
-
-/**
- * Returns the starting point for every visitor; changes are stored per visitor in a cookie.
- * The recipes are loaded once and kept. If the API is unavailable, the list starts empty
- * and loading is tried again after RETRY_DELAY, so a short outage isn't kept until a restart.
- */
-function getDefaultEntries() {
-  if (!defaultEntries && Date.now() - failedAt >= RETRY_DELAY) {
-    defaultEntries = loadRecipes().then((entries) => {
-      if (!entries) {
-        defaultEntries = undefined;
-        failedAt = Date.now();
-      }
-      return entries ?? [];
-    });
-  }
-  return defaultEntries ?? Promise.resolve([]);
-}
 
 // Start loading right away, so the first visitor doesn't have to wait as long.
-getDefaultEntries();
-
-/** Loads some recipes; returns undefined if the API is unavailable. */
-async function loadRecipes() {
-  try {
-    const response = await fetch("https://dummyjson.com/recipes?limit=5", {
-      signal: AbortSignal.timeout(5000),
-    });
-    const { recipes } = response.ok ? await response.json() : {};
-    return Array.isArray(recipes) ? recipes.slice(0, MAX_ENTRIES).map(toEntry) : undefined;
-  } catch {
-    return undefined;
-  }
-}
+loadRecipes();
 
 /**
- * Reads the visitor's recipes from the cookie; falls back to the defaults
- * if it is missing or malformed.
+ * Reads the visitor's recipes from the cookie; falls back to the recipes from the API
+ * (or an empty list if it is unavailable) if the cookie is missing or malformed.
  *
  * @param {string | undefined} cookie
  */
 async function readEntries(cookie) {
-  return readListCookie(cookie)?.slice(0, MAX_ENTRIES).map(toEntry) ?? (await getDefaultEntries());
+  return (readListCookie(cookie) ?? (await loadRecipes())).slice(0, MAX_ENTRIES).map(toEntry);
 }
 
 /** @param {Record<string, unknown>} value */
@@ -107,25 +71,51 @@ async function Fragment({ request, reply }) {
     id >= 0 &&
     (id < entries.length || (id === entries.length && entries.length < MAX_ENTRIES));
 
+  const action = String(body["action"]);
+  const isNew = id === entries.length;
   let error = "";
-  if (["save", "create"].includes(String(body["action"])) && isValidId) {
-    const changed = [...entries];
-    changed[id] = toEntry(body);
-    const cookie = JSON.stringify(changed);
-    // Changes which don't fit into the cookie (e.g. lots of emojis) are dropped.
-    if (fitsCookie(cookie)) {
-      entries = changed;
-      reply.setCookie("recipes", cookie, { path: "/fixi" });
-    } else {
-      error = "Your changes are too long to be stored in a cookie. Please shorten them.";
+  /**
+   * Values of the row shown in edit mode (at index `id`), if any.
+   * @type {ReturnType<typeof toEntry> | undefined}
+   */
+  let editing;
+
+  if (action === "save" && isValidId) {
+    const entry = toEntry(body);
+    // A new recipe without any text isn't stored, so no empty rows pile up.
+    if (!isNew || entry.name || entry.cuisine || entry.difficulty) {
+      const changed = [...entries];
+      changed[id] = entry;
+      const cookie = JSON.stringify(changed);
+      if (fitsCookie(cookie)) {
+        entries = changed;
+        reply.setCookie("recipes", cookie, { path: "/fixi" });
+      } else {
+        // Changes which don't fit into the cookie (e.g. lots of emojis) aren't stored.
+        // Keep the row open with the entered values, so they can be shortened.
+        error = "Your changes are too long to be stored in a cookie. Please shorten them.";
+        editing = entry;
+      }
     }
+  } else if (action === "edit" && isValidId && !isNew) {
+    editing = entries[id];
+  } else if (action === "create" && isValidId && isNew) {
+    // A new recipe is only stored on "save", so leaving the empty row stores nothing.
+    editing = toEntry({});
   }
+
+  const rows = [...entries];
+  if (editing) {
+    rows[id] = editing;
+  }
+  // Hide "Add" while a new recipe is being entered.
+  const isAdding = rows.length > entries.length;
 
   return (
     <article id="entries" class="card-secondary">
       {error && <p role="alert">{error}</p>}
-      {Object.entries(entries).map(([id, { name, cuisine, difficulty }]) => {
-        const isEditMode = body["id"] === id && ["edit", "create"].includes(String(body["action"]));
+      {rows.map(({ name, cuisine, difficulty }, index) => {
+        const isEditMode = editing !== undefined && index === id;
         return (
           <form
             class="row"
@@ -135,7 +125,7 @@ async function Fragment({ request, reply }) {
             fx-method="post"
             fx-target="#entries"
           >
-            <input type="hidden" name="id" value={id} />
+            <input type="hidden" name="id" value={index} />
             <div class="col-md-3 col-sm-12">
               {isEditMode ? (
                 <input type="text" name="name" value={name} placeholder="Name..." />
@@ -176,7 +166,7 @@ async function Fragment({ request, reply }) {
           </form>
         );
       })}
-      {entries.length < MAX_ENTRIES ? (
+      {isAdding ? null : entries.length < MAX_ENTRIES ? (
         <form
           class="row"
           action="."

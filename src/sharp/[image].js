@@ -1,7 +1,7 @@
 import { stat } from "node:fs/promises";
 import { join, sep } from "node:path";
 import sharp from "sharp";
-import limiter from "./limiter";
+import limiter, { QueueFullError } from "./limiter";
 
 const LOCAL_IMAGE_DIR = join(process.cwd(), "public", "images");
 const ALLOWED_REMOTE_HOSTS = ["cdn.dummyjson.com"];
@@ -13,7 +13,9 @@ const MAX_DIMENSION = 2000;
 const MAX_INPUT_PIXELS = 25_000_000;
 // Converting is expensive, so keep recent results and limit parallel work.
 const MAX_CACHE_ENTRIES = 100;
-const limit = limiter(2);
+// Waiting requests hold no image data, but limit the line like for uploads, so a flood
+// of requests can't keep the CPU busy for minutes. One product overview loads 30 images.
+const limit = limiter(2, 100);
 const POSITIONS = new Set([
   ...Object.keys(sharp.strategy),
   ...Object.keys(sharp.gravity),
@@ -51,30 +53,43 @@ export default async function ({ request, reply }) {
 
   // Downloading (up to MAX_REMOTE_BYTES) and converting both run within the limit,
   // so requests waiting in line don't hold any image data in memory.
-  const image =
-    cacheGet(key) ??
-    (await limit(async () => {
-      // Another request may have converted the same image while this one was waiting.
-      const cached = cacheGet(key);
-      if (cached) {
-        return cached;
+  let image = cacheGet(key);
+  if (!image) {
+    try {
+      image = await limit(async () => {
+        // Another request may have converted the same image while this one was waiting.
+        const cached = cacheGet(key);
+        if (cached) {
+          return cached;
+        }
+        // The visitor left while this request was waiting, so nobody would get the image.
+        if (reply.raw.destroyed) {
+          return;
+        }
+        const input = await loadImage(query["src"]);
+        if (!input) {
+          return;
+        }
+        try {
+          const converted = await sharp(input, { limitInputPixels: MAX_INPUT_PIXELS })
+            .resize({ width, height, position })
+            .toFormat(format, { quality: 70 })
+            .toBuffer();
+          cacheSet(key, converted);
+          return converted;
+        } catch {
+          // Broken images and images with too many pixels end up as 404.
+          return;
+        }
+      });
+    } catch (error) {
+      if (error instanceof QueueFullError) {
+        reply.status(503).header("retry-after", "10").type("text/plain; charset=utf-8");
+        return "Too many images are being converted right now. Please try again in a moment.";
       }
-      const input = await loadImage(query["src"]);
-      if (!input) {
-        return;
-      }
-      try {
-        const converted = await sharp(input, { limitInputPixels: MAX_INPUT_PIXELS })
-          .resize({ width, height, position })
-          .toFormat(format, { quality: 70 })
-          .toBuffer();
-        cacheSet(key, converted);
-        return converted;
-      } catch {
-        // Broken images and images with too many pixels end up as 404.
-        return;
-      }
-    }));
+      throw error;
+    }
+  }
   if (!image) {
     return;
   }

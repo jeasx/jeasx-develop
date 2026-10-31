@@ -9,9 +9,9 @@ export default function () {
     >
       <h1>(Asynchronous) JSX components in the browser</h1>
       <p>
-        You can use JSX components built with{" "}
-        <a href="https://github.com/jeasx/jsx-async-runtime">jsx-async-runtime</a> also in the
-        browser for lightweight rendering of client-side markup.
+        You can also use JSX components built with{" "}
+        <a href="https://github.com/jeasx/jsx-async-runtime">jsx-async-runtime</a> in the browser
+        for lightweight rendering of client-side markup.
       </p>
       <form
         onsubmit={

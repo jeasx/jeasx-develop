@@ -9,6 +9,9 @@ import { compress, decompress } from "./utils/zip";
 // Clearing a cookie needs the same path as setting it.
 const COOKIE_OPTIONS = { path: "/wizard" };
 
+// Only steps store answers, so posts to other paths (e.g. "/wizard/foo") don't fill the cookie.
+const STEPS = new Set(Object.values(SLUGS));
+
 /**
  * @param {import("../types").RouteProps} props
  */
@@ -23,6 +26,10 @@ export default function ({ request, reply }) {
     const index = request.url.indexOf("?");
     return reply.redirect(location + (index === -1 ? "" : request.url.slice(index)), 301);
   }
+
+  // Other methods aren't redirected (a redirect would drop the form data),
+  // so a post to "/wizard/4-claimant/" counts for "/wizard/4-claimant".
+  const step = path.replace(/\/+$/, "");
 
   try {
     const props = {
@@ -53,11 +60,13 @@ export default function ({ request, reply }) {
         props.data = saved;
       }
 
-      const data = convertBodyToData(request.body);
-      if (Object.keys(data).length > 0) {
-        props.data[path] = data;
-      } else {
-        delete props.data[path];
+      if (STEPS.has(step)) {
+        const data = convertBodyToData(request.body);
+        if (Object.keys(data).length > 0) {
+          props.data[step] = data;
+        } else {
+          delete props.data[step];
+        }
       }
 
       // A cookie which doesn't fit would be dropped by the browser and lose all answers.
@@ -69,7 +78,7 @@ export default function ({ request, reply }) {
       }
     }
 
-    const { previous, next } = navigate(path, props.data);
+    const { previous, next } = navigate(step, props.data);
     props.previous = previous;
     props.next = next;
 
@@ -88,7 +97,7 @@ export default function ({ request, reply }) {
           // Steps outside of the current flow have no previous step.
           return reply.redirect(props.previous || SLUGS.START);
         default:
-          props.errors = validator(path, props.data[path]);
+          props.errors = validator(step, props.data[step]);
           if (Object.keys(props.errors).length === 0) {
             if (props.next === SLUGS.THANK_YOU) {
               // The claim is complete, so its answers aren't needed anymore.
@@ -99,7 +108,7 @@ export default function ({ request, reply }) {
       }
     }
 
-    props.form = props.data[path] || {};
+    props.form = props.data[step] || {};
     return props;
   } catch (error) {
     request.log.error(error);

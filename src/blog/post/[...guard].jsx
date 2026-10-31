@@ -12,7 +12,10 @@ export default function ({ request, reply }) {
       <Layout title="Error 401">
         <section class="center">
           <h1>Error 401</h1>
-          <p>You are not allowed to view this page!</p>
+          <p>You are not allowed to submit new posts.</p>
+          <p>
+            Please <a href="">reload the page</a> and enter the correct credentials (demo / demo).
+          </p>
         </section>
       </Layout>
     );
