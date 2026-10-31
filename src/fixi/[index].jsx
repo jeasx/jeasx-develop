@@ -29,6 +29,7 @@ export default function ({ request }) {
 }
 
 const MAX_ENTRIES = 20;
+const MAX_LENGTH = 100;
 
 /** Shared by all visitors, so keep it small. */
 const entries = await loadRecipes();
@@ -44,6 +45,11 @@ async function loadRecipes() {
   }
 }
 
+/** @param {unknown} value */
+function toText(value) {
+  return String(value ?? "").slice(0, MAX_LENGTH);
+}
+
 function Fragment({ request }) {
   const body = request?.body || {};
 
@@ -55,10 +61,11 @@ function Fragment({ request }) {
     (id < entries.length || (id === entries.length && entries.length < MAX_ENTRIES));
 
   if (["save", "create"].includes(body["action"]) && isValidId) {
+    // Every visitor sees these entries, so store only short texts.
     entries[id] = {
-      name: body["name"],
-      cuisine: body["cuisine"],
-      difficulty: body["difficulty"],
+      name: toText(body["name"]),
+      cuisine: toText(body["cuisine"]),
+      difficulty: toText(body["difficulty"]),
     };
   }
 

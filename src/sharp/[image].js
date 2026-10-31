@@ -1,13 +1,16 @@
 import { stat } from "node:fs/promises";
 import { join, sep } from "node:path";
 import sharp from "sharp";
+import limiter from "./limiter";
 
 const LOCAL_IMAGE_DIR = join(process.cwd(), "public", "images");
 const ALLOWED_REMOTE_HOSTS = ["cdn.dummyjson.com"];
+const MAX_REMOTE_BYTES = 10 * 1024 * 1024;
+const REMOTE_TIMEOUT = 5000;
 const MAX_DIMENSION = 2000;
 // Converting is expensive, so keep recent results and limit parallel work.
 const MAX_CACHE_ENTRIES = 100;
-const MAX_PARALLEL_CONVERSIONS = 2;
+const limit = limiter(2);
 const POSITIONS = new Set([
   ...Object.keys(sharp.strategy),
   ...Object.keys(sharp.gravity),
@@ -96,8 +99,38 @@ async function loadImage(src) {
     return;
   }
 
-  const response = await fetch(url);
-  return response.ok ? await response.arrayBuffer() : undefined;
+  try {
+    // Don't follow redirects, as they could lead to hosts outside the allowlist.
+    // The timeout also covers reading the body.
+    const response = await fetch(url, {
+      redirect: "error",
+      signal: AbortSignal.timeout(REMOTE_TIMEOUT),
+    });
+    return response.ok ? await readBody(response, MAX_REMOTE_BYTES) : undefined;
+  } catch {
+    // Network errors, timeouts and redirects end up as 404.
+    return;
+  }
+}
+
+/**
+ * Reads the response body, but gives up once it grows beyond maxBytes.
+ *
+ * @param {Response} response
+ * @param {number} maxBytes
+ */
+async function readBody(response, maxBytes) {
+  const chunks = [];
+  let size = 0;
+  for await (const chunk of response.body) {
+    size += chunk.byteLength;
+    if (size > maxBytes) {
+      // Leaving the loop cancels the download.
+      return;
+    }
+    chunks.push(chunk);
+  }
+  return Buffer.concat(chunks);
 }
 
 /** @type {Map<string, Buffer>} Least recently used entries come first. */
@@ -122,36 +155,6 @@ function cacheSet(key, value) {
   cache.set(key, value);
   if (cache.size > MAX_CACHE_ENTRIES) {
     cache.delete(cache.keys().next().value);
-  }
-}
-
-let running = 0;
-/** @type {(() => void)[]} */
-const waiting = [];
-
-/**
- * Runs the task once fewer than MAX_PARALLEL_CONVERSIONS tasks are running.
- *
- * @template T
- * @param {() => Promise<T>} task
- * @returns {Promise<T>}
- */
-async function limit(task) {
-  if (running < MAX_PARALLEL_CONVERSIONS) {
-    running++;
-  } else {
-    // Wait until a finished task hands over its slot.
-    await new Promise((resolve) => waiting.push(() => resolve(undefined)));
-  }
-  try {
-    return await task();
-  } finally {
-    const next = waiting.shift();
-    if (next) {
-      next();
-    } else {
-      running--;
-    }
   }
 }
 
