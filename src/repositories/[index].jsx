@@ -1,4 +1,8 @@
+import cache from "../cache";
 import Layout from "../Layout";
+
+// GitHub allows only 10 unauthenticated searches per minute, so keep the results for a while.
+const cached = cache({ ttl: 5 * 60_000 });
 
 /**
  * @this {import("../types").ThisContext}
@@ -32,20 +36,8 @@ export default async function ({ request }) {
 }
 
 async function Repositories({ search }) {
-  let items;
-  try {
-    const response = await fetch(
-      `https://api.github.com/search/repositories?q=${encodeURIComponent(search)}+in:name&sort=updated`,
-      // Don't wait forever for a slow server. The timeout also covers the body.
-      { signal: AbortSignal.timeout(5000) },
-    );
-    // Error responses may not be JSON, so only parse successful ones.
-    ({ items } = response.ok ? await response.json() : {});
-  } catch {
-    // Network errors and timeouts end up in the message below.
-  }
-  if (!Array.isArray(items)) {
-    // E.g. GitHub's rate limit for unauthenticated requests was hit or it timed out.
+  const items = await cached(search, () => searchRepositories(search));
+  if (!items) {
     return <p>GitHub couldn't be reached right now. Please try again later.</p>;
   }
   // GitHub ignores case when searching, so the filter does too.
@@ -64,4 +56,25 @@ async function Repositories({ search }) {
       ))}
     </ul>
   );
+}
+
+/**
+ * Searches GitHub; returns undefined if it can't be reached right now,
+ * e.g. when the rate limit for unauthenticated requests was hit or it timed out.
+ *
+ * @param {string} search
+ */
+async function searchRepositories(search) {
+  try {
+    const response = await fetch(
+      `https://api.github.com/search/repositories?q=${encodeURIComponent(search)}+in:name&sort=updated`,
+      // Don't wait forever for a slow server. The timeout also covers the body.
+      { signal: AbortSignal.timeout(5000) },
+    );
+    // Error responses may not be JSON, so only parse successful ones.
+    const { items } = response.ok ? await response.json() : {};
+    return Array.isArray(items) ? items : undefined;
+  } catch {
+    return undefined;
+  }
 }

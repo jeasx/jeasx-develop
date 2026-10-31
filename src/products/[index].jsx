@@ -1,5 +1,9 @@
+import cache from "../cache";
 import Layout from "../Layout";
 import Image from "../sharp/Image";
+
+// Keep the products for a while, so not every visit has to wait for the API.
+const cached = cache({ ttl: 5 * 60_000 });
 
 /**
  * @param {import("../types").RouteProps} props
@@ -7,10 +11,7 @@ import Image from "../sharp/Image";
 export default async function ({ reply }) {
   let products;
   try {
-    const response = await fetch("https://dummyjson.com/products", {
-      signal: AbortSignal.timeout(5000),
-    });
-    ({ products } = response.ok ? await response.json().catch(() => ({})) : {});
+    products = await cached("products", loadProducts);
   } catch {
     // Network errors and timeouts: the upstream server didn't answer in time.
     reply.status(504);
@@ -59,4 +60,16 @@ export default async function ({ reply }) {
       </div>
     </Layout>
   );
+}
+
+/**
+ * Loads the products; returns undefined for error responses and unexpected data.
+ * Network errors and timeouts are thrown.
+ */
+async function loadProducts() {
+  const response = await fetch("https://dummyjson.com/products", {
+    signal: AbortSignal.timeout(5000),
+  });
+  const { products } = response.ok ? await response.json().catch(() => ({})) : {};
+  return Array.isArray(products) ? products : undefined;
 }

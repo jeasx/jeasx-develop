@@ -29,7 +29,7 @@ export default function () {
           <code>new Response(body, {"{ status: 418 }"})</code> for any status code.
         </Card>
         <Card href="./proxy" title="Proxy">
-          <code>return fetch(url)</code> passes a remote response through.
+          <code>fetch(url)</code> passes a remote response through, cached for five minutes.
         </Card>
       </div>
     </Layout>
