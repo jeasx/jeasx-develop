@@ -8,6 +8,9 @@ const ALLOWED_REMOTE_HOSTS = ["cdn.dummyjson.com"];
 const MAX_REMOTE_BYTES = 10 * 1024 * 1024;
 const REMOTE_TIMEOUT = 5000;
 const MAX_DIMENSION = 2000;
+// A small file can still decode to a huge image (a "decompression bomb"),
+// so limit the pixels like for uploads (sharp's default is 268 megapixels).
+const MAX_INPUT_PIXELS = 25_000_000;
 // Converting is expensive, so keep recent results and limit parallel work.
 const MAX_CACHE_ENTRIES = 100;
 const limit = limiter(2);
@@ -52,9 +55,17 @@ export default async function ({ request, reply }) {
     if (!input) {
       return;
     }
-    image = await limit(() =>
-      sharp(input).resize({ width, height, position }).toFormat(format, { quality: 70 }).toBuffer(),
-    );
+    try {
+      image = await limit(() =>
+        sharp(input, { limitInputPixels: MAX_INPUT_PIXELS })
+          .resize({ width, height, position })
+          .toFormat(format, { quality: 70 })
+          .toBuffer(),
+      );
+    } catch {
+      // Broken images and images with too many pixels end up as 404.
+      return;
+    }
     cacheSet(key, image);
   }
 
