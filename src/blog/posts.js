@@ -5,6 +5,8 @@ const MAX_COOKIE_SIZE = 3800;
 const FIELDS = { slug: 100, title: 100, author: 100, description: 200, body: 1000 };
 // Slugs end up in links, so only allow safe characters (no "javascript:" etc.).
 const SLUG_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/;
+// "/blog/post" is the form for new posts, so posts with these slugs could never be opened.
+const RESERVED_SLUGS = new Set(["post"]);
 
 /**
  * Reads posts from the cookie; falls back to the example posts if it is missing or malformed.
@@ -50,7 +52,8 @@ export function createPost(body) {
   for (const [name, maxLength] of Object.entries(FIELDS)) {
     post[name] = String(body[name] ?? "").slice(0, maxLength);
   }
-  post["slug"] = slugify(post["slug"] || post["title"]) || `post-${Date.now()}`;
+  const slug = slugify(post["slug"] || post["title"]);
+  post["slug"] = slug && !RESERVED_SLUGS.has(slug) ? slug : `post-${Date.now()}`;
   return { ...post, date: new Date().toISOString() };
 }
 

@@ -5,6 +5,14 @@ import { Product } from "./Product";
  * @param {import("../types").RouteProps} props
  */
 export default function ({ request }) {
+  // Answer "/fragments" and its fragments "/fragments/~product" and "/fragments/~time" only.
+  const match = /^\/fragments(?:\/~(product|time))?\/?$/.exec(request.path);
+  if (!match) {
+    return;
+  }
+  // Name of the requested fragment; undefined renders the whole page.
+  this.fragment = match[1];
+
   // Keep the product id between 1 and 10, even for tampered query parameters.
   const id = Math.min(Math.max(Math.trunc(Number(request.query["id"])) || 1, 1), 10);
 
@@ -72,10 +80,10 @@ export default function ({ request }) {
 }
 
 /**
- * @this {import("../types").ThisContext}
+ * @this {import("../types").ThisContext & { fragment?: string }}
  */
 function Fragments({ container, children }) {
-  if (this.request.path.includes("~")) {
+  if (this.fragment) {
     return <>{children}</>;
   } else {
     const Container = container;
@@ -84,10 +92,10 @@ function Fragments({ container, children }) {
 }
 
 /**
- * @this {import("../types").ThisContext}
+ * @this {import("../types").ThisContext & { fragment?: string }}
  */
 function Fragment({ name = undefined, children }) {
-  if (!this.request.path.includes("~") || (name && this.request.path.endsWith(name))) {
+  if (!this.fragment || name === this.fragment) {
     return <>{children}</>;
   }
 }

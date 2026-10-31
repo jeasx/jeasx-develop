@@ -6,7 +6,8 @@ import Layout from "../Layout";
 export default async function ({ request }) {
   this.jsxStream = true;
 
-  const search = request.query["search"] || "jeasx";
+  // A repeated parameter arrives as array, so always work with a string.
+  const search = String(request.query["search"] || "jeasx");
 
   return (
     <Layout title="Search GitHub Repositories" description="A list of repositories at GitHub.">
@@ -46,9 +47,12 @@ async function Repositories({ search }) {
     // E.g. GitHub's rate limit for unauthenticated requests was hit or it timed out.
     return <p>GitHub couldn't be reached right now. Please try again later.</p>;
   }
-  const repositories = items.filter(({ full_name }) =>
-    search === "jeasx" ? full_name.startsWith(search) : full_name.includes(search),
-  );
+  // GitHub ignores case when searching, so the filter does too.
+  const term = search.toLowerCase();
+  const repositories = items.filter(({ full_name }) => {
+    const name = String(full_name).toLowerCase();
+    return search === "jeasx" ? name.startsWith(term) : name.includes(term);
+  });
   return (
     <ul>
       {repositories.map(({ html_url, full_name, description }) => (

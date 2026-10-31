@@ -41,7 +41,8 @@ export const PomodoroTimer = component(() => {
   const start = () => {
     if (state.running) return;
     state.running = true;
-    tick();
+    // The first second has to pass before the time goes down.
+    timer = window.setTimeout(tick, 1000);
   };
 
   const pause = () => {

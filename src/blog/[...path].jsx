@@ -6,8 +6,9 @@ import { readPosts } from "./posts";
  * @param {import("../types").RouteProps} props
  */
 export default function ({ request, reply }) {
-  const slug = request.path.slice(request.path.lastIndexOf("/") + 1);
-  const blog = readPosts(request).find((post) => post.slug === slug);
+  // Only answer "/blog/<slug>", not deeper paths like "/blog/a/b/<slug>".
+  const slug = /^\/blog\/([^/]+)\/?$/.exec(request.path)?.[1];
+  const blog = slug && readPosts(request).find((post) => post.slug === slug);
 
   if (!blog) {
     return;

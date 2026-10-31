@@ -11,6 +11,13 @@ const MAX_COOKIE_SIZE = 3800;
  * @param {import("../types").RouteProps} props
  */
 export default function ({ request, reply }) {
+  const path = request.path;
+
+  // Answers are stored per path, so "/wizard/4-claimant/" must not become a separate step.
+  if (path.length > 1 && path.endsWith("/") && request.method === "GET") {
+    return reply.redirect(path.replace(/\/+$/, ""), 301);
+  }
+
   try {
     const props = {
       data: decompress(request.cookies["data"]) || {},
@@ -20,13 +27,24 @@ export default function ({ request, reply }) {
       form: {},
     };
 
-    const path = request.path;
     let tooLarge = false;
 
     // Apply loaded and submitted data first, so navigation reflects the latest answers.
     if (request.body) {
-      if (request.body["$hash"]) {
-        props.data = decompress(request.cookies[request.body["$hash"]]) || {};
+      const token = String(request.body["$hash"] ?? "")
+        .trim()
+        .toUpperCase();
+      if (token) {
+        const saved = loadSaved(request.cookies, token);
+        if (!saved) {
+          // Keep the current answers instead of starting over with nothing.
+          props.errors = {
+            hash: "No saved damage report was found for this token. Please check the token or start a new report.",
+          };
+          props.form = { $hash: token };
+          return props;
+        }
+        props.data = saved;
       }
 
       const data = convertBodyToData(request.body);
@@ -57,7 +75,8 @@ export default function ({ request, reply }) {
         case "Save":
           return reply.redirect(SLUGS.SAVE);
         case "Back":
-          return reply.redirect(props.previous);
+          // Steps outside of the current flow have no previous step.
+          return reply.redirect(props.previous || SLUGS.START);
         default:
           props.errors = validator(path, props.data[path]);
           if (Object.keys(props.errors).length === 0) {
@@ -72,6 +91,25 @@ export default function ({ request, reply }) {
     console.error(error);
     reply.clearCookie("data");
     return reply.redirect(SLUGS.START);
+  }
+}
+
+/**
+ * Returns the saved answers for a token like "ID-1A2B3C4D",
+ * or undefined if the token is invalid, unknown, expired or its cookie is broken.
+ *
+ * @param {Record<string, string | undefined>} cookies
+ * @param {string} token
+ */
+function loadSaved(cookies, token) {
+  if (!/^ID-[0-9A-F]{8}$/.test(token)) {
+    return;
+  }
+  try {
+    const data = decompress(cookies[token]);
+    return data && typeof data === "object" ? data : undefined;
+  } catch {
+    return;
   }
 }
 

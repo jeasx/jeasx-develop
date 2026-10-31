@@ -24,7 +24,8 @@
 
 	function create() {
 		people = people.concat({ first, last });
-		i = people.length - 1;
+		// i is an index into the filtered list (-1 if the filter hides the new person).
+		i = filteredPeople.indexOf(people[people.length - 1]);
 		first = last = "";
 	}
 
