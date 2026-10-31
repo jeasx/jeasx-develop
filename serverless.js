@@ -141,7 +141,7 @@ async function handler(request, reply) {
     }
   }
 }
-const SPECIAL_SEGMENTS = /* @__PURE__ */ new Set(["index", "...guard", "...path"]);
+const SPECIAL_SEGMENTS = /* @__PURE__ */ new Set(["index", "...guard", "...path", "--metadata--"]);
 function* generateRoutes(path) {
   const segments = [""];
   let edgeSegment = "";

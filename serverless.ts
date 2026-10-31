@@ -262,7 +262,9 @@ async function handler(request: FastifyRequest, reply: FastifyReply) {
 }
 
 // Names of special routes which must not be requested as "/a/b/[c]".
-const SPECIAL_SEGMENTS = new Set(["index", "...guard", "...path"]);
+// "--metadata--" is the route and file mapping of a production build, which must
+// not be served if the server runs in development mode on a production build.
+const SPECIAL_SEGMENTS = new Set(["index", "...guard", "...path", "--metadata--"]);
 
 /**
  * Generates all possible routes based on the given input path.
@@ -299,7 +301,7 @@ function* generateRoutes(path: string): Generator<string | typeof STATIC_FILE_RO
   yield STATIC_FILE_ROUTE;
 
   // "/a/b/c" => ["/a/b/[c]", "/a/b/c/[index]"]
-  // Special routes aren't reachable by name ("/index", "/...guard", "/...path"),
+  // Special routes aren't reachable by name ("/index", "/...guard", "/...path", "/--metadata--"),
   // except "/a/404", which is answered by "/a/[404]" on purpose.
   const lastSlash = edgeSegment.lastIndexOf("/") + 1;
   const lastSegment = edgeSegment.substring(lastSlash);
