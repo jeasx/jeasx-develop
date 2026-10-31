@@ -38,7 +38,7 @@ export default async function ({ request }) {
     <Layout
       title="Use a captcha with Jeasx"
       description="Using Cap.js as proof-of-work captcha with Jeasx"
-      script="./index.js"
+      script="/cap/index.js"
     >
       <h1>Cap.js - A modern, lightning-quick PoW captcha</h1>
       <p>

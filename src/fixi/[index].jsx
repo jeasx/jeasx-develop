@@ -13,7 +13,7 @@ export default function ({ request, reply }) {
     <Layout
       title="Fixi.js and Jeasx - lightweight hypermedia controls"
       description="Jeasx integrates easily with Fixi.js"
-      script="./index.js"
+      script="/fixi/index.js"
     >
       <h1>Fixi.js and Jeasx - lightweight hypermedia controls</h1>
       <p>

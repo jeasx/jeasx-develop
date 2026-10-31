@@ -23,7 +23,7 @@ export default function ({ request }) {
         <Layout
           title="Template fragments with HTMX and Jeasx"
           description="Template fragments allow you to render a fragment or partial bit of the content within a template, rather than the entire template."
-          script="./index.js"
+          script="/fragments/index.js"
         >
           {children}
         </Layout>

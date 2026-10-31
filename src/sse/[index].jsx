@@ -5,7 +5,7 @@ export default function () {
     <Layout
       title="Server-Sent Events with Jeasx"
       description="Push live updates from the server by returning a Response with a ReadableStream."
-      script="./index.js"
+      script="/sse/index.js"
     >
       <h1>Push live updates with Server-Sent Events</h1>
       <p>

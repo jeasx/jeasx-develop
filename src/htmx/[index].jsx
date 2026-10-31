@@ -12,7 +12,7 @@ export default function ({ request, reply }) {
     <Layout
       title="HTMX and Jeasx - a perfect match"
       description="Jeasx integrates easily with HTMX"
-      script="./index.js"
+      script="/htmx/index.js"
     >
       <h1>HTMX and Jeasx - a perfect match</h1>
       <p>

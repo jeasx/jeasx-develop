@@ -5,7 +5,7 @@ export default function () {
     <Layout
       title="Implement Active Search with HTMX and Jeasx"
       description="Implementing active search with HTMX and Jeasx"
-      script="./index.js"
+      script="/nominatim/index.js"
     >
       <h1>Active Search with HTMX and Jeasx</h1>
       <p>

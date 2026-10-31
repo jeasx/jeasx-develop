@@ -6,8 +6,8 @@ export default function () {
     <Layout
       title="Use React with Jeasx"
       description="Supporting React in Jeasx"
-      css="./assets/index.css"
-      script="./assets/index.js"
+      css="/react/assets/index.css"
+      script="/react/assets/index.js"
     >
       <section class="center">
         <h1>Enhance your application with React</h1>

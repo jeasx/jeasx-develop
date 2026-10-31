@@ -6,7 +6,7 @@ export default async function () {
     <Layout
       title="Use hx-live with Jeasx"
       description="Add reactive bindings to HTML with hx-live"
-      script="./index.js"
+      script="/hx-live/index.js"
     >
       <h1>Use hx-live with Jeasx</h1>
       <p>
