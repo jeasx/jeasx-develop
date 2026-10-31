@@ -3,6 +3,8 @@ import limiter, { QueueFullError } from "../sharp/limiter";
 
 const FORMATS = ["avif", "webp"];
 const MAX_SIZE = 640;
+// Sharp accepts any angle, but values like 1e308 overflow its internal math.
+const MAX_ROTATION = 360;
 // A small file can still decode to a huge image (a "decompression bomb"),
 // so limit the pixels (sharp's default is 268 megapixels) and the parallel work.
 const MAX_INPUT_PIXELS = 25_000_000;
@@ -24,7 +26,7 @@ export default async function ({ request, reply }) {
       !Buffer.isBuffer(upload) ||
       !FORMATS.includes(format) ||
       !(Number.isInteger(size) && size > 0 && size <= MAX_SIZE) ||
-      !Number.isFinite(rotate)
+      !(Number.isFinite(rotate) && Math.abs(rotate) <= MAX_ROTATION)
     ) {
       reply.status(400).type("text/plain; charset=utf-8");
       return "Invalid upload: please choose an image, a supported format, size and rotation.";
