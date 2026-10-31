@@ -6,4 +6,13 @@ await serverless.listen({
   port: Number(process.env.PORT || 3000),
 });
 
-process.on("SIGTERM", () => serverless.close());
+// Shut down gracefully on Ctrl+C (SIGINT) and SIGTERM. In a container, Node runs as PID 1,
+// which ignores SIGINT unless a handler is registered. Exit explicitly afterwards, as other
+// handles (e.g. the esbuild watcher in development) would keep the process running.
+// "once": a second Ctrl+C kills the process if the shutdown hangs.
+for (const signal of ["SIGINT", "SIGTERM"]) {
+  process.once(signal, async () => {
+    await serverless.close();
+    process.exit(0);
+  });
+}
