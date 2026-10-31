@@ -20,18 +20,18 @@
     ]
   },
   {
-    "title": "HTMX - Taking HTML Seriously",
+    "title": "HTMX - Taking HTML seriously",
     "description": "Jeasx seamlessly integrates with HTMX, enabling UI updates with server-rendered HTML fragments.",
     "links": [
       { "path": "/htmx", "title": "Simple form" },
       { "path": "/nominatim", "title": "Active search" },
-      { "path": "/fragments", "title": "Template Fragments" },
-      { "path": "/hx-live", "title": "Reactive Scripting" },
+      { "path": "/fragments", "title": "Template fragments" },
+      { "path": "/hx-live", "title": "Reactive scripting" },
       { "path": "/fixi", "title": "Fixi.js" }
     ]
   },
   {
-    "title": "Islands of client side JavaScript",
+    "title": "Islands of client-side JavaScript",
     "description": "Jeasx integrates smoothly with established JavaScript libraries to enhance UX through islands of interaction.",
     "links": [
       { "path": "/alpine", "title": "Alpine" },
@@ -44,18 +44,18 @@
     ]
   },
   {
-    "title": "Generating non-HTML Content-Types",
+    "title": "Generating non-HTML content types",
     "description": "Jeasx is not limited to rendering HTML — it can generate various content types with the power of server-side JavaScript.",
     "links": [
-      { "path": "/upload", "title": "Binary Upload" },
-      { "path": "/sharp", "title": "Image Scaler" },
+      { "path": "/upload", "title": "Binary upload" },
+      { "path": "/sharp", "title": "Image scaler" },
       { "path": "/svg", "title": "SVG generator" },
-      { "path": "/json/request.json?foo=bar", "title": "JSON Response" },
-      { "path": "/sitemap.xml", "title": "XML-Sitemap" }
+      { "path": "/json/request.json?foo=bar", "title": "JSON response" },
+      { "path": "/sitemap.xml", "title": "XML sitemap" }
     ]
   },
   {
-    "title": "Streaming and Web Standards",
+    "title": "Streaming and web standards",
     "description": "Jeasx speaks the language of the web platform — return a Response or ReadableStream to stream HTML, push live updates or proxy APIs.",
     "links": [
       { "path": "/streaming", "title": "Streaming HTML" },
@@ -71,16 +71,15 @@
     "links": [
       { "path": "/render-props", "title": "Render props" },
       { "path": "/values", "title": "Values in JSX" },
-
       { "path": "/error-handler", "title": "Catch errors" },
       { "path": "/prettier", "title": "Prettify HTML" },
       { "path": "/cheerio", "title": "Extract styles" },
       { "path": "/parallel", "title": "Parallel loading" },
       { "path": "/context", "title": "'this' as context" },
       { "path": "/interceptor", "title": "Intercept JSX" },
-      { "path": "/head", "title": "Helmet for Head" },
+      { "path": "/head", "title": "Helmet for head" },
       { "path": "/basic-auth", "title": "Authentication" },
-      { "path": "/client-jsx", "title": "Client-Side JSX" }
+      { "path": "/client-jsx", "title": "Client-side JSX" }
     ]
   }
 ]

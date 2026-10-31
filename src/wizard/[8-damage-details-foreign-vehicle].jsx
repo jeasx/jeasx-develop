@@ -15,7 +15,7 @@ export default function ({ data, form, errors }) {
         </Legend>
         <Input
           name="license_plate"
-          label="Official License Plate"
+          label="Official license plate"
           value={form.license_plate}
           placeholder="XYZ-XV 123"
         />

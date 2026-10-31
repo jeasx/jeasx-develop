@@ -5,7 +5,7 @@ export default function () {
     <Layout title="Default title" description="Default description">
       <h1>A Helmet for the HTML-Head</h1>
       <p>
-        In Jeasx you can easily implement a helmet like functionality: use head-tags in any
+        In Jeasx you can easily implement a helmet-like functionality: use head-tags in any
         sub-component and beam the title, meta tags, styles and scripts into the head of your
         document. You only have to wire up a simple guard which takes care of the process. Have a
         look at the source to see how it works.

@@ -15,7 +15,7 @@ export default function ({ data }) {
           of the insurance claim or the insurance company's obligation to provide benefits.
         </Paragraph>
         <Paragraph>
-          In the event of intentional false, incomplete or delayed information, evidence and
+          In the event of intentionally false, incomplete or delayed information, evidence and
           documents, the insurance company may be entitled to refuse to provide benefits. If the
           breach is due to gross negligence, the insurance company may be entitled to reduce its
           benefits in a proportionate manner, up to a complete loss of the claim.

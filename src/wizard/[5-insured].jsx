@@ -21,9 +21,9 @@ export default function ({ data, form, errors }) {
         {["Company", undefined].includes(form.salutation) && (
           <Input name="company" label="Company" value={form.company} />
         )}
-        <Input name="firstname" label="First Name" value={form.firstname} />
-        <Input name="lastname" label="Last Name" value={form.lastname} />
-        <Input name="license_plate" label="Official License Plate" value={form.license_plate} />
+        <Input name="firstname" label="First name" value={form.firstname} />
+        <Input name="lastname" label="Last name" value={form.lastname} />
+        <Input name="license_plate" label="Official license plate" value={form.license_plate} />
         <Actions />
         <Error message={errors} />
       </Form>

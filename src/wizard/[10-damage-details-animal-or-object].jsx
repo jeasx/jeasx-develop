@@ -11,7 +11,7 @@ export default function ({ data, form, errors }) {
     <Layout title="Damage Details for Animal or Object" data={data}>
       <Form>
         <Legend>
-          You have indicated that an object was damaged. Do you have any additional details?
+          You have indicated that an object or an animal was damaged. Do you have any additional details?
         </Legend>
         <Input
           name="label"

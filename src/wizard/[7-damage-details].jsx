@@ -15,7 +15,7 @@ export default function ({ data, form, errors }) {
         <Input name="time" type="time" label="Time" value={form.time} />
         <Legend>At which address did the damage occur?</Legend>
         <Input name="street" label="Street" value={form.street} />
-        <Input name="zip" label="Postal Code" value={form.zip} />
+        <Input name="zip" label="Postal code" value={form.zip} />
         <Input name="city" label="City" value={form.city} />
         <Legend>Please briefly describe what happened.</Legend>
         <Textarea

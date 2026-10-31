@@ -17,7 +17,7 @@ export default function () {
       <input
         type="search"
         name="search"
-        placeholder="Begin Typing To Search for Locations..."
+        placeholder="Begin typing to search for locations..."
         hx-post="./locations"
         hx-trigger="input changed delay:500ms, keyup[key=='Enter']"
         hx-target="#results"

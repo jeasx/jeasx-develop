@@ -15,7 +15,7 @@ export default function ({ reply }) {
       <Form>
         <Headline>Thank you</Headline>
         <Paragraph>
-          You have successfully reported your claim to the private liability insurance.
+          You have successfully reported your claim to your car insurance.
         </Paragraph>
         <Paragraph>
           If you have any further questions, please contact us via chat or phone.

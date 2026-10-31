@@ -10,7 +10,7 @@
   {
     "slug": "escape-demo",
     "title": "<b>This is <i>a</i> Test</b>",
-    "description": "This is <i>a italics</i> description",
+    "description": "This is <i>an italic</i> description",
     "body": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. <i>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</i>",
     "date": "2023-09-10T12:43:09",
     "author": "Peter Pan"

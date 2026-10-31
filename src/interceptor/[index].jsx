@@ -22,7 +22,7 @@ export default function ({ request }) {
         {removeStyles ? (
           <HouseKeeper>
             <ThirdPartyComponent />
-            <a href="?styles=on"> Turn inline styles on</a>
+            <a href="?styles=on">Turn inline styles on</a>
           </HouseKeeper>
         ) : (
           <>

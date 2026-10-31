@@ -18,7 +18,7 @@ export async function Product({ id }) {
     <article>
       <header>
         <h3>{product.title}</h3>
-        <b>{product.price} €</b>
+        <b>${product.price}</b>
       </header>
       <Image
         src={product.thumbnail}

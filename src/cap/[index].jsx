@@ -12,7 +12,7 @@ export default async function ({ request }) {
       if (success) {
         const name = request.body?.["name"];
         return (
-          <Layout>
+          <Layout title="Thank you">
             <h1>Thank you, {name}!</h1>
             <p>Simply reload this page to simulate an invalid captcha process.</p>
             <hr />
@@ -21,7 +21,7 @@ export default async function ({ request }) {
         );
       } else {
         return (
-          <Layout>
+          <Layout title="No success">
             <h1>No success!</h1>
             <a href={request.path}>Start again</a>
           </Layout>

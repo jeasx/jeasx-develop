@@ -38,7 +38,7 @@ export default async function () {
                 loading="lazy"
               />
               <hr />
-              <b>{price} €</b>
+              <b>${price}</b>
             </header>
             <div>
               <h3>

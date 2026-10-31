@@ -262,7 +262,7 @@ async function handler(request: FastifyRequest, reply: FastifyReply) {
  *
  * [
  *  "/[...guard]","/a/[...guard]","/a/b/[...guard]","/a/b/c/[...guard]",
- *  STATIC_FILE,
+ *  STATIC_FILE_ROUTE,
  *  "/a/b/[c]","/a/b/c/[index]",
  *  "/a/b/c/[...path]","/a/b/[...path]","/a/[...path]","/[...path]",
  *  "/a/b/c/[404]","/a/b/[404]","/a/[404]","/[404]"
@@ -270,7 +270,7 @@ async function handler(request: FastifyRequest, reply: FastifyReply) {
  */
 function* generateRoutes(path: string): Generator<string | typeof STATIC_FILE_ROUTE> {
   // Transform given path into array of all its segments.
-  // "/a/b/c" => ["", "/a", "/a/b/", "/a/b/c"]
+  // "/a/b/c" => ["", "/a", "/a/b", "/a/b/c"]
   const segments = [""];
   let edgeSegment = "";
   for (const segment of path.split("/")) {

@@ -10,7 +10,7 @@ export default function ({ data, form, errors }) {
   return (
     <Layout title="Insured (Perpetrator)" data={data}>
       <Form>
-        <Legend>Insured (Perpetrator) Details</Legend>
+        <Legend>Insured (perpetrator) details</Legend>
         <RadioGroup
           name="salutation"
           label="Salutation"
@@ -21,22 +21,22 @@ export default function ({ data, form, errors }) {
         {["Company", undefined].includes(form.salutation) && (
           <Input name="company" label="Company" value={form.company} />
         )}
-        <Input name="firstname" label="First Name" value={form.firstname} />
-        <Input name="lastname" label="Last Name" value={form.lastname} />
+        <Input name="firstname" label="First name" value={form.firstname} />
+        <Input name="lastname" label="Last name" value={form.lastname} />
         <Legend>Address</Legend>
         <Input name="street" label="Street" value={form.street} />
-        <Input name="zip" label="Postal Code" value={form.zip} />
+        <Input name="zip" label="Postal code" value={form.zip} />
         <Input name="city" label="City" value={form.city} />
         <Input
           name="license_plate"
-          label="Official License Plate (if applicable)"
+          label="Official license plate (if applicable)"
           value={form.license_plate}
         />
         <Legend>Contact for inquiries and notifications</Legend>
         <Input name="phone" label="Phone" value={form.phone} type="tel" />
         <Input
           name="policy_number"
-          label="Insurance Policy Number (if applicable)"
+          label="Insurance policy number (if applicable)"
           value={form.policy_number}
         />
         <Actions />

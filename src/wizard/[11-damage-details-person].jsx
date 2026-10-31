@@ -26,8 +26,8 @@ export default function ({ data, form, errors }) {
           options={["Ms.", "Mr."]}
           value={form.salutation}
         />
-        <Input name="firstname" label="First Name" value={form.firstname} />
-        <Input name="lastname" label="Last Name" value={form.lastname} />
+        <Input name="firstname" label="First name" value={form.firstname} />
+        <Input name="lastname" label="Last name" value={form.lastname} />
         <Textarea
           name="description"
           label="Can you provide further details about the person's injuries?"

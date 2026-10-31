@@ -30,7 +30,7 @@ export default function ({ form, errors, data }) {
         <Input name="zip" label="Postal code" value={form.zip} />
         <Input name="city" label="City" value={form.city} />
         <Legend>Contact details for inquiries and notifications</Legend>
-        <Input name="email" label="E-Mail" value={form.email} type="email" />
+        <Input name="email" label="Email" value={form.email} type="email" />
         <Input name="phone" label="Phone" value={form.phone} type="tel" />
         <Legend>Other details</Legend>
         {data[SLUGS.CLAIM_REPORT]?.["claim_report"] === "Insured" && (

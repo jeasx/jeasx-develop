@@ -4,7 +4,7 @@ import styles from "./index.module.css";
 export default function ({ number, delta, numbers, submit }) {
   return (
     <Layout
-      title={`Lottery ${numbers.join(", ")}`}
+      title={numbers.length > 0 ? `Lottery ${numbers.join(", ")}` : "Lottery"}
       description="A fake lottery"
       css="./index.module.css"
     >

@@ -13,7 +13,7 @@ export default function () {
           reported damage.
         </Paragraph>
         <Paragraph>
-          You can save your damage report at any time and retrieve it within 10 days using the code.
+          You can save your damage report at any time and retrieve it in this browser within 10 days using the token.
           Saving again replaces the previously saved report.
         </Paragraph>
         <Input
