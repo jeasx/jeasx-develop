@@ -49,24 +49,34 @@ export default async function ({ request, reply }) {
   const height = toDimension(query["height"]);
   const key = JSON.stringify([query["src"], width, height, position, format]);
 
-  let image = cacheGet(key);
-  if (!image) {
-    const input = await loadImage(query["src"]);
-    if (!input) {
-      return;
-    }
-    try {
-      image = await limit(() =>
-        sharp(input, { limitInputPixels: MAX_INPUT_PIXELS })
+  // Downloading (up to MAX_REMOTE_BYTES) and converting both run within the limit,
+  // so requests waiting in line don't hold any image data in memory.
+  const image =
+    cacheGet(key) ??
+    (await limit(async () => {
+      // Another request may have converted the same image while this one was waiting.
+      const cached = cacheGet(key);
+      if (cached) {
+        return cached;
+      }
+      const input = await loadImage(query["src"]);
+      if (!input) {
+        return;
+      }
+      try {
+        const converted = await sharp(input, { limitInputPixels: MAX_INPUT_PIXELS })
           .resize({ width, height, position })
           .toFormat(format, { quality: 70 })
-          .toBuffer(),
-      );
-    } catch {
-      // Broken images and images with too many pixels end up as 404.
-      return;
-    }
-    cacheSet(key, image);
+          .toBuffer();
+        cacheSet(key, converted);
+        return converted;
+      } catch {
+        // Broken images and images with too many pixels end up as 404.
+        return;
+      }
+    }));
+  if (!image) {
+    return;
   }
 
   reply.type(`image/${format}`);

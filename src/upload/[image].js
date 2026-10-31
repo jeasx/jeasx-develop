@@ -29,6 +29,13 @@ export default async function ({ request, reply }) {
       return "Invalid upload: please choose an image, a supported format, size and rotation.";
     }
 
+    // Sharp reads many formats (e.g. SVG, TIFF, GIF), but the form only promises JPEG,
+    // so accept nothing else. Sharp detects the format by these leading bytes as well.
+    if (!isJpeg(upload)) {
+      reply.status(400).type("text/plain; charset=utf-8");
+      return "Invalid upload: please choose a JPEG image.";
+    }
+
     let image;
     try {
       image = await limit(() =>
@@ -51,4 +58,13 @@ export default async function ({ request, reply }) {
     reply.type(`image/${format}`);
     return image;
   }
+}
+
+/**
+ * Checks for the JPEG signature (FF D8 FF).
+ *
+ * @param {Buffer} buffer
+ */
+function isJpeg(buffer) {
+  return buffer.length > 3 && buffer[0] === 0xff && buffer[1] === 0xd8 && buffer[2] === 0xff;
 }
