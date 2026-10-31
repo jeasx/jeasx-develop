@@ -5,6 +5,10 @@ import navigate from "./domain/navigate";
 import validator from "./domain/validator";
 import { compress, decompress } from "./utils/zip";
 
+// Cookies are only sent to the wizard, see "../cookies.js".
+// Clearing a cookie needs the same path as setting it.
+const COOKIE_OPTIONS = { path: "/wizard" };
+
 /**
  * @param {import("../types").RouteProps} props
  */
@@ -61,7 +65,7 @@ export default function ({ request, reply }) {
       const cookie = compress(props.data);
       tooLarge = !fitsCookie(cookie);
       if (!tooLarge) {
-        reply.setCookie("data", cookie);
+        reply.setCookie("data", cookie, COOKIE_OPTIONS);
       }
     }
 
@@ -88,7 +92,7 @@ export default function ({ request, reply }) {
           if (Object.keys(props.errors).length === 0) {
             if (props.next === SLUGS.THANK_YOU) {
               // The claim is complete, so its answers aren't needed anymore.
-              reply.clearCookie("data");
+              reply.clearCookie("data", COOKIE_OPTIONS);
             }
             return reply.redirect(props.next);
           }
@@ -99,7 +103,7 @@ export default function ({ request, reply }) {
     return props;
   } catch (error) {
     console.error(error);
-    reply.clearCookie("data");
+    reply.clearCookie("data", COOKIE_OPTIONS);
     return reply.redirect(SLUGS.START);
   }
 }
@@ -138,13 +142,13 @@ function save(request, reply, data) {
   // would push the Cookie header beyond the server's limit and every request would fail.
   for (const name of Object.keys(request.cookies)) {
     if (name !== token && TOKEN_PATTERN.test(name)) {
-      reply.clearCookie(name);
+      reply.clearCookie(name, COOKIE_OPTIONS);
     }
   }
   // Keep the saved claim for 10 days, as promised on the start page.
-  reply.setCookie(token, compress(data), { maxAge: 10 * 24 * 60 * 60 });
+  reply.setCookie(token, compress(data), { ...COOKIE_OPTIONS, maxAge: 10 * 24 * 60 * 60 });
   // Replaces the "data" cookie set above for the submitted answers.
-  reply.clearCookie("data");
+  reply.clearCookie("data", COOKIE_OPTIONS);
   return token;
 }
 

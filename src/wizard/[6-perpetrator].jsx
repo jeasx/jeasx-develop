@@ -8,7 +8,7 @@ import Layout from "./Layout";
 
 export default function ({ data, form, errors }) {
   return (
-    <Layout title="Insured (Perpetrator)" data={data}>
+    <Layout title="Insured (perpetrator)" data={data}>
       <Form>
         <Legend>Insured (perpetrator) details</Legend>
         <RadioGroup

@@ -1,3 +1,4 @@
+/** @jsxImportSource preact */
 import { time } from "./signals";
 
 export default function Clock({ locale }) {

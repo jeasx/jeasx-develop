@@ -126,7 +126,12 @@ export default function () {
       <Sample
         title="URLs, dates and booleans"
         render={() => (
-          <a href={new URL("/values", "https://expo.jeasx.dev")} data-date={new Date(0)} download>
+          <a
+            // @ts-expect-error The runtime renders a URL via toString(), but the types expect a string.
+            href={new URL("/values", "https://expo.jeasx.dev")}
+            data-date={new Date(0)}
+            download
+          >
             Download
           </a>
         )}
@@ -140,6 +145,7 @@ export default function () {
         render={() => (
           <button
             type="button"
+            // @ts-expect-error On purpose: functions are skipped, but the types expect a string.
             onclick={() => alert("Hi")}
             title={null}
             disabled={false}

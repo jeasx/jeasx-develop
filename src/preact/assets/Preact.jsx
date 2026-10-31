@@ -1,3 +1,4 @@
+/** @jsxImportSource preact */
 import { html } from "jsx-async-runtime";
 import { render } from "preact-render-to-string";
 import Components from "./components/$index";

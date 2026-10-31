@@ -45,7 +45,7 @@ export default function ({ request }) {
       </Fragment>
       <Fragment name="product">
         <form hx-get="./~product" hx-swap="outerHTML" hx-target="closest form">
-          <h2>Product-Browser</h2>
+          <h2>Product browser</h2>
           <fieldset role="group">
             <button
               class="btn btn-primary"

@@ -1,6 +1,16 @@
-// Never echo credentials: page scripts could read them here,
-// which would undo the protection of httpOnly cookies.
-const SENSITIVE_HEADERS = new Set(["cookie", "authorization", "proxy-authorization"]);
+// Only echo harmless headers. Hosting platforms and proxies add their own headers,
+// some carrying credentials (e.g. tokens), and page scripts could read them here.
+const SAFE_HEADERS = new Set([
+  "accept",
+  "accept-encoding",
+  "accept-language",
+  "cache-control",
+  "content-length",
+  "content-type",
+  "host",
+  "referer",
+  "user-agent",
+]);
 
 /**
  * @param {import("../types").RouteProps} props
@@ -8,7 +18,7 @@ const SENSITIVE_HEADERS = new Set(["cookie", "authorization", "proxy-authorizati
 export default function ({ request, reply }) {
   const { url, path, route, query, method, body } = request;
   const headers = Object.fromEntries(
-    Object.entries(request.headers).filter(([name]) => !SENSITIVE_HEADERS.has(name)),
+    Object.entries(request.headers).filter(([name]) => SAFE_HEADERS.has(name)),
   );
   return {
     url,

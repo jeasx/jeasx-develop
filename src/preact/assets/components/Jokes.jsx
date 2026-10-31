@@ -1,3 +1,4 @@
+/** @jsxImportSource preact */
 import { useState } from "preact/hooks";
 
 export default function Jokes({ initial, api }) {
@@ -5,7 +6,7 @@ export default function Jokes({ initial, api }) {
   const [data, setData] = useState([]);
 
   async function submit(category) {
-    setData(await (await fetch(`${api}/${category}?amount=${counter}`)).json());
+    setData(await (await fetch(`${api}/${encodeURIComponent(category)}?amount=${counter}`)).json());
   }
 
   return (

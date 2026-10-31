@@ -1,25 +1,33 @@
 import Layout from "../../Layout";
-import { FIELDS, canStore, createPost, readPosts, writePosts } from "../posts";
+import { FIELDS, canStore, createPost, missingFields, readPosts, writePosts } from "../posts";
 
 /**
  * @param {import("../../types").RouteProps} props
  */
 export default function ({ request, reply }) {
-  const body = request.body && typeof request.body === "object" ? request.body : undefined;
+  const body = /** @type {Record<string, unknown> | undefined} */ (
+    request.body && typeof request.body === "object" ? request.body : undefined
+  );
   let error = "";
 
   if (request.method === "POST" && body) {
     const post = createPost(body);
-    if (canStore(post)) {
-      const posts = readPosts(request);
+    const posts = readPosts(request);
+    // Keep the form filled on errors, so the post can be corrected instead of written again.
+    if (missingFields(body).length > 0) {
+      error = "Please fill in all fields.";
+    } else if (posts.some(({ slug }) => slug === post.slug)) {
+      // Otherwise the older post with the same slug could never be opened again.
+      error = `A post with the slug "${post.slug}" already exists. Please choose another one.`;
+    } else if (!canStore(post)) {
+      error = "Your post is too long to be stored in a cookie. Please shorten it.";
+    } else {
       posts.unshift(post);
       writePosts(reply, posts);
       // 303 makes the browser load the blog with GET, so a reload doesn't resubmit the form.
       return reply.redirect("/blog", 303);
     }
-    // Keep the form filled, so the post can be shortened instead of written again.
     reply.status(400);
-    error = "Your post is too long to be stored in a cookie. Please shorten it.";
   }
 
   /** @param {string} name */
@@ -32,7 +40,13 @@ export default function ({ request, reply }) {
       <form method="post" novalidate>
         <label>
           Slug
-          <input type="text" name="slug" maxlength={FIELDS.slug} value={value("slug")} required />
+          <input
+            type="text"
+            name="slug"
+            maxlength={FIELDS.slug}
+            value={value("slug")}
+            placeholder="Leave empty to create it from the title"
+          />
         </label>
         <label>
           Title

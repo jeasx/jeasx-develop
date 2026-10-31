@@ -13,12 +13,16 @@ const DEFAULT_TODOS = [
  */
 export default function ({ request, reply }) {
   const query = request.query || {};
-  const body = request.body || {};
+  const body = /** @type {Record<string, unknown>} */ (request.body || {});
 
   let todos = readListCookie(request.cookies["todos"]) ?? structuredClone(DEFAULT_TODOS);
 
-  if (body["newTodo"]) {
-    todos.unshift({ label: String(body["newTodo"]).slice(0, MAX_LABEL_LENGTH), status: "active" });
+  // Ignore todos without any text, e.g. only spaces.
+  const newTodo = String(body["newTodo"] ?? "")
+    .trim()
+    .slice(0, MAX_LABEL_LENGTH);
+  if (newTodo) {
+    todos.unshift({ label: newTodo, status: "active" });
   }
 
   if (body["toggleTodo"]) {
@@ -39,12 +43,12 @@ export default function ({ request, reply }) {
   // like index.css, which shouldn't carry a cookie.
   if (request.method === "POST") {
     // Drop the oldest todos until the cookie fits.
-    todos = writeListCookie(reply, "todos", todos);
+    todos = writeListCookie(reply, "todos", todos, "/todos");
   }
 
   return {
     todos,
     status: query["status"],
-    autofocus: request.method === "GET" || Boolean(body["newTodo"]),
+    autofocus: request.method === "GET" || "newTodo" in body,
   };
 }

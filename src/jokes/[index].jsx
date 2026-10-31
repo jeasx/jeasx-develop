@@ -13,13 +13,13 @@ export default function ({ request, reply }) {
     5,
   );
   const data = category ? jokes(category, counter) : [];
-  reply.setCookie("counter", String(counter));
+  reply.setCookie("counter", String(counter), { path: "/jokes" });
 
   return (
     <Layout title="Building forms with Jeasx" description="Some funny jokes with Jeasx">
       <h1>Building a simple form</h1>
       <p>
-        Jeasx allows you to build and evaluate server rendered forms easily, so you don't have to
+        Jeasx allows you to build and evaluate server-rendered forms easily, so you don't have to
         rely on JavaScript in the frontend to make form submission work.
       </p>
       <form method="post">

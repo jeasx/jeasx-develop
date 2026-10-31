@@ -13,21 +13,24 @@ export default function Layout({
   children,
 }) {
   const path = this.request.path;
+  // The path is decoded, so encode it again for URLs: a decoded "?" or "#" (from "%3F" or "%23")
+  // would otherwise end the path, and relative links would resolve against the wrong URL.
+  const url = encodeURI(path).replace(/[?#]/g, encodeURIComponent);
   return (
     <>
       {html("<!DOCTYPE html>")}
       <html lang="en" data-theme="dark">
         <head>
-          <base href={path.endsWith("/") ? path : `${path}/`} />
+          <base href={url.endsWith("/") ? url : `${url}/`} />
           <meta charset="utf-8" />
-          <meta name="description" content={description} />
+          {description && <meta name="description" content={description} />}
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           {robots && <meta name="robots" content={robots} />}
           <link rel="stylesheet" href={addCacheBuster("/index.css")} />
           {css && <link rel="stylesheet" href={addCacheBuster(css)} />}
           <link
             rel="canonical"
-            href={`https://expo.jeasx.dev${path.endsWith("/") ? path.slice(0, -1) : path}`}
+            href={`https://expo.jeasx.dev${url.endsWith("/") ? url.slice(0, -1) : url}`}
           ></link>
           <script type="module" src={addCacheBuster("/index.js")}></script>
           {script && <script type="module" src={addCacheBuster(script)}></script>}

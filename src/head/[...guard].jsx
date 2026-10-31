@@ -1,4 +1,4 @@
-import { jsxToString } from "jsx-async-runtime";
+import { isJsxNode, jsxToString } from "jsx-async-runtime";
 
 const HEAD_MARK = "[[HEAD]]";
 
@@ -15,7 +15,7 @@ export default async function () {
   // The first head is replaced with the HEAD_MARK,
   // all other heads are deleted.
   this.jsxToString = async (jsxElement) => {
-    if (jsxElement?.tag === "head") {
+    if (isJsxNode(jsxElement) && jsxElement.tag === "head") {
       headTags.push(jsxElement.props.children);
       return headTags.length === 1 ? HEAD_MARK : "";
     }

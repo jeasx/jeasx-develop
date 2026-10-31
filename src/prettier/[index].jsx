@@ -34,8 +34,8 @@ export default function ({ request, reply }) {
       <h1>Post-process HTML with Prettier</h1>
       <p>
         Jeasx allows you to post-process the resulting HTML output via a response handler. Have a
-        look at the source to see how things are wired up. This is an example for how to use
-        Prettier to format the resulting HTML.
+        look at the source to see how things are wired up. This is an example of how to use Prettier
+        to format the resulting HTML.
       </p>
       <form action="" method="post">
         <label>

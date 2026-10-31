@@ -29,11 +29,19 @@ export default async function ({ request }) {
         order stays the same.
       </p>
       <div class="row center">
-        <a href="?mode=sequential" role="button" aria-disabled={String(mode === "sequential")}>
+        <a
+          href="?mode=sequential"
+          role="button"
+          aria-disabled={mode === "sequential" ? "true" : "false"}
+        >
           Sequential
         </a>
         &nbsp;
-        <a href="?mode=parallel" role="button" aria-disabled={String(mode === "parallel")}>
+        <a
+          href="?mode=parallel"
+          role="button"
+          aria-disabled={mode === "parallel" ? "true" : "false"}
+        >
           Parallel
         </a>
       </div>

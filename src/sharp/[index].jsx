@@ -4,10 +4,10 @@ import Image from "./Image";
 export default function () {
   return (
     <Layout
-      title="Image transformation with Sharp in Jeasx"
+      title="Image transformation with sharp in Jeasx"
       description="Using sharp to transform images with Jeasx."
     >
-      <h1>Image transformation with Sharp</h1>
+      <h1>Image transformation with sharp</h1>
       <p>
         Jeasx lets you easily create an image component and converter in userland based on the
         fantastic <a href="https://sharp.pixelplumbing.com">sharp</a> library. Here you see a simple

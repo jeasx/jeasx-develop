@@ -7,7 +7,7 @@ import Layout from "./Layout";
 
 export default function ({ data, form, errors }) {
   return (
-    <Layout title="Damage Types" data={data}>
+    <Layout title="Damage types" data={data}>
       <Form>
         <Legend>Please select from the following options (multiple selections possible):</Legend>
         {[

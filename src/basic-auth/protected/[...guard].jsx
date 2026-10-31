@@ -24,7 +24,7 @@ export default function ({ request, reply }) {
           <h1 class="access-denied">Error 401</h1>
           <p>You are not allowed to view the protected content.</p>
           <p>
-            Please <a href="">reload page</a> and enter correct credentials (demo / demo).
+            Please <a href="">reload the page</a> and enter correct credentials (demo / demo).
           </p>
         </section>
       </Layout>

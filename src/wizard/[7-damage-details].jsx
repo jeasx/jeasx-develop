@@ -8,7 +8,7 @@ import Layout from "./Layout";
 
 export default function ({ data, form, errors }) {
   return (
-    <Layout title="Damage Details" data={data}>
+    <Layout title="Damage details" data={data}>
       <Form>
         <Legend>When did the damage occur or when did you become aware of the damage?</Legend>
         <Input name="date" type="date" label="Date" value={form.date} />

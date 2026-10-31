@@ -1,3 +1,4 @@
+/** @jsxImportSource react */
 // Code taken from https://medium.com/@dimterion/clock-with-reactjs-css-c2b56fbabd2c
 import { useEffect, useRef } from "react";
 

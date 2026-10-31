@@ -6,7 +6,8 @@ export default function ({ request }) {
 
   const number = +body["number"];
   const submit = body["submit"];
-  const numbers = !submit ? parseNumbers(body["numbers"]) : [];
+  // Keep the numbers when the results are revealed, so they are shown next to them.
+  const numbers = parseNumbers(body["numbers"]);
   let delta = 0;
 
   if (isValidNumber(number)) {
@@ -43,5 +44,5 @@ function parseNumbers(value) {
  * @returns {value is number}
  */
 function isValidNumber(value) {
-  return Number.isInteger(value) && value >= 1 && value <= 49;
+  return typeof value === "number" && Number.isInteger(value) && value >= 1 && value <= 49;
 }

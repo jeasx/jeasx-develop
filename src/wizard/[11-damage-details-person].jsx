@@ -9,7 +9,7 @@ import Layout from "./Layout";
 
 export default function ({ data, form, errors }) {
   return (
-    <Layout title="Damage Details for Person" data={data}>
+    <Layout title="Damage details for person" data={data}>
       <Form>
         <Legend>
           You have indicated that a person was injured. Do you have any additional details?

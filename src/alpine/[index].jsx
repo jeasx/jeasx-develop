@@ -3,7 +3,7 @@ import Layout from "../Layout";
 export default async function () {
   return (
     <Layout
-      title="Use Alpine.js in Jeasx"
+      title="Use Alpine.js with Jeasx"
       description="How to use Alpine.js with Jeasx?"
       script="./index.js"
     >

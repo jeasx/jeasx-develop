@@ -3,6 +3,10 @@
 /** Browsers silently drop cookies larger than about 4 KB (name, value and attributes). */
 export const MAX_COOKIE_SIZE = 3800;
 
+// Each example stores its cookies under its own path. With path "/", the browser would send
+// the cookies of all examples with every request, and a few full ones exceed the 16 KB
+// header limit of Node: then every request fails with "431 Request Header Fields Too Large".
+
 /**
  * Checks if a value fits into a cookie once it is encoded like @fastify/cookie does.
  *
@@ -38,12 +42,13 @@ export function readListCookie(cookie) {
  * @param {import("fastify").FastifyReply} reply
  * @param {string} name
  * @param {T[]} list
+ * @param {string} path Path of the example, so the cookie isn't sent to other examples.
  */
-export function writeListCookie(reply, name, list) {
+export function writeListCookie(reply, name, list, path) {
   const kept = [...list];
   while (kept.length > 1 && !fitsCookie(JSON.stringify(kept))) {
     kept.pop();
   }
-  reply.setCookie(name, JSON.stringify(kept));
+  reply.setCookie(name, JSON.stringify(kept), { path });
   return kept;
 }

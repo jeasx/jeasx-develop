@@ -4,7 +4,7 @@ import React from "./assets/React";
 export default function () {
   return (
     <Layout
-      title="Integrate React with Jeasx"
+      title="Use React with Jeasx"
       description="Supporting React in Jeasx"
       css="./assets/index.css"
       script="./assets/index.js"
@@ -24,7 +24,7 @@ export default function () {
       </section>
       <hr />
       <section>
-        <h2>Analog Clock</h2>
+        <h2>Analog clock</h2>
         <React component="Clock" />
       </section>
     </Layout>

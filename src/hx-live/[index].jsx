@@ -4,11 +4,11 @@ import Layout from "../Layout";
 export default async function () {
   return (
     <Layout
-      title="Use hx-live in Jeasx"
+      title="Use hx-live with Jeasx"
       description="Add reactive bindings to HTML with hx-live"
       script="./index.js"
     >
-      <h1>Use hx-live in Jeasx</h1>
+      <h1>Use hx-live with Jeasx</h1>
       <p>
         <a href="https://four.htmx.org/extensions/hx-live">hx-live</a> is an HTMX extension to ease
         reactive scripting for the web. It is inspired by Alpine, jQuery and hyperscript.

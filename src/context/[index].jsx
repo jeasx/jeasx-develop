@@ -10,7 +10,7 @@ export default function ({ request }) {
   return (
     <Layout
       title="Use 'this' as context object for Jeasx"
-      description="Avoid prop drilling with forwarding settings via 'this' context."
+      description="Avoid prop drilling by forwarding settings via the 'this' context."
     >
       <h1>Avoid prop drilling via 'this'</h1>
       <p>
@@ -32,10 +32,18 @@ function Subcomponent() {
   return (
     <>
       <div style="display: flex; justify-content: space-evenly; align-items: center;">
-        <a href="?theme=light" role="button" aria-disabled={String(this.theme === "light")}>
+        <a
+          href="?theme=light"
+          role="button"
+          aria-disabled={this.theme === "light" ? "true" : "false"}
+        >
           Light
         </a>
-        <a href="?theme=dark" role="button" aria-disabled={String(this.theme === "dark")}>
+        <a
+          href="?theme=dark"
+          role="button"
+          aria-disabled={this.theme === "dark" ? "true" : "false"}
+        >
           Dark
         </a>
       </div>

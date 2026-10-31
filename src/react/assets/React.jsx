@@ -1,3 +1,4 @@
+/** @jsxImportSource react */
 import { html } from "jsx-async-runtime";
 import { renderToString } from "react-dom/server";
 import Components from "./components/$index";

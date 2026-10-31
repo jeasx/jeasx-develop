@@ -13,6 +13,8 @@ export default async function ({ request }) {
         <Layout title="Internal Server Error">
           <h1>Internal Server Error</h1>
           <p>We're sorry, but something went wrong with your request. Please try again later.</p>
+          {/* Only for this demo: in production, don't show error details to visitors,
+              as they can reveal internals like file paths or queries. Log them instead. */}
           <p>
             <code>{error.toString()}</code>
           </p>
@@ -23,7 +25,7 @@ export default async function ({ request }) {
   }
 
   return (
-    <Layout title="User friendly error messages">
+    <Layout title="User-friendly error messages">
       <h1>Catch errors at runtime</h1>
       <p>
         Jeasx allows you to catch errors with a dynamic{" "}
@@ -42,6 +44,7 @@ export default async function ({ request }) {
   );
 }
 
+/** @returns {Promise<JSX.Element>} */
 async function ComponentWithError() {
   throw new Error("Something went wrong while rendering this component.");
 }

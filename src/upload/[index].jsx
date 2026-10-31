@@ -3,14 +3,14 @@ import Layout from "../Layout";
 export default async function () {
   return (
     <Layout
-      title="How to upload and transform images in Jeasx with Sharp"
+      title="How to upload and transform images in Jeasx with sharp"
       description="Handling binary assets and image transformations with upload forms."
     >
       <h1>Upload and transform images in Jeasx</h1>
       <p>
         This example demonstrates how to handle binary uploads and image transformations in Jeasx.
         As Jeasx is focused on the core technologies, image transformation is implemented in
-        userland with the help of the <a href="https://sharp.pixelplumbing.com">Sharp</a> image
+        userland with the help of the <a href="https://sharp.pixelplumbing.com">sharp</a> image
         processor.
       </p>
       <form action="./image" method="post" enctype="multipart/form-data">

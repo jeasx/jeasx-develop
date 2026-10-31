@@ -7,7 +7,7 @@ import Layout from "./Layout";
 
 export default function ({ data, form, errors }) {
   return (
-    <Layout title="Claim Report" data={data}>
+    <Layout title="Claim report" data={data}>
       <Form>
         <Legend>I am reporting the claim as:</Legend>
         <Input

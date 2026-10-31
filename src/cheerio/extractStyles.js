@@ -25,7 +25,10 @@ export default function extractStyles(html) {
           ? item.trim()
           : `${item.slice(0, colon).trim()}:${item.slice(colon + 1).trim()}`;
       })) {
-      if (!declaration) {
+      // Cheerio decodes attributes, so "&lt;/style&gt;" in a style attribute comes back
+      // as "</style>" and would close the <style> tag below, letting markup (e.g. a script)
+      // escape into the page. CSS declarations never need "<", so skip those.
+      if (!declaration || declaration.includes("<")) {
         continue;
       }
       if (!declarations.has(declaration)) {

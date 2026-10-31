@@ -12,13 +12,13 @@ export default function ({ request, reply }) {
   return (
     <Layout
       title="Fixi.js and Jeasx - lightweight hypermedia controls"
-      description="Jeasx integrates easily with fixi.js"
+      description="Jeasx integrates easily with Fixi.js"
       script="./index.js"
     >
       <h1>Fixi.js and Jeasx - lightweight hypermedia controls</h1>
       <p>
         <a href="https://github.com/bigskysoftware/fixi">Fixi.js</a> is a minimalist alternative to
-        HTMX, developed by the creators of HTMX. Enhancing a Jeasx server rendered application with
+        HTMX, developed by the creators of HTMX. Enhancing a server-rendered Jeasx application with
         Fixi.js works without problems. The example illustrates progressive enhancement: it provides
         an improved user experience with JavaScript while remaining fully functional as a fallback
         without it.
@@ -96,7 +96,7 @@ function toText(value) {
  * @param {import("../types").RouteProps} props
  */
 async function Fragment({ request, reply }) {
-  const body = request?.body || {};
+  const body = /** @type {Record<string, unknown>} */ (request?.body || {});
   let entries = await readEntries(request.cookies["recipes"]);
 
   // Only allow existing entries or appending a new one.
@@ -106,21 +106,25 @@ async function Fragment({ request, reply }) {
     id >= 0 &&
     (id < entries.length || (id === entries.length && entries.length < MAX_ENTRIES));
 
-  if (["save", "create"].includes(body["action"]) && isValidId) {
+  let error = "";
+  if (["save", "create"].includes(String(body["action"])) && isValidId) {
     const changed = [...entries];
     changed[id] = toEntry(body);
     const cookie = JSON.stringify(changed);
-    // Ignore changes which don't fit into the cookie (e.g. lots of emojis).
+    // Changes which don't fit into the cookie (e.g. lots of emojis) are dropped.
     if (fitsCookie(cookie)) {
       entries = changed;
-      reply.setCookie("recipes", cookie);
+      reply.setCookie("recipes", cookie, { path: "/fixi" });
+    } else {
+      error = "Your changes are too long to be stored in a cookie. Please shorten them.";
     }
   }
 
   return (
     <article id="entries" class="card-secondary">
+      {error && <p role="alert">{error}</p>}
       {Object.entries(entries).map(([id, { name, cuisine, difficulty }]) => {
-        const isEditMode = body["id"] === id && ["edit", "create"].includes(body["action"]);
+        const isEditMode = body["id"] === id && ["edit", "create"].includes(String(body["action"]));
         return (
           <form
             class="row"

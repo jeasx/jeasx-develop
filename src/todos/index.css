@@ -50,7 +50,7 @@
       margin: auto 0;
       border: none; /* Mobile Safari */
       width: 40px;
-      /* auto, since non-WebKit browsers doesn't support input styling */
+      /* auto, since non-WebKit browsers don't support input styling */
       height: auto;
       text-align: center;
 

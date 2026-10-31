@@ -2,13 +2,13 @@ import { SLUGS } from "../domain/constants";
 import Progress from "./Progress";
 
 const groups = [
-  { label: "Start", links: [SLUGS.DAMAGE_TYPES] },
+  { label: "Start", links: [SLUGS.START, SLUGS.DAMAGE_TYPES] },
   {
-    label: "Claim Report",
+    label: "Claim report",
     links: [SLUGS.CLAIM_REPORT, SLUGS.CLAIMANT, SLUGS.INJURED_PARTY, SLUGS.PERPETRATOR],
   },
   {
-    label: "Damage Details",
+    label: "Damage details",
     links: [
       SLUGS.DAMAGE_DETAILS,
       SLUGS.DAMAGE_DETAILS_FOREIGN_VEHICLE,
@@ -17,8 +17,8 @@ const groups = [
       SLUGS.DAMAGE_DETAILS_PERSON,
     ],
   },
-  { label: "Legal Notice", links: [SLUGS.LEGAL_NOTICE] },
-  { label: "Thank You", links: [SLUGS.THANK_YOU] },
+  { label: "Legal notice", links: [SLUGS.LEGAL_NOTICE] },
+  { label: "Thank you", links: [SLUGS.THANK_YOU] },
 ];
 
 export default function Header({ path, data }) {
@@ -26,7 +26,7 @@ export default function Header({ path, data }) {
 
   return (
     <header>
-      <h1>Your Car Insurance Claim Form</h1>
+      <h1>Your car insurance claim form</h1>
       <nav aria-label="breadcrumb">
         <ul>
           {groups.slice(0, currentStep + 1).map(({ label, links }) => (

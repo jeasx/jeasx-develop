@@ -1,3 +1,4 @@
+/** @jsxImportSource react */
 import { useState } from "react";
 
 export default function Lottery({ title }) {
@@ -33,7 +34,7 @@ export default function Lottery({ title }) {
       </div>
       {selectedNumbers.length > 0 && (
         <div className="selected-numbers">
-          <h3>Selected Numbers:</h3>
+          <h3>Selected numbers:</h3>
           <ul>
             {selectedNumbers.map((number) => (
               <li key={number}>{number}</li>

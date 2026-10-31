@@ -5,9 +5,13 @@ import cap from "./cap";
  * @param {import("../types").RouteProps} props
  */
 export default async function ({ request }) {
+  let error = "";
   if (request.method === "POST") {
     const token = request.body?.["cap-token"];
-    if (token) {
+    if (!token) {
+      // E.g. submitted before the captcha was solved.
+      error = "Please solve the captcha before submitting the form.";
+    } else {
       const { success } = await cap.validateToken(token);
       if (success) {
         const name = request.body?.["name"];
@@ -32,7 +36,7 @@ export default async function ({ request }) {
 
   return (
     <Layout
-      title="Use a captcha in Jeasx"
+      title="Use a captcha with Jeasx"
       description="Using Cap.js as proof-of-work captcha with Jeasx"
       script="./index.js"
     >
@@ -42,13 +46,14 @@ export default async function ({ request }) {
         alternative using proof-of-work. This example demonstrates how to integrate Cap.js with
         Jeasx to protect form submissions.
       </p>
+      {error && <p role="alert">{error}</p>}
       <form action="" method="post">
         <label>
           Enter your name:
           <input type="text" name="name" value={request?.body?.["name"]} />
         </label>
         <label>
-          <cap-widget data-cap-api-endpoint={`${request.path}/`}></cap-widget>
+          <cap-widget data-cap-api-endpoint={`${request.path.replace(/\/$/, "")}/`}></cap-widget>
         </label>
         <label>
           <input class="btn btn-primary" type="submit" value="Submit" />

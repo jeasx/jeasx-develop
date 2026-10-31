@@ -1,3 +1,4 @@
+/** @jsxImportSource react */
 import { createRoot } from "react-dom/client";
 import Components from "./components/$index";
 

@@ -11,7 +11,7 @@ export default async function ({ request }) {
   const search = String(request.query["search"] || "jeasx");
 
   return (
-    <Layout title="Search GitHub Repositories" description="A list of repositories at GitHub.">
+    <Layout title="Search GitHub Repositories" description="A list of repositories on GitHub.">
       <h1 class="center">Search GitHub Repositories</h1>
       <p>
         The page is streamed with <code>this.jsxStream = true</code>: the page shell and a loading

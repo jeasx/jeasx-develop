@@ -16,7 +16,7 @@ export default function () {
         Then, reload the page and enter the correct credentials.
       </p>
       <p>
-        <a href="protected">Access forbidden area</a>
+        <a href="protected">Access protected area</a>
       </p>
     </Layout>
   );
