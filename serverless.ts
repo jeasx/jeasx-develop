@@ -115,6 +115,9 @@ async function handler(request: FastifyRequest, reply: FastifyReply) {
   // Default props for route handlers
   const props = { request, reply };
 
+  // Remember if headers of a static file were applied, so they can be removed on errors.
+  let fileHeadersApplied = false;
+
   try {
     // Check for static file and store result for later processing.
     reply.file = await tryFile(request);
@@ -126,6 +129,7 @@ async function handler(request: FastifyRequest, reply: FastifyReply) {
         if (reply.file) {
           reply.status(reply.file.statusCode);
           reply.headers(reply.file.headers);
+          fileHeadersApplied = true;
           response = reply.file.stream;
           break;
         }
@@ -228,6 +232,16 @@ async function handler(request: FastifyRequest, reply: FastifyReply) {
   } catch (error) {
     const errorHandler = context["errorHandler"];
     if (typeof errorHandler === "function") {
+      // Headers describing the failed response don't fit the error page:
+      // a wrong content-length breaks it, and file headers could cache it for a year.
+      // Like Fastify's error handler, keep other headers (e.g. cookies).
+      if (fileHeadersApplied && reply.file) {
+        for (const name of Object.keys(reply.file.headers)) {
+          reply.removeHeader(name);
+        }
+      }
+      reply.removeHeader("content-type");
+      reply.removeHeader("content-length");
       // Keep the status of the error (e.g. 403) like Fastify does, otherwise use 500.
       const statusCode = (error as any)?.statusCode ?? (error as any)?.status;
       reply.status(

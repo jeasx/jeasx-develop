@@ -49,6 +49,7 @@ async function handler(request, reply) {
   let response;
   const context = {};
   const props = { request, reply };
+  let fileHeadersApplied = false;
   try {
     reply.file = await tryFile(request);
     for (const route of generateRoutes(request.path)) {
@@ -56,6 +57,7 @@ async function handler(request, reply) {
         if (reply.file) {
           reply.status(reply.file.statusCode);
           reply.headers(reply.file.headers);
+          fileHeadersApplied = true;
           response = reply.file.stream;
           break;
         }
@@ -122,6 +124,13 @@ async function handler(request, reply) {
   } catch (error) {
     const errorHandler = context["errorHandler"];
     if (typeof errorHandler === "function") {
+      if (fileHeadersApplied && reply.file) {
+        for (const name of Object.keys(reply.file.headers)) {
+          reply.removeHeader(name);
+        }
+      }
+      reply.removeHeader("content-type");
+      reply.removeHeader("content-length");
       const statusCode = error?.statusCode ?? error?.status;
       reply.status(
         Number.isInteger(statusCode) && statusCode >= 400 && statusCode <= 599 ? statusCode : 500
