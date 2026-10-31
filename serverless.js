@@ -23,8 +23,7 @@ const FASTIFY_SEND_OPTIONS = {
 const FASTIFY_SERVER = CONFIG.FASTIFY_SERVER ?? ((fastify2) => fastify2);
 var serverless_default = FASTIFY_SERVER(
   fastify(CONFIG.FASTIFY_SERVER_OPTIONS?.()).decorateRequest("route", "").decorateRequest("path", "").decorateReply("file", void 0).addHook("onRequest", async (request, reply) => {
-    const index = request.url.indexOf("?");
-    const path = decodePath(index === -1 ? request.url : request.url.slice(0, index));
+    const path = decodePath(request.url);
     if (path === void 0) {
       reply.code(400).send();
       return reply;
@@ -168,8 +167,10 @@ function* generateRoutes(path) {
     yield `${segments[i]}/[404]`;
   }
 }
-function decodePath(rawPath) {
+function decodePath(url) {
   try {
+    const index = url.indexOf("?");
+    const rawPath = index === -1 ? url : url.slice(0, index);
     const path = decodeURIComponent(rawPath).replace(/[\\/]+/g, "/");
     if (path.includes("\0") || /(^|\/)\.\.(\/|$)/.test(path)) {
       return void 0;

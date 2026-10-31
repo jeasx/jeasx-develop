@@ -67,9 +67,7 @@ export default FASTIFY_SERVER(
     .decorateRequest("path", "")
     .decorateReply("file", undefined)
     .addHook("onRequest", async (request, reply) => {
-      // Extract and decode path from url
-      const index = request.url.indexOf("?");
-      const path = decodePath(index === -1 ? request.url : request.url.slice(0, index));
+      const path = decodePath(request.url);
       if (path === undefined) {
         reply.code(400).send();
         return reply;
@@ -322,14 +320,16 @@ function* generateRoutes(path: string): Generator<string | typeof STATIC_FILE_RO
 }
 
 /**
- * Decodes an url-encoded path.
+ * Extracts the path from a request url (dropping the query string) and decodes it.
  * Backslashes become slashes (as in browsers) and repeated slashes are collapsed,
  * so a path like "//evil.com" can't be mistaken for another host, e.g. in a <base> tag.
  * Returns undefined for malformed encodings, null bytes and ".." segments,
  * as browsers never send them and they could escape the project directory.
  */
-function decodePath(rawPath: string): string | undefined {
+function decodePath(url: string): string | undefined {
   try {
+    const index = url.indexOf("?");
+    const rawPath = index === -1 ? url : url.slice(0, index);
     const path = decodeURIComponent(rawPath).replace(/[\\/]+/g, "/");
     if (path.includes("\0") || /(^|\/)\.\.(\/|$)/.test(path)) {
       return undefined;
