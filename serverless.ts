@@ -20,15 +20,19 @@ const NODE_ENV_IS_DEVELOPMENT = process.env.NODE_ENV === "development";
 // Map routes and files for non-development environments from metadata export.
 // Module paths are initialized at startup but overwritten
 // with resolved modules upon the first request.
-const {
-  routes: MODULE_BY_ROUTE,
-  files: FILE_BY_PATH,
-}: {
+const METADATA: {
   routes: Record<string, string | { default: Function }>;
   files: Record<string, string>;
 } = NODE_ENV_IS_DEVELOPMENT
   ? { routes: {}, files: {} }
   : (await import(`file://${join(CWD, "dist", "[--metadata--].js")}`)).default;
+
+// Without a prototype, lookups never return inherited keys like "constructor".
+const MODULE_BY_ROUTE = Object.assign(
+  Object.create(null),
+  METADATA.routes,
+) as typeof METADATA.routes;
+const FILE_BY_PATH = Object.assign(Object.create(null), METADATA.files) as typeof METADATA.files;
 
 declare module "fastify" {
   interface FastifyRequest {
@@ -185,9 +189,13 @@ async function handler(request: FastifyRequest, reply: FastifyReply) {
       if (reply.sent) {
         return;
       } else if (route.endsWith("/[404]")) {
-        // Preserve existing status if a 404 page is requested directly.
+        // Preserve existing status if a 404 page is requested directly
+        // (e.g. "/a/404" answered by "/a/[404]", but not by "/[404]").
         // If no status is defined, set status to 404 automatically.
-        if (reply.statusCode === 200 && !request.path.endsWith("/404")) {
+        if (
+          reply.statusCode === 200 &&
+          !(route.slice(0, -"[404]".length) + "404" === request.path.replace(/\/$/, ""))
+        ) {
           reply.status(404);
         }
         break;
@@ -333,8 +341,7 @@ async function tryFile(request: FastifyRequest): Promise<BaseSendResult | undefi
   // by unexpected `request.path` values.
   const file = FILE_BY_PATH[request.path];
   if (file) {
-    // fastifySend decodes the path, so it must be encoded.
-    return await fastifySend(request.raw, encodeURI(file), FASTIFY_SEND_OPTIONS);
+    return await sendFile(request, file);
   }
 
   if (NODE_ENV_IS_DEVELOPMENT) {
@@ -349,11 +356,7 @@ async function tryFile(request: FastifyRequest): Promise<BaseSendResult | undefi
         if ((await stat(join(CWD, directory, request.path))).isFile()) {
           // Dynamic path loading is restricted to development environments;
           // therefore, production-level path validation is not required here.
-          return await fastifySend(
-            request.raw,
-            encodeURI(`${directory}${request.path}`),
-            FASTIFY_SEND_OPTIONS,
-          );
+          return await sendFile(request, `${directory}${request.path}`);
         }
       } catch {
         continue;
@@ -362,4 +365,23 @@ async function tryFile(request: FastifyRequest): Promise<BaseSendResult | undefi
   }
 
   return undefined;
+}
+
+/**
+ * Prepares a file for sending. Returns undefined if there is nothing to send,
+ * so routes like [...path] or [404] can answer instead of the plain error page of fastifySend.
+ */
+async function sendFile(
+  request: FastifyRequest,
+  path: string,
+): Promise<BaseSendResult | undefined> {
+  // fastifySend decodes the path, so it must be encoded.
+  const result = await fastifySend(request.raw, encodeURI(path), FASTIFY_SEND_OPTIONS);
+  // 404: file is missing or ignored, e.g. dotfiles by default.
+  // Other errors (403 for denied dotfiles, 412, 416 for invalid ranges) belong to the file.
+  if (result.type === "error" && result.statusCode === 404) {
+    result.stream.destroy();
+    return undefined;
+  }
+  return result;
 }

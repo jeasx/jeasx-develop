@@ -9,10 +9,12 @@ env();
 const CWD = process.cwd();
 const CONFIG = (await import(`file://${join(CWD, "jeasx.config.js")}`)).default;
 const NODE_ENV_IS_DEVELOPMENT = process.env.NODE_ENV === "development";
-const {
-  routes: MODULE_BY_ROUTE,
-  files: FILE_BY_PATH
-} = NODE_ENV_IS_DEVELOPMENT ? { routes: {}, files: {} } : (await import(`file://${join(CWD, "dist", "[--metadata--].js")}`)).default;
+const METADATA = NODE_ENV_IS_DEVELOPMENT ? { routes: {}, files: {} } : (await import(`file://${join(CWD, "dist", "[--metadata--].js")}`)).default;
+const MODULE_BY_ROUTE = Object.assign(
+  /* @__PURE__ */ Object.create(null),
+  METADATA.routes
+);
+const FILE_BY_PATH = Object.assign(/* @__PURE__ */ Object.create(null), METADATA.files);
 const FASTIFY_SEND_OPTIONS = CONFIG.FASTIFY_SEND_OPTIONS?.();
 const FASTIFY_SERVER = CONFIG.FASTIFY_SERVER ?? ((fastify2) => fastify2);
 var serverless_default = FASTIFY_SERVER(
@@ -97,7 +99,7 @@ async function handler(request, reply) {
       if (reply.sent) {
         return;
       } else if (route.endsWith("/[404]")) {
-        if (reply.statusCode === 200 && !request.path.endsWith("/404")) {
+        if (reply.statusCode === 200 && !(route.slice(0, -"[404]".length) + "404" === request.path.replace(/\/$/, ""))) {
           reply.status(404);
         }
         break;
@@ -182,7 +184,7 @@ async function renderResponse(context, response) {
 async function tryFile(request) {
   const file = FILE_BY_PATH[request.path];
   if (file) {
-    return await fastifySend(request.raw, encodeURI(file), FASTIFY_SEND_OPTIONS);
+    return await sendFile(request, file);
   }
   if (NODE_ENV_IS_DEVELOPMENT) {
     for (const directory of ["dist", "public"]) {
@@ -191,11 +193,7 @@ async function tryFile(request) {
       }
       try {
         if ((await stat(join(CWD, directory, request.path))).isFile()) {
-          return await fastifySend(
-            request.raw,
-            encodeURI(`${directory}${request.path}`),
-            FASTIFY_SEND_OPTIONS
-          );
+          return await sendFile(request, `${directory}${request.path}`);
         }
       } catch {
         continue;
@@ -203,6 +201,14 @@ async function tryFile(request) {
     }
   }
   return void 0;
+}
+async function sendFile(request, path) {
+  const result = await fastifySend(request.raw, encodeURI(path), FASTIFY_SEND_OPTIONS);
+  if (result.type === "error" && result.statusCode === 404) {
+    result.stream.destroy();
+    return void 0;
+  }
+  return result;
 }
 export {
   serverless_default as default
