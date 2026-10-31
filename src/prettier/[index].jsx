@@ -1,11 +1,19 @@
 import * as prettier from "prettier";
 import Layout from "../Layout";
 
+// Limit the options, as a huge tabWidth would inflate the output to many megabytes.
+const PRINT_WIDTH = { min: 20, max: 200, fallback: 80 };
+const TAB_WIDTH = { min: 1, max: 8, fallback: 2 };
+
 /**
  * @param {import("../types").RouteProps} props
  */
 export default function ({ request, reply }) {
-  const form = request.body || { printWidth: 80, tabWidth: 2 };
+  const body = request.body || {};
+  const form = {
+    printWidth: toOption(body["printWidth"], PRINT_WIDTH),
+    tabWidth: toOption(body["tabWidth"], TAB_WIDTH),
+  };
 
   if (request.query["printWidth"] && request.query["tabWidth"]) {
     this.responseHandler = async (payload) => {
@@ -13,8 +21,8 @@ export default function ({ request, reply }) {
       return typeof payload === "string"
         ? await prettier.format(payload, {
             parser: "html",
-            printWidth: Number(request.query["printWidth"]),
-            tabWidth: Number(request.query["tabWidth"]),
+            printWidth: toOption(request.query["printWidth"], PRINT_WIDTH),
+            tabWidth: toOption(request.query["tabWidth"], TAB_WIDTH),
           })
         : payload;
     };
@@ -31,11 +39,23 @@ export default function ({ request, reply }) {
       <form action="" method="post">
         <label>
           Print width:
-          <input type="number" name="printWidth" value={form["printWidth"]} />
+          <input
+            type="number"
+            name="printWidth"
+            min={PRINT_WIDTH.min}
+            max={PRINT_WIDTH.max}
+            value={form["printWidth"]}
+          />
         </label>
         <label>
           Tab width:
-          <input type="number" name="tabWidth" value={form["tabWidth"]} />
+          <input
+            type="number"
+            name="tabWidth"
+            min={TAB_WIDTH.min}
+            max={TAB_WIDTH.max}
+            value={form["tabWidth"]}
+          />
         </label>
         <input type="submit" value="Submit" />
       </form>
@@ -45,4 +65,15 @@ export default function ({ request, reply }) {
       ></iframe>
     </Layout>
   );
+}
+
+/**
+ * Parses a number and keeps it within the given range; uses the fallback for invalid input.
+ *
+ * @param {unknown} value
+ * @param {{ min: number, max: number, fallback: number }} range
+ */
+function toOption(value, { min, max, fallback }) {
+  const number = Number.parseInt(String(value), 10);
+  return Number.isFinite(number) ? Math.min(Math.max(number, min), max) : fallback;
 }
