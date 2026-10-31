@@ -47,7 +47,11 @@ await rm(join(CWD, "dist"), { recursive: true, force: true, maxRetries: 3 });
 
 for (const options of [SERVER_OPTIONS, BROWSER_OPTIONS]) {
   if (NODE_ENV_IS_DEVELOPMENT) {
-    await (await esbuild.context(options)).watch();
+    const context = await esbuild.context(options);
+    // watch() doesn't wait for the first build, so the server would start with an empty "dist".
+    // Build errors are already logged and fixed while watching, so don't stop on them.
+    await context.rebuild().catch(() => {});
+    await context.watch();
   } else {
     await esbuild.build(options);
   }
