@@ -24,13 +24,14 @@ export default async function () {
 
   // Use response handler to replace HEAD_MARK with unified head.
   this.responseHandler = async (payload) => {
-    // Only rendered strings contain the mark (not streams, JSON etc.).
-    if (typeof payload !== "string") {
+    // The mark can only be replaced in the complete markup, so a streamed payload is collected first.
+    const html = await toText(payload);
+    if (html === undefined) {
       return payload;
     }
     const htmlHead = await $jsxToString.call(this, <head>{unifyHead(headTags.flat())}</head>);
     // Use a function, so "$&" or "$'" in the head isn't treated as a replacement pattern.
-    return payload.replace(HEAD_MARK, () => htmlHead);
+    return html.replace(HEAD_MARK, () => htmlHead);
   };
 }
 
@@ -62,4 +63,25 @@ function unifyHead(jsxElements) {
     }
   }
   return jsxElements;
+}
+
+/**
+ * Returns the payload as string; collects streams (Node or Web) into a string.
+ * Returns undefined for anything else.
+ *
+ * @param {unknown} payload
+ */
+async function toText(payload) {
+  if (typeof payload === "string") {
+    return payload;
+  }
+  if (payload && typeof payload[Symbol.asyncIterator] === "function") {
+    const decoder = new TextDecoder();
+    let text = "";
+    for await (const chunk of payload) {
+      text += typeof chunk === "string" ? chunk : decoder.decode(chunk, { stream: true });
+    }
+    return text + decoder.decode();
+  }
+  return undefined;
 }

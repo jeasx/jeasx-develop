@@ -1,8 +1,6 @@
 import Layout from "../Layout";
 
 export default function () {
-  this.jsxStream = false;
-
   return (
     <Layout title="Default title" description="Default description">
       <h1>A Helmet for the HTML-Head</h1>
