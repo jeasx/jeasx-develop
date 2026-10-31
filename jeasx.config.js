@@ -38,6 +38,9 @@ export default {
   FASTIFY_SERVER_OPTIONS: () => ({
     logger: { level: NODE_ENV_IS_DEVELOPMENT ? "error" : "info" },
     bodyLimit: 2 * 1024 * 1024,
+    // Close open connections on shutdown, otherwise long-lived responses
+    // like Server-Sent Events keep the server from stopping.
+    forceCloseConnections: true,
     // Strip cache busters like "/index~mhe4k2x1.css" from the last path segment, but leave
     // the query string alone. The buster is the BUILD_ID (Date.now() in base 36, 8 characters
     // until 2059), so other names with a tilde like "/my~notes.txt" stay untouched.
