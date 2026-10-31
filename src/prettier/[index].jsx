@@ -10,8 +10,6 @@ const TAB_WIDTH = { min: 1, max: 8, fallback: 2 };
  * @param {import("../types").RouteProps} props
  */
 export default function ({ request, reply }) {
-  this.jsxStream = false;
-
   const body = request.body || {};
   const form = {
     printWidth: toOption(body["printWidth"], PRINT_WIDTH),
@@ -20,14 +18,17 @@ export default function ({ request, reply }) {
 
   if (request.query["printWidth"] && request.query["tabWidth"]) {
     this.responseHandler = async (payload) => {
+      // Prettier needs the complete markup, so a streamed payload is collected first.
+      const html = await toText(payload);
+      if (html === undefined) {
+        return payload;
+      }
       reply.type("text/plain; charset=utf-8");
-      return typeof payload === "string"
-        ? await prettier.format(payload, {
-            parser: "html",
-            printWidth: toOption(request.query["printWidth"], PRINT_WIDTH),
-            tabWidth: toOption(request.query["tabWidth"], TAB_WIDTH),
-          })
-        : payload;
+      return await prettier.format(html, {
+        parser: "html",
+        printWidth: toOption(request.query["printWidth"], PRINT_WIDTH),
+        tabWidth: toOption(request.query["tabWidth"], TAB_WIDTH),
+      });
     };
   }
 
@@ -82,4 +83,25 @@ export default function ({ request, reply }) {
 function toOption(value, { min, max, fallback }) {
   const number = Number.parseInt(String(value), 10);
   return Number.isFinite(number) ? Math.min(Math.max(number, min), max) : fallback;
+}
+
+/**
+ * Returns the payload as string; collects streams (Node or Web) into a string.
+ * Returns undefined for anything else.
+ *
+ * @param {unknown} payload
+ */
+async function toText(payload) {
+  if (typeof payload === "string") {
+    return payload;
+  }
+  if (payload && typeof payload[Symbol.asyncIterator] === "function") {
+    const decoder = new TextDecoder();
+    let text = "";
+    for await (const chunk of payload) {
+      text += typeof chunk === "string" ? chunk : decoder.decode(chunk, { stream: true });
+    }
+    return text + decoder.decode();
+  }
+  return undefined;
 }
