@@ -1,6 +1,6 @@
 import * as esbuild from "esbuild";
 import { readdir, rm, stat, writeFile } from "node:fs/promises";
-import { join, sep } from "node:path";
+import { join, relative, sep } from "node:path";
 import { pathToFileURL } from "node:url";
 import env from "./env.js";
 
@@ -64,10 +64,23 @@ if (!NODE_ENV_IS_DEVELOPMENT) {
   // Unlike glob, readdir includes dotfiles (e.g. ".well-known"), so the "dotfiles"
   // option of FASTIFY_SEND_OPTIONS decides about them like in development.
   // "dist" comes first: if a file exists in both directories, "dist" wins.
+  // Only files are collected. Dirents tell the type without a stat() call per entry,
+  // except for symbolic links, which may point to a file.
   const entries = [];
   for (const directory of ["dist", "public"]) {
-    const names = await readdir(join(CWD, directory), { recursive: true }).catch(() => []);
-    entries.push(...names.map((name) => join(directory, name)));
+    const dirents = await readdir(join(CWD, directory), {
+      recursive: true,
+      withFileTypes: true,
+    }).catch(() => []);
+    for (const dirent of dirents) {
+      const path = join(dirent.parentPath, dirent.name);
+      if (
+        dirent.isFile() ||
+        (dirent.isSymbolicLink() && (await stat(path).catch(() => undefined))?.isFile())
+      ) {
+        entries.push(relative(CWD, path));
+      }
+    }
   }
 
   for (const entry of entries) {
@@ -85,11 +98,9 @@ if (!NODE_ENV_IS_DEVELOPMENT) {
     }
 
     // Treat all other entries as static files.
-    if ((await stat(join(CWD, path))).isFile()) {
-      const key = path.slice(path.indexOf("/"));
-      if (!(path.startsWith("public/") && key in files)) {
-        files[key] = path;
-      }
+    const key = path.slice(path.indexOf("/"));
+    if (!(path.startsWith("public/") && key in files)) {
+      files[key] = path;
     }
   }
 
