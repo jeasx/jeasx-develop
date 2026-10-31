@@ -35,11 +35,15 @@ export default function ({ request, reply }) {
     }
   }
 
-  // Drop the oldest todos until the cookie fits.
-  while (todos.length > 1 && encodeURIComponent(JSON.stringify(todos)).length > MAX_COOKIE_SIZE) {
-    todos.pop();
+  // Only form submissions change todos. The guard also runs for static files
+  // like index.css, which shouldn't carry a cookie.
+  if (request.method === "POST") {
+    // Drop the oldest todos until the cookie fits.
+    while (todos.length > 1 && encodeURIComponent(JSON.stringify(todos)).length > MAX_COOKIE_SIZE) {
+      todos.pop();
+    }
+    reply.setCookie("todos", JSON.stringify(todos));
   }
-  reply.setCookie("todos", JSON.stringify(todos));
 
   return {
     todos,

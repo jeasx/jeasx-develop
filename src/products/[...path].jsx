@@ -6,11 +6,12 @@ import Image from "../sharp/Image";
  */
 export default async function ({ request, reply }) {
   const id = request.path.slice(request.path.lastIndexOf("/") + 1);
-  const product = await (
-    await fetch(`https://dummyjson.com/product/${encodeURIComponent(id)}`)
-  ).json();
+  const response = await fetch(`https://dummyjson.com/product/${encodeURIComponent(id)}`);
+  const product = response.ok ? await response.json() : undefined;
 
-  if (product.message) {
+  // Unknown ids get a 404, but "." is redirected to the list of all products,
+  // so check for a single product before rendering it.
+  if (!Array.isArray(product?.images)) {
     return;
   }
 

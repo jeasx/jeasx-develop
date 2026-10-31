@@ -24,15 +24,22 @@ export default async function ({ request, reply }) {
       return "Invalid upload: please choose an image, a supported format, size and rotation.";
     }
 
-    const image = await sharp(upload)
-      .resize({
-        width: size,
-        height: size,
-        position: "entropy",
-      })
-      .rotate(rotate)
-      .toFormat(format, { quality: 70 })
-      .toBuffer();
+    let image;
+    try {
+      image = await sharp(upload)
+        .resize({
+          width: size,
+          height: size,
+          position: "entropy",
+        })
+        .rotate(rotate)
+        .toFormat(format, { quality: 70 })
+        .toBuffer();
+    } catch {
+      // Sharp throws for files that aren't images or are broken.
+      reply.status(400).type("text/plain; charset=utf-8");
+      return "Invalid upload: the file couldn't be read as an image.";
+    }
 
     reply.type(`image/${format}`);
     return image;

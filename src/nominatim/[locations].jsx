@@ -2,12 +2,15 @@
  * @param {import("../types").RouteProps} props
  */
 export default async function ({ request }) {
-  const json = await (
-    await fetch(
-      `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(request.body?.["search"] ?? "")}&addressdetails=1&format=jsonv2`,
-      { headers: { "user-agent": "jeasx.dev (mail@jeasx.dev)" } },
-    )
-  ).json();
+  const response = await fetch(
+    `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(request.body?.["search"] ?? "")}&addressdetails=1&format=jsonv2`,
+    { headers: { "user-agent": "jeasx.dev (mail@jeasx.dev)" } },
+  );
+  // Error responses (e.g. when the rate limit is hit) may not be JSON, so only parse successful ones.
+  const json = response.ok ? await response.json() : undefined;
+  if (!Array.isArray(json)) {
+    return <p>Nominatim couldn't be reached right now. Please try again later.</p>;
+  }
 
   return (
     <table>
@@ -21,7 +24,7 @@ export default async function ({ request }) {
         </tr>
       </thead>
       <tbody>
-        {json.map(({ addresstype, address }) => (
+        {json.map(({ addresstype, address = {} }) => (
           <tr>
             <td>{address.country}</td>
             <td>{address.postcode}</td>

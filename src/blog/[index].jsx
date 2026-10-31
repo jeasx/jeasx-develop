@@ -1,13 +1,11 @@
 import Layout from "../Layout";
-import data from "./data.json";
-import { readPosts, writePosts } from "./posts";
+import { readPosts } from "./posts";
 
 /**
  * @param {import("../types").RouteProps} props
  */
-export default function ({ request, reply }) {
-  const posts = readPosts(request, data);
-  writePosts(reply, posts);
+export default function ({ request }) {
+  const posts = readPosts(request);
 
   return (
     <Layout title="Blog example with Jeasx">

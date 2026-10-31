@@ -1,3 +1,5 @@
+import data from "./data.json";
+
 // Browsers silently drop cookies larger than about 4 KB (name, value and attributes).
 const MAX_COOKIE_SIZE = 3800;
 const FIELDS = { slug: 100, title: 100, author: 100, description: 200, body: 1000 };
@@ -5,23 +7,22 @@ const FIELDS = { slug: 100, title: 100, author: 100, description: 200, body: 100
 const SLUG_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 
 /**
- * Reads posts from the cookie; falls back if it is missing or malformed.
+ * Reads posts from the cookie; falls back to the example posts if it is missing or malformed.
  *
  * @param {import("fastify").FastifyRequest} request
- * @param {any[]} fallback
  */
-export function readPosts(request, fallback = []) {
+export function readPosts(request) {
   try {
     const posts = JSON.parse(request.cookies["posts"]);
     // The cookie can be edited by the client, so drop posts with invalid slugs.
-    return Array.isArray(posts)
-      ? posts.filter(
-          (post) => post && typeof post === "object" && SLUG_PATTERN.test(String(post.slug)),
-        )
-      : fallback;
-  } catch {
-    return fallback;
-  }
+    if (Array.isArray(posts)) {
+      return posts.filter(
+        (post) => post && typeof post === "object" && SLUG_PATTERN.test(String(post.slug)),
+      );
+    }
+  } catch {}
+  // Return a copy, so callers can add posts without changing the shared example data.
+  return [...data];
 }
 
 /**
@@ -64,6 +65,7 @@ function slugify(text) {
     .replace(/\p{M}/gu, "")
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "")
-    .slice(0, FIELDS.slug);
+    // Shorten before trimming, so the cut never leaves a dash at the end.
+    .slice(0, FIELDS.slug)
+    .replace(/^-|-$/g, "");
 }
