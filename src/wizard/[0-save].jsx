@@ -20,9 +20,9 @@ export default function ({ request, reply }) {
   return (
     <Layout title="Save">
       <Form>
-        <Headline>Your data has been saved</Headline>
+        <Headline>Your claim has been saved</Headline>
         <Input
-          label="To reload your data, please use the following token:"
+          label="Enter this token on the start page to continue your claim:"
           readonly
           value={token}
         />

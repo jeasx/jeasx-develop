@@ -5,7 +5,7 @@ export default function ({ number, delta, numbers, submit }) {
   return (
     <Layout
       title={numbers.length > 0 ? `Lottery ${numbers.join(", ")}` : "Lottery"}
-      description="A fake lottery"
+      description="Pick six numbers with plain HTML forms, no client-side JavaScript needed."
       css="/lottery/index.module.css"
     >
       <div class={styles.lottery}>

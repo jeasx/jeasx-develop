@@ -1,10 +1,10 @@
 import Layout from "../Layout";
 import Preact from "./assets/Preact";
 
-<Layout title="Use Preact with Jeasx" description="Enhance your application with Preact" script="/preact/assets/index.js">
+<Layout title="Use Preact with Jeasx" description="Add interactive Preact islands with shared signals to server-rendered pages." script="/preact/assets/index.js">
 # Preact in Jeasx with state & signals
 
-[Preact](https://preactjs.com) empowers you to enhance your server-rendered JSX application by embedding interactive islands of UI. With support for state management and reactive signals, your components can efficiently communicate and synchronize across the page, delivering a fast and dynamic user experience.
+[Preact](https://preactjs.com) lets you embed interactive islands into server-rendered pages. Components keep their own state, and signals let separate islands share state across the page.
 
 <details>
 <summary>How to integrate Preact with Jeasx?</summary>
@@ -33,7 +33,7 @@ Please visit the [source code on GitHub](https://github.com/jeasx/jeasx-expo) to
 <article>
 ## Jokes
 
-The widget below handles reactivity via manipulating state.
+The widget below updates itself via component state.
 
 <Preact component="Jokes" api="/jokes/api" initial={3} />
 </article>

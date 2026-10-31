@@ -11,7 +11,7 @@
   },
   {
     "title": "Web applications without client-side JavaScript",
-    "description": "Jeasx enables the creation of web applications with enhanced UX, thanks to browser support for view transitions.",
+    "description": "Jeasx builds interactive applications with plain HTML forms, while view transitions make page changes feel smooth.",
     "links": [
       { "path": "/lottery", "title": "Lottery" },
       { "path": "/todos", "title": "Todos" },
@@ -67,7 +67,7 @@
   },
   {
     "title": "Advanced features",
-    "description": "Jeasx offers advanced features that delight web developers.",
+    "description": "Hook into rendering, error handling and response processing to take full control of your output.",
     "links": [
       { "path": "/render-props", "title": "Render props" },
       { "path": "/values", "title": "Values in JSX" },

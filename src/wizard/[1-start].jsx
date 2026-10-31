@@ -10,8 +10,7 @@ export default function ({ form, errors }) {
     <Layout title="Start">
       <Form>
         <Paragraph>
-          In the following, we will ask you some questions to be able to assign and process the
-          reported damage.
+          We will ask you a few questions, so we can assign and process your claim.
         </Paragraph>
         <Paragraph>
           You can save your claim at any time and retrieve it in this browser within 10 days using

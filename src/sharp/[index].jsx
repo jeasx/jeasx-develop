@@ -9,9 +9,9 @@ export default function () {
     >
       <h1>Image transformation with sharp</h1>
       <p>
-        Jeasx lets you easily create an image component and converter in userland based on the
-        fantastic <a href="https://sharp.pixelplumbing.com">sharp</a> library. Here you see a simple
-        example with static images. The image converter is also used in the{" "}
+        With the <a href="https://sharp.pixelplumbing.com">sharp</a> library, you can build an image
+        component and converter in userland. The images below are cropped, resized and converted to
+        AVIF or WebP on the fly. The image converter is also used in the{" "}
         <a href="/products">products</a> example.
       </p>
       <section class="container center">

@@ -12,10 +12,14 @@ export default async function ({ request }) {
   this.jsxStream = true;
 
   // A repeated parameter arrives as array, so always work with a string.
-  const search = String(request.query["search"] || "jeasx");
+  // GitHub rejects queries longer than 256 characters.
+  const search = String(request.query["search"] || "jeasx").slice(0, 100);
 
   return (
-    <Layout title="Search GitHub Repositories" description="A list of repositories on GitHub.">
+    <Layout
+      title="Search GitHub Repositories"
+      description="Search GitHub repositories and stream the results as they arrive."
+    >
       <h1 class="center">Search GitHub Repositories</h1>
       <p>
         The page is streamed with <code>this.jsxStream = true</code>: the page shell and a loading
@@ -24,7 +28,7 @@ export default async function ({ request }) {
         which is then hidden by a single CSS rule. No client-side JavaScript is involved.
       </p>
       <form method="get">
-        <input type="search" name="search" placeholder="Search..." value={search} />
+        <input type="search" name="search" placeholder="Search..." maxlength={100} value={search} />
       </form>
       <div class="loader">
         {/* Flushed immediately; hidden via CSS as soon as the results are streamed in after it. */}

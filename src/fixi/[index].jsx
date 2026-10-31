@@ -13,16 +13,15 @@ export default function ({ request, reply }) {
   return (
     <Layout
       title="Fixi.js and Jeasx - lightweight hypermedia controls"
-      description="Jeasx integrates easily with Fixi.js"
+      description="Edit a list in place with Fixi.js, with a full page reload as fallback."
       script="/fixi/index.js"
     >
       <h1>Fixi.js and Jeasx - lightweight hypermedia controls</h1>
       <p>
         <a href="https://github.com/bigskysoftware/fixi">Fixi.js</a> is a minimalist alternative to
-        HTMX, developed by the creators of HTMX. Enhancing a server-rendered Jeasx application with
-        Fixi.js works without problems. The example illustrates progressive enhancement: it provides
-        an improved user experience with JavaScript while remaining fully functional as a fallback
-        without it.
+        HTMX, developed by the creators of HTMX. This example shows progressive enhancement: with
+        JavaScript, Fixi.js swaps only the edited list; without it, the same forms reload the whole
+        page and still work.
       </p>
       <h2>Recipe editor</h2>
       <Fragment request={request} reply={reply} />

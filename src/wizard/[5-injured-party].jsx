@@ -10,7 +10,7 @@ export default function ({ data, form, errors }) {
   return (
     <Layout title="Injured party" data={data}>
       <Form>
-        <Legend>Who was harmed by you?</Legend>
+        <Legend>Who suffered the damage?</Legend>
         <RadioGroup
           name="salutation"
           label="Salutation"

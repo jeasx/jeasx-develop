@@ -5,7 +5,7 @@ import Layout from "../Layout";
  */
 export default async function ({ request }) {
   // A repeated parameter arrives as array, so always work with a string.
-  const text = String(request.query["text"] ?? "");
+  const text = String(request.query["text"] ?? "").slice(0, 100);
   return (
     <Layout title="Create SVG images with Jeasx" description="How to create SVG images with Jeasx.">
       <h1>Create SVG images with Jeasx</h1>
@@ -15,7 +15,14 @@ export default async function ({ request }) {
       </p>
       <form action="" method="get">
         <label>
-          <input type="text" name="text" value={text} autofocus placeholder="Enter some text" />
+          <input
+            type="text"
+            name="text"
+            value={text}
+            maxlength={100}
+            autofocus
+            placeholder="Enter some text"
+          />
         </label>
         <input type="submit" value="Submit" />
       </form>

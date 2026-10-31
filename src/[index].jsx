@@ -7,7 +7,7 @@ export default function () {
       <section class="container hero hero-primary">
         <h1>Explore Jeasx</h1>
         <p class="hero-tagline">
-          Use asynchronous JSX as self-evident templating technology
+          Use asynchronous JSX as an intuitive templating language
           <br />
           for the server-side rendered web.
         </p>

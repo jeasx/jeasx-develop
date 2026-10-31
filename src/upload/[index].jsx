@@ -9,9 +9,8 @@ export default async function () {
       <h1>Upload and transform images in Jeasx</h1>
       <p>
         This example demonstrates how to handle binary uploads and image transformations in Jeasx.
-        As Jeasx is focused on the core technologies, image transformation is implemented in
-        userland with the help of the <a href="https://sharp.pixelplumbing.com">sharp</a> image
-        processor.
+        Jeasx doesn't ship an image processor, so the transformation is implemented in userland with
+        the <a href="https://sharp.pixelplumbing.com">sharp</a> image processor.
       </p>
       <form action="./image" method="post" enctype="multipart/form-data">
         <label>

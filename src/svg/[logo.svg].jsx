@@ -2,7 +2,8 @@
  * @param {import("../types").RouteProps} props
  */
 export default function ({ request, reply }) {
-  const text = String(request.query["text"] ?? "");
+  // Limit the text, so a long query can't blow up the image.
+  const text = String(request.query["text"] ?? "").slice(0, 100);
   reply.type("image/svg+xml; charset=utf-8");
   return (
     <svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">

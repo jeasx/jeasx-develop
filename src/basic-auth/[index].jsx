@@ -13,7 +13,7 @@ export default function () {
       </p>
       <p>
         To view this example, click the link below and select 'Cancel' on the authentication dialog.
-        Then, reload the page and enter the correct credentials.
+        Then reload the page and sign in with username "demo" and password "demo".
       </p>
       <p>
         <a href="protected">Access protected area</a>

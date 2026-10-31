@@ -14,19 +14,24 @@ export default async function ({ request }) {
     } else {
       const { success } = await cap.validateToken(token);
       if (success) {
-        const name = request.body?.["name"];
+        // An empty name would read "Thank you, !".
+        const name = String(request.body?.["name"] ?? "").trim() || "stranger";
         return (
           <Layout title="Thank you">
             <h1>Thank you, {name}!</h1>
-            <p>Simply reload this page to simulate an invalid captcha process.</p>
+            <p>
+              Reload this page to send the form again: each captcha token can only be used once, so
+              the second check fails.
+            </p>
             <hr />
             <a href={request.path}>Start again</a>
           </Layout>
         );
       } else {
         return (
-          <Layout title="No success">
-            <h1>No success!</h1>
+          <Layout title="Captcha check failed">
+            <h1>Captcha check failed</h1>
+            <p>The captcha token is invalid, expired or was already used.</p>
             <a href={request.path}>Start again</a>
           </Layout>
         );
@@ -37,7 +42,7 @@ export default async function ({ request }) {
   return (
     <Layout
       title="Use a captcha with Jeasx"
-      description="Using Cap.js as proof-of-work captcha with Jeasx"
+      description="Protect a form with Cap.js, a proof-of-work captcha, in Jeasx."
       script="/cap/index.js"
     >
       <h1>Cap.js - A modern, lightning-quick PoW captcha</h1>

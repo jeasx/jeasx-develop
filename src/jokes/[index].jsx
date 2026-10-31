@@ -16,7 +16,10 @@ export default function ({ request, reply }) {
   reply.setCookie("counter", String(counter), { path: "/jokes" });
 
   return (
-    <Layout title="Building forms with Jeasx" description="Some funny jokes with Jeasx">
+    <Layout
+      title="Building forms with Jeasx"
+      description="Server-rendered forms that work without client-side JavaScript."
+    >
       <h1>Building a simple form</h1>
       <p>
         Jeasx allows you to build and evaluate server-rendered forms easily, so you don't have to

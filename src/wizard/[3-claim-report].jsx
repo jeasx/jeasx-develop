@@ -22,7 +22,7 @@ export default function ({ data, form, errors }) {
           value="InvolvedParty"
           type="radio"
           checked={form.claim_report === "InvolvedParty"}
-          label="Involved party who was damaged by a person who is insured"
+          label="I am an involved party and was damaged by an insured person"
         />
         <Actions />
         <ErrorMessage message={errors} />

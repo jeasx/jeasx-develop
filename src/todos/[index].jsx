@@ -3,7 +3,11 @@ import TrashIcon from "./trash.svg";
 
 export default function ({ todos, status, autofocus }) {
   return (
-    <Layout title="Todo app with Jeasx" description="A simple todo app in Jeasx." css="/todos/index.css">
+    <Layout
+      title="Todo app with Jeasx"
+      description="A todo app built with plain HTML forms that stores its state in a cookie."
+      css="/todos/index.css"
+    >
       <h1>Todos</h1>
       <form method="post">
         <input name="newTodo" placeholder="What needs to be done?" autofocus={autofocus} />

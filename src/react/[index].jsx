@@ -5,16 +5,16 @@ export default function () {
   return (
     <Layout
       title="Use React with Jeasx"
-      description="Supporting React in Jeasx"
+      description="Render React components on the server and hydrate them as interactive islands."
       css="/react/assets/index.css"
       script="/react/assets/index.js"
     >
       <section class="center">
         <h1>Enhance your application with React</h1>
         <p>
-          Jeasx allows you to integrate React as a frontend library in userland. This is useful to
-          build islands of interactivity for a better user experience without having to render the
-          whole application in the browser.
+          Jeasx lets you add React in userland: components are rendered on the server and hydrated
+          in the browser. This gives you islands of interactivity without rendering the whole
+          application in the browser.
         </p>
       </section>
       <hr />

@@ -11,13 +11,14 @@ export default function ({ request, reply }) {
   return (
     <Layout
       title="HTMX and Jeasx - a perfect match"
-      description="Jeasx integrates easily with HTMX"
+      description="Edit a form in place with HTMX and server-rendered HTML fragments."
       script="/htmx/index.js"
     >
       <h1>HTMX and Jeasx - a perfect match</h1>
       <p>
-        Jeasx is the perfect match for <a href="https://htmx.org">HTMX</a> because it makes it easy
-        to create routes that emit HTML fragments. This example works even without JavaScript.
+        Jeasx is a perfect match for <a href="https://htmx.org">HTMX</a>, as every route can return
+        an HTML fragment. Click "Submit" and "Edit" to swap the form in place. Without JavaScript,
+        the same forms reload the whole page.
       </p>
       {body["action"] === "edit" ? (
         <Edit request={request} reply={reply} />
