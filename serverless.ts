@@ -78,30 +78,25 @@ export default FASTIFY_SERVER(
       }
     })
     .all("*", async (request: FastifyRequest, reply: FastifyReply) => {
-      let payload: unknown;
+      // Close the file stream once the response is finished or aborted,
+      // otherwise its file handle leaks if nobody reads it. Waiting for the
+      // response also covers routes which send the stream via reply.send().
+      reply.raw.once("close", () => reply.file?.stream.destroy());
+
       // Errors aren't caught and logged here, as Fastify's error handler already logs them.
       // Errors handled by a userland errorHandler (see below) never reach Fastify and aren't logged.
-      try {
-        payload = await handler(request, reply);
-        if (
-          reply.getHeader("content-type") === undefined &&
-          (typeof payload === "string" ||
-            payload instanceof ReadableStream ||
-            // Static files bring their own content type (or none, e.g. for 304).
-            (payload instanceof Readable && payload !== reply.file?.stream) ||
-            Buffer.isBuffer(payload))
-        ) {
-          reply.type("text/html; charset=utf-8");
-        }
-        return payload;
-      } finally {
-        // Close file stream if it isn't sent and nobody started reading it,
-        // otherwise its file handle leaks.
-        const stream = reply.file?.stream;
-        if (stream && stream !== payload && stream.readableFlowing === null) {
-          stream.destroy();
-        }
+      const payload = await handler(request, reply);
+      if (
+        reply.getHeader("content-type") === undefined &&
+        (typeof payload === "string" ||
+          payload instanceof ReadableStream ||
+          // Static files bring their own content type (or none, e.g. for 304).
+          (payload instanceof Readable && payload !== reply.file?.stream) ||
+          Buffer.isBuffer(payload))
+      ) {
+        reply.type("text/html; charset=utf-8");
       }
+      return payload;
     }),
 );
 
@@ -237,6 +232,10 @@ async function handler(request: FastifyRequest, reply: FastifyReply) {
     }
     return await renderResponse(context, response);
   } catch (error) {
+    // An error page can't be sent anymore, so let Fastify log the error.
+    if (reply.sent) {
+      throw error;
+    }
     const errorHandler = context["errorHandler"];
     if (typeof errorHandler === "function") {
       // Headers describing the failed response don't fit the error page:
@@ -261,6 +260,9 @@ async function handler(request: FastifyRequest, reply: FastifyReply) {
     }
   }
 }
+
+// Names of special routes which must not be requested as "/a/b/[c]".
+const SPECIAL_SEGMENTS = new Set(["index", "...guard", "...path"]);
 
 /**
  * Generates all possible routes based on the given input path.
@@ -297,9 +299,12 @@ function* generateRoutes(path: string): Generator<string | typeof STATIC_FILE_RO
   yield STATIC_FILE_ROUTE;
 
   // "/a/b/c" => ["/a/b/[c]", "/a/b/c/[index]"]
+  // Special routes aren't reachable by name ("/index", "/...guard", "/...path"),
+  // except "/a/404", which is answered by "/a/[404]" on purpose.
   const lastSlash = edgeSegment.lastIndexOf("/") + 1;
-  if (lastSlash > 0) {
-    yield `${edgeSegment.substring(0, lastSlash)}[${edgeSegment.substring(lastSlash)}]`;
+  const lastSegment = edgeSegment.substring(lastSlash);
+  if (lastSlash > 0 && !SPECIAL_SEGMENTS.has(lastSegment)) {
+    yield `${edgeSegment.substring(0, lastSlash)}[${lastSegment}]`;
   }
   yield `${edgeSegment}/[index]`;
 

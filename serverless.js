@@ -32,20 +32,13 @@ var serverless_default = FASTIFY_SERVER(
       request.path = path;
     }
   }).all("*", async (request, reply) => {
-    let payload;
-    try {
-      payload = await handler(request, reply);
-      if (reply.getHeader("content-type") === void 0 && (typeof payload === "string" || payload instanceof ReadableStream || // Static files bring their own content type (or none, e.g. for 304).
-      payload instanceof Readable && payload !== reply.file?.stream || Buffer.isBuffer(payload))) {
-        reply.type("text/html; charset=utf-8");
-      }
-      return payload;
-    } finally {
-      const stream = reply.file?.stream;
-      if (stream && stream !== payload && stream.readableFlowing === null) {
-        stream.destroy();
-      }
+    reply.raw.once("close", () => reply.file?.stream.destroy());
+    const payload = await handler(request, reply);
+    if (reply.getHeader("content-type") === void 0 && (typeof payload === "string" || payload instanceof ReadableStream || // Static files bring their own content type (or none, e.g. for 304).
+    payload instanceof Readable && payload !== reply.file?.stream || Buffer.isBuffer(payload))) {
+      reply.type("text/html; charset=utf-8");
     }
+    return payload;
   })
 );
 const STATIC_FILE_ROUTE = /* @__PURE__ */ Symbol("static-file-route");
@@ -125,6 +118,9 @@ async function handler(request, reply) {
     }
     return await renderResponse(context, response);
   } catch (error) {
+    if (reply.sent) {
+      throw error;
+    }
     const errorHandler = context["errorHandler"];
     if (typeof errorHandler === "function") {
       if (fileHeadersApplied && reply.file) {
@@ -145,6 +141,7 @@ async function handler(request, reply) {
     }
   }
 }
+const SPECIAL_SEGMENTS = /* @__PURE__ */ new Set(["index", "...guard", "...path"]);
 function* generateRoutes(path) {
   const segments = [""];
   let edgeSegment = "";
@@ -159,8 +156,9 @@ function* generateRoutes(path) {
   }
   yield STATIC_FILE_ROUTE;
   const lastSlash = edgeSegment.lastIndexOf("/") + 1;
-  if (lastSlash > 0) {
-    yield `${edgeSegment.substring(0, lastSlash)}[${edgeSegment.substring(lastSlash)}]`;
+  const lastSegment = edgeSegment.substring(lastSlash);
+  if (lastSlash > 0 && !SPECIAL_SEGMENTS.has(lastSegment)) {
+    yield `${edgeSegment.substring(0, lastSlash)}[${lastSegment}]`;
   }
   yield `${edgeSegment}/[index]`;
   for (let i = segments.length - 1; i >= 0; i--) {
