@@ -1,7 +1,18 @@
 import Image from "../sharp/Image";
 
 export async function Product({ id }) {
-  const product = await (await fetch(`https://dummyjson.com/products/${id}`)).json();
+  let product;
+  try {
+    const response = await fetch(`https://dummyjson.com/products/${id}`, {
+      signal: AbortSignal.timeout(5000),
+    });
+    product = response.ok ? await response.json() : undefined;
+  } catch {
+    // Network errors and timeouts end up in the message below.
+  }
+  if (!product) {
+    return <p>The product couldn't be loaded right now. Please try again later.</p>;
+  }
 
   return (
     <article>

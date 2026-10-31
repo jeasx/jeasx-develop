@@ -6,8 +6,21 @@ import Image from "../sharp/Image";
  */
 export default async function ({ request, reply }) {
   const id = request.path.slice(request.path.lastIndexOf("/") + 1);
-  const response = await fetch(`https://dummyjson.com/product/${encodeURIComponent(id)}`);
-  const product = response.ok ? await response.json() : undefined;
+  let response;
+  try {
+    response = await fetch(`https://dummyjson.com/product/${encodeURIComponent(id)}`, {
+      signal: AbortSignal.timeout(5000),
+    });
+  } catch {
+    // Network errors and timeouts aren't a missing product, so don't answer with 404.
+    reply.status(504);
+    return (
+      <Layout title="Product" robots="noindex">
+        <p>The product couldn't be loaded right now. Please try again later.</p>
+      </Layout>
+    );
+  }
+  const product = response.ok ? await response.json().catch(() => undefined) : undefined;
 
   // Unknown ids get a 404, but "." is redirected to the list of all products,
   // so check for a single product before rendering it.

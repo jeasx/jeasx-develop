@@ -37,7 +37,10 @@ const entries = await loadRecipes();
 /** Loads some recipes; starts with an empty list if the API is unavailable. */
 async function loadRecipes() {
   try {
-    const response = await fetch("https://dummyjson.com/recipes?limit=5");
+    // Runs while the module loads, so a hanging server would block the first request.
+    const response = await fetch("https://dummyjson.com/recipes?limit=5", {
+      signal: AbortSignal.timeout(5000),
+    });
     const { recipes } = await response.json();
     return Array.isArray(recipes) ? recipes : [];
   } catch {

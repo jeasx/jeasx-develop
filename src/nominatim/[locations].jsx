@@ -2,12 +2,21 @@
  * @param {import("../types").RouteProps} props
  */
 export default async function ({ request }) {
-  const response = await fetch(
-    `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(request.body?.["search"] ?? "")}&addressdetails=1&format=jsonv2`,
-    { headers: { "user-agent": "jeasx.dev (mail@jeasx.dev)" } },
-  );
-  // Error responses (e.g. when the rate limit is hit) may not be JSON, so only parse successful ones.
-  const json = response.ok ? await response.json() : undefined;
+  let json;
+  try {
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(request.body?.["search"] ?? "")}&addressdetails=1&format=jsonv2`,
+      {
+        headers: { "user-agent": "jeasx.dev (mail@jeasx.dev)" },
+        // Don't wait forever for a slow server. The timeout also covers the body.
+        signal: AbortSignal.timeout(5000),
+      },
+    );
+    // Error responses (e.g. when the rate limit is hit) may not be JSON, so only parse successful ones.
+    json = response.ok ? await response.json() : undefined;
+  } catch {
+    // Network errors and timeouts end up in the message below.
+  }
   if (!Array.isArray(json)) {
     return <p>Nominatim couldn't be reached right now. Please try again later.</p>;
   }

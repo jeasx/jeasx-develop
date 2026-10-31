@@ -30,13 +30,20 @@ export default async function ({ request }) {
 }
 
 async function Repositories({ search }) {
-  const response = await fetch(
-    `https://api.github.com/search/repositories?q=${encodeURIComponent(search)}+in:name&sort=updated`,
-  );
-  // Error responses may not be JSON, so only parse successful ones.
-  const { items } = response.ok ? await response.json() : {};
+  let items;
+  try {
+    const response = await fetch(
+      `https://api.github.com/search/repositories?q=${encodeURIComponent(search)}+in:name&sort=updated`,
+      // Don't wait forever for a slow server. The timeout also covers the body.
+      { signal: AbortSignal.timeout(5000) },
+    );
+    // Error responses may not be JSON, so only parse successful ones.
+    ({ items } = response.ok ? await response.json() : {});
+  } catch {
+    // Network errors and timeouts end up in the message below.
+  }
   if (!Array.isArray(items)) {
-    // E.g. GitHub's rate limit for unauthenticated requests was hit.
+    // E.g. GitHub's rate limit for unauthenticated requests was hit or it timed out.
     return <p>GitHub couldn't be reached right now. Please try again later.</p>;
   }
   const repositories = items.filter(({ full_name }) =>

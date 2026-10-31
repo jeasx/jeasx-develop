@@ -2,7 +2,24 @@ import Layout from "../Layout";
 import Image from "../sharp/Image";
 
 export default async function () {
-  const { products } = await (await fetch("https://dummyjson.com/products")).json();
+  let products;
+  try {
+    const response = await fetch("https://dummyjson.com/products", {
+      signal: AbortSignal.timeout(5000),
+    });
+    ({ products } = response.ok ? await response.json() : {});
+  } catch {
+    // Network errors and timeouts end up in the message below.
+  }
+
+  if (!Array.isArray(products)) {
+    return (
+      <Layout title="Products" robots="noindex">
+        <h1>Product overview</h1>
+        <p>The products couldn't be loaded right now. Please try again later.</p>
+      </Layout>
+    );
+  }
 
   return (
     <Layout title="Products" description="Product overview" robots="index,nofollow">
