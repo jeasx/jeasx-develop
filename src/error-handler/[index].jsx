@@ -28,10 +28,12 @@ export default async function ({ request }) {
       </p>
       <ul>
         <li>
-          <a href={`${request.path}?error=before`}>Error before streaming</a> → error page
+          <a href={`${request.path}?error=before`}>Error before streaming</a> → Fastify's error
+          handler
         </li>
         <li>
           <a href={`${request.path}?error=caught`}>Error while streaming, caught</a> → fallback
+          content
         </li>
         <li>
           <a href={`${request.path}?error=uncaught`}>Error while streaming, uncaught</a> → truncated
