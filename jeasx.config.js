@@ -40,6 +40,12 @@ export default {
   FASTIFY_SERVER_OPTIONS: () => ({
     logger: { level: NODE_ENV_IS_DEVELOPMENT ? "error" : "info" },
     bodyLimit: 2 * 1024 * 1024,
+    // Behind a proxy which terminates TLS (e.g. Vercel or a load balancer in front of Docker),
+    // only the X-Forwarded-Proto header tells that the request used https. Trust it there,
+    // so secure: "auto" (see cookies below) sets the Secure flag. Vercel sets VERCEL=1;
+    // set TRUST_PROXY=true for other proxies. Don't trust it without a proxy, as clients
+    // could then fake their IP address via X-Forwarded-For.
+    trustProxy: process.env.VERCEL === "1" || process.env.TRUST_PROXY === "true",
     // Close open connections on shutdown, otherwise long-lived responses
     // like Server-Sent Events keep the server from stopping.
     forceCloseConnections: true,
