@@ -38,8 +38,10 @@ export default {
   FASTIFY_SERVER_OPTIONS: () => ({
     logger: { level: NODE_ENV_IS_DEVELOPMENT ? "error" : "info" },
     bodyLimit: 2 * 1024 * 1024,
-    // Strip cache busters like "/index~abc123.css" from the path, but leave the query string alone.
-    rewriteUrl: (req) => req.url.replace(/^([^?]*?)~[a-z0-9]*\./, "$1."),
+    // Strip cache busters like "/index~mhe4k2x1.css" from the last path segment, but leave
+    // the query string alone. The buster is the BUILD_ID (Date.now() in base 36, 8 characters
+    // until 2059), so other names with a tilde like "/my~notes.txt" stay untouched.
+    rewriteUrl: (req) => req.url.replace(/^([^?]*\/[^/?]*)~[a-z0-9]{8}(\.[^/?]*)(?=\?|$)/, "$1$2"),
   }),
 
   /** @type {(fastify: import("fastify").FastifyInstance) => import("fastify").FastifyInstance} */
