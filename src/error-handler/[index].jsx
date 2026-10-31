@@ -1,3 +1,4 @@
+import { jsxToString } from "jsx-async-runtime";
 import Layout from "../Layout";
 
 /**
@@ -5,25 +6,11 @@ import Layout from "../Layout";
  * @param {import("../types").RouteProps} props
  */
 export default async function ({ request }) {
-  this.jsxStream = false;
+  const error = request.query["error"];
 
-  if (request.query["errorHandler"] === "true") {
-    this.errorHandler = async (error) => {
-      // You can decide if you want to create a log entry.
-      // console.error("❌", error);
-      return (
-        <Layout title="Internal Server Error">
-          <h1>Internal Server Error</h1>
-          <p>We're sorry, but something went wrong with your request. Please try again later.</p>
-          {/* Only for this demo: in production, don't show error details to visitors,
-              as they can reveal internals like file paths or queries. Log them instead. */}
-          <p>
-            <code>{error.toString()}</code>
-          </p>
-          <a href={request.path}>Restart</a>
-        </Layout>
-      );
-    };
+  // Errors before the response is returned reach Fastify's error handler.
+  if (error === "before") {
+    throw new Error("Something went wrong before rendering.");
   }
 
   return (
@@ -33,23 +20,49 @@ export default async function ({ request }) {
     >
       <h1>Catch errors at runtime</h1>
       <p>
-        Jeasx allows you to catch errors with a dynamic{" "}
-        <a href="https://www.jeasx.dev/faq#error-handler">error handler</a>, so you can provide a
-        user-friendly response when something goes wrong. Have a look at the source to see how
-        things are wired up.
+        Jeasx streams markup by default. Errors that happen before the first chunk is sent are
+        handled by Fastify's error handler, which renders a user-friendly error page with the right
+        status code. Once streaming has started, status and headers are already sent: wrap risky
+        components in an error boundary to render a fallback instead. Have a look at the source to
+        see how things are wired up.
       </p>
-      <p>
-        <a href={`${request.path}?errorHandler=true`}>Force error with error handler</a>
-      </p>
-      <p>
-        <a href={`${request.path}?errorHandler=false`}>Force error without error handler</a>
-      </p>
-      {request.query["errorHandler"] && <ComponentWithError />}
+      <ul>
+        <li>
+          <a href={`${request.path}?error=before`}>Error before streaming</a> → error page
+        </li>
+        <li>
+          <a href={`${request.path}?error=caught`}>Error while streaming, caught</a> → fallback
+        </li>
+        <li>
+          <a href={`${request.path}?error=uncaught`}>Error while streaming, uncaught</a> → truncated
+          page
+        </li>
+      </ul>
+      {error === "caught" && (
+        <ErrorBoundary fallback={<p>This section could not be loaded.</p>}>
+          <ComponentWithError />
+        </ErrorBoundary>
+      )}
+      {error === "uncaught" && <ComponentWithError />}
     </Layout>
   );
 }
 
+/**
+ * Renders children to a string, so errors can be caught here and replaced by a fallback.
+ * @this {import("../types").ThisContext}
+ */
+async function ErrorBoundary({ fallback, children }) {
+  try {
+    return await jsxToString.call(this, children);
+  } catch (error) {
+    this.request?.log.error(error);
+    return fallback;
+  }
+}
+
 /** @returns {Promise<JSX.Element>} */
 async function ComponentWithError() {
+  await new Promise((resolve) => setTimeout(resolve, 100));
   throw new Error("Something went wrong while rendering this component.");
 }

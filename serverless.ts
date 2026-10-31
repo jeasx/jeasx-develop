@@ -71,9 +71,8 @@ export default FASTIFY_SERVER(
       if (path === undefined) {
         reply.code(400).send();
         return reply;
-      } else {
-        request.path = path;
       }
+      request.path = path;
     })
     .all("*", async (request: FastifyRequest, reply: FastifyReply) => {
       // Close the file stream once the response is finished or aborted,
@@ -81,8 +80,6 @@ export default FASTIFY_SERVER(
       // response also covers routes which send the stream via reply.send().
       reply.raw.once("close", () => reply.file?.stream.destroy());
 
-      // Errors aren't caught and logged here, as Fastify's error handler already logs them.
-      // Errors handled by a userland errorHandler (see below) never reach Fastify and aren't logged.
       const payload = await handler(request, reply);
       if (
         reply.getHeader("content-type") === undefined &&
@@ -113,150 +110,118 @@ async function handler(request: FastifyRequest, reply: FastifyReply) {
   // Default props for route handlers
   const props = { request, reply };
 
-  // Remember if headers of a static file were applied, so they can be removed on errors.
-  let fileHeadersApplied = false;
+  // Check for static file and store result for later processing.
+  reply.file = await tryFile(request);
 
-  try {
-    // Check for static file and store result for later processing.
-    reply.file = await tryFile(request);
-
-    // Execute route handlers for current request
-    for (const route of generateRoutes(request.path)) {
-      // Try to serve static file
-      if (route === STATIC_FILE_ROUTE) {
-        if (reply.file) {
-          reply.status(reply.file.statusCode);
-          reply.headers(reply.file.headers);
-          fileHeadersApplied = true;
-          response = reply.file.stream;
-          break;
-        }
-        continue;
-      }
-
-      // Resolve module or path to module
-      let module = MODULE_BY_ROUTE[route];
-
-      // Skip processing if the route path was not initialized.
-      if (module === undefined && !NODE_ENV_IS_DEVELOPMENT) {
-        continue;
-      }
-
-      // Module was not loaded yet?
-      try {
-        if (typeof module === "string") {
-          // Production: Load and cache module only via pre-calculated path.
-          // This avoids potential path traversal vulnerabilities caused
-          // by unexpected `route` values.
-          module = MODULE_BY_ROUTE[route] = await import(pathToFileURL(join(CWD, module)).href);
-        } else if (module === undefined && NODE_ENV_IS_DEVELOPMENT) {
-          // Only map module paths depending on `route` during development.
-          const modulePath = join(CWD, "dist", `${route}.js`);
-          if (typeof require === "function" && require.cache[modulePath]) {
-            // Bun: Remove module from cache before importing
-            // as query parameter for import is ignored.
-            delete require.cache[modulePath];
-          }
-          // Use timestamp as query parameter to update modules.
-          const mtime = (await stat(modulePath)).mtime.getTime();
-          // Dynamic imports are restricted to development environments;
-          // therefore, production-level path validation is not required here.
-          module = await import(`${pathToFileURL(modulePath).href}?${mtime}`);
-        }
-      } catch (e) {
-        // Only stat() reports a missing route module (development).
-        // ERR_MODULE_NOT_FOUND isn't ignored, as it is also thrown
-        // for missing imports of an existing module.
-        switch ((e as any)?.code) {
-          case "ENOENT":
-          case "ENOTDIR":
-            continue;
-          default:
-            // Module exists, but fails to load.
-            throw e;
-        }
-      }
-
-      // Store current route in request.
-      request.route = route;
-
-      // Ensure module is a valid object before processing.
-      if (module && typeof module === "object") {
-        response =
-          typeof module.default === "function"
-            ? // Call functions with context as `this` and props as parameters,
-              await module.default.call(context, props)
-            : // otherwise return default export.
-              module.default;
-      }
-
-      if (reply.sent) {
-        return;
-      } else if (route.endsWith("/[404]")) {
-        // Preserve existing status if a 404 page is requested directly
-        // (e.g. "/a/404" answered by "/a/[404]", but not by "/[404]").
-        // If no status is defined, set status to 404 automatically.
-        if (
-          reply.statusCode === 200 &&
-          !(route.slice(0, -"[404]".length) + "404" === request.path.replace(/\/$/, ""))
-        ) {
-          reply.status(404);
-        }
+  // Execute route handlers for current request
+  for (const route of generateRoutes(request.path)) {
+    // Try to serve static file
+    if (route === STATIC_FILE_ROUTE) {
+      if (reply.file) {
+        reply.status(reply.file.statusCode);
+        reply.headers(reply.file.headers);
+        response = reply.file.stream;
         break;
-      } else if (
-        typeof response === "string" ||
-        response instanceof Response ||
-        response instanceof Readable ||
-        response instanceof ReadableStream ||
-        Buffer.isBuffer(response) ||
-        isJsxNode(response)
-      ) {
-        break;
-      } else if (typeof response === "object" && route.endsWith("/[...guard]")) {
-        // Add object entries from guard to props
-        Object.assign(props, response);
-        // Props are not a response: never send them if no other route answers.
-        response = undefined;
-        continue;
-      } else if (response === undefined) {
-        continue;
-      } else {
-        break;
+      }
+      continue;
+    }
+
+    // Resolve module or path to module
+    let module = MODULE_BY_ROUTE[route];
+
+    // Skip processing if the route path was not initialized.
+    if (module === undefined && !NODE_ENV_IS_DEVELOPMENT) {
+      continue;
+    }
+
+    // Module was not loaded yet?
+    try {
+      if (typeof module === "string") {
+        // Production: Load and cache module only via pre-calculated path.
+        // This avoids potential path traversal vulnerabilities caused
+        // by unexpected `route` values.
+        module = MODULE_BY_ROUTE[route] = await import(pathToFileURL(join(CWD, module)).href);
+      } else if (module === undefined && NODE_ENV_IS_DEVELOPMENT) {
+        // Only map module paths depending on `route` during development.
+        const modulePath = join(CWD, "dist", `${route}.js`);
+        if (typeof require === "function" && require.cache[modulePath]) {
+          // Bun: Remove module from cache before importing
+          // as query parameter for import is ignored.
+          delete require.cache[modulePath];
+        }
+        // Use timestamp as query parameter to update modules.
+        const mtime = (await stat(modulePath)).mtime.getTime();
+        // Dynamic imports are restricted to development environments;
+        // therefore, production-level path validation is not required here.
+        module = await import(`${pathToFileURL(modulePath).href}?${mtime}`);
+      }
+    } catch (e) {
+      // Only stat() reports a missing route module (development).
+      // ERR_MODULE_NOT_FOUND isn't ignored, as it is also thrown
+      // for missing imports of an existing module.
+      switch ((e as any)?.code) {
+        case "ENOENT":
+        case "ENOTDIR":
+          continue;
+        default:
+          // Module exists, but fails to load.
+          throw e;
       }
     }
-    // No route answered and no [404] exists: don't reply with an empty 200.
-    if (response === undefined && reply.statusCode === 200) {
-      reply.status(404);
+
+    // Store current route in request.
+    request.route = route;
+
+    // Ensure module is a valid object before processing.
+    if (module && typeof module === "object") {
+      response =
+        typeof module.default === "function"
+          ? // Call functions with context as `this` and props as parameters,
+            await module.default.call(context, props)
+          : // otherwise return default export.
+            module.default;
     }
-    return await renderResponse(context, response);
-  } catch (error) {
-    // An error page can't be sent anymore, so let Fastify log the error.
+
     if (reply.sent) {
-      throw error;
-    }
-    const errorHandler = context["errorHandler"];
-    if (typeof errorHandler === "function") {
-      // Headers describing the failed response don't fit the error page:
-      // a wrong content-length breaks it, and file headers could cache it for a year.
-      // Like Fastify's error handler, keep other headers (e.g. cookies).
-      if (fileHeadersApplied && reply.file) {
-        for (const name of Object.keys(reply.file.headers)) {
-          reply.removeHeader(name);
-        }
+      return;
+    } else if (route.endsWith("/[404]")) {
+      // Preserve existing status if a 404 page is requested directly
+      // (e.g. "/a/404" answered by "/a/[404]", but not by "/[404]").
+      // If no status is defined, set status to 404 automatically.
+      if (
+        reply.statusCode === 200 &&
+        !(route.slice(0, -"[404]".length) + "404" === request.path.replace(/\/$/, ""))
+      ) {
+        reply.status(404);
       }
-      reply.removeHeader("content-type");
-      reply.removeHeader("content-length");
-      // Keep the status of the error (e.g. 403) like Fastify does, otherwise use 500.
-      const statusCode = (error as any)?.statusCode ?? (error as any)?.status;
-      reply.status(
-        Number.isInteger(statusCode) && statusCode >= 400 && statusCode <= 599 ? statusCode : 500,
-      );
-      response = await errorHandler.call(context, error);
-      return await renderResponse(context, response);
+      break;
+    } else if (
+      typeof response === "string" ||
+      response instanceof Response ||
+      response instanceof Readable ||
+      response instanceof ReadableStream ||
+      Buffer.isBuffer(response) ||
+      isJsxNode(response)
+    ) {
+      break;
+    } else if (typeof response === "object" && route.endsWith("/[...guard]")) {
+      // Add object entries from guard to props
+      Object.assign(props, response);
+      // Props are not a response: never send them if no other route answers.
+      response = undefined;
+      continue;
+    } else if (response === undefined) {
+      continue;
     } else {
-      throw error;
+      break;
     }
   }
+  // No route answered and no [404] exists: don't reply with an empty 200.
+  if (response === undefined && reply.statusCode === 200) {
+    reply.status(404);
+  }
+
+  return await renderResponse(context, response);
 }
 
 // Names of special routes which must not be requested as "/a/b/[c]".

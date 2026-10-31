@@ -27,9 +27,8 @@ var serverless_default = FASTIFY_SERVER(
     if (path === void 0) {
       reply.code(400).send();
       return reply;
-    } else {
-      request.path = path;
     }
+    request.path = path;
   }).all("*", async (request, reply) => {
     reply.raw.once("close", () => reply.file?.stream.destroy());
     const payload = await handler(request, reply);
@@ -45,100 +44,74 @@ async function handler(request, reply) {
   let response;
   const context = {};
   const props = { request, reply };
-  let fileHeadersApplied = false;
-  try {
-    reply.file = await tryFile(request);
-    for (const route of generateRoutes(request.path)) {
-      if (route === STATIC_FILE_ROUTE) {
-        if (reply.file) {
-          reply.status(reply.file.statusCode);
-          reply.headers(reply.file.headers);
-          fileHeadersApplied = true;
-          response = reply.file.stream;
-          break;
-        }
-        continue;
-      }
-      let module = MODULE_BY_ROUTE[route];
-      if (module === void 0 && !NODE_ENV_IS_DEVELOPMENT) {
-        continue;
-      }
-      try {
-        if (typeof module === "string") {
-          module = MODULE_BY_ROUTE[route] = await import(pathToFileURL(join(CWD, module)).href);
-        } else if (module === void 0 && NODE_ENV_IS_DEVELOPMENT) {
-          const modulePath = join(CWD, "dist", `${route}.js`);
-          if (typeof require === "function" && require.cache[modulePath]) {
-            delete require.cache[modulePath];
-          }
-          const mtime = (await stat(modulePath)).mtime.getTime();
-          module = await import(`${pathToFileURL(modulePath).href}?${mtime}`);
-        }
-      } catch (e) {
-        switch (e?.code) {
-          case "ENOENT":
-          case "ENOTDIR":
-            continue;
-          default:
-            throw e;
-        }
-      }
-      request.route = route;
-      if (module && typeof module === "object") {
-        response = typeof module.default === "function" ? (
-          // Call functions with context as `this` and props as parameters,
-          await module.default.call(context, props)
-        ) : (
-          // otherwise return default export.
-          module.default
-        );
-      }
-      if (reply.sent) {
-        return;
-      } else if (route.endsWith("/[404]")) {
-        if (reply.statusCode === 200 && !(route.slice(0, -"[404]".length) + "404" === request.path.replace(/\/$/, ""))) {
-          reply.status(404);
-        }
-        break;
-      } else if (typeof response === "string" || response instanceof Response || response instanceof Readable || response instanceof ReadableStream || Buffer.isBuffer(response) || isJsxNode(response)) {
-        break;
-      } else if (typeof response === "object" && route.endsWith("/[...guard]")) {
-        Object.assign(props, response);
-        response = void 0;
-        continue;
-      } else if (response === void 0) {
-        continue;
-      } else {
+  reply.file = await tryFile(request);
+  for (const route of generateRoutes(request.path)) {
+    if (route === STATIC_FILE_ROUTE) {
+      if (reply.file) {
+        reply.status(reply.file.statusCode);
+        reply.headers(reply.file.headers);
+        response = reply.file.stream;
         break;
       }
+      continue;
     }
-    if (response === void 0 && reply.statusCode === 200) {
-      reply.status(404);
+    let module = MODULE_BY_ROUTE[route];
+    if (module === void 0 && !NODE_ENV_IS_DEVELOPMENT) {
+      continue;
     }
-    return await renderResponse(context, response);
-  } catch (error) {
-    if (reply.sent) {
-      throw error;
-    }
-    const errorHandler = context["errorHandler"];
-    if (typeof errorHandler === "function") {
-      if (fileHeadersApplied && reply.file) {
-        for (const name of Object.keys(reply.file.headers)) {
-          reply.removeHeader(name);
+    try {
+      if (typeof module === "string") {
+        module = MODULE_BY_ROUTE[route] = await import(pathToFileURL(join(CWD, module)).href);
+      } else if (module === void 0 && NODE_ENV_IS_DEVELOPMENT) {
+        const modulePath = join(CWD, "dist", `${route}.js`);
+        if (typeof require === "function" && require.cache[modulePath]) {
+          delete require.cache[modulePath];
         }
+        const mtime = (await stat(modulePath)).mtime.getTime();
+        module = await import(`${pathToFileURL(modulePath).href}?${mtime}`);
       }
-      reply.removeHeader("content-type");
-      reply.removeHeader("content-length");
-      const statusCode = error?.statusCode ?? error?.status;
-      reply.status(
-        Number.isInteger(statusCode) && statusCode >= 400 && statusCode <= 599 ? statusCode : 500
+    } catch (e) {
+      switch (e?.code) {
+        case "ENOENT":
+        case "ENOTDIR":
+          continue;
+        default:
+          throw e;
+      }
+    }
+    request.route = route;
+    if (module && typeof module === "object") {
+      response = typeof module.default === "function" ? (
+        // Call functions with context as `this` and props as parameters,
+        await module.default.call(context, props)
+      ) : (
+        // otherwise return default export.
+        module.default
       );
-      response = await errorHandler.call(context, error);
-      return await renderResponse(context, response);
+    }
+    if (reply.sent) {
+      return;
+    } else if (route.endsWith("/[404]")) {
+      if (reply.statusCode === 200 && !(route.slice(0, -"[404]".length) + "404" === request.path.replace(/\/$/, ""))) {
+        reply.status(404);
+      }
+      break;
+    } else if (typeof response === "string" || response instanceof Response || response instanceof Readable || response instanceof ReadableStream || Buffer.isBuffer(response) || isJsxNode(response)) {
+      break;
+    } else if (typeof response === "object" && route.endsWith("/[...guard]")) {
+      Object.assign(props, response);
+      response = void 0;
+      continue;
+    } else if (response === void 0) {
+      continue;
     } else {
-      throw error;
+      break;
     }
   }
+  if (response === void 0 && reply.statusCode === 200) {
+    reply.status(404);
+  }
+  return await renderResponse(context, response);
 }
 const SPECIAL_SEGMENTS = /* @__PURE__ */ new Set(["index", "...guard", "...path", "--metadata--"]);
 function* generateRoutes(path) {
