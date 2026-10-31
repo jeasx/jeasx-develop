@@ -1,12 +1,13 @@
 import sharp from "sharp";
-import limiter from "../sharp/limiter";
+import limiter, { QueueFullError } from "../sharp/limiter";
 
 const FORMATS = ["avif", "webp"];
 const MAX_SIZE = 640;
 // A small file can still decode to a huge image (a "decompression bomb"),
 // so limit the pixels (sharp's default is 268 megapixels) and the parallel work.
 const MAX_INPUT_PIXELS = 25_000_000;
-const limit = limiter(2);
+// Waiting uploads keep their file in memory (up to about 8 MB each), so limit the line too.
+const limit = limiter(2, 8);
 
 /**
  * @param {import("../types").RouteProps} props
@@ -22,7 +23,7 @@ export default async function ({ request, reply }) {
     if (
       !Buffer.isBuffer(upload) ||
       !FORMATS.includes(format) ||
-      !(size > 0 && size <= MAX_SIZE) ||
+      !(Number.isInteger(size) && size > 0 && size <= MAX_SIZE) ||
       !Number.isFinite(rotate)
     ) {
       reply.status(400).type("text/plain; charset=utf-8");
@@ -49,7 +50,11 @@ export default async function ({ request, reply }) {
           .toFormat(format, { quality: 70 })
           .toBuffer(),
       );
-    } catch {
+    } catch (error) {
+      if (error instanceof QueueFullError) {
+        reply.status(503).header("retry-after", "10").type("text/plain; charset=utf-8");
+        return "Too many images are being converted right now. Please try again in a moment.";
+      }
       // Sharp throws for files that aren't images, are broken or have too many pixels.
       reply.status(400).type("text/plain; charset=utf-8");
       return "Invalid upload: the file couldn't be read as an image or is larger than 25 megapixels.";
@@ -66,5 +71,5 @@ export default async function ({ request, reply }) {
  * @param {Buffer} buffer
  */
 function isJpeg(buffer) {
-  return buffer.length > 3 && buffer[0] === 0xff && buffer[1] === 0xd8 && buffer[2] === 0xff;
+  return buffer.length >= 3 && buffer[0] === 0xff && buffer[1] === 0xd8 && buffer[2] === 0xff;
 }
