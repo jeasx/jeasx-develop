@@ -12,7 +12,7 @@ export default function () {
       <section class="center">
         <h1>Enhance your application with React</h1>
         <p>
-          Jeasx allows you to integrate React as frontend library in userland. This is useful to
+          Jeasx allows you to integrate React as a frontend library in userland. This is useful to
           build islands of interactivity for a better user experience without having to render the
           whole application in the browser.
         </p>

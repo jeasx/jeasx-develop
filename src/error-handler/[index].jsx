@@ -25,7 +25,10 @@ export default async function ({ request }) {
   }
 
   return (
-    <Layout title="User-friendly error messages">
+    <Layout
+      title="User-friendly error messages"
+      description="Catch errors at runtime and answer with a user-friendly error page."
+    >
       <h1>Catch errors at runtime</h1>
       <p>
         Jeasx allows you to catch errors with a dynamic{" "}

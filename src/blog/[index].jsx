@@ -8,7 +8,10 @@ export default function ({ request }) {
   const posts = readPosts(request);
 
   return (
-    <Layout title="Blog example with Jeasx">
+    <Layout
+      title="Blog example with Jeasx"
+      description="A simple blog built with Jeasx which stores its posts in a cookie."
+    >
       <h1>Blog example</h1>
       <p>
         This example shows how to create a blog using Jeasx. Please note that the blog content is

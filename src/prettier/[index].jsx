@@ -30,7 +30,10 @@ export default function ({ request, reply }) {
   }
 
   return (
-    <Layout title="Format resulting HTML with Prettier">
+    <Layout
+      title="Format resulting HTML with Prettier"
+      description="Format the resulting HTML with Prettier via a response handler."
+    >
       <h1>Post-process HTML with Prettier</h1>
       <p>
         Jeasx allows you to post-process the resulting HTML output via a response handler. Have a
