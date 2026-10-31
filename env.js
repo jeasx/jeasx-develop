@@ -1,7 +1,9 @@
 import { existsSync } from "node:fs";
 
 /**
- * Load environment variables from .env-files into process.env in the following order:
+ * Loads environment variables from .env files into process.env.
+ * Files are read in the order below. A variable that is already set,
+ * by the environment or by an earlier file, is never overwritten:
  *
  * 1. .env.<NODE_ENV>.local
  * 2. .env.<NODE_ENV>

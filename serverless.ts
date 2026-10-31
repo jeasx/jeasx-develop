@@ -71,6 +71,7 @@ export default FASTIFY_SERVER(
     .all("*", async (request: FastifyRequest, reply: FastifyReply) => {
       let payload: unknown;
       // Errors aren't caught and logged here, as Fastify's error handler already logs them.
+      // Errors handled by a userland errorHandler (see below) never reach Fastify and aren't logged.
       try {
         payload = await handler(request, reply);
         if (
