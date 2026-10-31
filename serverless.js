@@ -198,7 +198,7 @@ async function tryFile(request) {
   }
   if (NODE_ENV_IS_DEVELOPMENT) {
     for (const directory of ["dist", "public"]) {
-      if (directory === "dist" && /\]\.js/iu.test(request.path)) {
+      if (directory === "dist" && /\]\./u.test(request.path)) {
         continue;
       }
       try {

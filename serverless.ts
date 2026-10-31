@@ -374,10 +374,10 @@ async function tryFile(request: FastifyRequest): Promise<BaseSendResult | undefi
 
   if (NODE_ENV_IS_DEVELOPMENT) {
     for (const directory of ["dist", "public"]) {
-      // Don't expose compiled server routes and their sourcemaps.
-      // Case-insensitive and not anchored at the end, as some file systems ignore case
-      // (macOS, Windows) or trailing dots and stream names (Windows: "[index].js.", "[index].js::$DATA").
-      if (directory === "dist" && /\]\.js/iu.test(request.path)) {
+      // Don't expose compiled server routes and their other outputs (sourcemaps, CSS).
+      // Not anchored at the end, as some file systems ignore trailing dots and
+      // stream names (Windows: "[index].js.", "[index].js::$DATA").
+      if (directory === "dist" && /\]\./u.test(request.path)) {
         continue;
       }
       try {
