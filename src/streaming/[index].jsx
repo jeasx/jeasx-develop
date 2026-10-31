@@ -25,10 +25,7 @@ export default async function () {
   ));
 
   return (
-    <Layout
-      title="Stream HTML with Jeasx"
-      description="Send HTML progressively to the browser by setting this.jsxStream = true."
-    >
+    <Layout title="Stream HTML with Jeasx" description="Send HTML progressively to the browser.">
       <h1>Stream HTML to the browser</h1>
       <p>
         Set <code>this.jsxStream = true</code> in a route (or a guard) and the rendered markup is
