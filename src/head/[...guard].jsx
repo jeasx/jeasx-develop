@@ -33,7 +33,7 @@ export default async function ({ reply }) {
   // Use response handler to replace HEAD_MARK with unified head.
   this.responseHandler = async (payload) => {
     // The mark can only be replaced in the complete markup, so a streamed payload is collected first.
-    const html = await toText(payload);
+    const html = await toText(this, payload);
     if (html === undefined) {
       return payload;
     }

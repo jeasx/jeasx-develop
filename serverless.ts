@@ -5,7 +5,7 @@ import fastify, {
   FastifyRequest,
   FastifyServerOptions,
 } from "fastify";
-import { isJsxNode, jsxToStream, jsxToString } from "jsx-async-runtime";
+import { isJsxNode, jsxToStream } from "jsx-async-runtime";
 import { stat } from "node:fs/promises";
 import { join } from "node:path";
 import { Readable } from "node:stream";
@@ -311,24 +311,18 @@ function decodePath(url: string): string | undefined {
 }
 
 /**
- * Renders JSX to a stream (or to a string if `jsxStream` is false)
- * and applies the optional response handler.
+ * Applies the optional response handler to the unrendered response,
+ * then streams any JSX that is left.
  */
 async function renderResponse(context: any, response: unknown) {
-  let payload = response;
-  if (isJsxNode(response)) {
-    if (context["jsxStream"] === false) {
-      payload = await jsxToString.call(context, response);
-    } else {
-      payload = await jsxToStream.call(context, response);
-    }
-  }
-
-  // Post-process the payload with an optional response handler
+  // The handler sees JSX before rendering, so it may render it itself
+  // (e.g. with jsxToString) or return it unchanged to stream it.
   const responseHandler = context["responseHandler"];
-  return typeof responseHandler === "function"
-    ? await responseHandler.call(context, payload)
-    : payload;
+  const payload =
+    typeof responseHandler === "function"
+      ? await responseHandler.call(context, response)
+      : response;
+  return isJsxNode(payload) ? await jsxToStream.call(context, payload) : payload;
 }
 
 /**

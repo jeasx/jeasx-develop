@@ -1,6 +1,6 @@
 import fastifySend from "@fastify/send";
 import fastify from "fastify";
-import { isJsxNode, jsxToStream, jsxToString } from "jsx-async-runtime";
+import { isJsxNode, jsxToStream } from "jsx-async-runtime";
 import { stat } from "node:fs/promises";
 import { join } from "node:path";
 import { Readable } from "node:stream";
@@ -154,16 +154,9 @@ function decodePath(url) {
   }
 }
 async function renderResponse(context, response) {
-  let payload = response;
-  if (isJsxNode(response)) {
-    if (context["jsxStream"] === false) {
-      payload = await jsxToString.call(context, response);
-    } else {
-      payload = await jsxToStream.call(context, response);
-    }
-  }
   const responseHandler = context["responseHandler"];
-  return typeof responseHandler === "function" ? await responseHandler.call(context, payload) : payload;
+  const payload = typeof responseHandler === "function" ? await responseHandler.call(context, response) : response;
+  return isJsxNode(payload) ? await jsxToStream.call(context, payload) : payload;
 }
 async function tryFile(request) {
   if (request.method !== "GET" && request.method !== "HEAD") {

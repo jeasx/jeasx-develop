@@ -14,7 +14,7 @@ export default function ({ request, reply }) {
 
   this.responseHandler = async (payload) => {
     // Cheerio and Prettier need the complete markup, so a streamed payload is collected first.
-    const html = await toText(payload);
+    const html = await toText(this, payload);
     if (html === undefined) {
       return payload;
     }

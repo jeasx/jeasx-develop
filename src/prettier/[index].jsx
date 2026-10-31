@@ -20,7 +20,7 @@ export default function ({ request, reply }) {
   if (request.query["printWidth"] && request.query["tabWidth"]) {
     this.responseHandler = async (payload) => {
       // Prettier needs the complete markup, so a streamed payload is collected first.
-      const html = await toText(payload);
+      const html = await toText(this, payload);
       if (html === undefined) {
         return payload;
       }
