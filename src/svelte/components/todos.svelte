@@ -32,10 +32,13 @@
     let uid = todos.length + 1;
 
     function add(input) {
+        // Ignore todos without any text, e.g. only spaces.
+        if (!input.value.trim()) return;
+
         const todo = {
             id: uid++,
             done: false,
-            description: input.value,
+            description: input.value.trim(),
         };
 
         todos = [todo, ...todos];

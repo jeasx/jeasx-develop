@@ -18,7 +18,8 @@ export default function Lottery({ title }) {
 
   return (
     <div className="lottery">
-      <h1>{title}</h1>
+      {/* The page already has an h1 and an h2 for this section. */}
+      <h3>{title}</h3>
       <div className="number-grid">
         {Array.from({ length: 49 }, (_, index) => index + 1).map((number) => (
           <button
@@ -34,7 +35,7 @@ export default function Lottery({ title }) {
       </div>
       {selectedNumbers.length > 0 && (
         <div className="selected-numbers">
-          <h3>Selected numbers:</h3>
+          <h4>Selected numbers:</h4>
           <ul>
             {selectedNumbers.map((number) => (
               <li key={number}>{number}</li>

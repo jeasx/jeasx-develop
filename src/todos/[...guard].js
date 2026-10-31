@@ -13,7 +13,10 @@ const DEFAULT_TODOS = [
  */
 export default function ({ request, reply }) {
   const query = request.query || {};
-  const body = /** @type {Record<string, unknown>} */ (request.body || {});
+  // A JSON body can also be a number or string, which the "in" check below can't handle.
+  const body = /** @type {Record<string, unknown>} */ (
+    request.body && typeof request.body === "object" ? request.body : {}
+  );
 
   let todos = readListCookie(request.cookies["todos"]) ?? structuredClone(DEFAULT_TODOS);
 

@@ -4,7 +4,8 @@ import Layout from "../Layout";
  * @param {import("../types").RouteProps} props
  */
 export default async function ({ request }) {
-  const text = request.query?.["text"];
+  // A repeated parameter arrives as array, so always work with a string.
+  const text = String(request.query["text"] ?? "");
   return (
     <Layout title="Create SVG images with Jeasx" description="How to create SVG images with Jeasx.">
       <h1>Create SVG images with Jeasx</h1>
@@ -18,7 +19,7 @@ export default async function ({ request }) {
         </label>
         <input type="submit" value="Submit" />
       </form>
-      {text && <img src={`/svg/logo.svg?text=${encodeURIComponent(text)}`} alt={String(text)} />}
+      {text && <img src={`/svg/logo.svg?text=${encodeURIComponent(text)}`} alt={text} />}
     </Layout>
   );
 }

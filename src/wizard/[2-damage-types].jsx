@@ -23,7 +23,8 @@ export default function ({ data, form, errors }) {
             type="checkbox"
             name="damage_types[]"
             value={`${index + 1}`}
-            checked={form["damage_types[]"]?.includes(String(index + 1))}
+            // A single selection arrives as string, several as array.
+            checked={[form["damage_types[]"] ?? []].flat().includes(String(index + 1))}
             label={damageType}
           />
         ))}

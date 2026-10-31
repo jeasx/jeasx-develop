@@ -16,7 +16,7 @@ export default async function () {
       <div
         x-data="{
               jokes:[],
-              counter: +(sessionStorage.getItem('counter') || 3),
+              counter: Math.min(Math.max(Math.trunc(+sessionStorage.getItem('counter')) || 3, 1), 5),
               async load(category) {
                 this.jokes = await (await fetch(`/jokes/api/${category}?amount=${this.counter}`)).json()
               },

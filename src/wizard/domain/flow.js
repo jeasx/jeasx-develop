@@ -22,28 +22,23 @@ export default function flow(data) {
 
   steps.push(SLUGS.DAMAGE_DETAILS);
 
-  if (
-    data?.[SLUGS.DAMAGE_TYPES]?.["damage_types[]"]?.includes("1") ||
-    data?.[SLUGS.DAMAGE_TYPES]?.["damage_types[]"]?.includes("4")
-  ) {
+  // A single selection arrives as string, several as array. Without normalizing,
+  // includes() would match substrings of a string (e.g. "1" in "10").
+  const damageTypes = [data?.[SLUGS.DAMAGE_TYPES]?.["damage_types[]"] ?? []].flat();
+
+  if (damageTypes.includes("1") || damageTypes.includes("4")) {
     steps.push(SLUGS.DAMAGE_DETAILS_FOREIGN_VEHICLE);
   }
 
-  if (
-    data?.[SLUGS.DAMAGE_TYPES]?.["damage_types[]"]?.includes("3") ||
-    data?.[SLUGS.DAMAGE_TYPES]?.["damage_types[]"]?.includes("6")
-  ) {
+  if (damageTypes.includes("3") || damageTypes.includes("6")) {
     steps.push(SLUGS.DAMAGE_DETAILS_OWN_VEHICLE);
   }
 
-  if (
-    data?.[SLUGS.DAMAGE_TYPES]?.["damage_types[]"]?.includes("2") ||
-    data?.[SLUGS.DAMAGE_TYPES]?.["damage_types[]"]?.includes("5")
-  ) {
+  if (damageTypes.includes("2") || damageTypes.includes("5")) {
     steps.push(SLUGS.DAMAGE_DETAILS_ANIMAL_OR_OBJECT);
   }
 
-  if (data?.[SLUGS.DAMAGE_TYPES]?.["damage_types[]"]?.includes("7")) {
+  if (damageTypes.includes("7")) {
     steps.push(SLUGS.DAMAGE_DETAILS_PERSON);
   }
 

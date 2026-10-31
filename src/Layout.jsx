@@ -1,5 +1,13 @@
 import { html } from "jsx-async-runtime";
 import GithubIcon from "./github.svg";
+import sitemap from "./sitemap.json";
+
+const REPOSITORY = "https://github.com/jeasx/jeasx-expo";
+
+// Top-level folders of all examples, e.g. "blog" for "/blog".
+const EXAMPLES = new Set(
+  sitemap.flatMap(({ links }) => links.map(({ path }) => path.split(/[/?]/)[1])),
+);
 
 /**
  * @this {import("./types").ThisContext}
@@ -16,6 +24,9 @@ export default function Layout({
   // The path is decoded, so encode it again for URLs: a decoded "?" or "#" (from "%3F" or "%23")
   // would otherwise end the path, and relative links would resolve against the wrong URL.
   const url = encodeURI(path).replace(/[?#]/g, encodeURIComponent);
+  // Link to the source of the current example; unknown paths (e.g. 404 pages) get the repository.
+  const example = path.split("/")[1];
+  const sourceUrl = EXAMPLES.has(example) ? `${REPOSITORY}/tree/main/src/${example}` : REPOSITORY;
   return (
     <>
       {html("<!DOCTYPE html>")}
@@ -47,9 +58,7 @@ export default function Layout({
                 </ul>
                 <ul>
                   <li>
-                    <a
-                      href={`https://github.com/jeasx/jeasx-expo/tree/main/src/${path.split("/")[1]}`}
-                    >
+                    <a href={sourceUrl}>
                       <img
                         src={GithubIcon}
                         width="24"
