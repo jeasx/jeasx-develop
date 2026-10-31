@@ -1,5 +1,5 @@
 /** @jsxImportSource react */
-import { createRoot } from "react-dom/client";
+import { hydrateRoot } from "react-dom/client";
 import Components from "./components/$index";
 
 function init(components) {
@@ -8,7 +8,8 @@ function init(components) {
       const Component = components[el.dataset.component];
       const props = el.dataset.props ? JSON.parse(el.dataset.props) : {};
       if (Component) {
-        createRoot(el).render(<Component {...props} />);
+        // The server rendered the same markup, so React only attaches its event handlers.
+        hydrateRoot(el, <Component {...props} />);
       }
     }
   });

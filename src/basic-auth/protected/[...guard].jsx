@@ -5,10 +5,10 @@ import Layout from "../../Layout";
  * @param {import("../../types").RouteProps} props
  */
 export default function ({ request, reply }) {
-  // If a static file is requested (e.g., a CSS file),
-  // the 'reply.file' property is pre-populated with a file stream.
-  // We use this to bypass authentication for static assets.
-  if (reply.file) {
+  // If a static file is requested, the 'reply.file' property is pre-populated with a file stream.
+  // Only stylesheets bypass authentication, so the error page is styled.
+  // Every other file (e.g. a PDF placed next to them) stays protected.
+  if (reply.file && request.path.endsWith(".css")) {
     return;
   }
 

@@ -2,7 +2,7 @@ import Layout from "../Layout";
 
 const WORD_DELAY = 60;
 
-const ANSWER = `Async iterables are rendered item by item as they arrive. This text comes from a
+const ANSWER = `ReadableStreams are rendered chunk by chunk as they arrive. This text comes from a
 ReadableStream which emits one word every ${WORD_DELAY} ms. Text chunks are escaped like any other
 string, so <b>this markup</b> shows up as plain text. A fetch response body works the same way:
 response.body.pipeThrough(new TextDecoderStream()).`.replace(/\s+/g, " ");

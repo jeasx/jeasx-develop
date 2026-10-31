@@ -3,7 +3,7 @@ import sitemap from "./sitemap.json";
 
 export default function () {
   return (
-    <Layout title="The power of Jeasx in examples" description="Welcome to Jeasx - JSX with Ease">
+    <Layout title="The power of Jeasx in examples" description="Welcome to Jeasx - JSX with Ease. Explore the framework in examples.">
       <section class="container hero hero-primary">
         <h1>Explore Jeasx</h1>
         <p class="hero-tagline">

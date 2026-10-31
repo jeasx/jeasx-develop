@@ -11,6 +11,10 @@ export default function () {
     start(controller) {
       clients++;
       const push = () => {
+        // Skip updates while the client doesn't read, so they don't pile up in memory.
+        if (controller.desiredSize <= 0) {
+          return;
+        }
         const data = {
           time: new Date().toLocaleTimeString("en-GB"),
           uptime: Math.round(process.uptime()),

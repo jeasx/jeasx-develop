@@ -1,5 +1,6 @@
 import * as prettier from "prettier";
 import Layout from "../Layout";
+import toText from "../toText";
 import extractStyles from "./extractStyles";
 
 /**
@@ -61,25 +62,4 @@ function IFrame({ title, src }) {
       </div>
     </>
   );
-}
-
-/**
- * Returns the payload as string; collects streams (Node or Web) into a string.
- * Returns undefined for anything else.
- *
- * @param {unknown} payload
- */
-async function toText(payload) {
-  if (typeof payload === "string") {
-    return payload;
-  }
-  if (payload && typeof payload[Symbol.asyncIterator] === "function") {
-    const decoder = new TextDecoder();
-    let text = "";
-    for await (const chunk of payload) {
-      text += typeof chunk === "string" ? chunk : decoder.decode(chunk, { stream: true });
-    }
-    return text + decoder.decode();
-  }
-  return undefined;
 }
