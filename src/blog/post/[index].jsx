@@ -9,7 +9,8 @@ export default function ({ request, reply }) {
     const posts = readPosts(request);
     posts.unshift(createPost(request.body));
     writePosts(reply, posts);
-    return reply.redirect("/blog");
+    // 303 makes the browser load the blog with GET, so a reload doesn't resubmit the form.
+    return reply.redirect("/blog", 303);
   }
 
   return (

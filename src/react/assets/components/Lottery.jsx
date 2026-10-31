@@ -20,13 +20,15 @@ export default function Lottery({ title }) {
       <h1>{title}</h1>
       <div className="number-grid">
         {Array.from({ length: 49 }, (_, index) => index + 1).map((number) => (
-          <div
+          <button
+            type="button"
             key={number}
-            className={`number ${selectedNumbers.includes(number) ? "selected" : ""}`}
+            className={`number${selectedNumbers.includes(number) ? " selected" : ""}`}
+            aria-pressed={selectedNumbers.includes(number)}
             onClick={() => handleNumberClick(number)}
           >
             {number}
-          </div>
+          </button>
         ))}
       </div>
       {selectedNumbers.length > 0 && (

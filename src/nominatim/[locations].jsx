@@ -37,7 +37,7 @@ export default async function ({ request }) {
           <tr>
             <td>{address.country}</td>
             <td>{address.postcode}</td>
-            <td>{address.city}</td>
+            <td>{address.city ?? address.town ?? address.village}</td>
             <td>
               {address.road} {address.house_number}
             </td>

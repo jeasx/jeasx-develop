@@ -63,12 +63,15 @@ export const PasswordGenerator = component(() => {
     digits: true,
     symbols: true,
     password: "",
-    copied: false,
+    copyLabel: "Copy",
   });
+
+  let copyTimer = 0;
 
   const regenerate = () => {
     state.password = generate(state.length, state.lower, state.upper, state.digits, state.symbols);
-    state.copied = false;
+    window.clearTimeout(copyTimer);
+    state.copyLabel = "Copy";
   };
 
   regenerate();
@@ -76,11 +79,17 @@ export const PasswordGenerator = component(() => {
   const strength = () =>
     scoreStrength(state.length, state.lower, state.upper, state.digits, state.symbols);
 
-  const copy = () => {
-    navigator.clipboard.writeText(state.password);
-    state.copied = true;
-    setTimeout(() => {
-      state.copied = false;
+  const copy = async () => {
+    try {
+      // Fails e.g. without permission or outside of a secure context (https).
+      await navigator.clipboard.writeText(state.password);
+      state.copyLabel = "Copied!";
+    } catch {
+      state.copyLabel = "Copy failed";
+    }
+    window.clearTimeout(copyTimer);
+    copyTimer = window.setTimeout(() => {
+      state.copyLabel = "Copy";
     }, 1500);
   };
 
@@ -99,7 +108,7 @@ export const PasswordGenerator = component(() => {
       >
       <div class="gen-actions">
         <button class="gen-copy" @click="${copy}">
-          ${() => (state.copied ? "Copied!" : "Copy")}
+          ${() => state.copyLabel}
         </button>
         <button class="gen-new" @click="${regenerate}">Regenerate</button>
       </div>

@@ -42,5 +42,5 @@ export default async function ({ request }) {
 }
 
 async function ComponentWithError() {
-  return <div>{await (await fetch("/invalid")).text()}</div>;
+  throw new Error("Something went wrong while rendering this component.");
 }
