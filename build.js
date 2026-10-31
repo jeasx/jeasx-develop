@@ -1,5 +1,5 @@
 import * as esbuild from "esbuild";
-import { glob, rm, stat, writeFile } from "node:fs/promises";
+import { readdir, rm, stat, writeFile } from "node:fs/promises";
 import { join, sep } from "node:path";
 import env from "./env.js";
 
@@ -47,7 +47,7 @@ await rm(join(CWD, "dist"), { recursive: true, force: true, maxRetries: 3 });
 
 for (const options of [SERVER_OPTIONS, BROWSER_OPTIONS]) {
   if (NODE_ENV_IS_DEVELOPMENT) {
-    (await esbuild.context(options)).watch();
+    await (await esbuild.context(options)).watch();
   } else {
     await esbuild.build(options);
   }
@@ -60,7 +60,16 @@ if (!NODE_ENV_IS_DEVELOPMENT) {
   /** @type {Record<string,string>} */
   const files = {};
 
-  for await (const entry of glob("{dist,public}/**/*")) {
+  // Unlike glob, readdir includes dotfiles (e.g. ".well-known"), so the "dotfiles"
+  // option of FASTIFY_SEND_OPTIONS decides about them like in development.
+  // "dist" comes first: if a file exists in both directories, "dist" wins.
+  const entries = [];
+  for (const directory of ["dist", "public"]) {
+    const names = await readdir(join(CWD, directory), { recursive: true }).catch(() => []);
+    entries.push(...names.map((name) => join(directory, name)));
+  }
+
+  for (const entry of entries) {
     const path = entry.split(sep).join("/");
 
     // Handle server routes.
@@ -75,7 +84,6 @@ if (!NODE_ENV_IS_DEVELOPMENT) {
     }
 
     // Treat all other entries as static files.
-    // If a file exists in both directories, "dist" wins like in development.
     if ((await stat(join(CWD, path))).isFile()) {
       const key = path.slice(path.indexOf("/"));
       if (!(path.startsWith("public/") && key in files)) {
