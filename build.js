@@ -79,8 +79,8 @@ if (!NODE_ENV_IS_DEVELOPMENT) {
       continue;
     }
 
-    // Skip sourcemaps for server routes.
-    if (/^dist\/.*\[.+\]\.js\.map$/.test(path)) {
+    // Skip all other outputs of server routes, e.g. sourcemaps or CSS of components.
+    if (/^dist\/.*\[[^/]+\]\.[^/]+$/.test(path)) {
       continue;
     }
 
