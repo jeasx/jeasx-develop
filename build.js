@@ -1,12 +1,13 @@
 import * as esbuild from "esbuild";
 import { readdir, rm, stat, writeFile } from "node:fs/promises";
 import { join, sep } from "node:path";
+import { pathToFileURL } from "node:url";
 import env from "./env.js";
 
 env();
 
 const CWD = process.cwd();
-const CONFIG = (await import(`file://${join(CWD, "jeasx.config.js")}`)).default;
+const CONFIG = (await import(pathToFileURL(join(CWD, "jeasx.config.js")).href)).default;
 const NODE_ENV_IS_DEVELOPMENT = process.env.NODE_ENV === "development";
 
 /** @type {esbuild.BuildOptions} */
