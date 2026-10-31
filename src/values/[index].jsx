@@ -68,7 +68,7 @@ export default function () {
         render={() => <pre>{Buffer.from("Bytes are decoded as UTF-8 text: ✓ <b>escaped</b>")}</pre>}
       >
         A <code>Uint8Array</code> or <code>Buffer</code> renders as UTF-8 text, e.g. a file read
-        with <code>fs.readFile()</code> or a <code>fetch()</code> response body.
+        with <code>fs.readFile()</code> or the bytes of a <code>fetch()</code> response.
       </Sample>
 
       <Sample

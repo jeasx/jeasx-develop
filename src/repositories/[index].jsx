@@ -10,7 +10,7 @@ const cached = cache({ ttl: 5 * 60_000 });
  */
 export default async function ({ request }) {
   // A repeated parameter arrives as array, so always work with a string.
-  // GitHub rejects queries longer than 256 characters.
+  // Cut it to the maxlength of the search field, well below GitHub's limit of 256 characters.
   const search = String(request.query["search"] || "jeasx").slice(0, 100);
 
   return (

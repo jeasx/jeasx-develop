@@ -99,7 +99,7 @@ export default FASTIFY_SERVER(
 const STATIC_FILE_ROUTE = Symbol("static-file-route");
 
 /**
- * Resolves route module based on the request path and execute it.
+ * Resolves route modules based on the request path and executes them.
  */
 async function handler(request: FastifyRequest, reply: FastifyReply) {
   let response: unknown;
@@ -307,7 +307,8 @@ function decodePath(url: string): string | undefined {
 }
 
 /**
- * Renders JSX to string and applies optional response handler.
+ * Renders JSX to a stream (or to a string if `jsxStream` is false)
+ * and applies the optional response handler.
  */
 async function renderResponse(context: any, response: unknown) {
   let payload = response;

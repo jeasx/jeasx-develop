@@ -1,6 +1,8 @@
 const MIN_LENGTH = 3;
 const MAX_LENGTH = 200;
 // Nominatim's usage policy allows at most one request per second for the whole application.
+// The limiter below only counts the requests of this server process, so with several
+// instances (e.g. on Vercel), each one has its own limit.
 const INTERVAL = 1000;
 // Don't let requests pile up: give up if a search would have to wait longer than this.
 const MAX_WAIT = 3000;
