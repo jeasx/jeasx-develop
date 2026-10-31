@@ -3,6 +3,10 @@ import navigate from "./domain/navigate";
 import validator from "./domain/validator";
 import { compress, decompress } from "./utils/zip";
 
+// Browsers silently drop cookies larger than about 4 KB (name, value and attributes),
+// which would lose all answers.
+const MAX_COOKIE_SIZE = 3800;
+
 /**
  * @param {import("../types").RouteProps} props
  */
@@ -17,6 +21,7 @@ export default function ({ request, reply }) {
     };
 
     const path = request.path;
+    let tooLarge = false;
 
     // Apply loaded and submitted data first, so navigation reflects the latest answers.
     if (request.body) {
@@ -31,14 +36,21 @@ export default function ({ request, reply }) {
         delete props.data[path];
       }
 
-      reply.setCookie("data", compress(props.data));
+      const cookie = compress(props.data);
+      tooLarge = cookie.length > MAX_COOKIE_SIZE;
+      if (!tooLarge) {
+        reply.setCookie("data", cookie);
+      }
     }
 
     const { previous, next } = navigate(path, props.data);
     props.previous = previous;
     props.next = next;
 
-    if (request.body) {
+    if (tooLarge) {
+      // Stay on the page and keep the submitted answers, so they can be shortened.
+      props.errors = { size: "Your answers are too long to be stored. Please shorten them." };
+    } else if (request.body) {
       switch (request.body["$action"] || "") {
         case "":
           break;
