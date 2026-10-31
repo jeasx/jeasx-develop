@@ -51,7 +51,7 @@ async function Repositories({ search }) {
   const term = search.toLowerCase();
   const repositories = items.filter(({ full_name }) => {
     const name = String(full_name).toLowerCase();
-    return search === "jeasx" ? name.startsWith(term) : name.includes(term);
+    return term === "jeasx" ? name.startsWith(term + "/") : name.includes(term);
   });
   return (
     <ul>
