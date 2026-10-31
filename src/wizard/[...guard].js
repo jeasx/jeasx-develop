@@ -16,6 +16,12 @@ const STEPS = new Set(Object.values(SLUGS));
  * @param {import("../types").RouteProps} props
  */
 export default function ({ request, reply }) {
+  // Static files (e.g. "/wizard/index.js") need no answers, so serve them as they are.
+  // Otherwise a broken cookie would redirect them to the start page below.
+  if (reply.file) {
+    return;
+  }
+
   const path = request.path;
 
   // Answers are stored per path, so "/wizard/4-claimant/" must not become a separate step.

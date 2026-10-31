@@ -5,8 +5,15 @@ const HEAD_MARK = "[[HEAD]]";
 
 /**
  * @this {import("../types").ThisContext}
+ * @param {import("../types").RouteProps} props
  */
-export default async function () {
+export default async function ({ reply }) {
+  // Static files have no head, and the response handler below would read them as text,
+  // which breaks binary files like images.
+  if (reply.file) {
+    return;
+  }
+
   const headTags = [];
 
   // Useful pattern to retain existing overrides
