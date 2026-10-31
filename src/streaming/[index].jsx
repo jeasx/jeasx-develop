@@ -13,8 +13,8 @@ const SOURCES = [
 export default async function () {
   const start = Date.now();
 
-  // Start all requests at once; the markup just awaits the pending promises.
-  // Each result is wrapped in a loader which shows a spinner until the result is streamed in.
+  // Fire all requests at once; the markup simply awaits the pending promises.
+  // Each result sits inside a loader that shows a spinner until the result is streamed in.
   const results = SOURCES.map((source) => (
     <div class="loader">
       <p aria-busy="true">Loading {source.name.toLowerCase()}...</p>
@@ -28,14 +28,14 @@ export default async function () {
     <Layout title="Stream HTML with Jeasx" description="Send HTML progressively to the browser.">
       <h1>Stream HTML to the browser</h1>
       <p>
-        Set <code>this.jsxStream = true</code> in a route (or a guard) and the rendered markup is
-        sent in chunks: whenever rendering waits for an async component, everything rendered so far
-        is flushed. The browser shows the page shell right away and renders slow parts as they
-        arrive. No client-side JavaScript is involved.
+        By default, Jeasx sends rendered markup in chunks: whenever rendering waits for an async
+        component, everything rendered so far is flushed to the browser. The page shell appears
+        immediately, and slow parts are filled in as they arrive. No client-side JavaScript
+        required.
       </p>
       <p>
-        Four slow data sources are queried in parallel. Each result is flushed as soon as it and all
-        results before it are ready. <a href="">Reload</a> to watch it again.
+        This page queries four slow data sources in parallel. Each result is flushed as soon as it
+        and every result before it is ready. <a href="">Reload</a> to watch it again.
       </p>
       {results}
       <Done start={start} />
