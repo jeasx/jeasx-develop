@@ -1,34 +1,45 @@
-import mdxPlugin from "@mdx-js/esbuild";
-import sveltePlugin from "esbuild-svelte";
 import querystring from "node:querystring";
-import rehypePrismPlus from "rehype-prism-plus";
 
 const NODE_ENV_IS_DEVELOPMENT = process.env.NODE_ENV === "development";
 
-export default {
-  /** @type {() => import("esbuild").BuildOptions} */
-  ESBUILD_SERVER_OPTIONS: () => ({
-    define: { "process.env.BUILD_ID": `"${Date.now().toString(36)}"` },
-    sourcemap: NODE_ENV_IS_DEVELOPMENT && "inline",
-    loader: { ".svg": "file" },
-    plugins: [
-      // Component styles end up in a CSS file (e.g. "/svelte/index.css" from the browser build),
-      // so they apply before hydration and without JavaScript. The server build's copy is unused.
-      sveltePlugin({ compilerOptions: { generate: "server", css: "external" } }),
-      mdxPlugin({
-        development: NODE_ENV_IS_DEVELOPMENT,
-        jsxImportSource: "jsx-async-runtime",
-        elementAttributeNameCase: "html",
-        stylePropertyNameCase: "css",
-        rehypePlugins: [rehypePrismPlus],
-      }),
-    ],
-  }),
+// The server imports this config at startup, so build-only plugins are imported lazily:
+// loading them (e.g. the Svelte compiler) would add about 200 ms to every server start.
 
-  /** @type {() => import("esbuild").BuildOptions} */
-  ESBUILD_BROWSER_OPTIONS: () => ({
-    plugins: [sveltePlugin({ compilerOptions: { generate: "client", css: "external" } })],
-  }),
+export default {
+  /** @type {() => Promise<import("esbuild").BuildOptions>} */
+  ESBUILD_SERVER_OPTIONS: async () => {
+    const [{ default: sveltePlugin }, { default: mdxPlugin }, { default: rehypePrismPlus }] =
+      await Promise.all([
+        import("esbuild-svelte"),
+        import("@mdx-js/esbuild"),
+        import("rehype-prism-plus"),
+      ]);
+    return {
+      define: { "process.env.BUILD_ID": `"${Date.now().toString(36)}"` },
+      sourcemap: NODE_ENV_IS_DEVELOPMENT && "inline",
+      loader: { ".svg": "file" },
+      plugins: [
+        // Component styles end up in a CSS file (e.g. "/svelte/index.css" from the browser build),
+        // so they apply before hydration and without JavaScript. The server build's copy is unused.
+        sveltePlugin({ compilerOptions: { generate: "server", css: "external" } }),
+        mdxPlugin({
+          development: NODE_ENV_IS_DEVELOPMENT,
+          jsxImportSource: "jsx-async-runtime",
+          elementAttributeNameCase: "html",
+          stylePropertyNameCase: "css",
+          rehypePlugins: [rehypePrismPlus],
+        }),
+      ],
+    };
+  },
+
+  /** @type {() => Promise<import("esbuild").BuildOptions>} */
+  ESBUILD_BROWSER_OPTIONS: async () => {
+    const { default: sveltePlugin } = await import("esbuild-svelte");
+    return {
+      plugins: [sveltePlugin({ compilerOptions: { generate: "client", css: "external" } })],
+    };
+  },
 
   /** @type {() => import("@fastify/send").SendOptions} */
   FASTIFY_SEND_OPTIONS: () => ({

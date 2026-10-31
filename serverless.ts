@@ -49,20 +49,24 @@ declare module "fastify" {
   }
 }
 
+// All config options may be sync or async functions.
+
 // Files are passed relative to CWD, so the root must always be CWD.
 const FASTIFY_SEND_OPTIONS: SendOptions = {
-  ...(CONFIG.FASTIFY_SEND_OPTIONS?.() as SendOptions),
+  ...((await CONFIG.FASTIFY_SEND_OPTIONS?.()) as SendOptions),
   root: CWD,
 };
 
 // Enhance Fastify server from userland
 const FASTIFY_SERVER = (CONFIG.FASTIFY_SERVER ?? ((fastify) => fastify)) as (
   fastify: FastifyInstance,
-) => FastifyInstance;
+) => FastifyInstance | Promise<FastifyInstance>;
 
-// Create and export a Fastify instance
-export default FASTIFY_SERVER(
-  fastify(CONFIG.FASTIFY_SERVER_OPTIONS?.() as FastifyServerOptions)
+// Create and export a Fastify instance.
+// A Fastify instance is thenable: awaiting it loads the plugins registered so far
+// and resolves to the instance itself, so further plugins and routes can still be added.
+export default await FASTIFY_SERVER(
+  fastify((await CONFIG.FASTIFY_SERVER_OPTIONS?.()) as FastifyServerOptions)
     .decorateRequest("route", "")
     .decorateRequest("path", "")
     .decorateReply("file", undefined)

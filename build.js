@@ -22,7 +22,8 @@ const SERVER_OPTIONS = {
   format: "esm",
   platform: "neutral",
   packages: "external",
-  ...CONFIG.ESBUILD_SERVER_OPTIONS?.(),
+  // Options may be async, so build-only plugins can be imported lazily (see jeasx.config.js).
+  ...(await CONFIG.ESBUILD_SERVER_OPTIONS?.()),
 };
 
 /** @type {esbuild.BuildOptions} */
@@ -37,7 +38,7 @@ const BROWSER_OPTIONS = {
   format: "esm",
   platform: "browser",
   packages: "bundle",
-  ...CONFIG.ESBUILD_BROWSER_OPTIONS?.(),
+  ...(await CONFIG.ESBUILD_BROWSER_OPTIONS?.()),
 };
 
 // Start from an empty output directory, so stale routes, assets and metadata

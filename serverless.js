@@ -17,12 +17,12 @@ const MODULE_BY_ROUTE = Object.assign(
 );
 const FILE_BY_PATH = Object.assign(/* @__PURE__ */ Object.create(null), METADATA.files);
 const FASTIFY_SEND_OPTIONS = {
-  ...CONFIG.FASTIFY_SEND_OPTIONS?.(),
+  ...await CONFIG.FASTIFY_SEND_OPTIONS?.(),
   root: CWD
 };
 const FASTIFY_SERVER = CONFIG.FASTIFY_SERVER ?? ((fastify2) => fastify2);
-var serverless_default = FASTIFY_SERVER(
-  fastify(CONFIG.FASTIFY_SERVER_OPTIONS?.()).decorateRequest("route", "").decorateRequest("path", "").decorateReply("file", void 0).addHook("onRequest", async (request, reply) => {
+var serverless_default = await FASTIFY_SERVER(
+  fastify(await CONFIG.FASTIFY_SERVER_OPTIONS?.()).decorateRequest("route", "").decorateRequest("path", "").decorateReply("file", void 0).addHook("onRequest", async (request, reply) => {
     const path = decodePath(request.url);
     if (path === void 0) {
       reply.code(400).send();
