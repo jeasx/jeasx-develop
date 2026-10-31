@@ -10,6 +10,10 @@ import { existsSync } from "node:fs";
  * 3. .env.local
  * 4. .env
  * 5. .env.defaults
+ *
+ * NODE_ENV itself must come from the environment (e.g. set by "jeasx dev"):
+ * the files above are chosen before any of them is read, so a NODE_ENV
+ * set in a file doesn't select .env.<NODE_ENV>(.local).
  */
 export default function env() {
   if (typeof process.loadEnvFile === "function") {
