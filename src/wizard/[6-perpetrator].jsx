@@ -27,17 +27,18 @@ export default function ({ data, form, errors }) {
         <Input name="street" label="Street" value={form.street} />
         <Input name="zip" label="Postal code" value={form.zip} />
         <Input name="city" label="City" value={form.city} />
-        <Input
-          name="license_plate"
-          label="Official license plate (if applicable)"
-          value={form.license_plate}
-        />
-        <Legend>Contact for inquiries and notifications</Legend>
+        <Legend>Contact details for inquiries and notifications</Legend>
         <Input name="phone" label="Phone" value={form.phone} type="tel" />
+        <Legend>Other details</Legend>
         <Input
           name="policy_number"
           label="Insurance policy number (if applicable)"
           value={form.policy_number}
+        />
+        <Input
+          name="license_plate"
+          label="Official license plate (if applicable)"
+          value={form.license_plate}
         />
         <Actions />
         <ErrorMessage message={errors} />

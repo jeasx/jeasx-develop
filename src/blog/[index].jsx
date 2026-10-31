@@ -21,7 +21,7 @@ export default function ({ request }) {
             Submit new post
           </a>
           <br />
-          Login: demo/demo
+          Login: demo / demo
         </article>
       </section>
       {posts.map(({ slug, date, author, title }) => (

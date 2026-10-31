@@ -68,7 +68,7 @@ class MotionList extends LitElement {
 
   render() {
     return html`
-      <ul class="tabs ${classMap({ row: this.row })}">
+      <ul class="${classMap({ row: this.row })}">
         ${repeat(
           this.list,
           (i) => i,

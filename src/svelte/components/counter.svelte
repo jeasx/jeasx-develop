@@ -1,6 +1,7 @@
 <script>
     let { init = 0 } = $props();
-    let count = $state((() => init)());
+    // svelte-ignore state_referenced_locally
+    let count = $state(init);
 </script>
 
 <input type="number" bind:value={count} />

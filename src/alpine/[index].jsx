@@ -4,7 +4,7 @@ export default async function () {
   return (
     <Layout
       title="Use Alpine.js with Jeasx"
-      description="How to use Alpine.js with Jeasx?"
+      description="Add interactive behavior to server-rendered markup with Alpine.js."
       script="/alpine/index.js"
     >
       <h1>Use Alpine.js with Jeasx</h1>

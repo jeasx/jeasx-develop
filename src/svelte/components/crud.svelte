@@ -1,7 +1,8 @@
 <script>
 	let { data } = $props();
 
-	let people = $state((() => data)());
+	// svelte-ignore state_referenced_locally
+	let people = $state(data);
 
 	let prefix = $state("");
 	let first = $state("");

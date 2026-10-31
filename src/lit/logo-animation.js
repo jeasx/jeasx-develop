@@ -28,12 +28,6 @@ export const styles = [
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
-
-    .info {
-      position: absolute;
-      right: 2px;
-      bottom: 2px;
-    }
   `,
 ];
 
