@@ -7,8 +7,9 @@ export const FIELDS = { slug: 100, title: 100, author: 100, description: 200, bo
 export const REQUIRED_FIELDS = ["title", "author", "description", "body"];
 // Slugs end up in links, so only allow safe characters (no "javascript:" etc.).
 const SLUG_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/;
-// "/blog/post" is the form for new posts, so posts with these slugs could never be opened.
-const RESERVED_SLUGS = new Set(["post"]);
+// "/blog/post" is the form for new posts and "/blog/404" is answered by "[404].jsx",
+// so posts with these slugs could never be opened.
+const RESERVED_SLUGS = new Set(["post", "404"]);
 
 /** @typedef {{ slug: string, title: string, author: string, description: string, body: string, date: string }} Post */
 
