@@ -66,7 +66,7 @@ async function ErrorBoundary({ fallback, children }) {
   try {
     return await jsxToString.call(this, children);
   } catch (error) {
-    this.request?.log.error(error);
+    this.request.log.error(error);
     return fallback;
   }
 }

@@ -5,12 +5,11 @@ import { FastifyRequest } from "fastify/types/request";
 import "../serverless";
 
 type RouteProps = {
-  request?: FastifyRequest;
-  reply?: FastifyReply;
+  request: FastifyRequest;
+  reply: FastifyReply;
 };
 
 type ThisContext = RouteProps & {
-  jsxStream?: boolean;
   jsxToString?: (this: ThisContext, jsxElement: JSX.Element) => string | Promise<string>;
   responseHandler?: (this: ThisContext, payload: any) => unknown;
 };

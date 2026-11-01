@@ -59,7 +59,7 @@ function toText(value) {
  * @param {import("../types").RouteProps} props
  */
 async function Fragment({ request, reply }) {
-  const body = /** @type {Record<string, unknown>} */ (request?.body || {});
+  const body = /** @type {Record<string, unknown>} */ (request.body || {});
   let entries = await readEntries(request.cookies["recipes"]);
 
   // Only allow existing entries or appending a new one.
