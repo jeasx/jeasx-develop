@@ -68,7 +68,7 @@ export default {
       .register(import("@fastify/multipart"), {
         attachFieldsToBody: "keyValues",
         // All parts are buffered in memory and bodyLimit only applies to each file,
-        // so limit the number and size of parts per request (max. about 8 MB).
+        // so limit the number and size of parts per request (up to about 8 MB).
         limits: { files: 1, fields: 100, fieldSize: 64 * 1024 },
       })
       .register(import("@fastify/cookie"), {
