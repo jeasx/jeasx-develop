@@ -154,9 +154,9 @@ function decodePath(url) {
   }
 }
 async function renderResponse(context, response) {
+  const payload = isJsxNode(response) ? await jsxToStream.call(context, response) : response;
   const responseHandler = context["responseHandler"];
-  const payload = typeof responseHandler === "function" ? await responseHandler.call(context, response) : response;
-  return isJsxNode(payload) ? await jsxToStream.call(context, payload) : payload;
+  return typeof responseHandler === "function" ? await responseHandler.call(context, payload) : payload;
 }
 async function tryFile(request) {
   if (request.method !== "GET" && request.method !== "HEAD") {

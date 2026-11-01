@@ -311,18 +311,15 @@ function decodePath(url: string): string | undefined {
 }
 
 /**
- * Applies the optional response handler to the unrendered response,
- * then streams any JSX that is left.
+ * Renders JSX as stream and applies the optional response handler to the response.
  */
 async function renderResponse(context: any, response: unknown) {
-  // The handler sees JSX before rendering, so it may render it itself
-  // (e.g. with jsxToString) or return it unchanged to stream it.
+  const payload = isJsxNode(response) ? await jsxToStream.call(context, response) : response;
+  // Post-process the payload with an optional response handler
   const responseHandler = context["responseHandler"];
-  const payload =
-    typeof responseHandler === "function"
-      ? await responseHandler.call(context, response)
-      : response;
-  return isJsxNode(payload) ? await jsxToStream.call(context, payload) : payload;
+  return typeof responseHandler === "function"
+    ? await responseHandler.call(context, payload)
+    : payload;
 }
 
 /**
