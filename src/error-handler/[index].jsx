@@ -1,4 +1,4 @@
-import { jsxToString } from "jsx-async-runtime";
+import { html, jsxToString } from "jsx-async-runtime";
 import Layout from "../Layout";
 
 /**
@@ -56,11 +56,12 @@ export default async function ({ request }) {
 
 /**
  * Renders children to a string, so errors can be caught here and replaced by a fallback.
+ * The string is wrapped in html(), as strings returned by components are escaped.
  * @this {import("../types").ThisContext}
  */
 async function ErrorBoundary({ fallback, children }) {
   try {
-    return await jsxToString.call(this, children);
+    return html(await jsxToString.call(this, children));
   } catch (error) {
     this.request.log.error(error);
     return fallback;
