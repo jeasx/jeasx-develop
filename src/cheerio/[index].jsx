@@ -1,6 +1,6 @@
 import * as prettier from "prettier";
+import toText from "../@helpers/toText";
 import Layout from "../Layout";
-import toText from "../toText";
 import extractStyles from "./extractStyles";
 
 /**

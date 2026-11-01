@@ -1,4 +1,4 @@
-import cache from "../cache";
+import cache from "../@helpers/cache";
 
 // Keep the recipes for a while, so not every visit has to wait for the API.
 const cached = cache({ ttl: 5 * 60_000 });

@@ -1,5 +1,5 @@
 import { isJsxNode, jsxToString } from "jsx-async-runtime";
-import toText from "../toText";
+import toText from "../@helpers/toText";
 
 const HEAD_MARK = "[[HEAD]]";
 

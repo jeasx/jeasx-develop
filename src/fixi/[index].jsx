@@ -1,4 +1,4 @@
-import { fitsCookie, readListCookie } from "../cookies";
+import { fitsCookie, readListCookie } from "../@helpers/cookies";
 import Layout from "../Layout";
 import { loadRecipes } from "../mdx/recipes";
 

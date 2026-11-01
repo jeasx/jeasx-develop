@@ -1,4 +1,4 @@
-import cache from "../cache";
+import cache from "../@helpers/cache";
 
 const API = "https://dummyjson.com/products";
 // Don't wait forever for a slow server. The timeout also covers the body.

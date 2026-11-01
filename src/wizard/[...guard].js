@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { fitsCookie, readSignedCookie } from "../cookies";
+import { fitsCookie, readSignedCookie } from "../@helpers/cookies";
 import { SLUGS, TOKEN_PATTERN } from "./domain/constants";
 import navigate from "./domain/navigate";
 import validator from "./domain/validator";

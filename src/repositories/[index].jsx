@@ -1,4 +1,4 @@
-import cache from "../cache";
+import cache from "../@helpers/cache";
 import Layout from "../Layout";
 
 // GitHub allows only 10 unauthenticated searches per minute, so keep the results for a while.

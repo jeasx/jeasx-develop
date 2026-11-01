@@ -5,7 +5,7 @@ import { isJsxNode, jsxToString } from "jsx-async-runtime";
  * Returns undefined for anything else.
  * Response handlers need it, as a streamed payload has to be complete before it can be changed.
  *
- * @param {import("./types").ThisContext} context
+ * @param {import("../types").ThisContext} context
  * @param {unknown} payload
  * @returns {Promise<string | undefined>}
  */

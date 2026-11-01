@@ -1,4 +1,4 @@
-import { readListCookie, writeListCookie } from "../cookies";
+import { readListCookie, writeListCookie } from "../@helpers/cookies";
 
 const MAX_LABEL_LENGTH = 200;
 
@@ -17,8 +17,7 @@ export default function ({ request, reply }) {
     request.body && typeof request.body === "object" ? request.body : {}
   );
 
-  let todos =
-    readListCookie(request, "todos")?.map(toTodo) ?? structuredClone(DEFAULT_TODOS);
+  let todos = readListCookie(request, "todos")?.map(toTodo) ?? structuredClone(DEFAULT_TODOS);
 
   // Ignore todos without any text, e.g. only spaces.
   const newTodo = String(body["newTodo"] ?? "")

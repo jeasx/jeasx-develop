@@ -1,4 +1,4 @@
-import cache from "../cache";
+import cache from "../@helpers/cache";
 
 // GitHub allows only 60 unauthenticated requests per hour, so keep the answer for a while.
 const cached = cache({ ttl: 5 * 60_000 });

@@ -1,4 +1,4 @@
-import { fitsCookie, readListCookie, writeListCookie } from "../cookies";
+import { fitsCookie, readListCookie, writeListCookie } from "../@helpers/cookies";
 import data from "./data.json";
 
 /** Fields of a post and their maximum length. */

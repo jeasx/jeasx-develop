@@ -1,6 +1,6 @@
 import * as prettier from "prettier";
+import toText from "../@helpers/toText";
 import Layout from "../Layout";
-import toText from "../toText";
 
 // Limit the options, as a huge tabWidth would inflate the output to many megabytes.
 const PRINT_WIDTH = { min: 20, max: 200, fallback: 80 };

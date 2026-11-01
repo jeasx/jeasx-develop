@@ -1,4 +1,4 @@
-import { readSignedCookie } from "../cookies";
+import { readSignedCookie } from "../@helpers/cookies";
 import Layout from "../Layout";
 import jokes from "./jokes";
 
@@ -11,10 +11,7 @@ export default function ({ request, reply }) {
   // Keep the counter between 1 and 5, even for tampered form data
   // or a signed value of another cookie (see "../cookies.js").
   const counter = Math.min(
-    Math.max(
-      Math.trunc(Number(body["counter"] || readSignedCookie(request, "counter"))) || 3,
-      1,
-    ),
+    Math.max(Math.trunc(Number(body["counter"] || readSignedCookie(request, "counter"))) || 3, 1),
     5,
   );
   const data = category ? jokes(category, counter) : [];
