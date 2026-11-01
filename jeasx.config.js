@@ -1,3 +1,4 @@
+import { randomBytes } from "node:crypto";
 import querystring from "node:querystring";
 
 const NODE_ENV_IS_DEVELOPMENT = process.env.NODE_ENV === "development";
@@ -72,6 +73,7 @@ export default {
         limits: { files: 1, fields: 100, fieldSize: 64 * 1024 },
       })
       .register(import("@fastify/cookie"), {
+        secret: randomBytes(32).toString("hex"),
         parseOptions: {
           path: "/",
           httpOnly: true,

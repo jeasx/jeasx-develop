@@ -19,11 +19,11 @@ const RESERVED_SLUGS = new Set(["post"]);
  * @returns {Post[]}
  */
 export function readPosts(request) {
-  // The cookie can be edited by the client, so turn all fields into strings
-  // and drop posts with invalid slugs.
+  // The cookie is signed, but could hold a signed value of another cookie (see "../cookies.js"),
+  // so turn all fields into strings and drop posts with invalid slugs.
   // Return a copy of the example data, so callers can add posts without changing it.
   return (
-    readListCookie(request.cookies["posts"])
+    readListCookie(request, "posts")
       ?.map(toPost)
       .filter((post) => SLUG_PATTERN.test(post.slug)) ?? [...data]
   );
@@ -49,10 +49,11 @@ function toPost({ slug, title, author, description, body, date }) {
  * Checks if a post fits into the cookie on its own. Even within the field limits it may not,
  * as characters like "ü" or emojis grow to 6 or 12 characters once URL-encoded.
  *
+ * @param {import("fastify").FastifyReply} reply
  * @param {object} post
  */
-export function canStore(post) {
-  return fitsCookie(JSON.stringify([post]));
+export function canStore(reply, post) {
+  return fitsCookie(reply, JSON.stringify([post]));
 }
 
 /**

@@ -18,7 +18,7 @@ export default function ({ request, reply }) {
   );
 
   let todos =
-    readListCookie(request.cookies["todos"])?.map(toTodo) ?? structuredClone(DEFAULT_TODOS);
+    readListCookie(request, "todos")?.map(toTodo) ?? structuredClone(DEFAULT_TODOS);
 
   // Ignore todos without any text, e.g. only spaces.
   const newTodo = String(body["newTodo"] ?? "")
@@ -57,8 +57,8 @@ export default function ({ request, reply }) {
 }
 
 /**
- * The cookie can be edited by the client, so turn the label into a string of limited length
- * and only allow known states.
+ * The cookie is signed, but could hold a signed value of another cookie (see "../cookies.js"),
+ * so turn the label into a string of limited length and only allow known states.
  *
  * @param {Record<string, unknown>} item
  */

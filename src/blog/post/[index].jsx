@@ -19,7 +19,7 @@ export default function ({ request, reply }) {
     } else if (posts.some(({ slug }) => slug === post.slug)) {
       // Otherwise the older post with the same slug could never be opened again.
       error = `A post with the slug "${post.slug}" already exists. Please choose another one.`;
-    } else if (!canStore(post)) {
+    } else if (!canStore(reply, post)) {
       error = "Your post is too long to be stored in a cookie. Please shorten it.";
     } else {
       posts.unshift(post);

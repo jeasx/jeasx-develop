@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { fitsCookie } from "../cookies";
+import { fitsCookie, readSignedCookie } from "../cookies";
 import { SLUGS, TOKEN_PATTERN } from "./domain/constants";
 import navigate from "./domain/navigate";
 import validator from "./domain/validator";
@@ -44,7 +44,7 @@ export default function ({ request, reply }) {
 
   try {
     const props = {
-      data: toAnswers(decompress(request.cookies["data"])) || {},
+      data: toAnswers(decompress(readSignedCookie(request, "data"))) || {},
       errors: {},
       previous: "",
       next: "",
@@ -59,7 +59,7 @@ export default function ({ request, reply }) {
         .trim()
         .toUpperCase();
       if (token) {
-        const saved = loadSaved(request.cookies, token);
+        const saved = loadSaved(request, token);
         if (!saved) {
           // Keep the current answers instead of starting over with nothing.
           props.errors = {
@@ -83,9 +83,9 @@ export default function ({ request, reply }) {
       // A cookie which doesn't fit would be dropped by the browser and lose all answers.
       // The check includes the encoding of "+", "/" and "=" in the base64 value.
       const cookie = compress(props.data);
-      tooLarge = !fitsCookie(cookie);
+      tooLarge = !fitsCookie(reply, cookie);
       if (!tooLarge) {
-        reply.setCookie("data", cookie, COOKIE_OPTIONS);
+        reply.setCookie("data", cookie, { ...COOKIE_OPTIONS, signed: true });
       }
     }
 
@@ -130,17 +130,17 @@ export default function ({ request, reply }) {
 
 /**
  * Returns the saved answers for a token like "ID-1A2B3C4D",
- * or undefined if the token is invalid, unknown, expired or its cookie is broken.
+ * or undefined if the token is invalid, unknown, expired or its cookie is edited or broken.
  *
- * @param {Record<string, string | undefined>} cookies
+ * @param {import("fastify").FastifyRequest} request
  * @param {string} token
  */
-function loadSaved(cookies, token) {
+function loadSaved(request, token) {
   if (!TOKEN_PATTERN.test(token)) {
     return;
   }
   try {
-    return toAnswers(decompress(cookies[token]));
+    return toAnswers(decompress(readSignedCookie(request, token)));
   } catch {
     return;
   }
@@ -148,7 +148,7 @@ function loadSaved(cookies, token) {
 
 /**
  * Returns the value if it can hold answers, otherwise undefined.
- * Cookies can be edited by the client, so they may contain any JSON value.
+ * The cookies are signed, but could hold a signed value of another cookie (see "../cookies.js").
  * Arrays are rejected too: answers stored on them by path would be lost in JSON.stringify().
  *
  * @param {unknown} value
@@ -182,7 +182,11 @@ function save(request, reply, data) {
     }
   }
   // Keep the saved claim for 10 days, as promised on the start page.
-  reply.setCookie(token, compress(data), { ...COOKIE_OPTIONS, maxAge: 10 * 24 * 60 * 60 });
+  reply.setCookie(token, compress(data), {
+    ...COOKIE_OPTIONS,
+    signed: true,
+    maxAge: 10 * 24 * 60 * 60,
+  });
   // Replaces the "data" cookie set above for the submitted answers.
   reply.clearCookie("data", COOKIE_OPTIONS);
   return token;

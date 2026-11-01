@@ -37,12 +37,14 @@ loadRecipes();
 
 /**
  * Reads the visitor's recipes from the cookie; falls back to the recipes from the API
- * (or an empty list if it is unavailable) if the cookie is missing or malformed.
+ * (or an empty list if it is unavailable) if the cookie is missing, edited or malformed.
  *
- * @param {string | undefined} cookie
+ * @param {import("fastify").FastifyRequest} request
  */
-async function readEntries(cookie) {
-  return (readListCookie(cookie) ?? (await loadRecipes())).slice(0, MAX_ENTRIES).map(toEntry);
+async function readEntries(request) {
+  return (readListCookie(request, "recipes") ?? (await loadRecipes()))
+    .slice(0, MAX_ENTRIES)
+    .map(toEntry);
 }
 
 /** @param {Record<string, unknown>} value */
@@ -60,7 +62,7 @@ function toText(value) {
  */
 async function Fragment({ request, reply }) {
   const body = /** @type {Record<string, unknown>} */ (request.body || {});
-  let entries = await readEntries(request.cookies["recipes"]);
+  let entries = await readEntries(request);
 
   // Only allow existing entries or appending a new one.
   // Only digits count as id, as Number("") would be 0 and overwrite the first entry.
@@ -86,9 +88,9 @@ async function Fragment({ request, reply }) {
       const changed = [...entries];
       changed[id] = entry;
       const cookie = JSON.stringify(changed);
-      if (fitsCookie(cookie)) {
+      if (fitsCookie(reply, cookie)) {
         entries = changed;
-        reply.setCookie("recipes", cookie, { path: "/fixi" });
+        reply.setCookie("recipes", cookie, { path: "/fixi", signed: true });
       } else {
         // Changes which don't fit into the cookie (e.g. lots of emojis) aren't stored.
         // Keep the row open with the entered values, so they can be shortened.

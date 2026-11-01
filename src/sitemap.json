@@ -79,6 +79,7 @@
       { "path": "/interceptor", "title": "Intercept JSX" },
       { "path": "/head", "title": "Helmet for head" },
       { "path": "/basic-auth", "title": "Authentication" },
+      { "path": "/signed-cookies", "title": "Signed cookies" },
       { "path": "/client-jsx", "title": "Client-side JSX" }
     ]
   }
