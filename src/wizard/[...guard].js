@@ -24,6 +24,11 @@ export default function ({ request, reply }) {
 
   const path = request.path;
 
+  // A JSON body can also be a number or string, whose characters would be stored as answers.
+  const body = /** @type {Record<string, unknown> | undefined} */ (
+    request.body && typeof request.body === "object" ? request.body : undefined
+  );
+
   // Answers are stored per path, so "/wizard/4-claimant/" must not become a separate step.
   if (path.length > 1 && path.endsWith("/") && request.method === "GET") {
     // The path is decoded, so encode it again: characters like "✓" or a line break
@@ -49,8 +54,8 @@ export default function ({ request, reply }) {
     let tooLarge = false;
 
     // Apply loaded and submitted data first, so navigation reflects the latest answers.
-    if (request.body) {
-      const token = String(request.body["$hash"] ?? "")
+    if (body) {
+      const token = String(body["$hash"] ?? "")
         .trim()
         .toUpperCase();
       if (token) {
@@ -67,7 +72,7 @@ export default function ({ request, reply }) {
       }
 
       if (STEPS.has(step)) {
-        const data = convertBodyToData(request.body);
+        const data = convertBodyToData(body);
         if (Object.keys(data).length > 0) {
           props.data[step] = data;
         } else {
@@ -91,8 +96,8 @@ export default function ({ request, reply }) {
     if (tooLarge) {
       // Stay on the page and keep the submitted answers, so they can be shortened.
       props.errors = { size: "Your answers are too long to be stored. Please shorten them." };
-    } else if (request.body) {
-      switch (request.body["$action"] || "") {
+    } else if (body) {
+      switch (body["$action"] || "") {
         case "":
           break;
         // Saving and finishing delete the current answers. This only happens on form submissions,
@@ -151,6 +156,9 @@ function loadSaved(cookies, token) {
  * @param {unknown} data
  */
 function save(request, reply, data) {
+  // The token is short and derived from the answers, so it can be guessed.
+  // This is only safe because it's per-client: it is looked up in the visitor's own cookies.
+  // Don't reuse it as a key in server-side storage; use crypto.randomUUID() there.
   const token =
     "ID-" + createHash("sha1").update(JSON.stringify(data)).digest("hex").slice(0, 8).toUpperCase();
   // Keep only the latest saved claim. Each one takes up to 4 KB, so piling them up
