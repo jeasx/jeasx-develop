@@ -37,11 +37,18 @@ export default function ({ number, delta, numbers, submit }) {
             ))}
           </div>
           <div>
-            {numbers.length === 6 && (
-              <button type="submit" name="submit" value="submit">
-                Reveal results
-              </button>
-            )}
+            <div class={styles.actions}>
+              {numbers.length === 6 && !submit && (
+                <button type="submit" name="submit" value="submit">
+                  Reveal results
+                </button>
+              )}
+              {submit && numbers.length === 6 && (
+                <button type="submit" name="restart" value="restart">
+                  Start over
+                </button>
+              )}
+            </div>
             {submit && numbers.length === 6 && <Draw numbers={numbers} />}
           </div>
         </form>

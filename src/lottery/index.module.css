@@ -36,7 +36,8 @@
     }
   }
 
-  button[value="submit"] {
+  button[value="submit"],
+  button[value="restart"] {
     opacity: 1;
     animation: blendIn 0.5s ease-in-out;
     margin-top: 20px;
@@ -47,9 +48,24 @@
     text-align: center;
   }
 
+  button[value="restart"] {
+    background-color: var(--color-disabled);
+    color: var(--color-black);
+  }
+
   p {
     margin-top: 1rem;
   }
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  /* Take the width of the grid without widening it. */
+  width: 0;
+  min-width: 100%;
 }
 
 .grid {

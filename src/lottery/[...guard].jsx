@@ -4,6 +4,10 @@
 export default function ({ request }) {
   const body = request.body || {};
 
+  if (body["restart"]) {
+    return { number: 0, delta: 0, numbers: [], submit: undefined };
+  }
+
   const number = +body["number"];
   const submit = body["submit"];
   // Keep the numbers when the results are revealed, so they are shown next to them.
