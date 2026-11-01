@@ -21,7 +21,7 @@ export default function ({ form, errors }) {
         </Paragraph>
         <Paragraph>
           You can save your claim at any time and get a token to continue it in this browser within
-          10 days. Saving again replaces your previously saved claim.
+          24 hours. Saving again replaces your previously saved claim.
         </Paragraph>
         <Input
           label="Continue a saved claim (optional): enter your token"

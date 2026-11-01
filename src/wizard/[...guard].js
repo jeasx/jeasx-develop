@@ -181,11 +181,11 @@ function save(request, reply, data) {
       reply.clearCookie(name, COOKIE_OPTIONS);
     }
   }
-  // Keep the saved claim for 10 days, as promised on the start page.
+  // Keep the saved claim for 24h, as promised on the start page.
   reply.setCookie(token, compress(data), {
     ...COOKIE_OPTIONS,
     signed: true,
-    maxAge: 10 * 24 * 60 * 60,
+    maxAge: 24 * 60 * 60,
   });
   // Replaces the "data" cookie set above for the submitted answers.
   reply.clearCookie("data", COOKIE_OPTIONS);
