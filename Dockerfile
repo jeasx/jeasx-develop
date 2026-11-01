@@ -6,7 +6,6 @@ ENV NODE_ENV=production
 USER node
 WORKDIR /home/node
 
-COPY --chown=node:node jsx-async-runtime.tgz ./
 COPY --chown=node:node package.json package-lock.json ./
 RUN npm ci --omit=dev && npm cache clean --force
 COPY --chown=node:node . ./
