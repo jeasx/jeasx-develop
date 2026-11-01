@@ -12,7 +12,8 @@ export default function Layout({ title = "", data = {}, children }) {
       description="Report a car insurance claim step by step with a server-rendered form wizard."
       script="/wizard/index.js"
     >
-      <Header path={this.request.path} data={data} />
+      {/* Like the guard, ignore trailing slashes: a post to "/wizard/4-claimant/" isn't redirected. */}
+      <Header path={this.request.path.replace(/\/+$/, "")} data={data} />
       {children}
     </DefaultLayout>
   );
