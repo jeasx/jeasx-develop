@@ -82,6 +82,7 @@
       { "path": "/interceptor", "title": "Intercept JSX" },
       { "path": "/head", "title": "Manage the head" },
       { "path": "/basic-auth", "title": "Basic auth" },
+      { "path": "/login", "title": "Login and sessions" },
       { "path": "/signed-cookies", "title": "Signed cookies" },
       { "path": "/client-jsx", "title": "Client-side JSX" }
     ]
