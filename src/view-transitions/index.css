@@ -1,0 +1,39 @@
+.planet {
+  display: block;
+  margin: 0 auto 1rem;
+  border-radius: 50%;
+  aspect-ratio: 1;
+  width: 6rem;
+}
+
+.planet-large {
+  width: min(16rem, 60vw);
+}
+
+/* Only the text is morphed, not a line as wide as the page. */
+.planet-name {
+  display: inline-block;
+}
+
+.planet-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.planet-nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+::view-transition-group(*) {
+  animation-duration: 0.4s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none;
+  }
+}
