@@ -44,7 +44,7 @@ export default function ({ request, reply }) {
 
   try {
     const props = {
-      data: decompress(request.cookies["data"]) || {},
+      data: toAnswers(decompress(request.cookies["data"])) || {},
       errors: {},
       previous: "",
       next: "",
@@ -140,11 +140,24 @@ function loadSaved(cookies, token) {
     return;
   }
   try {
-    const data = decompress(cookies[token]);
-    return data && typeof data === "object" ? data : undefined;
+    return toAnswers(decompress(cookies[token]));
   } catch {
     return;
   }
+}
+
+/**
+ * Returns the value if it can hold answers, otherwise undefined.
+ * Cookies can be edited by the client, so they may contain any JSON value.
+ * Arrays are rejected too: answers stored on them by path would be lost in JSON.stringify().
+ *
+ * @param {unknown} value
+ * @returns {Record<string, any> | undefined}
+ */
+function toAnswers(value) {
+  return value && typeof value === "object" && !Array.isArray(value)
+    ? /** @type {Record<string, any>} */ (value)
+    : undefined;
 }
 
 /**
