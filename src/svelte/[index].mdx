@@ -18,16 +18,22 @@ npm install svelte esbuild-svelte
 Now you have to register Svelte as esbuild plugin by adding the following configuration to `jeasx.config.js`:
 
 ```js
-import sveltePlugin from "esbuild-svelte";
-
 export default {
-  ESBUILD_SERVER_OPTIONS: () => ({
-    plugins: [sveltePlugin({ compilerOptions: { generate: "server", css: "external" } })],
-  }),
+  // The server imports this config at startup too, so import build-only plugins lazily:
+  // loading the Svelte compiler would slow down every server start.
+  ESBUILD_SERVER_OPTIONS: async () => {
+    const { default: sveltePlugin } = await import("esbuild-svelte");
+    return {
+      plugins: [sveltePlugin({ compilerOptions: { generate: "server", css: "external" } })],
+    };
+  },
 
-  ESBUILD_BROWSER_OPTIONS: () => ({
-    plugins: [sveltePlugin({ compilerOptions: { generate: "client", css: "external" } })],
-  }),
+  ESBUILD_BROWSER_OPTIONS: async () => {
+    const { default: sveltePlugin } = await import("esbuild-svelte");
+    return {
+      plugins: [sveltePlugin({ compilerOptions: { generate: "client", css: "external" } })],
+    };
+  },
 };
 ```
 

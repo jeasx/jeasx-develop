@@ -14,20 +14,22 @@ import { loadRecipes } from "./recipes";
 If you want to use MDX with Jeasx, simply run `npm install @mdx-js/esbuild` and add the configuration below to `ESBUILD_SERVER_OPTIONS` in `jeasx.config.js`. Visit [jeasx.dev/jsx](https://www.jeasx.dev/jsx) to learn how to enhance MDX with additional plugins.
 
 ```js
-import mdx from "@mdx-js/esbuild";
-
 export default {
-  /** @type {() => import("esbuild").BuildOptions} */
-  ESBUILD_SERVER_OPTIONS: () => ({
-    plugins: [
-      mdx({
-        development: process.env.NODE_ENV === "development",
-        jsxImportSource: "jsx-async-runtime",
-        elementAttributeNameCase: "html",
-        stylePropertyNameCase: "css",
-      }),
-    ],
-  }),
+  // The server imports this config at startup too, so import build-only plugins lazily.
+  /** @type {() => Promise<import("esbuild").BuildOptions>} */
+  ESBUILD_SERVER_OPTIONS: async () => {
+    const { default: mdx } = await import("@mdx-js/esbuild");
+    return {
+      plugins: [
+        mdx({
+          development: process.env.NODE_ENV === "development",
+          jsxImportSource: "jsx-async-runtime",
+          elementAttributeNameCase: "html",
+          stylePropertyNameCase: "css",
+        }),
+      ],
+    };
+  },
 };
 ```
 
