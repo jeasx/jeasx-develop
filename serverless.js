@@ -129,7 +129,7 @@ function* generateRoutes(path) {
   yield STATIC_FILE_ROUTE;
   const lastSlash = edgeSegment.lastIndexOf("/") + 1;
   const lastSegment = edgeSegment.substring(lastSlash);
-  if (lastSlash > 0 && !SPECIAL_SEGMENTS.has(lastSegment)) {
+  if (lastSlash > 0 && !SPECIAL_SEGMENTS.has(lastSegment.toLowerCase())) {
     yield `${edgeSegment.substring(0, lastSlash)}[${lastSegment}]`;
   }
   yield `${edgeSegment}/[index]`;

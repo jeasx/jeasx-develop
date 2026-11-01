@@ -272,7 +272,9 @@ function* generateRoutes(path: string): Generator<string | typeof STATIC_FILE_RO
   // except "/a/404", which is answered by "/a/[404]" on purpose.
   const lastSlash = edgeSegment.lastIndexOf("/") + 1;
   const lastSegment = edgeSegment.substring(lastSlash);
-  if (lastSlash > 0 && !SPECIAL_SEGMENTS.has(lastSegment)) {
+  // Compared in lower case, as case-insensitive file systems (macOS, Windows) would
+  // otherwise resolve e.g. "/--METADATA--" to "[--metadata--].js" in development.
+  if (lastSlash > 0 && !SPECIAL_SEGMENTS.has(lastSegment.toLowerCase())) {
     yield `${edgeSegment.substring(0, lastSlash)}[${lastSegment}]`;
   }
   yield `${edgeSegment}/[index]`;
