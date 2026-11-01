@@ -37,14 +37,15 @@ export default async function ({ request }) {
         wraps <code>this.jsxToString</code> and calls <code>jsxToString</code> from{" "}
         <code>jsx-async-runtime</code> when a route sets <code>this.jsxStream = false</code>.
       </p>
-      <p role="group">
-        <a href="?stream=true" role="button" class={this.jsxStream ? "" : "outline"}>
+      <div class="row center">
+        <a href="?stream=true" role="button" aria-disabled={this.jsxStream ? "true" : "false"}>
           Streaming
         </a>
-        <a href="?stream=false" role="button" class={this.jsxStream ? "outline" : ""}>
+        &nbsp;
+        <a href="?stream=false" role="button" aria-disabled={this.jsxStream ? "false" : "true"}>
           String
         </a>
-      </p>
+      </div>
       <p>
         Current mode: <strong>{this.jsxStream ? "streaming" : "string"}</strong>.{" "}
         {this.jsxStream

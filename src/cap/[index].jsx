@@ -4,13 +4,14 @@ import cap from "./cap";
 /**
  * @param {import("../types").RouteProps} props
  */
-export default async function ({ request }) {
+export default async function ({ request, reply }) {
   let error = "";
   if (request.method === "POST") {
     const token = request.body?.["cap-token"];
     if (!token) {
       // E.g. submitted before the captcha was solved.
       error = "Please solve the captcha before submitting the form.";
+      reply.status(400);
     } else {
       const { success } = await cap.validateToken(token);
       if (success) {
@@ -28,6 +29,7 @@ export default async function ({ request }) {
           </Layout>
         );
       } else {
+        reply.status(400);
         return (
           <Layout title="Captcha check failed">
             <h1>Captcha check failed</h1>
