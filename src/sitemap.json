@@ -60,6 +60,7 @@
     "description": "Use the standards of the web platform: return a Response or a ReadableStream to stream HTML, push live updates or proxy APIs.",
     "links": [
       { "path": "/streaming", "title": "Streaming HTML" },
+      { "path": "/out-of-order", "title": "Out-of-order streaming" },
       { "path": "/async-iterable", "title": "Async iterables" },
       { "path": "/readable-stream", "title": "ReadableStreams" },
       { "path": "/response", "title": "Response objects" },

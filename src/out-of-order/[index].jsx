@@ -1,0 +1,108 @@
+import Layout from "../Layout";
+
+const SOURCES = [
+  { id: "weather", name: "Weather service" },
+  { id: "news", name: "News feed" },
+  { id: "stocks", name: "Stock exchange" },
+];
+
+/**
+ * @this {import("../types").ThisContext}
+ */
+export default function () {
+  const start = Date.now();
+
+  // Start all requests right away. Failures become a result of their own,
+  // so one broken source doesn't break the page.
+  const results = SOURCES.map((source) =>
+    query(source).then(
+      (value) => ({ ...source, value, time: Date.now() - start }),
+      () => ({ ...source, value: "Couldn't be loaded.", time: Date.now() - start }),
+    ),
+  );
+
+  return (
+    <Layout
+      title="Out-of-order streaming"
+      description="Stream slow parts of a page in the order they finish, while they still appear in their place."
+    >
+      <h1>Out-of-order streaming</h1>
+      <p>
+        Jeasx streams markup in order, so a slow component holds back everything after it (see{" "}
+        <a href="/streaming">Streaming HTML</a>). Here, the results show up in the order they finish
+        and still appear in their place on the page. <a href="">Reload</a> for new random delays.
+      </p>
+      <p>
+        This works without client-side JavaScript, thanks to{" "}
+        <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/template#shadowrootmode">
+          Declarative Shadow DOM
+        </a>
+        : the container is sent first, with a <code>&lt;slot&gt;</code> for each source and a
+        loading indicator inside it. An async generator then streams each result as soon as it's
+        ready, marked with <code>slot="…"</code>, and the browser moves it into the matching slot.
+      </p>
+      {/* µCSS styles a shadow host without data-theme as light, so repeat the theme of the page. */}
+      <div data-theme="dark">
+        <template shadowrootmode="open">
+          {/* Page styles don't reach into a shadow root, so it links them itself. */}
+          <link rel="stylesheet" href={`/index.css?v=${process.env.BUILD_ID}`} />
+          <div class="row">
+            {SOURCES.map(({ id, name }) => (
+              <div class="col-12 col-md-4">
+                <slot name={id}>
+                  <p aria-busy="true">Loading {name.toLowerCase()}...</p>
+                </slot>
+              </div>
+            ))}
+          </div>
+        </template>
+        <InOrderOfCompletion results={results} />
+      </div>
+      <Done start={start} />
+    </Layout>
+  );
+}
+
+/**
+ * Yields one card per result as soon as it is ready, no matter where it sits on the page.
+ *
+ * @param {{ results: Promise<{ id: string, name: string, value: string, time: number }>[] }} props
+ */
+async function* InOrderOfCompletion({ results }) {
+  const pending = new Map(results.map((result, index) => [index, result.then((r) => [index, r])]));
+  let position = 0;
+  while (pending.size > 0) {
+    const [index, { id, name, value, time }] = await Promise.race(pending.values());
+    pending.delete(index);
+    position++;
+    yield (
+      <article slot={id}>
+        <header>
+          <strong>{name}</strong>
+        </header>
+        <p>{value}</p>
+        <footer>
+          <small>
+            Arrived as #{position} after {time} ms
+          </small>
+        </footer>
+      </article>
+    );
+  }
+}
+
+/** Rendered after all results are streamed. */
+function Done({ start }) {
+  return (
+    <p class="center">
+      <strong>All done after {Date.now() - start} ms.</strong>
+    </p>
+  );
+}
+
+/** Simulates a slow backend call with a random delay. */
+async function query({ name }) {
+  const delay = 300 + Math.floor(Math.random() * 1700);
+  await new Promise((resolve) => setTimeout(resolve, delay));
+  return `Result from ${name.toLowerCase()} (took ${delay} ms)`;
+}
