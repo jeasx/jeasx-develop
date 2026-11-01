@@ -42,7 +42,7 @@ export default function Layout({
           <link
             rel="canonical"
             href={`https://expo.jeasx.dev${url.endsWith("/") ? url.slice(0, -1) : url}`}
-          ></link>
+          />
           <script type="module" src={addCacheBuster("/index.js")}></script>
           {script && <script type="module" src={addCacheBuster(script)}></script>}
           <title>{title ? `${title} » Jeasx - JSX with Ease` : "Jeasx - JSX with Ease"}</title>

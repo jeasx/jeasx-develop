@@ -8,8 +8,23 @@ const cached = cache({ ttl: 5 * 60_000 });
  */
 export default async function () {
   let upstream;
+  /** An error response of this request, which isn't cached. */
+  let failed;
   try {
-    upstream = await cached("repository", load);
+    upstream = await cached("repository", async () => {
+      const result = await load();
+      if (result.status !== 200) {
+        // Error responses (e.g. the rate limit) aren't kept, so the next request tries again.
+        failed = result;
+        return undefined;
+      }
+      return result;
+    });
+    // Requests which shared a failed call don't see its result, so they get the message below.
+    upstream ??= failed;
+    if (!upstream) {
+      throw new Error("GitHub answered with an error.");
+    }
   } catch {
     return new Response("GitHub couldn't be reached right now.", {
       status: 504,

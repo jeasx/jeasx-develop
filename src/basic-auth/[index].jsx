@@ -4,16 +4,16 @@ export default function () {
   return (
     <Layout
       title="Basic access authentication with Jeasx"
-      description="This example demonstrates how to set up basic authentication with Jeasx."
+      description="Protect a part of your site with HTTP basic authentication in Jeasx."
     >
       <h1>Basic access authentication</h1>
       <p>
-        This example demonstrates how to set up basic authentication with Jeasx. It also shows how
-        to exclude static files (such as CSS) from the authentication requirement.
+        This example protects a part of the site with HTTP basic authentication. It also shows how
+        to let static files (such as CSS) through, so even the error page is styled.
       </p>
       <p>
-        To view this example, click the link below and select 'Cancel' on the authentication dialog.
-        Then reload the page and sign in with username "demo" and password "demo".
+        Click the link below. Your browser asks for a username and password: enter "demo" and "demo"
+        to see the protected page, or press "Cancel" to see the error page instead.
       </p>
       <p>
         <a href="protected">Access protected area</a>

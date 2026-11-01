@@ -73,7 +73,10 @@ export default {
         limits: { files: 1, fields: 100, fieldSize: 64 * 1024 },
       })
       .register(import("@fastify/cookie"), {
-        secret: randomBytes(32).toString("hex"),
+        // Signed cookies are only valid as long as the secret stays the same, so set
+        // COOKIE_SECRET for every instance (e.g. on Vercel) and keep it across restarts.
+        // The random fallback invalidates all signed cookies on each start.
+        secret: process.env.COOKIE_SECRET || randomBytes(32).toString("hex"),
         parseOptions: {
           path: "/",
           httpOnly: true,

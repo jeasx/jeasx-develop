@@ -20,8 +20,8 @@ export default async function ({ request }) {
           <Layout title="Thank you">
             <h1>Thank you, {name}!</h1>
             <p>
-              Reload this page to send the form again: each captcha token can only be used once, so
-              the second check fails.
+              Try reloading this page: your browser sends the form again with the same captcha
+              token, which is rejected, as each token can only be used once.
             </p>
             <hr />
             <a href={request.path}>Start again</a>

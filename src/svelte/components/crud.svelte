@@ -51,7 +51,7 @@
 	}
 </script>
 
-<input placeholder="filter prefix" bind:value={prefix} />
+<input placeholder="Filter by last name..." bind:value={prefix} />
 
 <select bind:value={i} size={5}>
 	{#each filteredPeople as person, i}
@@ -59,15 +59,15 @@
 	{/each}
 </select>
 
-<label><input bind:value={first} placeholder="first" /></label>
-<label><input bind:value={last} placeholder="last" /></label>
+<label><input bind:value={first} placeholder="First name" /></label>
+<label><input bind:value={last} placeholder="Last name" /></label>
 
 <div class="buttons">
-	<button onclick={create} disabled={!first || !last}>create</button>
+	<button onclick={create} disabled={!first || !last}>Create</button>
 	<button onclick={update} disabled={!first || !last || !selected}
-		>update</button
+		>Update</button
 	>
-	<button onclick={remove} disabled={!selected}>delete</button>
+	<button onclick={remove} disabled={!selected}>Delete</button>
 </div>
 
 <style>

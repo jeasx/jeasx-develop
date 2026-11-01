@@ -1,5 +1,8 @@
 import data from "./jokes.json";
 
+/** Categories with at least one joke, e.g. "general". */
+export const CATEGORIES = new Set(data.map(({ type }) => type));
+
 /**
  * @param {string} category
  * @param {number} amount

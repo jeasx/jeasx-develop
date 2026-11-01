@@ -22,7 +22,6 @@ function generate(
   if (upper) pool += CHARS.upper;
   if (digits) pool += CHARS.digits;
   if (symbols) pool += CHARS.symbols;
-  if (!pool) pool = CHARS.lower;
 
   // Use a cryptographically secure source, Math.random() is predictable.
   const random = crypto.getRandomValues(new Uint32Array(length));
@@ -93,6 +92,20 @@ export const PasswordGenerator = component(() => {
     }, 1500);
   };
 
+  type CharSet = "lower" | "upper" | "digits" | "symbols";
+
+  // At least one character set stays selected, so the options always match the password.
+  const toggle = (key: CharSet) => (e: Event) => {
+    const input = e.target as HTMLInputElement;
+    const others = (["lower", "upper", "digits", "symbols"] as CharSet[]).filter((k) => k !== key);
+    if (state[key] && !others.some((k) => state[k])) {
+      input.checked = true;
+      return;
+    }
+    state[key] = !state[key];
+    regenerate();
+  };
+
   const handleLengthChange = (e: Event) => {
     state.length = Number((e.target as HTMLInputElement).value);
     regenerate();
@@ -137,50 +150,22 @@ export const PasswordGenerator = component(() => {
       </label>
       <div class="gen-toggles">
         <label class="gen-sw">
-          <input
-            type="checkbox"
-            checked="${() => state.lower}"
-            @change="${() => {
-              state.lower = !state.lower;
-              regenerate();
-            }}"
-          />
+          <input type="checkbox" checked="${() => state.lower}" @change="${toggle("lower")}" />
           <span class="gen-sw-track"></span>
           <span>Lowercase</span>
         </label>
         <label class="gen-sw">
-          <input
-            type="checkbox"
-            checked="${() => state.upper}"
-            @change="${() => {
-              state.upper = !state.upper;
-              regenerate();
-            }}"
-          />
+          <input type="checkbox" checked="${() => state.upper}" @change="${toggle("upper")}" />
           <span class="gen-sw-track"></span>
           <span>Uppercase</span>
         </label>
         <label class="gen-sw">
-          <input
-            type="checkbox"
-            checked="${() => state.digits}"
-            @change="${() => {
-              state.digits = !state.digits;
-              regenerate();
-            }}"
-          />
+          <input type="checkbox" checked="${() => state.digits}" @change="${toggle("digits")}" />
           <span class="gen-sw-track"></span>
           <span>Numbers</span>
         </label>
         <label class="gen-sw">
-          <input
-            type="checkbox"
-            checked="${() => state.symbols}"
-            @change="${() => {
-              state.symbols = !state.symbols;
-              regenerate();
-            }}"
-          />
+          <input type="checkbox" checked="${() => state.symbols}" @change="${toggle("symbols")}" />
           <span class="gen-sw-track"></span>
           <span>Symbols</span>
         </label>

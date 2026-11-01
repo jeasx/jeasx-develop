@@ -16,3 +16,5 @@ The server lives in `serverless.ts`, but Node runs the compiled `serverless.js` 
 ```bash
 npm run compile
 ```
+
+In production, set `COOKIE_SECRET` to a long random value (e.g. `openssl rand -hex 32`) and use the same value for all instances. Several examples store their state in signed cookies, which would otherwise become invalid with every restart or deploy.

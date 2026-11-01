@@ -28,7 +28,7 @@ export default function validator(path, form) {
   }
 
   if (form?.["zip"] && !/^\d{5}$/.test(form?.["zip"])) {
-    errors["zip"] = "Please enter a valid postal code.";
+    errors["zip"] = "Please enter a postal code with 5 digits.";
   }
 
   return errors;

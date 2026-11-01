@@ -53,7 +53,7 @@
 <div class="board">
     <input
         class="new-todo"
-        placeholder="what needs to be done?"
+        placeholder="What needs to be done? Press Enter to add it."
         onkeydown={(event) => event.key === "Enter" && add(event.target)}
     />
 
@@ -151,8 +151,16 @@
         line-height: 1;
     }
 
-    label:hover button {
+    label:hover button,
+    button:focus-visible {
         opacity: 1;
+    }
+
+    /* Touch screens can't hover, so always show the delete buttons there. */
+    @media (hover: none) {
+        button {
+            opacity: 1;
+        }
     }
 
     .clear {

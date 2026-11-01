@@ -5,7 +5,8 @@ import Layout from "../Layout";
  * @param {import("../types").RouteProps} props
  */
 export default function ({ request }) {
-  this.theme = request.query["theme"] || "light";
+  // Only known themes, so the page never shows a name it has no colors for.
+  this.theme = request.query["theme"] === "dark" ? "dark" : "light";
 
   return (
     <Layout

@@ -25,7 +25,7 @@ export default function () {
         <Stat id="time" label="Server time" />
         <Stat id="uptime" label="Uptime" />
         <Stat id="memory" label="Heap used" />
-        <Stat id="clients" label="Connected clients" />
+        <Stat id="clients" label="Clients on this server" />
       </div>
       <p class="center">
         <small id="status">Connecting…</small>
