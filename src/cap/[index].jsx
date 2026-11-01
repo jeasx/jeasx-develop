@@ -49,7 +49,7 @@ export default async function ({ request, reply }) {
     >
       <h1>Use a captcha with Jeasx</h1>
       <p>
-        <a href="https://capjs.js.org">Cap.js</a> is a lightweight, modern open-source CAPTCHA
+        <a href="https://capjs.js.org">Cap.js</a> is a lightweight, modern open-source captcha
         alternative using proof-of-work: instead of solving puzzles, your browser does a short
         calculation in the background. Enter your name, click the captcha and submit the form.
       </p>

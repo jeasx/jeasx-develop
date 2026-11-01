@@ -72,7 +72,7 @@ export default async function ({ request, reply, csrfToken, session }) {
         <section>
           <h2>Sign in</h2>
           <p>
-            Use <code>demo</code> / <code>demo-password</code> or{" "}
+            Use <code>demo</code> / <code>jsx-with-ease</code> or{" "}
             <a href={`${PATH}/register`}>create an account</a>.
           </p>
           {error && (

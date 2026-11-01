@@ -44,7 +44,7 @@ function hashPassword(password, salt) {
 // A demo account, so the login works without registering first.
 const demoUser = (store.ready ??= (async () => {
   const salt = randomBytes(16);
-  const hash = await hashPassword("demo-password", salt);
+  const hash = await hashPassword("jsx-with-ease", salt);
   users.set("demo", { email: "demo@example.com", salt, hash });
 })());
 
@@ -62,21 +62,27 @@ export async function userExists(username) {
  * @param {string} username
  * @param {string} email
  * @param {string} password
- * @returns {Promise<boolean>} false if the username is taken or the store is full
+ * @returns {Promise<"created" | "taken" | "full">}
  */
 export async function createUser(username, email, password) {
   await demoUser;
-  if (users.has(username) || users.size >= MAX_USERS) {
-    return false;
+  if (users.has(username)) {
+    return "taken";
+  }
+  if (users.size >= MAX_USERS) {
+    return "full";
   }
   const salt = randomBytes(16);
   const hash = await hashPassword(password, salt);
-  // Check again, as another request could have registered the name while hashing.
+  // Check again, as other requests could have registered while hashing.
   if (users.has(username)) {
-    return false;
+    return "taken";
+  }
+  if (users.size >= MAX_USERS) {
+    return "full";
   }
   users.set(username, { email, salt, hash });
-  return true;
+  return "created";
 }
 
 /**

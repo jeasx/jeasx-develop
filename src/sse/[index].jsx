@@ -28,7 +28,7 @@ export default function () {
         <Stat id="clients" label="Clients on this server" />
       </div>
       <p class="center">
-        <small id="status">Connecting…</small>
+        <small id="status">Connecting...</small>
       </p>
     </Layout>
   );

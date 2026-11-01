@@ -19,6 +19,11 @@ const MAX_VISITORS = 10000;
  */
 export function track(type, variant, visitor) {
   const set = stats[type][variant];
+  // Only visitors who saw the page count as conversions, otherwise the rate could exceed 100%
+  // (e.g. for direct posts to "/ab-testing/buy" or once the views reached MAX_VISITORS).
+  if (type === "conversions" && !stats.views[variant]?.has(visitor)) {
+    return;
+  }
   if (set && set.size < MAX_VISITORS) {
     set.add(visitor);
   }

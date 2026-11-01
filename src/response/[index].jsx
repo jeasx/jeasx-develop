@@ -3,10 +3,10 @@ import Layout from "../Layout";
 export default function () {
   return (
     <Layout
-      title="Return Web Standard Responses with Jeasx"
+      title="Return web-standard responses with Jeasx"
       description="Route handlers can return a standard Response object with status, headers and body."
     >
-      <h1>Return Web Standard Responses</h1>
+      <h1>Return web-standard responses</h1>
       <p>
         Besides JSX, strings, buffers and JSON, a route can return a standard{" "}
         <a href="https://developer.mozilla.org/en-US/docs/Web/API/Response">Response</a> object.

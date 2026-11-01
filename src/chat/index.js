@@ -52,7 +52,7 @@ function append({ id, name, text, time }) {
 
 const chatEvents = new EventSource(`/chat/events?after=${list.dataset.lastId}`);
 chatEvents.addEventListener("open", () => (byId("status").textContent = "Connected"));
-chatEvents.addEventListener("error", () => (byId("status").textContent = "Reconnecting…"));
+chatEvents.addEventListener("error", () => (byId("status").textContent = "Reconnecting..."));
 chatEvents.addEventListener("message", (event) => append(JSON.parse(event.data)));
 chatEvents.addEventListener("presence", (event) => {
   const { count } = JSON.parse(event.data);

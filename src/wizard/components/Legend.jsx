@@ -1,3 +1,3 @@
-export default function Legend({ children }) {
-  return <h3>{children}</h3>;
+export default function Legend({ id = undefined, children }) {
+  return <h3 id={id}>{children}</h3>;
 }

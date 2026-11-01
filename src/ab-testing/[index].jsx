@@ -29,7 +29,7 @@ export default function ({ request, visitor, variant, flags }) {
 
       {flags.banner && (
         <p role="status">
-          <mark>New: our grinders now come with a two year warranty!</mark>
+          <mark>New: our grinders now come with a two-year warranty!</mark>
         </p>
       )}
 

@@ -17,9 +17,11 @@ export default function ({ data, form, errors }) {
         <Input name="street" label="Street" value={form.street} />
         <Input name="zip" label="Postal code (5 digits)" value={form.zip} />
         <Input name="city" label="City" value={form.city} />
-        <Legend>Please briefly describe what happened.</Legend>
+        <Legend id="description-label">Please briefly describe what happened.</Legend>
+        {/* The heading is the label of the field, so screen readers announce it. */}
         <Textarea
           name="description"
+          aria-labelledby="description-label"
           value={form.description}
           placeholder="e.g. I backed into a parked car while leaving a parking space"
         />

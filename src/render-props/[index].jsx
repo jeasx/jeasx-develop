@@ -12,10 +12,10 @@ export default function () {
     >
       <h1>Render props with async components</h1>
       <p>
-        A component receives its <code>children</code> as written, like in React: a single child as
-        is, several children as an array and no <code>children</code> prop without children. So a
-        single function child works as a <em>render prop</em>: the component loads the data, the
-        caller decides how it looks.
+        A component receives its <code>children</code> as written, like in React: one child is
+        passed as it is, several children as an array, and without children there is no{" "}
+        <code>children</code> prop at all. So a single function child works as a{" "}
+        <em>render prop</em>: the component loads the data, and the caller decides how it looks.
       </p>
       <p>
         The same <code>&lt;Jokes&gt;</code> loader is used twice below with different markup.{" "}

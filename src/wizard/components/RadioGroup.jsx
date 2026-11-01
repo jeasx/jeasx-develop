@@ -6,10 +6,13 @@ export default function RadioGroup({
   required = false,
   submitOnChange = false,
 }) {
+  // aria-labelledby gives the group its label, so screen readers announce the question
+  // together with each option (like a <legend>, without changing the layout).
+  const labelId = `${name}-label`;
   return (
     <div>
-      {label}
-      <div role="group">
+      <span id={labelId}>{label}</span>
+      <div role="group" aria-labelledby={labelId}>
         {options.map((item) => (
           <label>
             <input

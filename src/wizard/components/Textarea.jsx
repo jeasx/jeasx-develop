@@ -6,6 +6,7 @@ export default function Textarea({
   required = false,
   placeholder = "",
   maxlength = 1000,
+  ...rest
 }) {
   return (
     <label>
@@ -16,6 +17,7 @@ export default function Textarea({
         placeholder={placeholder}
         required={required}
         maxlength={maxlength}
+        {...rest}
       >
         {value}
       </textarea>

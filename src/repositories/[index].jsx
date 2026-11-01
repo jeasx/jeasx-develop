@@ -15,10 +15,10 @@ export default async function ({ request }) {
 
   return (
     <Layout
-      title="Search GitHub Repositories"
+      title="Search GitHub repositories"
       description="Search GitHub repositories and stream the results as they arrive."
     >
-      <h1 class="center">Search GitHub Repositories</h1>
+      <h1 class="center">Search GitHub repositories</h1>
       <p>
         The page is rendered as a stream: the page shell and a loading indicator are sent to the
         browser right away, while the repositories are still fetched from the GitHub API. As soon as

@@ -5,7 +5,8 @@
 export const USERNAME = {
   minLength: 3,
   maxLength: 20,
-  pattern: "[a-z0-9_\\-]+",
+  // Uppercase letters are allowed, as the username is lowercased before it is checked.
+  pattern: "[a-zA-Z0-9_\\-]+",
 };
 export const PASSWORD = { minLength: 10, maxLength: 128 };
 export const EMAIL_MAX_LENGTH = 254;

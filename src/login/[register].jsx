@@ -38,12 +38,20 @@ export default async function ({ request, reply, csrfToken, session }) {
   if (request.method === "POST") {
     form = validateRegistration(request.body);
     if (Object.keys(form.errors).length === 0) {
-      if (await createUser(form.values.username, form.values.email, form.values.password)) {
+      const result = await createUser(
+        form.values.username,
+        form.values.email,
+        form.values.password,
+      );
+      if (result === "created") {
         endSession(reply, session?.id);
         startSession(reply, form.values.username);
         return reply.redirect(PATH, 303);
       }
-      form.errors.username = "This username is taken, please choose another one.";
+      form.errors.username =
+        result === "taken"
+          ? "This username is taken, please choose another one."
+          : "This demo has reached its maximum number of accounts. Please try again after the next restart.";
     }
     // 422 tells clients (and tests) that the form was understood but not accepted.
     reply.status(422);

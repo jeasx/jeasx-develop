@@ -69,7 +69,9 @@ export default function () {
  * @param {{ results: Promise<{ id: string, name: string, value: string, time: number }>[] }} props
  */
 async function* InOrderOfCompletion({ results }) {
-  const pending = new Map(results.map((result, index) => [index, result.then((r) => [index, r])]));
+  const pending = new Map(
+    results.map((result, index) => [index, result.then((r) => /** @type {const} */ ([index, r]))]),
+  );
   let position = 0;
   while (pending.size > 0) {
     const [index, { id, name, value, time }] = await Promise.race(pending.values());

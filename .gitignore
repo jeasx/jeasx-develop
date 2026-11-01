@@ -2,6 +2,9 @@
 dist
 dist-test
 
+# local environment files, which may hold secrets like COOKIE_SECRET (see env.js)
+.env*.local
+
 # dependencies
 node_modules
 

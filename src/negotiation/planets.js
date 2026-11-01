@@ -1,13 +1,7 @@
-export const PLANETS = [
-  { name: "Mercury", diameter: 4879, moons: 0 },
-  { name: "Venus", diameter: 12104, moons: 0 },
-  { name: "Earth", diameter: 12756, moons: 1 },
-  { name: "Mars", diameter: 6792, moons: 2 },
-  { name: "Jupiter", diameter: 142984, moons: 95 },
-  { name: "Saturn", diameter: 120536, moons: 146 },
-  { name: "Uranus", diameter: 51118, moons: 28 },
-  { name: "Neptune", diameter: 49528, moons: 16 },
-];
+import { PLANETS as ALL_PLANETS } from "../@helpers/planets";
+
+/** Only the fields this example shows in all formats. */
+export const PLANETS = ALL_PLANETS.map(({ name, diameter, moons }) => ({ name, diameter, moons }));
 
 /** The formats of the planets route, in the order the server prefers them. */
 export const OFFERS = ["text/html", "application/json", "text/csv", "text/plain"];

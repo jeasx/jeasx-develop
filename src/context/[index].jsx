@@ -10,7 +10,7 @@ export default function ({ request }) {
 
   return (
     <Layout
-      title="Use 'this' as context object for Jeasx"
+      title="Use 'this' as a context object in Jeasx"
       description="Avoid prop drilling by forwarding settings via the 'this' context."
     >
       <h1>Avoid prop drilling via 'this'</h1>

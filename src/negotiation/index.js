@@ -12,7 +12,7 @@ for (const button of document.querySelectorAll("[data-accept]")) {
 
 playground.addEventListener("submit", async (event) => {
   event.preventDefault();
-  statusLine.textContent = "Loading…";
+  statusLine.textContent = "Loading...";
   try {
     const response = await fetch(playground.action, { headers: { accept: input.value } });
     statusLine.textContent = `${response.status} ${response.statusText} · Content-Type: ${response.headers.get("content-type")}`;

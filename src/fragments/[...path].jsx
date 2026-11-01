@@ -30,7 +30,7 @@ export default function ({ request }) {
       )}
     >
       <Fragment>
-        <h1>Template Fragments</h1>
+        <h1>Template fragments</h1>
         <p>
           Creating routes that emit HTML fragments is straightforward in Jeasx, which makes it a
           perfect match for <a href="https://four.htmx.org">HTMX</a>. Sometimes, however, creating

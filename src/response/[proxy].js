@@ -3,33 +3,36 @@ import cache from "../@helpers/cache";
 // GitHub allows only 60 unauthenticated requests per hour, so keep the answer for a while.
 const cached = cache({ ttl: 5 * 60_000 });
 
+/** Thrown for an error response of GitHub, e.g. when the rate limit was hit. */
+class UpstreamError extends Error {}
+
 /**
  * Passes a remote response through to the client.
  */
 export default async function () {
   let upstream;
-  /** An error response of this request, which isn't cached. */
-  let failed;
   try {
     upstream = await cached("repository", async () => {
       const result = await load();
       if (result.status !== 200) {
-        // Error responses (e.g. the rate limit) aren't kept, so the next request tries again.
-        failed = result;
-        return undefined;
+        // Rejected calls aren't cached, so the next request tries again. All requests
+        // sharing this call get the same rejection and therefore the same answer below.
+        throw new UpstreamError(`GitHub answered with status ${result.status}.`);
       }
       return result;
     });
-    // Requests which shared a failed call don't see its result, so they get the message below.
-    upstream ??= failed;
-    if (!upstream) {
-      throw new Error("GitHub answered with an error.");
-    }
-  } catch {
-    return new Response("GitHub couldn't be reached right now.", {
-      status: 504,
-      headers: { "content-type": "text/plain; charset=utf-8" },
-    });
+  } catch (error) {
+    // GitHub answered with an error (502) or didn't answer in time (504).
+    const answered = error instanceof UpstreamError;
+    return new Response(
+      answered
+        ? "GitHub answered with an error right now."
+        : "GitHub couldn't be reached right now.",
+      {
+        status: answered ? 502 : 504,
+        headers: { "content-type": "text/plain; charset=utf-8" },
+      },
+    );
   }
   return new Response(upstream.body, {
     status: upstream.status,

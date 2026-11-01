@@ -1,17 +1,11 @@
-const PLANETS = [
-  ["Planet", "Diameter (km)", "Moons"],
-  ["Mercury", 4879, 0],
-  ["Venus", 12104, 0],
-  ["Earth", 12756, 1],
-  ["Mars", 6792, 2],
-  ["Jupiter", 142984, 95],
-  ["Saturn", 120536, 146],
-  ["Uranus", 51118, 28],
-  ["Neptune", 49528, 16],
-];
+import { PLANETS } from "../@helpers/planets";
 
 export default function () {
-  const csv = PLANETS.map((row) => row.join(",")).join("\n");
+  const rows = [
+    ["Planet", "Diameter (km)", "Moons"],
+    ...PLANETS.map(({ name, diameter, moons }) => [name, diameter, moons]),
+  ];
+  const csv = rows.map((row) => row.join(",")).join("\n");
   return new Response(csv, {
     headers: {
       "content-type": "text/csv; charset=utf-8",
