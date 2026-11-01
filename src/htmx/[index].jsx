@@ -27,10 +27,12 @@ export default function ({ request, reply }) {
         <View request={request} reply={reply} />
       )}
       <hr />
-      The current server time is:{" "}
-      <span hx-get="./time" hx-trigger="every 1s">
-        <Time />
-      </span>
+      <p>
+        The current server time is:{" "}
+        <span hx-get="./time" hx-trigger="every 1s">
+          <Time />
+        </span>
+      </p>
     </Layout>
   );
 }

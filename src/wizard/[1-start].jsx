@@ -12,7 +12,8 @@ export default function ({ form, errors }) {
         <Paragraph>
           <small>
             This demo shows a multi-step form rendered entirely on the server: the next step depends
-            on your answers, which are stored in a cookie in your browser. Nothing is sent anywhere.
+            on your answers, which are stored in a cookie in your browser. Nothing is stored on the
+            server or forwarded.
           </small>
         </Paragraph>
         <Paragraph>

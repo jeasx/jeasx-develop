@@ -15,8 +15,8 @@ export default function () {
         <Headline>Thank you</Headline>
         <Paragraph>You have completed all steps of the claim report.</Paragraph>
         <Paragraph>
-          This is a demo, so your answers weren't sent anywhere and have been deleted from your
-          browser.
+          This is a demo, so your answers weren't stored on the server or forwarded, and they have
+          been deleted from your browser.
         </Paragraph>
         <Submit label="Start new claim" />
       </Form>

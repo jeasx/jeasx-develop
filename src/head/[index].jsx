@@ -21,8 +21,11 @@ function Subcomponent() {
       <h2>This is a subcomponent</h2>
       <p>This component adds its own title, description and styles to the head of the page.</p>
       <head>
-        <title>Use Helmet in Jeasx</title>
-        <meta name="description" content="Move head tags to the head of a document." />
+        <title>Manage the head » Jeasx - JSX with Ease</title>
+        <meta
+          name="description"
+          content="Add titles, meta tags and styles to the head of the page from any component."
+        />
         <style>{
           /* css */ `.highlight { background-color: var(--mu-accent); text-align: center; padding: 1rem;}`
         }</style>

@@ -22,7 +22,7 @@ export default function ({ request }) {
       container={({ children }) => (
         <Layout
           title="Template fragments with HTMX and Jeasx"
-          description="Template fragments allow you to render a fragment or partial bit of the content within a template, rather than the entire template."
+          description="Render only a part of a page template as a fragment for HTMX, without a route for each part."
           script="/fragments/index.js"
         >
           {children}

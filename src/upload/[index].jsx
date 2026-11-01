@@ -3,8 +3,8 @@ import Layout from "../Layout";
 export default async function () {
   return (
     <Layout
-      title="How to upload and transform images in Jeasx with sharp"
-      description="Handling binary assets and image transformations with upload forms."
+      title="Upload and transform images with sharp"
+      description="Upload a JPEG image and convert, resize and rotate it with sharp."
     >
       <h1>Upload and transform images in Jeasx</h1>
       <p>

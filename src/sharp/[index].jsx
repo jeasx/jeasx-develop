@@ -5,7 +5,7 @@ export default function () {
   return (
     <Layout
       title="Image transformation with sharp in Jeasx"
-      description="Using sharp to transform images with Jeasx."
+      description="Crop, resize and convert images on the fly with sharp."
     >
       <h1>Image transformation with sharp</h1>
       <p>
