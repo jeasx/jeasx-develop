@@ -48,8 +48,8 @@ export default async function ({ request }) {
       <h1>Use a captcha with Jeasx</h1>
       <p>
         <a href="https://capjs.js.org">Cap.js</a> is a lightweight, modern open-source CAPTCHA
-        alternative using proof-of-work. This example demonstrates how to integrate Cap.js with
-        Jeasx to protect form submissions.
+        alternative using proof-of-work: instead of solving puzzles, your browser does a short
+        calculation in the background. Enter your name, click the captcha and submit the form.
       </p>
       {error && <p role="alert">{error}</p>}
       <form action="" method="post">

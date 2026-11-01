@@ -10,8 +10,8 @@ export default async function () {
       <h1>Use Alpine.js with Jeasx</h1>
       <p>
         <a href="https://alpinejs.dev">Alpine.js</a> is a minimal tool for composing behavior
-        directly in your markup. Jeasx lets you use Alpine.js by simply importing it as a browser
-        bundle.
+        directly in your markup. To use it with Jeasx, import it in a browser bundle (see{" "}
+        <code>index.js</code> of this example) and add <code>x-</code> attributes to your JSX.
       </p>
       <div
         x-data="{
@@ -28,6 +28,7 @@ export default async function () {
             type="button"
             x-on:click="counter--"
             x-bind:disabled="counter === 1"
+            aria-label="Fewer jokes"
           >
             -
           </button>
@@ -36,6 +37,7 @@ export default async function () {
             type="button"
             x-on:click="counter++"
             x-bind:disabled="counter === 5"
+            aria-label="More jokes"
           >
             +
           </button>

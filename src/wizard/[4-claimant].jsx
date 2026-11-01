@@ -27,16 +27,16 @@ export default function ({ form, errors, data }) {
         <Input name="birthday" label="Date of birth" value={form.birthday} type="date" />
         <Legend>Address</Legend>
         <Input name="street" label="Street" value={form.street} />
-        <Input name="zip" label="Postal code" value={form.zip} />
+        <Input name="zip" label="Postal code (5 digits)" value={form.zip} />
         <Input name="city" label="City" value={form.city} />
-        <Legend>Contact details for inquiries and notifications</Legend>
+        <Legend>How can we reach you?</Legend>
         <Input name="email" label="Email" value={form.email} type="email" />
         <Input name="phone" label="Phone" value={form.phone} type="tel" />
         <Legend>Other details</Legend>
         {data[SLUGS.CLAIM_REPORT]?.["claim_report"] === "Insured" && (
           <Input name="policy_number" label="Insurance policy number" value={form.policy_number} />
         )}
-        <Input name="license_plate" label="Official license plate" value={form.license_plate} />
+        <Input name="license_plate" label="License plate number" value={form.license_plate} />
         <Actions />
         <ErrorMessage message={errors} />
       </Form>

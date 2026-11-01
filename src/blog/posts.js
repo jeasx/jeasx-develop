@@ -19,7 +19,7 @@ const RESERVED_SLUGS = new Set(["post"]);
  * @returns {Post[]}
  */
 export function readPosts(request) {
-  // The cookie is signed, but could hold a signed value of another cookie (see "../cookies.js"),
+  // The cookie is signed, but could hold a signed value of another cookie (see "../@helpers/cookies.js"),
   // so turn all fields into strings and drop posts with invalid slugs.
   // Return a copy of the example data, so callers can add posts without changing it.
   return (

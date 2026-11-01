@@ -30,8 +30,6 @@ export default function ({ request, reply }) {
     body,
     // Only the runtime version (as in the footer): process.versions would also reveal
     // the exact versions of OpenSSL, V8 and other libraries, which helps attackers.
-    runtime: process.versions.bun
-      ? `Bun@${process.versions.bun}`
-      : `Node@${process.versions.node}`,
+    runtime: process.versions.bun ? `Bun@${process.versions.bun}` : `Node@${process.versions.node}`,
   };
 }

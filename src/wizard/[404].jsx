@@ -3,9 +3,11 @@ import Layout from "./Layout";
 export default function () {
   return (
     <Layout title="404 - Page not found">
-      <h1>Error 404</h1>
-      <p>The page does not exist.</p>
-      <a href="/wizard">Back to the wizard</a>
+      <section class="center">
+        <h2>Error 404</h2>
+        <p>This step of the claim form doesn't exist.</p>
+        <a href="/wizard">Back to the claim form</a>
+      </section>
     </Layout>
   );
 }

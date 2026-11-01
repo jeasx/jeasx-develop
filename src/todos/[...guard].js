@@ -58,7 +58,7 @@ export default function ({ request, reply }) {
 }
 
 /**
- * The cookie is signed, but could hold a signed value of another cookie (see "../cookies.js"),
+ * The cookie is signed, but could hold a signed value of another cookie (see "../@helpers/cookies.js"),
  * so turn the label into a string of limited length and only allow known states.
  *
  * @param {Record<string, unknown>} item

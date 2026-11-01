@@ -28,7 +28,7 @@ export default async function ({ request }) {
             placeholder="Enter some text"
           />
         </label>
-        <input type="submit" value="Submit" />
+        <input type="submit" value="Create image" />
       </form>
       {text && <img src={`/svg/logo.svg?text=${encodeURIComponent(text)}`} alt={text} />}
     </Layout>

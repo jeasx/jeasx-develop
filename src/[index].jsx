@@ -20,13 +20,14 @@ export default function () {
       </section>
       <section class="container center">
         <p>
-          You can find the complete repository on{" "}
-          <a href="https://github.com/jeasx/jeasx-expo">GitHub</a> to start experimenting with Jeasx
-          right on your computer.
+          The source code of all examples is on{" "}
+          <a href="https://github.com/jeasx/jeasx-expo">GitHub</a>: clone it to run them on your own
+          computer and start experimenting. Every example links to its source in the top right
+          corner.
         </p>
         <p>
-          The examples are styled with <a href="https://mucss.org/">µCSS</a> (a lightweight, mostly
-          classless CSS framework), so they are easier to read in source code.
+          The examples are styled with <a href="https://mucss.org/">µCSS</a>, a lightweight and
+          mostly classless CSS framework, so their markup stays short and easy to read.
         </p>
       </section>
       <section class="container center">

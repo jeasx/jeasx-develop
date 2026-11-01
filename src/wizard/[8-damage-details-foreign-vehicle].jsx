@@ -15,13 +15,13 @@ export default function ({ data, form, errors }) {
         </Legend>
         <Input
           name="license_plate"
-          label="Official license plate"
+          label="License plate number"
           value={form.license_plate}
-          placeholder="XYZ-XV 123"
+          placeholder="e.g. B-AB 1234"
         />
         <Textarea
           name="description"
-          label="Where was the vehicle damaged?"
+          label="Which parts of the vehicle were damaged?"
           value={form.description}
           placeholder="e.g. bumper or passenger door"
         />

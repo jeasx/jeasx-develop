@@ -26,7 +26,7 @@ export default function Header({ path, data }) {
 
   return (
     <header>
-      <h1>Your car insurance claim form</h1>
+      <h1>Report a car insurance claim</h1>
       <nav aria-label="breadcrumb">
         <ul>
           {groups.slice(0, currentStep + 1).map(({ label, links }) => (

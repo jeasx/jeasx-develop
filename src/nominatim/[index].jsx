@@ -12,12 +12,13 @@ export default function () {
         Implementing <a href="https://htmx.org/examples/active-search">Active Search</a> with HTMX
         and Jeasx is straightforward. This example uses{" "}
         <a href="https://nominatim.org/release-docs/latest/api/Search">Nominatim</a> from
-        OpenStreetMap to provide addresses for a search query.
+        OpenStreetMap to find addresses: the results update while you type, without reloading the
+        page.
       </p>
       <input
         type="search"
         name="search"
-        placeholder="Begin typing to search for locations..."
+        placeholder="Start typing an address or place, e.g. Brandenburg Gate..."
         hx-post="./locations"
         hx-trigger="input changed delay:500ms, keyup[key=='Enter']"
         hx-target="#results"

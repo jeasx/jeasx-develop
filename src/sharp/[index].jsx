@@ -22,6 +22,7 @@ export default function () {
               width={(idx + 2) * 200}
               height={idx * 200}
               position="entropy"
+              alt={`Sample image ${idx}, cropped to ${(idx + 2) * 200} × ${idx * 200} pixels`}
               loading="lazy"
             />
             <figcaption>Image {idx}</figcaption>

@@ -9,15 +9,15 @@ export default function ({ data, form, errors }) {
   return (
     <Layout title="Damage types" data={data}>
       <Form>
-        <Legend>Please select from the following options (multiple selections possible):</Legend>
+        <Legend>What happened? Select all that apply.</Legend>
         {[
-          "I had a traffic accident with another person who is known to me",
-          "I had a traffic accident with or caused by an animal",
-          "My vehicle has been damaged",
-          "The other person's vehicle is damaged",
+          "I had a traffic accident with another person, and I know who they are",
+          "I had a traffic accident involving an animal",
+          "My vehicle was damaged",
+          "Another person's vehicle was damaged",
           "I damaged an object or an animal",
-          "The person who damaged my car is unknown to me (could not be identified)",
-          "People were injured in the accident (including yourself)",
+          "Someone damaged my vehicle, but I don't know who",
+          "Someone was injured in the accident (including me)",
         ].map((damageType, index) => (
           <Input
             type="checkbox"

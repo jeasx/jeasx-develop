@@ -3,11 +3,12 @@ import Layout from "../Layout";
 export default function () {
   return (
     <Layout title="Default title" description="Default description">
-      <h1>A Helmet for the HTML-Head</h1>
+      <h1>Manage the head from any component</h1>
       <p>
-        In Jeasx you can build helmet-like functionality yourself: put a head tag into any
-        subcomponent, and its title, meta tags, styles and scripts are moved into the head of the
-        document. A small guard takes care of this. Have a look at the source to see how it works.
+        Like React Helmet, but built in userland: put a <code>&lt;head&gt;</code> tag into any
+        component, and its title, meta tags, styles and scripts are moved into the head of the
+        document. Duplicate titles and descriptions are replaced by the last one. A small guard
+        takes care of this; have a look at the source to see how it works.
       </p>
       <Subcomponent />
     </Layout>

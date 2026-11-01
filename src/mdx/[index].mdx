@@ -43,11 +43,14 @@ The current URL is **{props.request.url}**. In MDX all props can be accessed via
 
 ---
 
-<Hello name={props.request.query["name"] || "Jeasx"} />
+{/* A repeated parameter (e.g. "?name=a&name=b") arrives as array, so always pass a string. */}
+<Hello name={String(props.request.query["name"] || "Jeasx").slice(0, 100)} />
 
 ---
 
 ### Dynamic content in MDX
+
+These recipes are loaded from an API while the page is rendered:
 
 <ul>
   {(await loadRecipes()).map(({ name }) => (

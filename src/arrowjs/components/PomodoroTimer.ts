@@ -14,6 +14,10 @@ export const PomodoroTimer = component(() => {
   });
 
   let timer = 0;
+  // Time when the current period ends. Browsers slow down timers in background tabs
+  // (down to once per minute), so the remaining time is computed from the clock
+  // instead of counting ticks.
+  let endsAt = 0;
 
   const total = () => (state.mode === "work" ? WORK_SECONDS : BREAK_SECONDS);
   const progress = () => 1 - state.remaining / total();
@@ -22,6 +26,7 @@ export const PomodoroTimer = component(() => {
 
   const tick = () => {
     if (!state.running) return;
+    state.remaining = Math.max(0, Math.ceil((endsAt - Date.now()) / 1000));
     if (state.remaining <= 0) {
       state.running = false;
       if (state.mode === "work") {
@@ -34,15 +39,14 @@ export const PomodoroTimer = component(() => {
       }
       return;
     }
-    state.remaining--;
-    timer = window.setTimeout(tick, 1000);
+    timer = window.setTimeout(tick, 250);
   };
 
   const start = () => {
     if (state.running) return;
     state.running = true;
-    // The first second has to pass before the time goes down.
-    timer = window.setTimeout(tick, 1000);
+    endsAt = Date.now() + state.remaining * 1000;
+    timer = window.setTimeout(tick, 250);
   };
 
   const pause = () => {

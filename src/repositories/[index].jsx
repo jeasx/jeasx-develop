@@ -26,7 +26,13 @@ export default async function ({ request }) {
         single CSS rule. No client-side JavaScript is involved.
       </p>
       <form method="get">
-        <input type="search" name="search" placeholder="Search..." maxlength={100} value={search} />
+        <input
+          type="search"
+          name="search"
+          placeholder="Search repositories by name..."
+          maxlength={100}
+          value={search}
+        />
       </form>
       <div class="loader">
         {/* Flushed immediately; hidden via CSS as soon as the results are streamed in after it. */}

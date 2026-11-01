@@ -14,17 +14,18 @@ export default function ({ request }) {
     >
       <h1>Blog example</h1>
       <p>
-        This example shows how to create a blog using Jeasx. Please note that the blog content is
-        stored in a browser cookie. While this approach eliminates the need for a database, it is
-        not suitable for a real-world blog.
+        A small blog built with Jeasx: an overview page, a page per post and a protected form to
+        write new posts. To keep the example free of a database, new posts are stored in a cookie in
+        your browser, so only you can see them. A real blog would load its posts from a database or
+        a CMS instead.
       </p>
       <section class="center">
         <article class="card-primary">
           <a href="/blog/post" rel="nofollow">
-            Submit new post
+            Write a new post
           </a>
           <br />
-          Login: demo / demo
+          Username and password: demo
         </article>
       </section>
       {posts.map(({ slug, date, author, title }) => (

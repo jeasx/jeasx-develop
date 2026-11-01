@@ -9,6 +9,11 @@ export default function ({ todos, status, autofocus }) {
       css="/todos/index.css"
     >
       <h1>Todos</h1>
+      <p>
+        A classic todo app without client-side JavaScript: adding, completing and deleting a todo
+        submits a plain HTML form, and the server renders the updated list. Your todos are stored in
+        a cookie in your browser.
+      </p>
       <form method="post">
         <input name="newTodo" placeholder="What needs to be done?" autofocus={autofocus} />
       </form>
@@ -27,7 +32,7 @@ export default function ({ todos, status, autofocus }) {
                 </button>
                 <label>{todo.label}</label>
                 <button class="destroy" name="removeTodo" value={todos.indexOf(todo)}>
-                  <img src={TrashIcon} alt="Delete" />
+                  <img src={TrashIcon} alt={`Delete "${todo.label}"`} />
                 </button>
               </li>
             ))}

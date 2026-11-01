@@ -9,7 +9,7 @@ export default function ({ request, reply }) {
   const body = request.body || {};
   const category = body["category"];
   // Keep the counter between 1 and 5, even for tampered form data
-  // or a signed value of another cookie (see "../cookies.js").
+  // or a signed value of another cookie (see "../@helpers/cookies.js").
   const counter = Math.min(
     Math.max(Math.trunc(Number(body["counter"] || readSignedCookie(request, "counter"))) || 3, 1),
     5,
@@ -24,8 +24,9 @@ export default function ({ request, reply }) {
     >
       <h1>Building a simple form</h1>
       <p>
-        Jeasx allows you to build and evaluate server-rendered forms easily, so you don't have to
-        rely on JavaScript in the frontend to make form submission work.
+        Every button below submits a plain HTML form. The server reads the form, picks the jokes and
+        renders the page, so it works without any JavaScript in the browser. The number of jokes is
+        remembered in a cookie.
       </p>
       <form method="post">
         <fieldset class="grid">
@@ -34,6 +35,7 @@ export default function ({ request, reply }) {
             name="counter"
             value={counter - 1}
             disabled={counter === 1}
+            aria-label="Fewer jokes"
           >
             -
           </button>
@@ -42,6 +44,7 @@ export default function ({ request, reply }) {
             name="counter"
             value={counter + 1}
             disabled={counter === 5}
+            aria-label="More jokes"
           >
             +
           </button>

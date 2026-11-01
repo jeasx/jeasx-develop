@@ -8,9 +8,9 @@ export default async function () {
     >
       <h1>Upload and transform images in Jeasx</h1>
       <p>
-        This example demonstrates how to handle binary uploads and image transformations in Jeasx.
-        Jeasx doesn't ship an image processor, so the transformation is implemented in userland with
-        the <a href="https://sharp.pixelplumbing.com">sharp</a> image processor.
+        Choose a JPEG image and the server converts, resizes and rotates it, then sends the result
+        back to your browser. Jeasx doesn't ship an image processor, so the conversion is done in
+        userland with <a href="https://sharp.pixelplumbing.com">sharp</a>. Your image isn't stored.
       </p>
       <form action="./image" method="post" enctype="multipart/form-data">
         <label>
@@ -21,7 +21,7 @@ export default async function () {
           </select>
         </label>
         <label>
-          Resize to
+          Resize to (pixels)
           <select name="size">
             <option>160</option>
             <option>320</option>
@@ -29,7 +29,7 @@ export default async function () {
           </select>
         </label>
         <label>
-          Rotate
+          Rotate by (degrees)
           <select name="rotate">
             <option>0</option>
             <option>30</option>
@@ -45,7 +45,7 @@ export default async function () {
           <input type="file" name="upload" accept=".jpg,.jpeg,image/jpeg" required />
         </label>
         <button class="btn btn-primary" type="submit">
-          Submit
+          Convert image
         </button>
       </form>
     </Layout>

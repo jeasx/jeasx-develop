@@ -44,11 +44,7 @@ export default async function ({ request }) {
       </ul>
       {error === "caught" && (
         <ErrorBoundary
-          fallback={
-            <p class="alert alert-error">
-              This section could not be loaded.
-            </p>
-          }
+          fallback={<p class="alert alert-error">This section could not be loaded.</p>}
         >
           <ComponentWithError />
         </ErrorBoundary>

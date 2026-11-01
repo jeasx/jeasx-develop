@@ -35,6 +35,8 @@ export async function* Releases({ from, to }) {
 
   if (to < PAGES) {
     const next = to + 1;
+    // An absolute URL: relative to the <base> of the page, "?page=2" would become "/infinite-scroll/?page=2".
+    const url = `/infinite-scroll?page=${next}`;
     yield (
       // HTMX replaces this row with the rows of the next page and a new row like this one.
       // Without JavaScript, the link reloads the page with one more page of releases.
@@ -42,10 +44,10 @@ export async function* Releases({ from, to }) {
         hx-get={`./rows?page=${next}`}
         hx-trigger="revealed"
         hx-swap="outerHTML"
-        hx-push-url={`?page=${next}`}
+        hx-push-url={url}
       >
         <td colspan="4" class="center">
-          <a href={`?page=${next}`} aria-busy="true">
+          <a href={url} aria-busy="true">
             Load more releases
           </a>
         </td>

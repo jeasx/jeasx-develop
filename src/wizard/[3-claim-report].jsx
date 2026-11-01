@@ -9,20 +9,20 @@ export default function ({ data, form, errors }) {
   return (
     <Layout title="Claim report" data={data}>
       <Form>
-        <Legend>I am reporting the claim as:</Legend>
+        <Legend>Who are you in this claim?</Legend>
         <Input
           name="claim_report"
           value="Insured"
           type="radio"
           checked={form.claim_report === "Insured"}
-          label="I am the insured and have caused damage to someone else"
+          label="I am insured and caused damage to someone else"
         />
         <Input
           name="claim_report"
           value="InvolvedParty"
           type="radio"
           checked={form.claim_report === "InvolvedParty"}
-          label="I am an involved party and was damaged by an insured person"
+          label="Someone who is insured caused damage to me"
         />
         <Actions />
         <ErrorMessage message={errors} />

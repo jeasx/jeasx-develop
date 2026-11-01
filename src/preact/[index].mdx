@@ -8,13 +8,13 @@ import Preact from "./assets/Preact";
 
 <details>
 <summary>How to integrate Preact with Jeasx?</summary>
-First you have to install the required dependencies for Preact via npm:
+Install Preact, its signals and the server renderer:
 
 ```bash
 npm install @preact/signals preact preact-render-to-string
 ```
 
-As Preact requires a dedicated JSX runtime, you have to configure it via a `tsconfig.json` for the directories where you want to compile Preact to JavaScript:
+Preact brings its own JSX runtime, so add a `tsconfig.json` to the folder that holds your Preact components:
 
 ```json
 {
@@ -26,14 +26,14 @@ As Preact requires a dedicated JSX runtime, you have to configure it via a `tsco
 }
 ```
 
-Please visit the [source code on GitHub](https://github.com/jeasx/jeasx-expo) to see how to set up Preact in detail.
+Have a look at the [source code of this page](https://github.com/jeasx/jeasx-expo/tree/main/src/preact) to see how the components are rendered on the server and mounted in the browser.
 
 </details>
 
 <article>
 ## Jokes
 
-The widget below updates itself via component state.
+This widget keeps its counter in component state and loads the jokes from the jokes API.
 
 <Preact component="Jokes" api="/jokes/api" initial={3} />
 </article>

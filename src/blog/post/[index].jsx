@@ -85,7 +85,7 @@ export default function ({ request, reply }) {
           </textarea>
         </label>
         <button class="btn btn-primary" type="submit">
-          Submit Post
+          Publish post
         </button>
       </form>
     </Layout>

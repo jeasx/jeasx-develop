@@ -11,7 +11,9 @@ export default async function () {
       <h1>Use hx-live with Jeasx</h1>
       <p>
         <a href="https://four.htmx.org/extensions/hx-live">hx-live</a> is an HTMX extension to ease
-        reactive scripting for the web. It is inspired by Alpine, jQuery and hyperscript.
+        reactive scripting for the web. It is inspired by Alpine, jQuery and hyperscript. The jokes
+        widget below works like the one in the <a href="/alpine">Alpine example</a>, written with
+        hx-live attributes instead.
       </p>
       <div data-counter="3" data-jokes="[]">
         <script>
@@ -24,6 +26,7 @@ export default async function () {
             type="button"
             hx-on:click="data.counter--"
             hx-live:disabled="data.counter === 1"
+            aria-label="Fewer jokes"
           >
             -
           </button>
@@ -32,6 +35,7 @@ export default async function () {
             type="button"
             hx-on:click="data.counter++"
             hx-live:disabled="data.counter === 5"
+            aria-label="More jokes"
           >
             +
           </button>

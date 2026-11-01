@@ -17,7 +17,8 @@ export default function ({ request, reply }) {
       <h1>HTMX and Jeasx - a perfect match</h1>
       <p>
         Jeasx is a perfect match for <a href="https://four.htmx.org">HTMX</a>, as every route can
-        return an HTML fragment. Click "Submit" and "Edit" to swap the form in place. Without
+        return an HTML fragment. Click "Submit" to see your entries and "Edit" to change them again:
+        HTMX swaps only the form, while the server time below updates itself every second. Without
         JavaScript, the same forms reload the whole page.
       </p>
       {body["action"] === "edit" ? (

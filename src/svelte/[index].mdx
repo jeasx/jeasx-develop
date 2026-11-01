@@ -9,13 +9,13 @@ import Svelte from "./Svelte";
 
 <details>
 <summary>How to integrate Svelte with Jeasx?</summary>
-To integrate Svelte into Jeasx, you must install two additional packages:
+Install Svelte and its esbuild plugin:
 
 ```bash
 npm install svelte esbuild-svelte
 ```
 
-Now you have to register Svelte as esbuild plugin by adding the following configuration to `jeasx.config.js`:
+Then register the plugin for the server and the browser build in `jeasx.config.js`:
 
 ```js
 export default {

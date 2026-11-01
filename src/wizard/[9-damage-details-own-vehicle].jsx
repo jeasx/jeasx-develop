@@ -15,12 +15,12 @@ export default function ({ data, form, errors }) {
         </Legend>
         <Textarea
           name="description"
-          label="Where was the vehicle damaged?"
+          label="Which parts of your vehicle were damaged?"
           value={form.description}
           placeholder="e.g. bumper or passenger door"
         />
         <RadioGroup
-          label="Have you rented, leased or hired the vehicle?"
+          label="Is the vehicle rented or leased?"
           options={["Yes", "No"]}
           name="was_rented_hired_or_leased"
           value={form.was_rented_hired_or_leased}

@@ -15,7 +15,7 @@ export default function ({ data, form, errors }) {
           You have indicated that a person was injured. Do you have any additional details?
         </Legend>
         <RadioGroup
-          label="Is the injured person the same as the person you already entered?"
+          label="Is the injured person someone you already entered?"
           options={["Yes", "No"]}
           name="same_person"
           value={form.same_person}
@@ -30,7 +30,7 @@ export default function ({ data, form, errors }) {
         <Input name="lastname" label="Last name" value={form.lastname} />
         <Textarea
           name="description"
-          label="Can you provide further details about the person's injuries?"
+          label="What injuries does the person have?"
           value={form.description}
           placeholder="e.g. broken arm, broken leg"
         />

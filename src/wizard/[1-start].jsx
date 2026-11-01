@@ -10,14 +10,21 @@ export default function ({ form, errors }) {
     <Layout title="Start">
       <Form>
         <Paragraph>
-          We will ask you a few questions, so we can assign and process your claim.
+          <small>
+            This demo shows a multi-step form rendered entirely on the server: the next step depends
+            on your answers, which are stored in a cookie in your browser. Nothing is sent anywhere.
+          </small>
         </Paragraph>
         <Paragraph>
-          You can save your claim at any time and retrieve it in this browser within 10 days using
-          the token. Saving again replaces the previously saved claim.
+          Answer a few questions about the damage, so we can process your claim. Steps that don't
+          apply to you are skipped.
+        </Paragraph>
+        <Paragraph>
+          You can save your claim at any time and get a token to continue it in this browser within
+          10 days. Saving again replaces your previously saved claim.
         </Paragraph>
         <Input
-          label="If you want to continue a claim you already started:"
+          label="Continue a saved claim (optional): enter your token"
           name="$hash"
           placeholder="ID-1A2B3C4D"
           value={form["$hash"]}

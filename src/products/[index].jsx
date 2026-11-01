@@ -34,6 +34,12 @@ export default async function ({ reply }) {
       robots="index,nofollow"
     >
       <h1>Product overview</h1>
+      <p>
+        The products are loaded on the server from the <a href="https://dummyjson.com">DummyJSON</a>{" "}
+        API and cached for a few minutes. Their images are cropped and converted on the fly by the
+        image component of the <a href="/sharp">sharp example</a>. Click a product to see its
+        details.
+      </p>
       <div class="row center">
         {products.map(({ id, title, price, description, thumbnail }) => (
           <article class="col-12 col-md-6 col-lg-4">

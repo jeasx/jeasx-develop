@@ -5,7 +5,7 @@ import navigate from "./domain/navigate";
 import validator from "./domain/validator";
 import { compress, decompress } from "./utils/zip";
 
-// Cookies are only sent to the wizard, see "../cookies.js".
+// Cookies are only sent to the wizard, see "../@helpers/cookies.js".
 // Clearing a cookie needs the same path as setting it.
 const COOKIE_OPTIONS = { path: "/wizard" };
 
@@ -148,7 +148,7 @@ function loadSaved(request, token) {
 
 /**
  * Returns the value if it can hold answers, otherwise undefined.
- * The cookies are signed, but could hold a signed value of another cookie (see "../cookies.js").
+ * The cookies are signed, but could hold a signed value of another cookie (see "../@helpers/cookies.js").
  * Arrays are rejected too: answers stored on them by path would be lost in JSON.stringify().
  *
  * @param {unknown} value
@@ -192,12 +192,25 @@ function save(request, reply, data) {
   return token;
 }
 
+/**
+ * Keeps the answers of a form: fields starting with "$" are controls (e.g. "$action").
+ * Only text and lists of text are kept, so a posted file (a Buffer) or JSON object
+ * doesn't end up in the cookie.
+ *
+ * @param {Record<string, unknown>} body
+ */
 function convertBodyToData(body) {
-  const map = new Map();
-  Object.keys(body)
-    .filter((key) => !key.startsWith("$"))
-    .forEach((key) => {
-      map.set(key, body[key]);
-    });
-  return Object.fromEntries(map.entries());
+  /** @type {Record<string, string | string[]>} */
+  const data = {};
+  for (const [key, value] of Object.entries(body)) {
+    if (key.startsWith("$")) {
+      continue;
+    }
+    if (typeof value === "string") {
+      data[key] = value;
+    } else if (Array.isArray(value) && value.every((item) => typeof item === "string")) {
+      data[key] = value;
+    }
+  }
+  return data;
 }

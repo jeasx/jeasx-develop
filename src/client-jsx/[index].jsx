@@ -11,7 +11,8 @@ export default function () {
       <p>
         You can also use JSX components built with{" "}
         <a href="https://github.com/jeasx/jsx-async-runtime">jsx-async-runtime</a> in the browser
-        for lightweight rendering of client-side markup.
+        for lightweight rendering of client-side markup. Choose how many jokes you want and how they
+        should be shown: the components fetch the jokes and render them right in your browser.
       </p>
       <form
         onsubmit={
@@ -28,16 +29,25 @@ export default function () {
             );`
         }
       >
-        <input name="amount" type="number" min="1" max="5" value="3" />
-        <select name="category">
-          <option>general</option>
-          <option>knock-knock</option>
-          <option>programming</option>
-        </select>
-        <select name="component">
-          <option value="JokesHTML">HTML</option>
-          <option value="JokesJSON">JSON</option>
-        </select>
+        <label>
+          Number of jokes
+          <input name="amount" type="number" min="1" max="5" value="3" />
+        </label>
+        <label>
+          Category
+          <select name="category">
+            <option>general</option>
+            <option>knock-knock</option>
+            <option>programming</option>
+          </select>
+        </label>
+        <label>
+          Show as
+          <select name="component">
+            <option value="JokesHTML">List (HTML)</option>
+            <option value="JokesJSON">Raw data (JSON)</option>
+          </select>
+        </label>
         <button class="btn btn-primary" type="submit">
           Tell me jokes
         </button>

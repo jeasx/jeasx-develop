@@ -16,6 +16,7 @@ export default function Jokes({ initial, api }) {
           class="btn btn-secondary"
           onClick={() => setCounter(counter - 1)}
           disabled={counter === 1}
+          aria-label="Fewer jokes"
         >
           -
         </button>
@@ -23,6 +24,7 @@ export default function Jokes({ initial, api }) {
           class="btn btn-secondary"
           onClick={() => setCounter(counter + 1)}
           disabled={counter === 5}
+          aria-label="More jokes"
         >
           +
         </button>

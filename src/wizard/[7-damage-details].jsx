@@ -10,10 +10,10 @@ export default function ({ data, form, errors }) {
   return (
     <Layout title="Damage details" data={data}>
       <Form>
-        <Legend>When did the damage occur or when did you become aware of the damage?</Legend>
+        <Legend>When did the damage happen (or when did you notice it)?</Legend>
         <Input name="date" type="date" label="Date" value={form.date} />
         <Input name="time" type="time" label="Time" value={form.time} />
-        <Legend>At which address did the damage occur?</Legend>
+        <Legend>Where did it happen?</Legend>
         <Input name="street" label="Street" value={form.street} />
         <Input name="zip" label="Postal code (5 digits)" value={form.zip} />
         <Input name="city" label="City" value={form.city} />

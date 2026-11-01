@@ -15,10 +15,11 @@ export default function ({ request }) {
     >
       <h1>Avoid prop drilling via 'this'</h1>
       <p>
-        In Jeasx you can use 'this' to provide data to subcomponents without prop drilling. You
-        should use this with care to avoid concealed coupling of your components, but it is a handy
-        feature for forwarding global settings like themes. Have a look at the source to see how it
-        works.
+        In Jeasx, every component can read and write <code>this</code>, a context object shared by
+        all components of a request. It lets you pass data to deeply nested components without
+        handing it down as props through every level. Use it with care, as it hides dependencies
+        between components, but it is handy for global settings like a theme. Switch the theme
+        below: the nested component reads it from <code>this</code>.
       </p>
       <hr />
       <Subcomponent />
