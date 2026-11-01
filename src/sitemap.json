@@ -16,7 +16,8 @@
       { "path": "/lottery", "title": "Lottery" },
       { "path": "/todos", "title": "Todos" },
       { "path": "/jokes", "title": "Jokes" },
-      { "path": "/wizard", "title": "Wizard" }
+      { "path": "/wizard", "title": "Wizard" },
+      { "path": "/ab-testing", "title": "A/B testing" }
     ]
   },
   {
