@@ -2,42 +2,63 @@ import Layout from "../Layout";
 
 const SOURCES = [
   { name: "Stock exchange", delay: 500 },
-  { name: "News feed", delay: 1500 },
-  { name: "Weather service", delay: 2500 },
-  { name: "Recommendation engine", delay: 3500 },
+  { name: "News feed", delay: 1000 },
+  { name: "Weather service", delay: 1500 },
 ];
 
 /**
- * @this {import("../types").ThisContext}
+ * @this {import("../types").ThisContext & { jsxStream?: boolean }}
+ * @param {import("../types").RouteProps} props
  */
-export default async function () {
+export default async function ({ request }) {
+  this.jsxStream = (request.query || {})["stream"] !== "false";
+
   const start = Date.now();
 
-  // Fire all requests at once; the markup simply awaits the pending promises.
-  // Each result sits inside a loader that shows a spinner until the result is streamed in.
-  const results = SOURCES.map((source) => (
-    <div class="loader">
-      <p aria-busy="true">Loading {source.name.toLowerCase()}...</p>
-      {query(source).then((result) => (
-        <Result {...result} start={start} />
-      ))}
-    </div>
-  ));
-
   return (
-    <Layout title="Stream HTML with Jeasx" description="Send HTML progressively to the browser.">
-      <h1>Stream HTML to the browser</h1>
+    <Layout
+      title="Streaming vs. string rendering"
+      description="Compare streamed JSX with JSX rendered to a string."
+    >
+      <h1>Streaming vs. string rendering</h1>
       <p>
-        By default, Jeasx sends rendered markup in chunks: whenever rendering waits for an async
-        component, everything rendered so far is flushed to the browser. The page shell appears
-        immediately, and slow parts are filled in as they arrive. No client-side JavaScript
-        required.
+        Jeasx streams JSX by default: the page shell is flushed immediately and slow parts follow as
+        soon as they are ready. In v2, the complete markup was rendered to a string first and sent
+        in one go.
       </p>
       <p>
-        This page queries four slow data sources in parallel. Each result is flushed as soon as it
-        and every result before it is ready. <a href="">Reload</a> to watch it again.
+        Open the network tab of your browser's developer tools and reload the page in both modes.
+        When streaming, the first byte arrives almost instantly, while the download keeps going
+        until the last result is sent. When rendering to a string, the time to first byte equals the
+        time of the slowest result, and the complete document arrives in one go.
       </p>
-      {results}
+      <p>
+        The guard of this example shows how to restore the former string rendering in userland: it
+        wraps <code>this.jsxToString</code> and calls <code>jsxToString</code> from{" "}
+        <code>jsx-async-runtime</code> when a route sets <code>this.jsxStream = false</code>.
+      </p>
+      <p role="group">
+        <a href="?stream=true" role="button" class={this.jsxStream ? "" : "outline"}>
+          Streaming
+        </a>
+        <a href="?stream=false" role="button" class={this.jsxStream ? "outline" : ""}>
+          String
+        </a>
+      </p>
+      <p>
+        Current mode: <strong>{this.jsxStream ? "streaming" : "string"}</strong>.{" "}
+        {this.jsxStream
+          ? "Watch the results appear one after another."
+          : "The browser shows nothing until every result is ready."}
+      </p>
+      {SOURCES.map((source) => (
+        <div class="loader">
+          <p aria-busy="true">Loading {source.name.toLowerCase()}...</p>
+          {query(source).then((result) => (
+            <Result {...result} start={start} />
+          ))}
+        </div>
+      ))}
       <Done start={start} />
     </Layout>
   );
@@ -51,7 +72,7 @@ function Result({ name, value, start }) {
       </header>
       <p>{value}</p>
       <footer>
-        <small>flushed after {Date.now() - start} ms</small>
+        <small>rendered after {Date.now() - start} ms</small>
       </footer>
     </article>
   );
