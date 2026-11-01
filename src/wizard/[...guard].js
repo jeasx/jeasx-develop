@@ -9,7 +9,7 @@ import { compress, decompress } from "./utils/zip";
 // Clearing a cookie needs the same path as setting it.
 const COOKIE_OPTIONS = { path: "/wizard" };
 
-// Only steps store answers, so posts to other paths (e.g. "/wizard/foo") don't fill the cookie.
+// Only pages of the wizard store answers, so posts to other paths (e.g. "/wizard/foo") don't fill the cookie.
 const STEPS = new Set(Object.values(SLUGS));
 
 /**

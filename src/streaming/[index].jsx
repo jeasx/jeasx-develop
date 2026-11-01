@@ -11,7 +11,7 @@ const SOURCES = [
  * @param {import("../types").RouteProps} props
  */
 export default async function ({ request }) {
-  this.jsxStream = (request.query || {})["stream"] !== "false";
+  this.jsxStream = request.query["stream"] !== "false";
 
   const start = Date.now();
 

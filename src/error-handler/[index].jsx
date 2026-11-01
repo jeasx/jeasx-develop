@@ -15,8 +15,8 @@ export default async function ({ request }) {
 
   return (
     <Layout
-      title="User-friendly error messages"
-      description="Catch errors at runtime and answer with a user-friendly error page."
+      title="Catch errors at runtime"
+      description="Catch errors at runtime and render fallback content instead of a broken page."
     >
       <h1>Catch errors at runtime</h1>
       <p>

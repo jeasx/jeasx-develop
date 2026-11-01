@@ -16,12 +16,11 @@ export default async function () {
       <div
         x-data="{
               jokes:[],
-              counter: Math.min(Math.max(Math.trunc(+sessionStorage.getItem('counter')) || 3, 1), 5),
+              counter: 3,
               async load(category) {
                 this.jokes = await (await fetch(`/jokes/api/${category}?amount=${this.counter}`)).json()
               },
             }"
-        x-effect="sessionStorage.setItem('counter', counter)"
       >
         <div class="grid">
           <button

@@ -10,7 +10,7 @@ export default function () {
       script="/react/assets/index.js"
     >
       <section class="center">
-        <h1>Enhance your application with React</h1>
+        <h1>Use React with Jeasx</h1>
         <p>
           Jeasx lets you add React in userland: components are rendered on the server and hydrated
           in the browser. This gives you islands of interactivity without rendering the whole

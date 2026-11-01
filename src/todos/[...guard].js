@@ -12,7 +12,6 @@ const DEFAULT_TODOS = [
  * @param {import("../types").RouteProps} props
  */
 export default function ({ request, reply }) {
-  const query = request.query || {};
   // A JSON body can also be a number or string, which the "in" check below can't handle.
   const body = /** @type {Record<string, unknown>} */ (
     request.body && typeof request.body === "object" ? request.body : {}
@@ -52,7 +51,7 @@ export default function ({ request, reply }) {
 
   return {
     todos,
-    status: query["status"],
+    status: request.query["status"],
     autofocus: request.method === "GET" || "newTodo" in body,
   };
 }
