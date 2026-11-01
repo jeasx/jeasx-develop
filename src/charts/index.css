@@ -1,0 +1,124 @@
+/* The examples always use the dark theme, so only the dark steps of the palette are needed. */
+.charts {
+  --surface: #1a1a19;
+  --text-secondary: #c3c2b7;
+  --text-muted: #898781;
+  --gridline: #2c2c2a;
+  --baseline: #383835;
+  --series-1: #3987e5;
+  --series-2: #d95926;
+  --series-3: #199e70;
+  --series-4: #c98500;
+}
+
+.chart-figure {
+  margin: 0 0 2rem;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  background: var(--surface);
+}
+
+.chart-figure figcaption {
+  margin-bottom: 0.5rem;
+  color: var(--text-secondary);
+}
+
+.chart {
+  display: block;
+  width: 100%;
+  height: auto;
+  font:
+    12px system-ui,
+    sans-serif;
+}
+
+.chart .gridline {
+  stroke: var(--gridline);
+}
+
+.chart .baseline {
+  stroke: var(--baseline);
+}
+
+.chart .axis-label {
+  fill: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.chart .value-label,
+.chart .direct-label {
+  fill: var(--text-secondary);
+}
+
+.chart .line,
+.sparkline .line {
+  fill: none;
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+/* Hit areas are invisible, but catch the pointer for the tooltips. */
+.chart .hit {
+  fill: transparent;
+}
+
+.chart .crosshair {
+  stroke: var(--text-muted);
+  stroke-dasharray: 2 2;
+}
+
+/* Crosshair and markers only appear for the hovered column. */
+.chart .column .crosshair,
+.chart .column .marker {
+  visibility: hidden;
+}
+
+.chart .column:hover .crosshair,
+.chart .column:hover .marker {
+  visibility: visible;
+}
+
+.chart .marker {
+  stroke: var(--surface);
+  stroke-width: 2;
+}
+
+/* Dim the other bars, so the hovered one stands out. */
+.chart:has(.bar:hover) .bar:not(:hover) path {
+  opacity: 0.4;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.legend button {
+  width: auto;
+  margin: 0;
+}
+
+.legend label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.swatch {
+  display: inline-block;
+  width: 1rem;
+  height: 0.25rem;
+  border-radius: 2px;
+}
+
+.sparkline {
+  vertical-align: middle;
+}
+
+.number {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}

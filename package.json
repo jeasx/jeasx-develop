@@ -6,6 +6,7 @@
     "build": "node cli.js build",
     "dev": "node cli.js dev",
     "clean": "node cli.js clean",
+    "test": "node -e \"require('fs').rmSync('dist-test',{recursive:true,force:true})\" && esbuild \"src/**/*.test.*\" --bundle --platform=node --format=esm --packages=external --loader:.svg=file --outdir=dist-test --log-level=warning && node --test \"dist-test/**/*.test.js\"",
     "compile": "esbuild --platform=node --format=esm --sourcemap=linked --outdir=. serverless.ts"
   },
   "dependencies": {

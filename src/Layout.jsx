@@ -18,6 +18,7 @@ export default function Layout({
   css = "",
   script = "",
   robots = "",
+  lang = "en",
   children,
 }) {
   const path = this.request.path;
@@ -30,7 +31,7 @@ export default function Layout({
   return (
     <>
       {html("<!DOCTYPE html>")}
-      <html lang="en" data-theme="dark">
+      <html lang={lang} data-theme="dark">
         <head>
           <base href={url.endsWith("/") ? url : `${url}/`} />
           <meta charset="utf-8" />

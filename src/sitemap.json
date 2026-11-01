@@ -52,7 +52,9 @@
       { "path": "/upload", "title": "Image upload" },
       { "path": "/sharp", "title": "Image scaler" },
       { "path": "/svg", "title": "SVG generator" },
+      { "path": "/charts", "title": "SVG charts" },
       { "path": "/json/request.json?foo=bar", "title": "JSON response" },
+      { "path": "/negotiation", "title": "Content negotiation" },
       { "path": "/sitemap.xml", "title": "XML sitemap" }
     ]
   },
@@ -66,6 +68,7 @@
       { "path": "/readable-stream", "title": "ReadableStreams" },
       { "path": "/response", "title": "Response objects" },
       { "path": "/sse", "title": "Server-Sent Events" },
+      { "path": "/chat", "title": "Chat with SSE" },
       { "path": "/view-transitions", "title": "View transitions" }
     ]
   },
@@ -80,12 +83,14 @@
       { "path": "/cheerio", "title": "Extract styles" },
       { "path": "/parallel", "title": "Parallel loading" },
       { "path": "/context", "title": "'this' as context" },
+      { "path": "/i18n", "title": "Internationalization" },
       { "path": "/interceptor", "title": "Intercept JSX" },
       { "path": "/head", "title": "Manage the head" },
       { "path": "/basic-auth", "title": "Basic auth" },
       { "path": "/login", "title": "Login and sessions" },
       { "path": "/signed-cookies", "title": "Signed cookies" },
-      { "path": "/client-jsx", "title": "Client-side JSX" }
+      { "path": "/client-jsx", "title": "Client-side JSX" },
+      { "path": "/testing", "title": "Unit tests" }
     ]
   }
 ]

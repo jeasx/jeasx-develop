@@ -1,0 +1,86 @@
+const byId = (id) => /** @type {HTMLElement} */ (document.getElementById(id));
+
+const list = byId("messages");
+const chatForm = /** @type {HTMLFormElement} */ (byId("chat-form"));
+const textInput = /** @type {HTMLInputElement} */ (chatForm.elements.namedItem("text"));
+const MAX_MESSAGES = 50;
+
+/** @param {string} time */
+function formatTime(time) {
+  return new Date(time).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+}
+
+// Show the server-rendered times in the visitor's time zone.
+for (const time of list.querySelectorAll("time")) {
+  time.textContent = formatTime(time.dateTime);
+}
+list.scrollTop = list.scrollHeight;
+
+/**
+ * Appends a message. textContent never interprets markup, so messages can't inject HTML.
+ *
+ * @param {{ id: number, name: string, text: string, time: string }} message
+ */
+function append({ id, name, text, time }) {
+  // After a reconnect, a message may arrive twice.
+  if (list.querySelector(`[data-id="${id}"]`)) {
+    return;
+  }
+  list.querySelector(".empty")?.remove();
+
+  const item = document.createElement("li");
+  item.dataset.id = String(id);
+  const author = document.createElement("strong");
+  author.textContent = name;
+  const timeElement = document.createElement("time");
+  timeElement.dateTime = time;
+  timeElement.textContent = formatTime(time);
+  const paragraph = document.createElement("p");
+  paragraph.textContent = text;
+  item.append(author, " ", timeElement, paragraph);
+
+  // Only scroll down if the visitor hasn't scrolled up to read older messages.
+  const atBottom = list.scrollHeight - list.scrollTop - list.clientHeight < 40;
+  list.append(item);
+  while (list.children.length > MAX_MESSAGES) {
+    list.firstElementChild?.remove();
+  }
+  if (atBottom) {
+    list.scrollTop = list.scrollHeight;
+  }
+}
+
+const chatEvents = new EventSource(`/chat/events?after=${list.dataset.lastId}`);
+chatEvents.addEventListener("open", () => (byId("status").textContent = "Connected"));
+chatEvents.addEventListener("error", () => (byId("status").textContent = "Reconnecting…"));
+chatEvents.addEventListener("message", (event) => append(JSON.parse(event.data)));
+chatEvents.addEventListener("presence", (event) => {
+  const { count } = JSON.parse(event.data);
+  byId("presence").textContent = `${count} ${count === 1 ? "person" : "people"} online`;
+});
+chatEvents.addEventListener("full", () => {
+  chatEvents.close();
+  byId("status").textContent = "The chat is full. Please try again later.";
+});
+
+// Send messages without reloading the page. The new message arrives via the event stream.
+chatForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  byId("error").textContent = "";
+  try {
+    const response = await fetch(chatForm.action, {
+      method: "POST",
+      headers: { accept: "application/json" },
+      body: new URLSearchParams(/** @type {any} */ (new FormData(chatForm))),
+    });
+    const result = await response.json();
+    if (result.error) {
+      byId("error").textContent = result.error;
+      return;
+    }
+    textInput.value = "";
+    textInput.focus();
+  } catch {
+    byId("error").textContent = "Sending failed. Please try again.";
+  }
+});
