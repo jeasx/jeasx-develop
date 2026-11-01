@@ -143,10 +143,11 @@ export default async function ({ request, reply, csrfToken, session }) {
           />{" "}
           I accept that this demo forgets my account on the next restart.
         </label>
-        {/* Outside the label, as it would overlap the checkbox there. */}
+        {/* Outside the label, as it would overlap the checkbox there.
+            µCSS only colors a <small> right after the invalid input, so set the color here. */}
         {errors.terms && (
           <p>
-            <small id="terms-error">{errors.terms}</small>
+            <small id="terms-error" style="color: var(--mu-del-color)">{errors.terms}</small>
           </p>
         )}
         <div class="row">
