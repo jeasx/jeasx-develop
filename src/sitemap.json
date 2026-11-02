@@ -6,7 +6,6 @@
       { "path": "/view-transitions", "title": "Planet Gallery" },
       { "path": "/blog", "title": "Blog" },
       { "path": "/products", "title": "Products" },
-      { "path": "/repositories", "title": "GitHub Repos" },
       { "path": "/mdx", "title": "MDX support" }
     ]
   },
@@ -17,12 +16,13 @@
       { "path": "/lottery", "title": "Lottery" },
       { "path": "/todos", "title": "Todos" },
       { "path": "/jokes", "title": "Jokes" },
+      { "path": "/repositories", "title": "GitHub Repos" },
       { "path": "/wizard", "title": "Wizard" },
       { "path": "/ab-testing", "title": "A/B testing" }
     ]
   },
   {
-    "title": "Hypermedia with HTMX and Fixi",
+    "title": "Hypermedia with HTMX",
     "description": "Every Jeasx route can return an HTML fragment, so hypermedia libraries like HTMX and Fixi can update parts of a page with markup rendered on the server.",
     "links": [
       { "path": "/htmx", "title": "Click to edit" },
@@ -74,7 +74,7 @@
   },
   {
     "title": "Rendering with JSX",
-    "description": "Compose components, share request context, manage the head and control what JSX renders, on the server and in the browser.",
+    "description": "Compose components, share request context, manage the head, control what JSX renders on the server and in the browser, and test components with unit tests.",
     "links": [
       { "path": "/render-props", "title": "Render props" },
       { "path": "/values", "title": "What JSX renders" },
@@ -82,7 +82,8 @@
       { "path": "/interceptor", "title": "Intercept JSX" },
       { "path": "/head", "title": "Manage the head" },
       { "path": "/i18n", "title": "Internationalization" },
-      { "path": "/client-jsx", "title": "Client-side JSX" }
+      { "path": "/client-jsx", "title": "Client-side JSX" },
+      { "path": "/testing", "title": "Unit tests" }
     ]
   },
   {
@@ -96,13 +97,12 @@
     ]
   },
   {
-    "title": "Error handling, post-processing and testing",
-    "description": "Catch errors, transform the final HTML before it is sent and test your routes with unit tests.",
+    "title": "Error handling and post-processing",
+    "description": "Catch errors and transform the final HTML before it is sent to the browser.",
     "links": [
       { "path": "/error-handler", "title": "Catch errors" },
       { "path": "/prettier", "title": "Prettify HTML" },
-      { "path": "/cheerio", "title": "Extract styles" },
-      { "path": "/testing", "title": "Unit tests" }
+      { "path": "/cheerio", "title": "Extract styles" }
     ]
   }
 ]
