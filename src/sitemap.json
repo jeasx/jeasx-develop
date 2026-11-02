@@ -22,8 +22,8 @@
     ]
   },
   {
-    "title": "HTMX - Taking HTML seriously",
-    "description": "Every Jeasx route can return an HTML fragment, so HTMX can update parts of a page with markup rendered on the server.",
+    "title": "Hypermedia with HTMX and Fixi",
+    "description": "Every Jeasx route can return an HTML fragment, so hypermedia libraries like HTMX and Fixi can update parts of a page with markup rendered on the server.",
     "links": [
       { "path": "/htmx", "title": "Click to edit" },
       { "path": "/nominatim", "title": "Active search" },
@@ -42,8 +42,7 @@
       { "path": "/lit", "title": "Lit" },
       { "path": "/preact", "title": "Preact" },
       { "path": "/react", "title": "React" },
-      { "path": "/svelte", "title": "Svelte" },
-      { "path": "/cap", "title": "Cap.js" }
+      { "path": "/svelte", "title": "Svelte" }
     ]
   },
   {
@@ -60,7 +59,7 @@
     ]
   },
   {
-    "title": "Generating non-HTML content types",
+    "title": "Images, JSON and other content types",
     "description": "Routes aren't limited to HTML: they can return images, SVG, JSON, XML or any other content type.",
     "links": [
       { "path": "/upload", "title": "Image upload" },
@@ -74,22 +73,35 @@
     ]
   },
   {
-    "title": "Advanced features",
-    "description": "Hook into rendering, error handling and response processing to take full control of what is sent to the browser.",
+    "title": "Rendering with JSX",
+    "description": "Compose components, share request context, manage the head and control what JSX renders, on the server and in the browser.",
     "links": [
       { "path": "/render-props", "title": "Render props" },
       { "path": "/values", "title": "What JSX renders" },
-      { "path": "/error-handler", "title": "Catch errors" },
-      { "path": "/prettier", "title": "Prettify HTML" },
-      { "path": "/cheerio", "title": "Extract styles" },
       { "path": "/context", "title": "'this' as context" },
-      { "path": "/i18n", "title": "Internationalization" },
       { "path": "/interceptor", "title": "Intercept JSX" },
       { "path": "/head", "title": "Manage the head" },
+      { "path": "/i18n", "title": "Internationalization" },
+      { "path": "/client-jsx", "title": "Client-side JSX" }
+    ]
+  },
+  {
+    "title": "Authentication and security",
+    "description": "Protect routes with basic auth or sessions, sign cookies and stop bots with a proof-of-work captcha.",
+    "links": [
       { "path": "/basic-auth", "title": "Basic auth" },
       { "path": "/login", "title": "Login and sessions" },
       { "path": "/signed-cookies", "title": "Signed cookies" },
-      { "path": "/client-jsx", "title": "Client-side JSX" },
+      { "path": "/cap", "title": "Cap.js" }
+    ]
+  },
+  {
+    "title": "Error handling, post-processing and testing",
+    "description": "Catch errors, transform the final HTML before it is sent and test your routes with unit tests.",
+    "links": [
+      { "path": "/error-handler", "title": "Catch errors" },
+      { "path": "/prettier", "title": "Prettify HTML" },
+      { "path": "/cheerio", "title": "Extract styles" },
       { "path": "/testing", "title": "Unit tests" }
     ]
   }
