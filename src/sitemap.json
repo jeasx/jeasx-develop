@@ -3,6 +3,7 @@
     "title": "Dynamic websites",
     "description": "Render pages on the server with content from a headless CMS, a remote API or Markdown files.",
     "links": [
+      { "path": "/view-transitions", "title": "Planet Gallery" },
       { "path": "/blog", "title": "Blog" },
       { "path": "/products", "title": "Products" },
       { "path": "/repositories", "title": "GitHub Repos" },
@@ -46,6 +47,19 @@
     ]
   },
   {
+    "title": "Streaming and Server-Sent Events",
+    "description": "Use the standards of the web platform: stream HTML with a Response or a ReadableStream or push live updates.",
+    "links": [
+      { "path": "/streaming", "title": "Streaming HTML" },
+      { "path": "/parallel", "title": "Parallel loading" },
+      { "path": "/out-of-order", "title": "Out-of-order streaming" },
+      { "path": "/async-iterable", "title": "Async iterables" },
+      { "path": "/readable-stream", "title": "ReadableStreams" },
+      { "path": "/sse", "title": "Server-Sent Events" },
+      { "path": "/chat", "title": "Chat with SSE" }
+    ]
+  },
+  {
     "title": "Generating non-HTML content types",
     "description": "Routes aren't limited to HTML: they can return images, SVG, JSON, XML or any other content type.",
     "links": [
@@ -54,22 +68,9 @@
       { "path": "/svg", "title": "SVG generator" },
       { "path": "/charts", "title": "SVG charts" },
       { "path": "/json/request.json?foo=bar", "title": "JSON response" },
+      { "path": "/response", "title": "Response objects" },
       { "path": "/negotiation", "title": "Content negotiation" },
       { "path": "/sitemap.xml", "title": "XML sitemap" }
-    ]
-  },
-  {
-    "title": "Streaming and web standards",
-    "description": "Use the standards of the web platform: stream HTML with a Response or a ReadableStream, push live updates, proxy APIs or animate page changes.",
-    "links": [
-      { "path": "/streaming", "title": "Streaming HTML" },
-      { "path": "/out-of-order", "title": "Out-of-order streaming" },
-      { "path": "/async-iterable", "title": "Async iterables" },
-      { "path": "/readable-stream", "title": "ReadableStreams" },
-      { "path": "/response", "title": "Response objects" },
-      { "path": "/sse", "title": "Server-Sent Events" },
-      { "path": "/chat", "title": "Chat with SSE" },
-      { "path": "/view-transitions", "title": "View transitions" }
     ]
   },
   {
@@ -81,7 +82,6 @@
       { "path": "/error-handler", "title": "Catch errors" },
       { "path": "/prettier", "title": "Prettify HTML" },
       { "path": "/cheerio", "title": "Extract styles" },
-      { "path": "/parallel", "title": "Parallel loading" },
       { "path": "/context", "title": "'this' as context" },
       { "path": "/i18n", "title": "Internationalization" },
       { "path": "/interceptor", "title": "Intercept JSX" },
