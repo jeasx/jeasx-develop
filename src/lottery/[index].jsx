@@ -73,9 +73,15 @@ function Draw({ numbers }) {
     <p>
       Drawn numbers: <strong>{drawn.join(", ")}</strong>
       <br />
-      {matches.length === 0
-        ? "No match this time. Reveal again for a new draw."
-        : `🎉 You matched ${matches.length} of 6: ${matches.sort((a, b) => a - b).join(", ")}`}
+      {matches.length === 0 ? (
+        <>
+          No match this time.
+          <br />
+          Reveal again for a new draw.
+        </>
+      ) : (
+        `🎉 You matched ${matches.length} of 6: ${matches.sort((a, b) => a - b).join(", ")}`
+      )}
     </p>
   );
 }
