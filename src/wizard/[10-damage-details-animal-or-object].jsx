@@ -24,7 +24,7 @@ export default function ({ data, form, errors }) {
           name="description"
           label="What exactly happened to it?"
           value={form.description}
-          placeholder="e.g. the pole was knocked over"
+          placeholder="e.g. the front wheel of the bike was bent"
         />
         <Actions />
         <ErrorMessage message={errors} />

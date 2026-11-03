@@ -91,7 +91,7 @@ export default function ({ request }) {
         <h2>Bar chart</h2>
         <figure class="chart-figure">
           <figcaption>
-            Known moons per planet (as of 2026) ·{" "}
+            Known moons per planet (as of March 2026) ·{" "}
             {sortByMoons ? (
               <a href={withQuery(ids, false)}>sort by distance from the sun</a>
             ) : (

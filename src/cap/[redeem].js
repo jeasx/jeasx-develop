@@ -11,5 +11,5 @@ export default async function ({ request, reply }) {
     return reply.code(400).send({ success: false });
   }
 
-  reply.send(await cap.redeemChallenge({ token, solutions }));
+  return reply.send(await cap.redeemChallenge({ token, solutions }));
 }

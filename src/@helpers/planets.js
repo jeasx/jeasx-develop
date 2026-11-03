@@ -3,7 +3,7 @@
  * Response objects and view transitions), so their numbers always match.
  *
  * Diameter in km, distance from the sun in astronomical units (AU).
- * Moon counts change with new discoveries: these are the known moons as of mid-2026
+ * Moon counts change with new discoveries: these are the known moons as of March 2026
  * (see https://spaceplace.nasa.gov/how-many-moons/).
  *
  * @typedef {{ slug: string, name: string, colors: [string, string], diameter: number,
@@ -53,7 +53,7 @@ export const PLANETS = [
     name: "Jupiter",
     colors: ["#f0d9b5", "#a8754a"],
     diameter: 142984,
-    moons: 115,
+    moons: 101,
     distance: 5.2,
     fact: "Jupiter's Great Red Spot is a storm larger than Earth.",
   },
@@ -62,7 +62,7 @@ export const PLANETS = [
     name: "Saturn",
     colors: ["#f7e7b4", "#b89a5a"],
     diameter: 120536,
-    moons: 293,
+    moons: 285,
     distance: 9.54,
     fact: "Saturn is less dense than water.",
   },

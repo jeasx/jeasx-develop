@@ -17,6 +17,35 @@ export default function () {
           application in the browser.
         </p>
       </section>
+      <details>
+        <summary>How do I integrate React with Jeasx?</summary>
+        <p>Install React and React DOM:</p>
+        <pre>
+          <code>npm install react react-dom</code>
+        </pre>
+        <p>
+          React brings its own JSX runtime, so add a <code>tsconfig.json</code> to the folder that
+          holds your React components:
+        </p>
+        <pre>
+          <code>
+            {`{
+  "extends": "jeasx/tsconfig.json",
+  "compilerOptions": {
+    "jsxImportSource": "react"
+  },
+  "include": ["**/*"]
+}`}
+          </code>
+        </pre>
+        <p>
+          Have a look at the{" "}
+          <a href="https://github.com/jeasx/jeasx-expo/tree/main/src/react">
+            source code of this page
+          </a>{" "}
+          to see how the components are rendered on the server and hydrated in the browser.
+        </p>
+      </details>
       <hr />
       <section>
         <h2>Lottery</h2>

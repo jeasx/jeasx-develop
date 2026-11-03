@@ -52,12 +52,6 @@ const demoUser = (store.ready ??= (async () => {
 const dummySalt = randomBytes(16);
 const dummyHash = hashPassword("dummy-password", dummySalt);
 
-/** @param {string} username */
-export async function userExists(username) {
-  await demoUser;
-  return users.has(username);
-}
-
 /**
  * @param {string} username
  * @param {string} email

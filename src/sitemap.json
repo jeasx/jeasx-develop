@@ -1,7 +1,7 @@
 [
   {
     "title": "Dynamic websites",
-    "description": "Render pages on the server with content from a headless CMS, a remote API or Markdown files.",
+    "description": "Render pages on the server with content from a remote API, JSON data or Markdown with MDX.",
     "links": [
       { "path": "/view-transitions", "title": "Planet Gallery" },
       { "path": "/blog", "title": "Blog" },
@@ -15,7 +15,7 @@
     "links": [
       { "path": "/lottery", "title": "Lottery" },
       { "path": "/todos", "title": "Todos" },
-      { "path": "/jokes", "title": "Jokes" },
+      { "path": "/jokes", "title": "Forms" },
       { "path": "/repositories", "title": "GitHub Repos" },
       { "path": "/wizard", "title": "Wizard" },
       { "path": "/ab-testing", "title": "A/B testing" }
