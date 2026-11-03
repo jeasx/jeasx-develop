@@ -44,8 +44,11 @@ export default function Layout({
             rel="canonical"
             href={`https://expo.jeasx.dev${url.endsWith("/") ? url.slice(0, -1) : url}`}
           />
-          <script type="module" src={addCacheBuster("/index.js")}></script>
-          {script && <script type="module" src={addCacheBuster(script)}></script>}
+          {/* The nonce is only set by pages with a Content Security Policy (see "/csp"). */}
+          <script type="module" src={addCacheBuster("/index.js")} nonce={this.nonce}></script>
+          {script && (
+            <script type="module" src={addCacheBuster(script)} nonce={this.nonce}></script>
+          )}
           <title>{title ? `${title} » Jeasx - JSX with Ease` : "Jeasx - JSX with Ease"}</title>
         </head>
         <body>

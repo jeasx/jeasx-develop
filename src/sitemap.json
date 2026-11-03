@@ -88,11 +88,12 @@
   },
   {
     "title": "Authentication and security",
-    "description": "Protect routes with basic auth or sessions, sign cookies and stop bots with a proof-of-work captcha.",
+    "description": "Protect routes with basic auth or sessions, sign cookies, block injected scripts and stop bots with a proof-of-work captcha.",
     "links": [
       { "path": "/basic-auth", "title": "Basic auth" },
       { "path": "/login", "title": "Login and sessions" },
       { "path": "/signed-cookies", "title": "Signed cookies" },
+      { "path": "/csp", "title": "Content Security Policy" },
       { "path": "/cap", "title": "Cap.js" }
     ]
   },
