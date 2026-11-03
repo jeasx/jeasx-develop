@@ -3,6 +3,10 @@ FROM node:lts-alpine
 # Libraries like React check NODE_ENV at runtime and otherwise load their slower development builds.
 ENV NODE_ENV=production
 
+# Alpine has no fonts, so sharp would draw SVG text as empty boxes (see "src/og").
+# Liberation Sans has the same metrics as Helvetica and Arial, which the cards are laid out for.
+RUN apk add --no-cache fontconfig font-liberation
+
 USER node
 WORKDIR /home/node
 

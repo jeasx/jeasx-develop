@@ -34,6 +34,8 @@ export default function Layout({
   const ogImage = `${ORIGIN}/og/image?${new URLSearchParams({
     title: title || "Jeasx - JSX with Ease",
     subtitle: description,
+    // A new link per deploy, so social networks don't keep showing outdated images.
+    v: process.env.BUILD_ID,
   })}`;
   const sourceUrl = EXAMPLES.has(example)
     ? `${REPOSITORY}/tree/main/src/${example}`

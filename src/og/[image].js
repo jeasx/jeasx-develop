@@ -14,10 +14,14 @@ const limit = limiter(2, 50);
  * @param {import("../types").RouteProps} props
  */
 export default async function ({ request, reply }) {
-  const query = /** @type {Record<string, string | undefined>} */ (request.query);
+  const query = /** @type {Record<string, string | undefined>} */ (
+    request.query
+  );
   const title = String(query["title"] || "Hello Jeasx").slice(0, MAX_TITLE);
   const subtitle = String(query["subtitle"] ?? "").slice(0, MAX_SUBTITLE);
-  const theme = Object.hasOwn(THEMES, query["theme"] ?? "") ? query["theme"] : "sunset";
+  const theme = Object.hasOwn(THEMES, query["theme"] ?? "")
+    ? query["theme"]
+    : "sunset";
   const key = JSON.stringify([title, subtitle, theme]);
 
   let png = cache.get(key);
@@ -29,7 +33,10 @@ export default async function ({ request, reply }) {
       });
     } catch (error) {
       if (error instanceof QueueFullError) {
-        reply.status(503).header("retry-after", "10").type("text/plain; charset=utf-8");
+        reply
+          .status(503)
+          .header("retry-after", "10")
+          .type("text/plain; charset=utf-8");
         return "Too many images are being rendered right now. Please try again in a moment.";
       }
       throw error;
