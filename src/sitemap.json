@@ -65,6 +65,7 @@
       { "path": "/upload", "title": "Image upload" },
       { "path": "/sharp", "title": "Image scaler" },
       { "path": "/svg", "title": "SVG generator" },
+      { "path": "/og", "title": "Open Graph images" },
       { "path": "/charts", "title": "SVG charts" },
       { "path": "/json/request.json?foo=bar", "title": "JSON response" },
       { "path": "/response", "title": "Response objects" },
