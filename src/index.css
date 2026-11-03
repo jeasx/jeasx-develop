@@ -29,3 +29,243 @@ summary {
   opacity: 0.5;
   pointer-events: none;
 }
+
+/* Overview page */
+html {
+  scroll-behavior: smooth;
+}
+
+.home-hero {
+  text-align: center;
+  padding: 4rem 1rem 3rem;
+  background:
+    radial-gradient(ellipse at top, color-mix(in srgb, var(--mu-primary) 25%, transparent), transparent 70%);
+  border-radius: 1rem;
+}
+
+.home-eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 0.8rem;
+  color: var(--mu-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.home-hero h1 {
+  font-size: clamp(2.5rem, 8vw, 4.5rem);
+  line-height: 1.1;
+  margin-bottom: 1rem;
+}
+
+.home-gradient {
+  background: linear-gradient(90deg, var(--mu-primary), var(--mu-secondary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.home-tagline {
+  font-size: 1.25rem;
+  max-width: 36rem;
+  margin: 0 auto 2rem;
+  opacity: 0.85;
+}
+
+.home-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.home-stats {
+  display: flex;
+  justify-content: center;
+  gap: 2.5rem;
+  padding: 0;
+  margin: 2.5rem 0 0;
+  list-style: none;
+  opacity: 0.8;
+}
+
+.home-stats li {
+  list-style: none;
+}
+
+.home-stats strong {
+  display: block;
+  font-size: 1.75rem;
+  color: var(--mu-primary);
+}
+
+.home-intro {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: 1.5rem;
+  margin: 3rem 0;
+}
+
+.home-intro h3 {
+  margin-top: 0;
+}
+
+.home-topics {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 0;
+  margin-bottom: 2rem;
+}
+
+.home-topics a {
+  padding: 0.3rem 0.9rem;
+  border: 1px solid color-mix(in srgb, var(--mu-primary) 50%, transparent);
+  border-radius: 999px;
+  font-size: 0.85rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.home-topics a:hover {
+  background: var(--mu-primary);
+  color: #fff;
+}
+
+.home-topic {
+  margin-bottom: 3.5rem;
+  scroll-margin-top: 1rem;
+}
+
+.home-topic header {
+  display: flex;
+  gap: 1.25rem;
+  align-items: flex-start;
+  margin-bottom: 1.25rem;
+}
+
+.home-topic h2 {
+  text-align: left;
+  margin: 0 0 0.25rem;
+}
+
+.home-topic header p {
+  margin: 0;
+  opacity: 0.8;
+}
+
+.home-number {
+  font-size: 2.5rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--mu-primary);
+  opacity: 0.6;
+}
+
+.home-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+  gap: 1rem;
+}
+
+.home-tile {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid color-mix(in srgb, currentColor 15%, transparent);
+  border-radius: 0.75rem;
+  text-decoration: none;
+  transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
+}
+
+.home-tile:hover {
+  transform: translateY(-3px);
+  border-color: var(--mu-primary);
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--mu-primary) 25%, transparent);
+}
+
+.home-tile code {
+  font-size: 0.75rem;
+  opacity: 0.6;
+  background: none;
+  padding: 0;
+}
+
+/* Shell: header and footer of all pages */
+.shell-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  margin-bottom: 2rem;
+  background: color-mix(in srgb, var(--mu-background-color) 80%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid color-mix(in srgb, var(--mu-primary) 30%, transparent);
+}
+
+.shell-header nav {
+  align-items: center;
+}
+
+.shell-brand {
+  font-weight: 800;
+  font-size: 1.15rem;
+  text-decoration: none;
+  color: inherit;
+}
+
+.shell-gradient {
+  background: linear-gradient(90deg, var(--mu-primary), var(--mu-secondary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.shell-back {
+  font-size: 0.9rem;
+  opacity: 0.75;
+  text-decoration: none;
+}
+
+.shell-back:hover {
+  opacity: 1;
+}
+
+.shell-source {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.8rem;
+  border: 1px solid color-mix(in srgb, var(--mu-primary) 50%, transparent);
+  border-radius: 999px;
+  font-size: 0.85rem;
+  text-decoration: none;
+}
+
+.shell-source:hover {
+  background: color-mix(in srgb, var(--mu-primary) 20%, transparent);
+}
+
+.shell-footer {
+  margin-top: 4rem;
+  padding: 2rem 0;
+  border-top: 1px solid color-mix(in srgb, currentColor 15%, transparent);
+  text-align: center;
+  font-size: 0.85rem;
+  opacity: 0.75;
+}
+
+.shell-footer p {
+  margin: 0.25rem 0;
+}
+
+.shell-footer span {
+  margin: 0 0.5rem;
+}
+
+@media (max-width: 576px) {
+  .shell-back,
+  .shell-source span {
+    display: none;
+  }
+}

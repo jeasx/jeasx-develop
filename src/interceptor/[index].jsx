@@ -18,6 +18,20 @@ export default function ({ request }) {
         lets you intercept the rendering of JSX elements, so you can modify or replace existing
         markup.
       </p>
+      <p>
+        Every JSX element is turned into HTML by calling <code>this.jsxToString</code>. A component
+        can create a child context with <code>Object.create(this)</code>, assign its own{" "}
+        <code>jsxToString</code> there and render its children with it. The override sees every
+        element before it becomes HTML, so it can change props, swap tags or drop elements
+        entirely. Because the override only lives on the child context, everything rendered
+        outside of the component stays untouched.
+      </p>
+      <p>
+        In this example, a <code>HouseKeeper</code> component wraps a third-party component it
+        doesn't control. It removes all inline <code>style</code> attributes and rewrites{" "}
+        <code>className</code> to <code>class</code>, without changing the third-party code. Use
+        the link below to toggle it on and off.
+      </p>
       <section class="center">
         {removeStyles ? (
           <HouseKeeper>

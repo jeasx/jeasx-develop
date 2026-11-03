@@ -54,23 +54,25 @@ export default function Layout({
         </head>
         <body>
           {path !== "/" && (
-            <header>
+            <header class="shell-header">
               <nav class="container">
                 <ul>
                   <li>
-                    <a href="/">&laquo; Back to overview</a>
+                    <a href="/" class="shell-brand">
+                      <span class="shell-gradient">Jeasx</span> Expo
+                    </a>
+                  </li>
+                  <li>
+                    <a href="/" class="shell-back">
+                      &larr; All examples
+                    </a>
                   </li>
                 </ul>
                 <ul>
                   <li>
-                    <a href={sourceUrl}>
-                      <img
-                        src={GithubIcon}
-                        width="24"
-                        height="24"
-                        alt="GitHub Logo"
-                        title="View source code"
-                      />
+                    <a href={sourceUrl} class="shell-source" title="View source code">
+                      <img src={GithubIcon} width="20" height="20" alt="" />
+                      <span>Source</span>
                     </a>
                   </li>
                 </ul>
@@ -78,11 +80,14 @@ export default function Layout({
             </header>
           )}
           <main class="container">{children}</main>
-          <footer class="container">
-            <hr />
-            <p class="center">
-              &copy; {new Date().getFullYear()} - powered by{" "}
-              <a href="https://www.jeasx.dev">Jeasx</a> -{" "}
+          <footer class="container shell-footer">
+            <p>
+              <a href="https://www.jeasx.dev">jeasx.dev</a>
+              <span aria-hidden="true">·</span>
+              <a href={REPOSITORY}>GitHub</a>
+            </p>
+            <p>
+              &copy; {new Date().getFullYear()} - powered by Jeasx on{" "}
               {process.versions.bun
                 ? `Bun@${process.versions.bun}`
                 : `Node@${process.versions.node}`}

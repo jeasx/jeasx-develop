@@ -33,11 +33,14 @@ export const styles = [
 
 class MotionLit extends LitElement {
   static properties = {
-    letters: { type: Array },
+    text: { type: String },
+    letters: { state: true },
   };
   static styles = styles;
 
-  lit = ["L", "I", "T"];
+  get textLetters() {
+    return [...this.text];
+  }
 
   duration = 1000;
   controller = new AnimateController(this, {
@@ -51,8 +54,17 @@ class MotionLit extends LitElement {
   });
   constructor() {
     super();
+    /** @type {string} */
+    this.text = "";
     this.addEventListener("click", () => this.clickHandler());
-    this.letters = this.lit;
+    this.letters = [];
+  }
+
+  /** @param {import("lit").PropertyValues<this>} changed */
+  willUpdate(changed) {
+    if (changed.has("text")) {
+      this.letters = this.textLetters;
+    }
   }
 
   render() {
@@ -84,7 +96,7 @@ class MotionLit extends LitElement {
   }
 
   changeLayout() {
-    this.letters = this.letters.length ? [] : this.lit;
+    this.letters = this.letters.length ? [] : this.textLetters;
   }
 }
 
