@@ -1,5 +1,6 @@
-import { randomBytes, timingSafeEqual } from "node:crypto";
+import { randomBytes } from "node:crypto";
 import { readSignedCookie } from "../@helpers/cookies";
+import isSameToken from "../@helpers/isSameToken";
 import Layout from "../Layout";
 import { countAttempt } from "./attempts";
 import { PATH } from "./session";
@@ -64,16 +65,4 @@ export default function ({ request, reply }) {
 
   // Routes below receive these as props.
   return { csrfToken, session };
-}
-
-/**
- * Compares in constant time, so response times don't reveal how much of a guess was right.
- *
- * @param {string} actual
- * @param {string} expected
- */
-function isSameToken(actual, expected) {
-  const a = Buffer.from(actual);
-  const b = Buffer.from(expected);
-  return a.length === b.length && timingSafeEqual(a, b);
 }

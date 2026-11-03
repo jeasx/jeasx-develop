@@ -44,11 +44,11 @@ export default async function ({ request, reply }) {
 
   return (
     <Layout
-      title="Use a captcha with Jeasx"
+      title="Use Cap.js with Jeasx"
       description="Protect a form with Cap.js, a proof-of-work captcha, in Jeasx."
       script="/cap/index.js"
     >
-      <h1>Use a captcha with Jeasx</h1>
+      <h1>Use Cap.js with Jeasx</h1>
       <p>
         <a href="https://capjs.js.org">Cap.js</a> is a lightweight, modern open-source captcha
         alternative using proof-of-work: instead of solving puzzles, your browser does a short

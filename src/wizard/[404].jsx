@@ -2,7 +2,7 @@ import Layout from "./Layout";
 
 export default function () {
   return (
-    <Layout title="404 - Page not found">
+    <Layout title="Error 404">
       <section class="center">
         <h2>Error 404</h2>
         <p>This step of the claim form doesn't exist.</p>

@@ -4,10 +4,10 @@ import Image from "./Image";
 export default function () {
   return (
     <Layout
-      title="Image transformation with sharp"
+      title="Scale images with sharp"
       description="Crop, resize and convert images on the fly with sharp."
     >
-      <h1>Image transformation with sharp</h1>
+      <h1>Scale images with sharp</h1>
       <p>
         With the <a href="https://sharp.pixelplumbing.com">sharp</a> library, you can build an image
         component and converter in userland. The images below are cropped, resized and converted to

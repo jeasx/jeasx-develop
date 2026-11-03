@@ -33,10 +33,10 @@ export default function () {
             <strong>{EXAMPLE_COUNT}</strong> examples
           </li>
           <li>
-            <strong>{sitemap.length}</strong> topics
+            <strong>100%</strong> HTML first
           </li>
           <li>
-            <strong>100%</strong> open source
+            <strong>0</strong> magic
           </li>
         </ul>
       </section>

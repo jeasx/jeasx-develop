@@ -87,7 +87,7 @@ export default function Layout({
               <a href={REPOSITORY}>GitHub</a>
             </p>
             <p>
-              &copy; {new Date().getFullYear()} - powered by Jeasx on{" "}
+              &copy; {new Date().getFullYear()} · powered by Jeasx on{" "}
               {process.versions.bun
                 ? `Bun@${process.versions.bun}`
                 : `Node@${process.versions.node}`}

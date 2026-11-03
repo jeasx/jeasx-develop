@@ -20,11 +20,11 @@ export default function ({ request, reply }) {
 
   return (
     <Layout
-      title="Fixi.js and Jeasx - lightweight hypermedia controls"
+      title="Use Fixi.js with Jeasx"
       description="Edit a list in place with Fixi.js, with a full page reload as fallback."
       script="/fixi/index.js"
     >
-      <h1>Fixi.js and Jeasx - lightweight hypermedia controls</h1>
+      <h1>Use Fixi.js with Jeasx</h1>
       <p>
         <a href="https://github.com/bigskysoftware/fixi">Fixi.js</a> is a minimalist alternative to
         HTMX, developed by the creators of HTMX. This example shows progressive enhancement: with

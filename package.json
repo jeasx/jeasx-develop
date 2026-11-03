@@ -37,7 +37,9 @@
     "react-dom": "19.3.1",
     "rehype-prism-plus": "2.0.2",
     "sharp": "0.35.5",
-    "svelte": "5.57.3"
+    "svelte": "5.57.3",
+    "unplugin-vue": "8.0.1",
+    "vue": "3.5.44"
   },
   "devDependencies": {
     "@types/node": "26.6.6",

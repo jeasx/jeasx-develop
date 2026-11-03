@@ -3,7 +3,7 @@
     "title": "Dynamic websites",
     "description": "Render pages on the server with content from a remote API, JSON data or Markdown with MDX.",
     "links": [
-      { "path": "/view-transitions", "title": "Planet Gallery" },
+      { "path": "/view-transitions", "title": "Planet gallery" },
       { "path": "/blog", "title": "Blog" },
       { "path": "/products", "title": "Products" },
       { "path": "/mdx", "title": "MDX support" }
@@ -16,7 +16,7 @@
       { "path": "/lottery", "title": "Lottery" },
       { "path": "/todos", "title": "Todos" },
       { "path": "/jokes", "title": "Jokes" },
-      { "path": "/repositories", "title": "GitHub Repos" },
+      { "path": "/repositories", "title": "GitHub repos" },
       { "path": "/wizard", "title": "Wizard" },
       { "path": "/ab-testing", "title": "A/B testing" }
     ]
@@ -37,12 +37,13 @@
     "title": "Islands of client-side JavaScript",
     "description": "Add islands of interactivity to server-rendered pages with the client-side library you already know.",
     "links": [
-      { "path": "/alpine", "title": "Alpine" },
+      { "path": "/alpine", "title": "Alpine.js" },
       { "path": "/arrowjs", "title": "ArrowJS" },
       { "path": "/lit", "title": "Lit" },
       { "path": "/preact", "title": "Preact" },
       { "path": "/react", "title": "React" },
-      { "path": "/svelte", "title": "Svelte" }
+      { "path": "/svelte", "title": "Svelte" },
+      { "path": "/vue", "title": "Vue" }
     ]
   },
   {
@@ -63,7 +64,7 @@
     "description": "Routes aren't limited to HTML: they can return images, SVG, JSON, XML or any other content type.",
     "links": [
       { "path": "/upload", "title": "Image upload" },
-      { "path": "/sharp", "title": "Image scaler" },
+      { "path": "/sharp", "title": "Image scaling" },
       { "path": "/svg", "title": "SVG charts" },
       { "path": "/og", "title": "Open Graph images" },
       { "path": "/json/request.json?foo=bar", "title": "JSON response" },

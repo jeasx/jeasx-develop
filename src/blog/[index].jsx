@@ -9,10 +9,10 @@ export default function ({ request }) {
 
   return (
     <Layout
-      title="Blog example"
+      title="Blog"
       description="A simple blog built with Jeasx which stores its posts in a cookie."
     >
-      <h1>Blog example</h1>
+      <h1>Blog</h1>
       <p>
         A small blog built with Jeasx: an overview page, a page per post and a protected form to
         write new posts. To keep the example free of a database, new posts are stored in a cookie in

@@ -10,11 +10,11 @@ export default function ({ request, reply }) {
   const body = request.body || { action: "edit" };
   return (
     <Layout
-      title="HTMX and Jeasx - a perfect match"
+      title="Use HTMX with Jeasx"
       description="Edit a form in place with HTMX and server-rendered HTML fragments."
       script="/htmx/index.js"
     >
-      <h1>HTMX and Jeasx - a perfect match</h1>
+      <h1>Use HTMX with Jeasx</h1>
       <p>
         Jeasx is a perfect match for <a href="https://four.htmx.org">HTMX</a>, as every route can
         return an HTML fragment. Click "Submit" to see your entries and "Edit" to change them again:
