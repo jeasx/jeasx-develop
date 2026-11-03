@@ -1,4 +1,4 @@
-FROM node:26-alpine
+FROM node:lts-alpine
 
 # Libraries like React check NODE_ENV at runtime and otherwise load their slower development builds.
 ENV NODE_ENV=production
