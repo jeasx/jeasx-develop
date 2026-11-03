@@ -3,7 +3,7 @@ import Layout from "../Layout";
 export default function () {
   return (
     <Layout title="Default title" description="Default description">
-      <h1>Manage the head from any component</h1>
+      <h1>Manage the head</h1>
       <p>
         Like React Helmet, but built in userland: put a <code>&lt;head&gt;</code> tag into any
         component, and its title, meta tags, styles and scripts are moved into the head of the

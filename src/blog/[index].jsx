@@ -9,7 +9,7 @@ export default function ({ request }) {
 
   return (
     <Layout
-      title="Blog example with Jeasx"
+      title="Blog example"
       description="A simple blog built with Jeasx which stores its posts in a cookie."
     >
       <h1>Blog example</h1>

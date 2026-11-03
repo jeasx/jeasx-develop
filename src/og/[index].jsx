@@ -16,7 +16,7 @@ export default function ({ request }) {
 
   return (
     <Layout
-      title="Open Graph images with Jeasx"
+      title="Open Graph images"
       description="Generate social preview images from JSX: render SVG on the server and convert it to PNG with sharp."
     >
       <h1>Open Graph images</h1>

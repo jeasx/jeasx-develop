@@ -128,6 +128,8 @@ function Formats() {
  * @param {unknown} value
  */
 function parseCount(value) {
-  const count = Math.trunc(Number([value].flat()[0] ?? 1));
-  return Number.isFinite(count) ? Math.min(Math.max(count, 0), 1000000) : 1;
+  const raw = String([value].flat()[0] ?? "").trim();
+  // Number("") is 0, so an empty field would show 0 instead of the default.
+  const count = Math.trunc(Number(raw));
+  return raw !== "" && Number.isFinite(count) ? Math.min(Math.max(count, 0), 1000000) : 1;
 }

@@ -3,7 +3,7 @@ import Layout from "../Layout";
 export default function () {
   return (
     <Layout
-      title="Implement active search with HTMX and Jeasx"
+      title="Active search with HTMX and Jeasx"
       description="Search addresses as you type with HTMX, Jeasx and Nominatim."
       script="/nominatim/index.js"
     >

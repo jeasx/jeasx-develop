@@ -21,7 +21,7 @@ export default async function ({ reply }) {
     }
     return (
       <Layout title="Products" robots="noindex">
-        <h1>Product overview</h1>
+        <h1>Products</h1>
         <p>The products couldn't be loaded right now. Please try again later.</p>
       </Layout>
     );
@@ -33,7 +33,7 @@ export default async function ({ reply }) {
       description="Browse products loaded from a remote API and rendered on the server."
       robots="index,nofollow"
     >
-      <h1>Product overview</h1>
+      <h1>Products</h1>
       <p>
         The products are loaded on the server from the <a href="https://dummyjson.com">DummyJSON</a>{" "}
         API and cached for a few minutes. Their images are cropped and converted on the fly by the

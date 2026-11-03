@@ -8,7 +8,8 @@ export default function Layout({ title = "", data = {}, children }) {
   return (
     // An absolute path, so the script is also found from deeper paths like the 404 page of "/wizard/a/b".
     <DefaultLayout
-      title={title}
+      // Name the example, so a tab reads "Start - Car insurance claim" instead of just "Start".
+      title={title ? `${title} - Car insurance claim` : "Car insurance claim"}
       description="Report a car insurance claim step by step with a server-rendered form wizard."
       script="/wizard/index.js"
     >

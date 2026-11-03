@@ -11,7 +11,7 @@ export default function ({ request }) {
       <input type="hidden" name="action" value="view" />
       {fields.map(({ label, name, type, value }) => (
         <label>
-          {label}:
+          {label}
           <input
             // @ts-ignore
             type={type}

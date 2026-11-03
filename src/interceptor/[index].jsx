@@ -9,7 +9,7 @@ export default function ({ request }) {
 
   return (
     <Layout
-      title="Override the JSX renderer to modify markup"
+      title="Intercept and modify JSX at runtime"
       description="Override jsxToString to modify the markup of existing JSX components."
     >
       <h1>Intercept and modify JSX at runtime</h1>

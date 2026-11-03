@@ -44,9 +44,11 @@ export default function ({ number, delta, numbers, submit }) {
                 </button>
               )}
               {submit && numbers.length === 6 && (
-                <button type="submit" name="restart" value="restart">
-                  Start over
-                </button>
+                <>
+                  <button type="submit" name="restart" value="restart">
+                    Start over
+                  </button>
+                </>
               )}
             </div>
             {submit && numbers.length === 6 && <Draw numbers={numbers} />}
@@ -74,11 +76,7 @@ function Draw({ numbers }) {
       Drawn numbers: <strong>{drawn.join(", ")}</strong>
       <br />
       {matches.length === 0 ? (
-        <>
-          No match this time.
-          <br />
-          Reveal again for a new draw.
-        </>
+        <>No match this time.</>
       ) : (
         `🎉 You matched ${matches.length} of 6: ${matches.sort((a, b) => a - b).join(", ")}`
       )}

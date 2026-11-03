@@ -3,7 +3,7 @@ import Layout from "../Layout";
 export default function () {
   return (
     <Layout
-      title="Server-Sent Events with Jeasx"
+      title="Push live updates with Server-Sent Events"
       description="Push live updates from the server by returning a Response with a ReadableStream."
       script="/sse/index.js"
     >

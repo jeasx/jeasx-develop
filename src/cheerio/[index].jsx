@@ -25,7 +25,7 @@ export default function ({ request, reply }) {
 
   return (
     <Layout
-      title="Extract inline styles with Cheerio in Jeasx"
+      title="Extract inline styles with Cheerio"
       description="Post-process the resulting HTML with Cheerio to move inline styles into the head."
     >
       <div style="--mu-h1-color:orange; text-align: center">

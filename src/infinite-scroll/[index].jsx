@@ -15,7 +15,7 @@ export default function ({ request }) {
       description="Load more rows while scrolling with HTMX, streamed by an async generator."
       script="/infinite-scroll/index.js"
     >
-      <h1>Infinite scroll with HTMX</h1>
+      <h1>Infinite scroll with HTMX and async generators</h1>
       <p>
         Scroll down: as soon as the last row comes into view, HTMX fetches the next page from the
         server and puts it in its place. The rows come from an <code>async function*</code>, which

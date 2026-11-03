@@ -6,7 +6,7 @@ export default async function () {
       title="Upload and transform images with sharp"
       description="Upload a JPEG image and convert, resize and rotate it with sharp."
     >
-      <h1>Upload and transform images in Jeasx</h1>
+      <h1>Upload and transform images with sharp</h1>
       <p>
         Choose a JPEG image and the server converts, resizes and rotates it, then sends the result
         back to your browser. Jeasx doesn't ship an image processor, so the conversion is done in

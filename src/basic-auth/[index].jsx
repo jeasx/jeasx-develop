@@ -3,7 +3,7 @@ import Layout from "../Layout";
 export default function () {
   return (
     <Layout
-      title="Basic access authentication with Jeasx"
+      title="Basic access authentication"
       description="Protect a part of your site with HTTP basic authentication in Jeasx."
     >
       <h1>Basic access authentication</h1>

@@ -56,7 +56,7 @@ export default async function ({ request, reply }) {
       {error && <p role="alert">{error}</p>}
       <form action="" method="post">
         <label>
-          Enter your name:
+          Your name
           <input type="text" name="name" value={request.body?.["name"]} />
         </label>
         <p>

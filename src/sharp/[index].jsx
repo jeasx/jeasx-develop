@@ -4,7 +4,7 @@ import Image from "./Image";
 export default function () {
   return (
     <Layout
-      title="Image transformation with sharp in Jeasx"
+      title="Image transformation with sharp"
       description="Crop, resize and convert images on the fly with sharp."
     >
       <h1>Image transformation with sharp</h1>

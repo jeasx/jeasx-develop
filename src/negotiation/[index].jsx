@@ -11,11 +11,11 @@ const PRESETS = [
 export default function () {
   return (
     <Layout
-      title="Content negotiation with Jeasx"
+      title="Content negotiation: one URL, many formats"
       description="Answer the same URL with HTML, JSON, CSV or plain text, depending on the Accept header."
       script="/negotiation/index.js"
     >
-      <h1>One URL, many formats</h1>
+      <h1>Content negotiation: one URL, many formats</h1>
       <p>
         With{" "}
         <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Content_negotiation">

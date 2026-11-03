@@ -3,7 +3,7 @@ import Layout from "../Layout";
 export default function () {
   return (
     <Layout
-      title="Return web-standard responses with Jeasx"
+      title="Return web-standard responses"
       description="Route handlers can return a standard Response object with status, headers and body."
     >
       <h1>Return web-standard responses</h1>

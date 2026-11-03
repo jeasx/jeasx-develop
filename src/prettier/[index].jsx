@@ -35,7 +35,7 @@ export default function ({ request, reply }) {
 
   return (
     <Layout
-      title="Format resulting HTML with Prettier"
+      title="Post-process HTML with Prettier"
       description="Format the resulting HTML with Prettier via a response handler."
     >
       <h1>Post-process HTML with Prettier</h1>
@@ -46,7 +46,7 @@ export default function ({ request, reply }) {
       </p>
       <form action="" method="post">
         <label>
-          Print width:
+          Print width
           <input
             type="number"
             name="printWidth"
@@ -56,7 +56,7 @@ export default function ({ request, reply }) {
           />
         </label>
         <label>
-          Tab width:
+          Tab width
           <input
             type="number"
             name="tabWidth"

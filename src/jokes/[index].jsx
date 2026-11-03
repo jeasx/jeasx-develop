@@ -19,10 +19,10 @@ export default function ({ request, reply }) {
 
   return (
     <Layout
-      title="Building forms with Jeasx"
+      title="Build forms without JavaScript"
       description="Server-rendered forms that work without client-side JavaScript."
     >
-      <h1>Building a simple form</h1>
+      <h1>Build forms without JavaScript</h1>
       <p>
         Every button below submits a plain HTML form. The server reads the form, picks the jokes and
         renders the page, so it works without any JavaScript in the browser. The number of jokes is

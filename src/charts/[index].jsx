@@ -22,7 +22,7 @@ export default function ({ request }) {
       description="Render line charts, bar charts and sparklines as inline SVG with JSX on the server."
       css="/charts/index.css"
     >
-      <h1>SVG charts without client-side JavaScript</h1>
+      <h1>SVG charts rendered on the server</h1>
       <p>
         SVG is just markup, so JSX components can draw charts on the server: a few lines of math
         turn data into coordinates. The charts are part of the HTML, so they show up instantly, need

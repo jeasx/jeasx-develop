@@ -7,7 +7,7 @@ export default function () {
       description="Render asynchronous JSX components in the browser with jsx-async-runtime."
       script="/client-jsx/index.js"
     >
-      <h1>(Asynchronous) JSX components in the browser</h1>
+      <h1>Asynchronous JSX components in the browser</h1>
       <p>
         You can also use JSX components built with{" "}
         <a href="https://github.com/jeasx/jsx-async-runtime">jsx-async-runtime</a> in the browser
