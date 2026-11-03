@@ -15,7 +15,12 @@ const SAFE_HEADERS = new Set([
 /**
  * @param {import("../types").RouteProps} props
  */
-export default function ({ request }) {
+export default function ({ request, reply }) {
+  // The answer contains the visitor's own headers (e.g. a referer with private URLs),
+  // so caches must not hand it to others.
+  reply.header("cache-control", "private, no-store");
+  // The query is echoed as it is (e.g. "<script>"): never let browsers guess HTML from it.
+  reply.header("x-content-type-options", "nosniff");
   const { url, path, route, query, method } = request;
   const headers = Object.fromEntries(
     Object.entries(request.headers).filter(([name]) => SAFE_HEADERS.has(name)),
