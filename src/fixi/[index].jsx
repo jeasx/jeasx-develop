@@ -1,3 +1,4 @@
+import isCrossSite, { crossSiteResponse } from "../@helpers/crossSite";
 import { fitsCookie, readListCookie } from "../@helpers/cookies";
 import Layout from "../Layout";
 import { loadRecipes } from "../mdx/recipes";
@@ -6,6 +7,10 @@ import { loadRecipes } from "../mdx/recipes";
  * @param {import("../types").RouteProps} props
  */
 export default function ({ request, reply }) {
+  // Other sites must not overwrite the recipes cookie with a forged form.
+  if (isCrossSite(request)) {
+    return crossSiteResponse();
+  }
   // The same URL answers with the whole page or only the list, depending on this header,
   // so caches must keep one copy per value.
   reply.header("vary", "fx-request");

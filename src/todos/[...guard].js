@@ -1,4 +1,5 @@
 import { readListCookie, writeListCookie } from "../@helpers/cookies";
+import isCrossSite, { crossSiteResponse } from "../@helpers/crossSite";
 
 const MAX_LABEL_LENGTH = 200;
 const STATUSES = ["active", "completed"];
@@ -13,6 +14,11 @@ const DEFAULT_TODOS = [
  * @param {import("../types").RouteProps} props
  */
 export default function ({ request, reply }) {
+  // Other sites must not overwrite the todos cookie with a forged form.
+  if (isCrossSite(request)) {
+    return crossSiteResponse();
+  }
+
   // A JSON body can also be a number or string, which the "in" check below can't handle.
   const body = /** @type {Record<string, unknown>} */ (
     request.body && typeof request.body === "object" ? request.body : {}
@@ -53,7 +59,6 @@ export default function ({ request, reply }) {
     todos,
     // Unknown filters show all todos instead of an empty list.
     status: STATUSES.includes(request.query["status"]) ? request.query["status"] : undefined,
-    autofocus: request.method === "GET" || "newTodo" in body,
   };
 }
 

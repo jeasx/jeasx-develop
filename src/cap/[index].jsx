@@ -8,7 +8,8 @@ export default async function ({ request, reply }) {
   let error = "";
   if (request.method === "POST") {
     const token = request.body?.["cap-token"];
-    if (!token) {
+    // A repeated field arrives as array, which the Cap library can't handle.
+    if (typeof token !== "string" || !token) {
       // E.g. submitted before the captcha was solved.
       error = "Please solve the captcha before submitting the form.";
       reply.status(400);
@@ -57,7 +58,7 @@ export default async function ({ request, reply }) {
       <form action="" method="post">
         <label>
           Your name
-          <input type="text" name="name" value={request.body?.["name"]} />
+          <input type="text" name="name" value={String(request.body?.["name"] ?? "")} />
         </label>
         <p>
           <cap-widget data-cap-api-endpoint={`${request.path.replace(/\/$/, "")}/`}></cap-widget>

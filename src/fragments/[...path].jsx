@@ -1,18 +1,20 @@
 import Layout from "../Layout";
 import { Product } from "./Product";
 
+// Answer "/fragments" and its fragments "/fragments/~product" and "/fragments/~time" only.
+const FRAGMENT_PATTERN = new URLPattern({ pathname: "/fragments{/~:fragment(product|time)}?{/}?" });
+
 /**
  * @this {import("../types").ThisContext & { fragment?: string }}
  * @param {import("../types").RouteProps} props
  */
 export default function ({ request }) {
-  // Answer "/fragments" and its fragments "/fragments/~product" and "/fragments/~time" only.
-  const match = /^\/fragments(?:\/~(product|time))?\/?$/.exec(request.path);
+  const match = FRAGMENT_PATTERN.exec({ pathname: request.path });
   if (!match) {
     return;
   }
   // Name of the requested fragment; undefined renders the whole page.
-  this.fragment = match[1];
+  this.fragment = match.pathname.groups.fragment;
 
   // Keep the product id between 1 and 10, even for tampered query parameters.
   const id = Math.min(Math.max(Math.trunc(Number(request.query["id"])) || 1, 1), 10);

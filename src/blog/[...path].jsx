@@ -1,13 +1,15 @@
 import Layout from "../Layout";
 import { readPosts } from "./posts";
 
+// Only answer "/blog/<slug>", not deeper paths like "/blog/a/b/<slug>".
+const SLUG_PATTERN = new URLPattern({ pathname: "/blog/:slug{/}?" });
+
 /**
  * @this {import("../types").ThisContext}
  * @param {import("../types").RouteProps} props
  */
 export default function ({ request, reply }) {
-  // Only answer "/blog/<slug>", not deeper paths like "/blog/a/b/<slug>".
-  const slug = /^\/blog\/([^/]+)\/?$/.exec(request.path)?.[1];
+  const slug = SLUG_PATTERN.exec({ pathname: request.path })?.pathname.groups.slug;
   const blog = slug && readPosts(request).find((post) => post.slug === slug);
 
   if (!blog) {

@@ -2,12 +2,14 @@ import Layout from "../Layout";
 import Image from "../sharp/Image";
 import { loadProduct } from "./products";
 
+// Only answer "/products/<id>" with a numeric id, not deeper paths like "/products/a/1".
+const ID_PATTERN = new URLPattern({ pathname: "/products/:id(\\d+){/}?" });
+
 /**
  * @param {import("../types").RouteProps} props
  */
 export default async function ({ request, reply }) {
-  // Only answer "/products/<id>" with a numeric id, not deeper paths like "/products/a/1".
-  const id = /^\/products\/(\d+)\/?$/.exec(request.path)?.[1];
+  const id = ID_PATTERN.exec({ pathname: request.path })?.pathname.groups.id;
   if (!id) {
     return;
   }

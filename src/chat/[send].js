@@ -1,3 +1,4 @@
+import isCrossSite, { crossSiteResponse } from "../@helpers/crossSite";
 import { ERRORS, MAX_NAME_LENGTH, MAX_TEXT_LENGTH, PATH, postMessage } from "./room";
 
 // Time of the last message per IP address, to slow down flooding.
@@ -14,6 +15,10 @@ const MIN_INTERVAL = 1000;
 export default function ({ request, reply }) {
   if (request.method !== "POST") {
     return new Response(null, { status: 405, headers: { allow: "POST" } });
+  }
+  // Other sites must not post messages through a visitor's browser.
+  if (isCrossSite(request)) {
+    return crossSiteResponse();
   }
 
   const wantsJson = String(request.headers.accept).includes("application/json");

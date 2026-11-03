@@ -1,3 +1,4 @@
+import isCrossSite, { crossSiteResponse } from "../@helpers/crossSite";
 import { createHash } from "node:crypto";
 import { fitsCookie, readSignedCookie } from "../@helpers/cookies";
 import { SLUGS, TOKEN_PATTERN } from "./domain/constants";
@@ -20,6 +21,11 @@ export default function ({ request, reply }) {
   // Otherwise a broken cookie would redirect them to the start page below.
   if (reply.file) {
     return;
+  }
+
+  // Other sites must not overwrite the answers with a forged form.
+  if (isCrossSite(request)) {
+    return crossSiteResponse();
   }
 
   const path = request.path;

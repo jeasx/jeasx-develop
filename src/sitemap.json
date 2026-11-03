@@ -15,7 +15,7 @@
     "links": [
       { "path": "/lottery", "title": "Lottery" },
       { "path": "/todos", "title": "Todos" },
-      { "path": "/jokes", "title": "Forms" },
+      { "path": "/jokes", "title": "Jokes" },
       { "path": "/repositories", "title": "GitHub Repos" },
       { "path": "/wizard", "title": "Wizard" },
       { "path": "/ab-testing", "title": "A/B testing" }
@@ -64,9 +64,8 @@
     "links": [
       { "path": "/upload", "title": "Image upload" },
       { "path": "/sharp", "title": "Image scaler" },
-      { "path": "/svg", "title": "SVG generator" },
+      { "path": "/svg", "title": "SVG charts" },
       { "path": "/og", "title": "Open Graph images" },
-      { "path": "/charts", "title": "SVG charts" },
       { "path": "/json/request.json?foo=bar", "title": "JSON response" },
       { "path": "/response", "title": "Response objects" },
       { "path": "/negotiation", "title": "Content negotiation" },

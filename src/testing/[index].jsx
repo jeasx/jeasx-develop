@@ -58,7 +58,7 @@ export default function () {
       <p>
         Test files end with <code>.test.js</code> or <code>.test.jsx</code> and live next to the
         code they test, e.g. for the <a href="/i18n">i18n</a>,{" "}
-        <a href="/negotiation">content negotiation</a> and <a href="/charts">charts</a> examples.
+        <a href="/negotiation">content negotiation</a> and <a href="/svg">SVG charts</a> examples.
         Node.js can't run JSX directly, so <code>npm test</code> bundles the test files with esbuild
         first and then runs them with <code>node --test</code>:
       </p>

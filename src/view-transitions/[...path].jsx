@@ -1,12 +1,14 @@
 import Layout from "../Layout";
 import { PLANETS, planetStyles } from "./planets";
 
+// Only answer "/view-transitions/<slug>", not deeper paths like "/view-transitions/a/<slug>".
+const SLUG_PATTERN = new URLPattern({ pathname: "/view-transitions/:slug{/}?" });
+
 /**
  * @param {import("../types").RouteProps} props
  */
 export default function ({ request }) {
-  // Only answer "/view-transitions/<slug>", not deeper paths like "/view-transitions/a/<slug>".
-  const slug = /^\/view-transitions\/([^/]+)\/?$/.exec(request.path)?.[1];
+  const slug = SLUG_PATTERN.exec({ pathname: request.path })?.pathname.groups.slug;
   const index = PLANETS.findIndex((planet) => planet.slug === slug);
   if (index === -1) {
     return;

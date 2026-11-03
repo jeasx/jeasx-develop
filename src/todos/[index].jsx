@@ -1,7 +1,7 @@
 import Layout from "../Layout";
 import TrashIcon from "./trash.svg";
 
-export default function ({ todos, status, autofocus }) {
+export default function ({ todos, status }) {
   return (
     <Layout
       title="Todos"
@@ -15,7 +15,7 @@ export default function ({ todos, status, autofocus }) {
         a cookie in your browser.
       </p>
       <form method="post">
-        <input name="newTodo" placeholder="What needs to be done?" autofocus={autofocus} />
+        <input name="newTodo" placeholder="What needs to be done?" autofocus="autofocus" />
       </form>
       <form method="post">
         <ul class="todo-list">

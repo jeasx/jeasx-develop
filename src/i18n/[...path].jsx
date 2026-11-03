@@ -1,6 +1,9 @@
 import Layout from "../Layout";
 import { LOCALES } from "./messages";
 
+// Unknown locales and deeper paths are left to [404].
+const LOCALE_PATTERN = new URLPattern({ pathname: "/i18n/:locale{/}?" });
+
 /**
  * Renders "/i18n/<locale>". The guard has already put the locale and the translation
  * function into "this", so this route and its components only read them.
@@ -9,8 +12,7 @@ import { LOCALES } from "./messages";
  * @param {import("../types").RouteProps} props
  */
 export default function ({ request }) {
-  // Unknown locales and deeper paths are left to [404].
-  if (!this.t || !/^\/i18n\/[^/]+\/?$/.test(request.path)) {
+  if (!this.t || !LOCALE_PATTERN.test({ pathname: request.path })) {
     return;
   }
 

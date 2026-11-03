@@ -1,5 +1,8 @@
 import { LOCALES, createTranslator } from "./messages";
 
+// Matches "/i18n/<locale>" and any deeper path below it.
+const LOCALE_PATTERN = new URLPattern({ pathname: "/i18n/:locale{/*}?" });
+
 /**
  * Runs before every route of this example: reads the locale from the first path segment
  * ("/i18n/de/...") and puts the locale and a translation function into the "this" context.
@@ -9,7 +12,7 @@ import { LOCALES, createTranslator } from "./messages";
  * @param {import("../types").RouteProps} props
  */
 export default function ({ request }) {
-  const locale = /^\/i18n\/([^/]+)/.exec(request.path)?.[1];
+  const locale = LOCALE_PATTERN.exec({ pathname: request.path })?.pathname.groups.locale;
   if (locale && Object.hasOwn(LOCALES, locale)) {
     this.lang = locale;
     this.t = createTranslator(locale);

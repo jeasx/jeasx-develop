@@ -1,21 +1,17 @@
-import { readSignedCookie } from "../@helpers/cookies";
 import Layout from "../Layout";
 import jokes from "./jokes";
 
 /**
  * @param {import("../types").RouteProps} props
  */
-export default function ({ request, reply }) {
+export default function ({ request }) {
   const body = request.body || {};
   const category = body["category"];
-  // Keep the counter between 1 and 5, even for tampered form data
-  // or a signed value of another cookie (see "../@helpers/cookies.js").
-  const counter = Math.min(
-    Math.max(Math.trunc(Number(body["counter"] || readSignedCookie(request, "counter"))) || 3, 1),
-    5,
-  );
+  // The -/+ buttons send "change", so "counter" only comes from the hidden field.
+  const change = body["change"] === "-1" ? -1 : body["change"] === "1" ? 1 : 0;
+  const requested = (parseInt(body["counter"]) || 3) + change;
+  const counter = Math.min(Math.max(requested, 1), 5);
   const data = category ? jokes(category, counter) : [];
-  reply.setCookie("counter", String(counter), { path: "/jokes", signed: true });
 
   return (
     <Layout
@@ -26,14 +22,15 @@ export default function ({ request, reply }) {
       <p>
         Every button below submits a plain HTML form. The server reads the form, picks the jokes and
         renders the page, so it works without any JavaScript in the browser. The number of jokes is
-        remembered in a cookie.
+        passed along in a hidden form field.
       </p>
       <form method="post">
+        <input type="hidden" name="counter" value={counter} />
         <fieldset class="grid">
           <button
             class="btn btn-secondary"
-            name="counter"
-            value={counter - 1}
+            name="change"
+            value="-1"
             disabled={counter === 1}
             aria-label="Fewer jokes"
           >
@@ -41,8 +38,8 @@ export default function ({ request, reply }) {
           </button>
           <button
             class="btn btn-secondary"
-            name="counter"
-            value={counter + 1}
+            name="change"
+            value="1"
             disabled={counter === 5}
             aria-label="More jokes"
           >

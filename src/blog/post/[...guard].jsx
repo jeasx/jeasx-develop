@@ -1,3 +1,4 @@
+import isCrossSite, { crossSiteResponse } from "../../@helpers/crossSite";
 import isAuthorized from "../../basic-auth/isAuthorized";
 import Layout from "../../Layout";
 
@@ -5,6 +6,10 @@ import Layout from "../../Layout";
  * @param {import("../../types").RouteProps} props
  */
 export default function ({ request, reply }) {
+  // Browsers send remembered Basic Auth credentials along with forms from other sites too.
+  if (isCrossSite(request)) {
+    return crossSiteResponse();
+  }
   if (!isAuthorized(request.headers["authorization"])) {
     reply.header("WWW-Authenticate", 'Basic realm="Restricted Area"');
     reply.status(401);
