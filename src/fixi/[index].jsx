@@ -6,6 +6,9 @@ import { loadRecipes } from "../mdx/recipes";
  * @param {import("../types").RouteProps} props
  */
 export default function ({ request, reply }) {
+  // The same URL answers with the whole page or only the list, depending on this header,
+  // so caches must keep one copy per value.
+  reply.header("vary", "fx-request");
   if (request.headers["fx-request"] === "true") {
     return <Fragment request={request} reply={reply} />;
   }

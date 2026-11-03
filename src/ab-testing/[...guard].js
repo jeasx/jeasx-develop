@@ -18,13 +18,18 @@ export default function ({ request, reply }) {
 
   // Signed, so a visitor can't pick a variant by editing the cookie.
   let visitor = readSignedCookie(request, "visitor");
-  if (!visitor || query["reset"] !== undefined) {
+  const reset = query["reset"] !== undefined;
+  if (!visitor || reset) {
     visitor = randomBytes(16).toString("base64url");
     reply.setCookie("visitor", visitor, {
       path: PATH,
       signed: true,
       maxAge: 30 * 24 * 60 * 60,
     });
+  }
+  // Leave "?reset" behind, otherwise every reload would create (and count) another visitor.
+  if (reset) {
+    return reply.redirect(PATH, 303);
   }
 
   // Preview links like "?flag=reviews" turn flags on for one request, without changing

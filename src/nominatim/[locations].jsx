@@ -46,6 +46,9 @@ export default async function ({ request }) {
   if (!Array.isArray(json)) {
     return <p>Nominatim couldn't be reached right now. Please try again later.</p>;
   }
+  if (json.length === 0) {
+    return <p>No addresses found. Try another search.</p>;
+  }
 
   return (
     <table>

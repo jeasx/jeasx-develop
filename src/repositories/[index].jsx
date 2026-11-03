@@ -51,10 +51,18 @@ async function Repositories({ search }) {
   if (!items) {
     return <p>GitHub couldn't be reached right now. Please try again later.</p>;
   }
+  // GitHub matches each word on its own, so the filter does too: "react router" finds
+  // "remix-run/react-router", although the name doesn't contain the whole phrase.
+  const words = term.split(/\s+/).filter(Boolean);
   const repositories = items.filter(({ full_name }) => {
     const name = String(full_name).toLowerCase();
-    return term === "jeasx" ? name.startsWith(term + "/") : name.includes(term);
+    return term === "jeasx"
+      ? name.startsWith(term + "/")
+      : words.every((word) => name.includes(word));
   });
+  if (repositories.length === 0) {
+    return <p>No repositories found. Try another name.</p>;
+  }
   return (
     <ul>
       {repositories.map(({ html_url, full_name, description }) => (
