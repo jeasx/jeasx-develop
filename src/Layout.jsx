@@ -7,9 +7,7 @@ const ORIGIN = "https://expo.jeasx.dev";
 
 // Top-level folders of all examples, e.g. "blog" for "/blog".
 const EXAMPLES = new Set(
-  sitemap.flatMap(({ links }) =>
-    links.map(({ path }) => path.split(/[/?]/)[1]),
-  ),
+  sitemap.flatMap(({ links }) => links.map(({ path }) => path.split(/[/?]/)[1])),
 );
 
 /**
@@ -37,9 +35,7 @@ export default function Layout({
     // A new link per deploy, so social networks don't keep showing outdated images.
     v: process.env.BUILD_ID,
   })}`;
-  const sourceUrl = EXAMPLES.has(example)
-    ? `${REPOSITORY}/tree/main/src/${example}`
-    : REPOSITORY;
+  const sourceUrl = EXAMPLES.has(example) ? `${REPOSITORY}/tree/main/src/${example}` : REPOSITORY;
   return (
     <>
       {html("<!DOCTYPE html>")}
@@ -52,40 +48,20 @@ export default function Layout({
           {robots && <meta name="robots" content={robots} />}
           <link rel="stylesheet" href={addCacheBuster("/index.css")} />
           {css && <link rel="stylesheet" href={addCacheBuster(css)} />}
-          <link
-            rel="canonical"
-            href={`${ORIGIN}${url.endsWith("/") ? url.slice(0, -1) : url}`}
-          />
+          <link rel="canonical" href={`${ORIGIN}${url.endsWith("/") ? url.slice(0, -1) : url}`} />
           <meta property="og:type" content="website" />
-          <meta
-            property="og:title"
-            content={title || "Jeasx - JSX with Ease"}
-          />
-          {description && (
-            <meta property="og:description" content={description} />
-          )}
+          <meta property="og:title" content={title || "Jeasx - JSX with Ease"} />
+          {description && <meta property="og:description" content={description} />}
           <meta property="og:image" content={ogImage} />
           <meta property="og:image:width" content="1200" />
           <meta property="og:image:height" content="630" />
           <meta name="twitter:card" content="summary_large_image" />
           {/* The nonce is only set by pages with a Content Security Policy (see "/csp"). */}
-          <script
-            type="module"
-            src={addCacheBuster("/index.js")}
-            nonce={this.nonce}
-          ></script>
+          <script type="module" src={addCacheBuster("/index.js")} nonce={this.nonce}></script>
           {script && (
-            <script
-              type="module"
-              src={addCacheBuster(script)}
-              nonce={this.nonce}
-            ></script>
+            <script type="module" src={addCacheBuster(script)} nonce={this.nonce}></script>
           )}
-          <title>
-            {title
-              ? `${title} » Jeasx - JSX with Ease`
-              : "Jeasx - JSX with Ease"}
-          </title>
+          <title>{title ? `${title} » Jeasx - JSX with Ease` : "Jeasx - JSX with Ease"}</title>
         </head>
         <body>
           {path !== "/" && (

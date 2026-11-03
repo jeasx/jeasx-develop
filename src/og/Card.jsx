@@ -42,17 +42,9 @@ export default function Card({ title, subtitle = "", theme = "sunset" }) {
       {/* Decorative circles */}
       <circle cx="1080" cy="80" r="220" fill="#ffffff" opacity="0.12" />
       <circle cx="1150" cy="560" r="140" fill="#ffffff" opacity="0.08" />
-      <g
-        fill={colors.text}
-        font-family="Helvetica, Arial, Liberation Sans, sans-serif"
-      >
+      <g fill={colors.text} font-family="Helvetica, Arial, Liberation Sans, sans-serif">
         {lines.map((line, index) => (
-          <text
-            x="80"
-            y={top + index * fontSize * 1.1}
-            font-size={fontSize}
-            font-weight="bold"
-          >
+          <text x="80" y={top + index * fontSize * 1.1} font-size={fontSize} font-weight="bold">
             {line}
           </text>
         ))}
