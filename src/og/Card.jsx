@@ -15,13 +15,14 @@ export const MAX_SUBTITLE = 120;
 
 /**
  * An Open Graph card (1200 × 630 pixels) drawn as SVG with plain JSX.
- * SVG has no automatic line breaks, so the title is wrapped by hand.
+ * SVG has no automatic line breaks, so title and subtitle are wrapped by hand.
  *
  * @param {{ title: string, subtitle?: string, theme?: keyof typeof THEMES }} props
  */
 export default function Card({ title, subtitle = "", theme = "sunset" }) {
   const colors = THEMES[theme] ?? THEMES.sunset;
-  const lines = wrap(title, 22).slice(0, 3);
+  const lines = wrap(title, 22, 3);
+  const subtitleLines = wrap(subtitle, 50, 2);
   const fontSize = lines.length > 2 ? 80 : 96;
   const top = 250 - ((lines.length - 1) * fontSize) / 2;
   return (
@@ -52,16 +53,16 @@ export default function Card({ title, subtitle = "", theme = "sunset" }) {
             {line}
           </text>
         ))}
-        {subtitle && (
+        {subtitleLines.map((line, index) => (
           <text
             x="80"
-            y={top + lines.length * fontSize * 1.1 + 30}
+            y={top + (lines.length - 1) * fontSize * 1.1 + 90 + index * 50}
             font-size="40"
             opacity="0.9"
           >
-            {truncate(subtitle, 50)}
+            {line}
           </text>
-        )}
+        ))}
         <text x="80" y="570" font-size="32" font-weight="bold" opacity="0.85">
           expo.jeasx.dev
         </text>
@@ -71,13 +72,14 @@ export default function Card({ title, subtitle = "", theme = "sunset" }) {
 }
 
 /**
- * Splits text into lines of at most `max` characters, breaking at spaces.
+ * Splits text into at most `maxLines` lines of at most `max` characters, breaking at spaces.
  * Words longer than a line are cut, the last line gets an ellipsis if text is left.
  *
  * @param {string} text
  * @param {number} max
+ * @param {number} maxLines
  */
-function wrap(text, max) {
+function wrap(text, max, maxLines) {
   const lines = [];
   let line = "";
   for (const word of text.split(/\s+/).filter(Boolean)) {
@@ -90,10 +92,10 @@ function wrap(text, max) {
     }
   }
   if (line) lines.push(line);
-  if (lines.length > 3) {
-    lines[2] = truncate(`${lines[2]} …`, max);
+  if (lines.length > maxLines) {
+    lines[maxLines - 1] = truncate(`${lines[maxLines - 1]} …`, max);
   }
-  return lines;
+  return lines.slice(0, maxLines);
 }
 
 /**

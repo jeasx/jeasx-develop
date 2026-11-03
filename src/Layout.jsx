@@ -3,10 +3,13 @@ import GithubIcon from "./github.svg";
 import sitemap from "./sitemap.json";
 
 const REPOSITORY = "https://github.com/jeasx/jeasx-expo";
+const ORIGIN = "https://expo.jeasx.dev";
 
 // Top-level folders of all examples, e.g. "blog" for "/blog".
 const EXAMPLES = new Set(
-  sitemap.flatMap(({ links }) => links.map(({ path }) => path.split(/[/?]/)[1])),
+  sitemap.flatMap(({ links }) =>
+    links.map(({ path }) => path.split(/[/?]/)[1]),
+  ),
 );
 
 /**
@@ -27,7 +30,14 @@ export default function Layout({
   const url = encodeURI(path).replace(/[?#]/g, encodeURIComponent);
   // Link to the source of the current example; unknown paths (e.g. 404 pages) get the repository.
   const example = path.split("/")[1];
-  const sourceUrl = EXAMPLES.has(example) ? `${REPOSITORY}/tree/main/src/${example}` : REPOSITORY;
+  // Every page gets a social preview image, rendered from its title and description (see "/og").
+  const ogImage = `${ORIGIN}/og/image?${new URLSearchParams({
+    title: title || "Jeasx - JSX with Ease",
+    subtitle: description,
+  })}`;
+  const sourceUrl = EXAMPLES.has(example)
+    ? `${REPOSITORY}/tree/main/src/${example}`
+    : REPOSITORY;
   return (
     <>
       {html("<!DOCTYPE html>")}
@@ -42,14 +52,38 @@ export default function Layout({
           {css && <link rel="stylesheet" href={addCacheBuster(css)} />}
           <link
             rel="canonical"
-            href={`https://expo.jeasx.dev${url.endsWith("/") ? url.slice(0, -1) : url}`}
+            href={`${ORIGIN}${url.endsWith("/") ? url.slice(0, -1) : url}`}
           />
-          {/* The nonce is only set by pages with a Content Security Policy (see "/csp"). */}
-          <script type="module" src={addCacheBuster("/index.js")} nonce={this.nonce}></script>
-          {script && (
-            <script type="module" src={addCacheBuster(script)} nonce={this.nonce}></script>
+          <meta property="og:type" content="website" />
+          <meta
+            property="og:title"
+            content={title || "Jeasx - JSX with Ease"}
+          />
+          {description && (
+            <meta property="og:description" content={description} />
           )}
-          <title>{title ? `${title} » Jeasx - JSX with Ease` : "Jeasx - JSX with Ease"}</title>
+          <meta property="og:image" content={ogImage} />
+          <meta property="og:image:width" content="1200" />
+          <meta property="og:image:height" content="630" />
+          <meta name="twitter:card" content="summary_large_image" />
+          {/* The nonce is only set by pages with a Content Security Policy (see "/csp"). */}
+          <script
+            type="module"
+            src={addCacheBuster("/index.js")}
+            nonce={this.nonce}
+          ></script>
+          {script && (
+            <script
+              type="module"
+              src={addCacheBuster(script)}
+              nonce={this.nonce}
+            ></script>
+          )}
+          <title>
+            {title
+              ? `${title} » Jeasx - JSX with Ease`
+              : "Jeasx - JSX with Ease"}
+          </title>
         </head>
         <body>
           {path !== "/" && (
