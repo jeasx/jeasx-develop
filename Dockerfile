@@ -4,7 +4,6 @@ FROM node:lts-alpine
 ENV NODE_ENV=production
 
 # Alpine has no fonts, so sharp would draw SVG text as empty boxes (see "src/og").
-# Liberation Sans has the same metrics as Helvetica and Arial, which the cards are laid out for.
 RUN apk add --no-cache fontconfig font-liberation
 
 USER node
