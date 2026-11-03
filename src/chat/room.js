@@ -6,6 +6,12 @@ export const PATH = "/chat";
 export const MAX_NAME_LENGTH = 24;
 export const MAX_TEXT_LENGTH = 280;
 
+/** Error messages of the send route, passed to the page by their code. */
+export const ERRORS = {
+  missing: "Please enter your name and a message.",
+  fast: "Not so fast! Please wait a second.",
+};
+
 const MAX_MESSAGES = 50;
 const MAX_AGE = 60 * 60 * 1000;
 const MAX_CLIENTS = 500;

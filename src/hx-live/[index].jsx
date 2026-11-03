@@ -15,10 +15,21 @@ export default async function () {
         widget below works like the one in the <a href="/alpine">Alpine example</a>, written with
         hx-live attributes instead.
       </p>
-      <div data-counter="3" data-jokes="[]">
+      <div data-counter="3" data-jokes="[]" data-error="">
+        {/* Global helpers for the attributes below, so their names are specific to this example. */}
         <script>
-          {html(/*js*/ `async function load(category, count) {return await (await fetch(\`/jokes/api/\${category}?amount=\${count}\`)).json();}
-            function toListItem(text) {const li = document.createElement("li"); li.textContent = text; return li.outerHTML;}`)}
+          {html(/*js*/ `async function loadJokes(data, category) {
+              try {
+                const response = await fetch(\`/jokes/api/\${category}?amount=\${data.counter}\`);
+                if (!response.ok) throw new Error(response.statusText);
+                data.jokes = await response.json();
+                data.error = "";
+              } catch {
+                data.jokes = [];
+                data.error = "The jokes could not be loaded. Please try again.";
+              }
+            }
+            function jokeToListItem(text) {const li = document.createElement("li"); li.textContent = text; return li.outerHTML;}`)}
         </script>
         <div class="grid">
           <button
@@ -44,7 +55,7 @@ export default async function () {
           <button
             class="btn btn-primary"
             type="button"
-            hx-on:click="data.jokes = await load('programming', data.counter)"
+            hx-on:click="await loadJokes(data, 'programming')"
           >
             <span hx-live:text="data.counter === 1 ? `Tell me a nerd joke` : `Tell me ${data.counter} nerd jokes`" />
           </button>
@@ -53,12 +64,13 @@ export default async function () {
           <button
             class="btn btn-primary"
             type="button"
-            hx-on:click="data.jokes = await load('general', data.counter)"
+            hx-on:click="await loadJokes(data, 'general')"
           >
             <span hx-live:text="data.counter === 1 ? `Tell me a pun` : `Tell me ${data.counter} puns`" />
           </button>
         </div>
-        <ul hx-live:html="data.jokes.map(toListItem).join('')"></ul>
+        <p role="alert" hx-live:text="data.error"></p>
+        <ul hx-live:html="data.jokes.map(jokeToListItem).join('')"></ul>
       </div>
     </Layout>
   );

@@ -15,8 +15,8 @@ const SAFE_HEADERS = new Set([
 /**
  * @param {import("../types").RouteProps} props
  */
-export default function ({ request, reply }) {
-  const { url, path, route, query, method, body } = request;
+export default function ({ request }) {
+  const { url, path, route, query, method } = request;
   const headers = Object.fromEntries(
     Object.entries(request.headers).filter(([name]) => SAFE_HEADERS.has(name)),
   );
@@ -27,7 +27,6 @@ export default function ({ request, reply }) {
     query,
     method,
     headers,
-    body,
     // Only the runtime version (as in the footer): process.versions would also reveal
     // the exact versions of OpenSSL, V8 and other libraries, which helps attackers.
     runtime: process.versions.bun ? `Bun@${process.versions.bun}` : `Node@${process.versions.node}`,

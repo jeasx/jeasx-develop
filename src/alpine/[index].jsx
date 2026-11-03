@@ -15,10 +15,19 @@ export default async function () {
       </p>
       <div
         x-data="{
-              jokes:[],
+              jokes: [],
+              error: '',
               counter: 3,
               async load(category) {
-                this.jokes = await (await fetch(`/jokes/api/${category}?amount=${this.counter}`)).json()
+                try {
+                  const response = await fetch(`/jokes/api/${category}?amount=${this.counter}`);
+                  if (!response.ok) throw new Error(response.statusText);
+                  this.jokes = await response.json();
+                  this.error = '';
+                } catch {
+                  this.jokes = [];
+                  this.error = 'The jokes could not be loaded. Please try again.';
+                }
               },
             }"
       >
@@ -52,6 +61,7 @@ export default async function () {
             <span x-text="counter === 1 ? `Tell me a pun` : `Tell me ${counter} puns`" />
           </button>
         </div>
+        <p role="alert" x-show="error" x-text="error" />
         <template x-if="jokes.length">
           <ul>
             <template x-for="joke in jokes">

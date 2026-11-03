@@ -1,4 +1,4 @@
-import { MAX_NAME_LENGTH, MAX_TEXT_LENGTH, PATH, postMessage } from "./room";
+import { ERRORS, MAX_NAME_LENGTH, MAX_TEXT_LENGTH, PATH, postMessage } from "./room";
 
 // Time of the last message per IP address, to slow down flooding.
 /** @type {Map<string, number>} */
@@ -21,17 +21,20 @@ export default function ({ request, reply }) {
   const name = clean(body["name"], MAX_NAME_LENGTH);
   const text = clean(body["text"], MAX_TEXT_LENGTH);
 
+  /** @type {keyof typeof ERRORS | ""} */
   let error = "";
   if (!name || !text) {
-    error = "Please enter your name and a message.";
+    error = "missing";
   } else if (Date.now() - (lastPostByIp.get(request.ip) ?? 0) < MIN_INTERVAL) {
-    error = "Not so fast! Please wait a second.";
+    error = "fast";
   }
 
   if (error) {
+    // The redirect only carries the code: with the text in the URL, anyone could
+    // link to the chat with a message of their own in the error line.
     return wantsJson
-      ? Response.json({ error }, { status: 400 })
-      : redirect(`${PATH}?error=${encodeURIComponent(error)}`);
+      ? Response.json({ error: ERRORS[error] }, { status: 400 })
+      : redirect(`${PATH}?error=${error}`);
   }
 
   lastPostByIp.set(request.ip, Date.now());

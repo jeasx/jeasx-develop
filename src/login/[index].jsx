@@ -2,7 +2,7 @@ import Layout from "../Layout";
 import Field from "./Field";
 import { PATH, endSession, startSession } from "./session";
 import { verifyUser } from "./store";
-import { field } from "./validate";
+import { PASSWORD, field } from "./validate";
 
 /**
  * Shows the sign-in form or, with a session, the account of the user.
@@ -22,6 +22,9 @@ export default async function ({ request, reply, csrfToken, session }) {
     const password = field(request.body, "password", { trim: false });
     if (!username || !password) {
       error = "Please enter username and password.";
+    } else if (password.length > PASSWORD.maxLength) {
+      // Registration doesn't allow longer passwords, so don't spend time hashing them.
+      error = "Wrong username or password.";
     } else if (await verifyUser(username, password)) {
       // Replace any existing session, so an id known before login becomes worthless.
       endSession(reply, session?.id);
@@ -45,8 +48,8 @@ export default async function ({ request, reply, csrfToken, session }) {
       <p>
         This example stores a random session id in a cookie and keeps the session data on the
         server. Passwords are hashed with scrypt from <code>node:crypto</code>. A guard checks the
-        CSRF token of every form and looks up the session for all routes below it. Users and
-        sessions live in memory, so they are gone after a restart.
+        CSRF token of every form, limits the attempts per IP address and looks up the session for
+        all routes below it. Users and sessions live in memory, so they are gone after a restart.
       </p>
 
       {session ? (

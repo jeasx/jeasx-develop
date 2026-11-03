@@ -1,12 +1,14 @@
 import { randomBytes, timingSafeEqual } from "node:crypto";
 import { readSignedCookie } from "../@helpers/cookies";
 import Layout from "../Layout";
+import { countAttempt } from "./attempts";
 import { PATH } from "./session";
 import { getSession } from "./store";
 
 /**
  * Runs before every route of this example:
  * - checks the CSRF token of every POST (see the "signed-cookies" example for details),
+ * - limits the number of POSTs per IP address, as each one may hash a password,
  * - looks up the session of the visitor.
  *
  * @param {import("../types").RouteProps} props
@@ -35,6 +37,20 @@ export default function ({ request, reply }) {
           <section class="center">
             <h1>Error 403</h1>
             <p>The form was rejected, as its CSRF token is missing or doesn't match.</p>
+            <a href={PATH}>Back to the example</a>
+          </section>
+        </Layout>
+      );
+    }
+
+    const wait = countAttempt(request.ip);
+    if (wait > 0) {
+      reply.status(429).header("retry-after", String(wait));
+      return (
+        <Layout title="Error 429" robots="noindex">
+          <section class="center">
+            <h1>Error 429</h1>
+            <p>Too many attempts. Please wait {wait} seconds and try again.</p>
             <a href={PATH}>Back to the example</a>
           </section>
         </Layout>

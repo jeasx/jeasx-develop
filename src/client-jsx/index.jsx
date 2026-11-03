@@ -11,5 +11,9 @@ globalThis.renderJSX = async (container, component, props = {}) => {
     return;
   }
   const Component = Components[component];
-  container.innerHTML = await jsxToString(<Component {...props} />);
+  try {
+    container.innerHTML = await jsxToString(<Component {...props} />);
+  } catch {
+    container.textContent = "The jokes could not be loaded. Please try again.";
+  }
 };

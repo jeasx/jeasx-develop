@@ -4,9 +4,20 @@ import { useState } from "preact/hooks";
 export default function Jokes({ initial, api }) {
   const [counter, setCounter] = useState(initial);
   const [data, setData] = useState([]);
+  const [error, setError] = useState("");
 
   async function submit(category) {
-    setData(await (await fetch(`${api}/${encodeURIComponent(category)}?amount=${counter}`)).json());
+    try {
+      const response = await fetch(`${api}/${encodeURIComponent(category)}?amount=${counter}`);
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+      setData(await response.json());
+      setError("");
+    } catch {
+      setData([]);
+      setError("The jokes could not be loaded. Please try again.");
+    }
   }
 
   return (
@@ -39,6 +50,7 @@ export default function Jokes({ initial, api }) {
           {counter === 1 ? "Tell me a pun" : `Tell me ${counter} puns`}
         </button>
       </fieldset>
+      {error && <p role="alert">{error}</p>}
       {data.length > 0 && (
         <ul>
           {data.map((joke) => (

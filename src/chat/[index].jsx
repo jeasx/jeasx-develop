@@ -1,5 +1,5 @@
 import Layout from "../Layout";
-import { MAX_NAME_LENGTH, MAX_TEXT_LENGTH, recentMessages } from "./room";
+import { ERRORS, MAX_NAME_LENGTH, MAX_TEXT_LENGTH, recentMessages } from "./room";
 
 /**
  * @param {import("../types").RouteProps} props
@@ -8,7 +8,9 @@ export default function ({ request, reply }) {
   const messages = recentMessages();
   const lastId = messages.at(-1)?.id ?? 0;
   const name = String(request.cookies["name"] ?? "").slice(0, MAX_NAME_LENGTH);
-  const error = String(request.query["error"] ?? "").slice(0, 100);
+  // Only known codes, so a link can't put text of its own into the error line.
+  const code = String(request.query["error"] ?? "");
+  const error = Object.hasOwn(ERRORS, code) ? ERRORS[code] : "";
 
   // The page shows the latest messages, so it must not come from a cache.
   reply.header("cache-control", "no-store");
