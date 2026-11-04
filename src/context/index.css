@@ -1,0 +1,38 @@
+.theme-switcher {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+.tree {
+  margin: 1.5rem auto;
+  max-width: 32rem;
+  font-family: monospace;
+  font-size: 0.85rem;
+  line-height: 1.8;
+  opacity: 0.8;
+}
+.theme-box {
+  padding: 2rem 1.5rem;
+  border-radius: 0.75rem;
+  text-align: center;
+  transition:
+    background 0.3s,
+    color 0.3s;
+}
+.theme-box .icon {
+  display: block;
+  font-size: 2.5rem;
+}
+.theme-light {
+  background: linear-gradient(135deg, #fef9c3, #e0f2fe);
+  color: #0f172a;
+}
+.theme-light code {
+  color: #0f172a;
+  background: rgb(0 0 0 / 0.08);
+}
+.theme-dark {
+  background: linear-gradient(135deg, #0f172a, #312e81);
+  color: #f8fafc;
+  border: 1px solid #334155;
+}

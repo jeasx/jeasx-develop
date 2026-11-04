@@ -1,0 +1,233 @@
+:root {
+  --joke-accent: #f59e0b;
+  --joke-accent-2: #ec4899;
+  --joke-line: rgba(127, 127, 127, 0.18);
+  --joke-soft: rgba(127, 127, 127, 0.08);
+  --joke-muted: rgba(127, 127, 127, 0.85);
+}
+
+.jokes {
+  margin: 0 auto;
+  max-width: 40rem;
+
+  & h1 {
+    background: linear-gradient(120deg, var(--joke-accent), var(--joke-accent-2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-align: center;
+  }
+
+  & .lead {
+    color: var(--joke-muted);
+    text-align: center;
+  }
+}
+
+.jokes .card {
+  margin-top: 1.5rem;
+  border: 1px solid var(--joke-line);
+  border-radius: 1rem;
+  padding: 1.25rem;
+}
+
+.stepper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
+
+  & .stepper-label {
+    margin-right: auto;
+    color: var(--joke-muted);
+  }
+
+  & button {
+    margin: 0;
+    border: 2px solid var(--joke-line);
+    border-radius: 999px;
+    background: transparent;
+    padding: 0;
+    width: 2.5rem;
+    height: 2.5rem;
+    color: inherit;
+    font-size: 1.25rem;
+    line-height: 1;
+    transition:
+      border-color 0.2s,
+      transform 0.1s;
+
+    &:hover:not(:disabled) {
+      border-color: var(--joke-accent);
+    }
+
+    &:active:not(:disabled) {
+      transform: scale(0.92);
+    }
+
+    &:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+  }
+
+  & .stepper-value {
+    min-width: 2ch;
+    font-weight: 700;
+    font-size: 1.75rem;
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+  }
+}
+
+.dots {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.35rem;
+  margin: 0.75rem 0 1.25rem;
+
+  & span {
+    border-radius: 999px;
+    background: var(--joke-line);
+    width: 1.5rem;
+    height: 0.35rem;
+    transition: background 0.3s;
+  }
+
+  & .on {
+    background: linear-gradient(90deg, var(--joke-accent), var(--joke-accent-2));
+  }
+}
+
+.categories {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 0.75rem;
+}
+
+.category {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  border: 2px solid var(--joke-line);
+  border-radius: 0.875rem;
+  background: var(--joke-soft);
+  padding: 1.25rem 1rem;
+  color: inherit;
+  font-weight: 600;
+  transition:
+    border-color 0.2s,
+    transform 0.2s;
+
+  & .category-icon {
+    font-size: 2.25rem;
+    transition: transform 0.3s;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    border-color: var(--joke-accent);
+
+    & .category-icon {
+      transform: rotate(-10deg) scale(1.15);
+    }
+  }
+
+  &.selected {
+    border-color: var(--joke-accent-2);
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(236, 72, 153, 0.15));
+  }
+}
+
+.joke-list {
+  display: grid;
+  gap: 0.75rem;
+  margin: 1.5rem 0 0;
+  padding: 0;
+  list-style: none;
+
+  & li {
+    margin: 0;
+    animation: joke-in 0.4s ease-out both;
+    animation-delay: var(--delay);
+    list-style: none;
+  }
+}
+
+@keyframes joke-in {
+  from {
+    transform: translateY(0.75rem);
+    opacity: 0;
+  }
+}
+
+.joke-list details {
+  margin: 0;
+  border: 1px solid var(--joke-line);
+  border-radius: 0.875rem;
+  padding: 0;
+  overflow: hidden;
+
+  & summary {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    cursor: pointer;
+    padding: 1rem 1.25rem;
+    list-style: none;
+
+    &::-webkit-details-marker,
+    &::after {
+      display: none;
+    }
+  }
+
+  & .joke-number {
+    display: grid;
+    flex: none;
+    place-items: center;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--joke-accent), var(--joke-accent-2));
+    width: 2rem;
+    height: 2rem;
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.9rem;
+  }
+
+  & .joke-setup {
+    flex: 1;
+  }
+
+  & .joke-hint {
+    flex: none;
+    border-radius: 999px;
+    background: var(--joke-soft);
+    padding: 0.2rem 0.65rem;
+    color: var(--joke-muted);
+    font-size: 0.8rem;
+  }
+
+  &[open] .joke-hint {
+    display: none;
+  }
+
+  & .joke-punchline {
+    margin: 0;
+    border-top: 1px dashed var(--joke-line);
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(236, 72, 153, 0.1));
+    padding: 1rem 1.25rem 1rem 4.125rem;
+    font-weight: 600;
+    font-size: 1.1rem;
+    animation: joke-in 0.3s ease-out;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jokes * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

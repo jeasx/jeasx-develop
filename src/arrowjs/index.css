@@ -1,2 +1,31 @@
 @import "./components/PasswordGenerator.css";
 @import "./components/PomodoroTimer.css";
+
+:root {
+  --ar-accent: #f59e0b;
+  --ar-accent-2: #6366f1;
+}
+
+.ar {
+  margin: 0 auto;
+  max-width: 44rem;
+
+  & > h1 {
+    background: linear-gradient(120deg, var(--ar-accent), var(--ar-accent-2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+}
+
+/* Islands are mounted in the browser only: reserve their space to avoid layout shifts. */
+.ar-island {
+  margin-bottom: 1rem;
+  border-radius: 1rem;
+  overflow: hidden;
+
+  &:empty {
+    min-height: 30rem;
+    background: rgba(127, 127, 127, 0.07);
+  }
+}

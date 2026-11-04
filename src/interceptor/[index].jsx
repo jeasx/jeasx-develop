@@ -11,6 +11,7 @@ export default function ({ request }) {
     <Layout
       title="Intercept and modify JSX at runtime"
       description="Override jsxToString to modify the markup of existing JSX components."
+      css="/interceptor/index.css"
     >
       <h1>Intercept and modify JSX at runtime</h1>
       <p>
@@ -27,22 +28,27 @@ export default function ({ request }) {
         component stays untouched.
       </p>
       <p>
-        In this example, a <code>HouseKeeper</code> component wraps a third-party component it
-        doesn't control. It removes all inline <code>style</code> attributes and rewrites{" "}
-        <code>className</code> to <code>class</code>, without changing the third-party code. Use the
-        link below to toggle it on and off.
+        In this example, a <code>HouseKeeper</code> component wraps a weather widget from a
+        third-party library. The widget ships with its own look in inline <code>style</code>{" "}
+        attributes and uses React's <code>className</code>. <code>HouseKeeper</code> removes all
+        inline styles and rewrites <code>className</code> to <code>class</code>, so the stylesheet
+        of this site takes over, without changing the third-party code.
       </p>
-      <section class="center">
+      <section class="stage">
+        <p class="toggle">
+          <a href="?styles=on" role="button" aria-disabled={removeStyles ? "false" : "true"}>
+            Vendor styles
+          </a>
+          <a href="?styles=off" role="button" aria-disabled={removeStyles ? "true" : "false"}>
+            Site styles
+          </a>
+        </p>
         {removeStyles ? (
           <HouseKeeper>
-            <ThirdPartyComponent />
-            <a href="?styles=on">Turn inline styles on</a>
+            <WeatherWidget />
           </HouseKeeper>
         ) : (
-          <>
-            <ThirdPartyComponent />
-            <a href="?styles=off">Turn inline styles off</a>
-          </>
+          <WeatherWidget />
         )}
       </section>
     </Layout>
@@ -73,15 +79,66 @@ async function HouseKeeper({ children }) {
   return html(await jsxToString.call(context, <>{children}</>));
 }
 
-function ThirdPartyComponent() {
+const FORECAST = [
+  { day: "Mon", icon: "☀️", high: 24, low: 14 },
+  { day: "Tue", icon: "⛅", high: 21, low: 13 },
+  { day: "Wed", icon: "🌧️", high: 17, low: 11 },
+  { day: "Thu", icon: "⛈️", high: 16, low: 10 },
+  { day: "Fri", icon: "🌤️", high: 22, low: 12 },
+];
+
+/**
+ * Stands in for a component from a library you don't control:
+ * it hard-codes its look with inline styles and uses React's "className".
+ */
+function WeatherWidget() {
   return (
-    <div className="third-party" style="border: 4px dashed var(--mu-accent);">
-      {["red", "green", "blue", "orange"].map((color) => (
-        <>
-          <span style={`background-color: ${color}`}>{color}</span>
-          &nbsp;
-        </>
-      ))}
+    <div
+      className="weather"
+      style="width: 100%; max-width: 26rem; padding: 1.5rem; border-radius: 1.5rem; color: #fff; font-family: system-ui, sans-serif; background: linear-gradient(160deg, #38bdf8 0%, #6366f1 55%, #a855f7 100%); box-shadow: 0 20px 40px -12px rgb(99 102 241 / 0.6);"
+    >
+      <div
+        className="weather-now"
+        style="display: flex; align-items: center; justify-content: space-between;"
+      >
+        <div>
+          <div
+            className="weather-place"
+            style="font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase; opacity: 0.85;"
+          >
+            Hamburg
+          </div>
+          <div className="weather-temp" style="font-size: 4rem; font-weight: 200; line-height: 1;">
+            19°
+          </div>
+          <div className="weather-summary" style="opacity: 0.9;">
+            Partly cloudy · feels like 17°
+          </div>
+        </div>
+        <div
+          className="weather-icon"
+          style="font-size: 4.5rem; filter: drop-shadow(0 8px 12px rgb(0 0 0 / 0.25));"
+        >
+          ⛅
+        </div>
+      </div>
+      <ul
+        className="weather-forecast"
+        style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.5rem; margin: 1.5rem 0 0; padding: 0;"
+      >
+        {FORECAST.map(({ day, icon, high, low }) => (
+          <li
+            className="weather-day"
+            style="list-style: none; padding: 0.6rem 0; border-radius: 0.9rem; text-align: center; background: rgb(255 255 255 / 0.18); backdrop-filter: blur(6px);"
+          >
+            <div style="font-size: 0.75rem; font-weight: 600;">{day}</div>
+            <div style="font-size: 1.5rem; margin: 0.25rem 0;">{icon}</div>
+            <div style="font-size: 0.8rem;">
+              {high}° <span style="opacity: 0.65;">{low}°</span>
+            </div>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

@@ -1,0 +1,59 @@
+.cap-card,
+.result {
+  max-width: 26rem;
+  margin: 2rem auto;
+}
+.cap-card form {
+  display: grid;
+  gap: 1rem;
+  margin: 0;
+}
+.cap-card label {
+  margin: 0;
+}
+/* The widget reads its look from these custom properties. */
+cap-widget {
+  justify-self: center;
+  --cap-background: var(--mu-form-element-background-color);
+  --cap-border-color: var(--mu-form-element-border-color);
+  --cap-border-radius: var(--mu-border-radius);
+  --cap-color: var(--mu-color);
+  --cap-checkbox-background: var(--mu-background-color);
+  --cap-checkbox-border: 1px solid var(--mu-form-element-border-color);
+  --cap-spinner-color: var(--mu-primary);
+  --cap-font: var(--mu-font-family);
+}
+.wide {
+  width: 100%;
+}
+
+.result {
+  text-align: center;
+}
+.result-icon {
+  display: grid;
+  place-items: center;
+  width: 4rem;
+  height: 4rem;
+  margin: 0.5rem auto 1rem;
+  border-radius: 50%;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--card-color);
+  background: color-mix(in srgb, var(--card-color) 15%, transparent);
+}
+.result-steps {
+  max-width: 20rem;
+  margin: 0 auto 1rem;
+  text-align: left;
+}
+.result-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 0 0 0.5rem;
+}
+.result-actions .btn {
+  margin: 0;
+}

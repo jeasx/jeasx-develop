@@ -21,7 +21,8 @@ export const PomodoroTimer = component(() => {
 
   const total = () => (state.mode === "work" ? WORK_SECONDS : BREAK_SECONDS);
   const progress = () => 1 - state.remaining / total();
-  const minutes = () => String(Math.floor(state.remaining / 60)).padStart(2, "0");
+  const minutes = () =>
+    String(Math.floor(state.remaining / 60)).padStart(2, "0");
   const seconds = () => String(state.remaining % 60).padStart(2, "0");
 
   const tick = () => {
@@ -68,20 +69,24 @@ export const PomodoroTimer = component(() => {
   return html /*html*/ `<div class="timer" data-mode="${() => state.mode}">
     <nav class="timer-tabs">
       <button
+        type="button"
         class="${() => `timer-tab${state.mode === "work" ? " timer-tab--on" : ""}`}"
+        aria-pressed="${() => String(state.mode === "work")}"
         @click="${() => setMode("work")}"
       >
         Focus
       </button>
       <button
+        type="button"
         class="${() => `timer-tab${state.mode === "break" ? " timer-tab--on" : ""}`}"
+        aria-pressed="${() => String(state.mode === "break")}"
         @click="${() => setMode("break")}"
       >
         Break
       </button>
     </nav>
     <section class="timer-face">
-      <svg class="timer-ring" viewBox="0 0 200 200">
+      <svg class="timer-ring" viewBox="0 0 200 200" aria-hidden="true">
         <circle
           class="timer-ring__track"
           cx="100"
@@ -104,17 +109,24 @@ export const PomodoroTimer = component(() => {
         />
       </svg>
       <div class="timer-time">
-        <span class="timer-digits">${minutes}:${seconds}</span>
+        <span class="timer-digits" role="timer">${minutes}:${seconds}</span>
       </div>
     </section>
     <div class="timer-controls">
-      <button class="timer-btn" @click="${() => (state.running ? pause() : start())}">
+      <button
+        type="button"
+        class="timer-btn"
+        @click="${() => (state.running ? pause() : start())}"
+      >
         ${() => (state.running ? "Pause" : "Start")}
       </button>
-      <button class="timer-btn timer-btn--sec" @click="${reset}">Reset</button>
+      <button type="button" class="timer-btn timer-btn--sec" @click="${reset}">
+        Reset
+      </button>
     </div>
     <p class="timer-sessions">
-      ${() => state.sessions} ${() => (state.sessions === 1 ? "session" : "sessions")} completed
+      ${() => state.sessions}
+      ${() => (state.sessions === 1 ? "session" : "sessions")} completed
     </p>
   </div>`;
 });

@@ -1,0 +1,121 @@
+:root {
+  --tf-accent: #3b82f6;
+  --tf-accent-2: #8b5cf6;
+  --tf-line: rgba(127, 127, 127, 0.2);
+  --tf-soft: rgba(127, 127, 127, 0.07);
+  --tf-muted: rgba(127, 127, 127, 0.9);
+}
+
+.tf-title {
+  background: linear-gradient(120deg, var(--tf-accent), var(--tf-accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-align: center;
+}
+
+/* Product browser, swapped as a whole by the "~product" fragment */
+.tf-card {
+  transition: opacity 0.3s;
+  margin: 1.5rem 0;
+  border: 1px solid var(--tf-line);
+  border-radius: 0.75rem;
+  background: var(--tf-soft);
+  padding: 1.25rem 1.5rem;
+
+  /* Fade the swapped-in fragment in, so the change is noticeable. */
+  &.htmx-added {
+    opacity: 0;
+  }
+}
+
+.tf-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+
+  & h2 {
+    margin: 0;
+  }
+
+  & nav {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  & button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    padding: 0.25rem 0.9rem;
+    line-height: 1;
+  }
+
+  & output {
+    min-width: 4rem;
+    line-height: 1;
+    color: var(--tf-muted);
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+  }
+}
+
+.tf-product {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  align-items: start;
+  gap: 1.25rem;
+  margin: 0;
+
+  & img {
+    border-radius: 0.5rem;
+    max-width: 100%;
+    height: auto;
+  }
+
+  & h3 {
+    margin: 0 0 0.25rem;
+  }
+
+  & p {
+    margin: 0.5rem 0 0;
+  }
+
+  @media (max-width: 32rem) {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+  }
+}
+
+.tf-price {
+  color: var(--tf-accent);
+  font-size: 1.25rem;
+}
+
+.tf-empty {
+  color: var(--tf-muted);
+  font-style: italic;
+}
+
+/* Server time, swapped every second by the "~time" fragment */
+.tf-time {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: baseline;
+  gap: 0.5rem;
+  color: var(--tf-muted);
+
+  & output {
+    color: var(--tf-accent);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    font-family: ui-monospace, monospace;
+  }
+}

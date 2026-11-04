@@ -1,0 +1,10 @@
+.auth-card {
+  max-width: 28rem;
+  margin: 2rem auto 1rem;
+}
+.auth-card ol {
+  margin: 0;
+}
+.auth-card footer {
+  text-align: center;
+}

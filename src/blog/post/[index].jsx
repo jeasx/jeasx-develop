@@ -32,62 +32,126 @@ export default function ({ request, reply }) {
 
   /** @param {string} name */
   const value = (name) => String(body?.[name] ?? "");
+  // Mark empty required fields after a failed submit, so they stand out.
+  const missing = request.method === "POST" && body ? missingFields(body) : [];
+  /** @param {string} name */
+  const invalid = (name) => (missing.includes(name) ? "true" : undefined);
 
   return (
-    <Layout title="New blog post" robots="noindex">
-      <h1>New blog post</h1>
-      {error && <p role="alert">{error}</p>}
-      <form method="post" novalidate>
-        <label>
-          Slug
-          <input
-            type="text"
-            name="slug"
-            maxlength={FIELDS.slug}
-            value={value("slug")}
-            placeholder="Leave empty to create it from the title"
-          />
-        </label>
-        <label>
-          Title
-          <input
-            type="text"
-            name="title"
-            maxlength={FIELDS.title}
-            value={value("title")}
-            required
-          />
-        </label>
-        <label>
-          Author
-          <input
-            type="text"
-            name="author"
-            maxlength={FIELDS.author}
-            value={value("author")}
-            required
-          />
-        </label>
-        <label>
-          Description
-          <input
-            type="text"
-            name="description"
-            maxlength={FIELDS.description}
-            value={value("description")}
-            required
-          />
-        </label>
-        <label>
-          Body
-          <textarea name="body" rows={6} maxlength={FIELDS.body} required>
-            {value("body")}
-          </textarea>
-        </label>
-        <button class="btn btn-primary" type="submit">
-          Publish post
-        </button>
-      </form>
+    <Layout title="New blog post" robots="noindex" css="/blog/index.css">
+      <nav>
+        <a href="/blog">← All posts</a>
+      </nav>
+      <header class="blog-intro">
+        <h1>
+          Write a <span class="shell-gradient">new post</span>
+        </h1>
+        <p class="blog-lead">Share an idea. It will be stored in a cookie, only you can see it.</p>
+      </header>
+      <div class="blog-editor">
+        <form method="post" novalidate class="blog-form">
+          {error && (
+            <p role="alert" class="blog-error">
+              ⚠️ {error}
+            </p>
+          )}
+          <label class="blog-field">
+            <span class="blog-label">Title</span>
+            <input
+              type="text"
+              name="title"
+              class="blog-title-input"
+              maxlength={FIELDS.title}
+              value={value("title")}
+              placeholder="A catchy headline…"
+              aria-invalid={invalid("title")}
+              required
+              autofocus
+            />
+          </label>
+          <label class="blog-field">
+            <span class="blog-label">Description</span>
+            <input
+              type="text"
+              name="description"
+              maxlength={FIELDS.description}
+              value={value("description")}
+              placeholder="One or two sentences shown on the overview page"
+              aria-invalid={invalid("description")}
+              required
+            />
+            <small>Up to {FIELDS.description} characters</small>
+          </label>
+          <div class="blog-field-row">
+            <label class="blog-field">
+              <span class="blog-label">Author</span>
+              <input
+                type="text"
+                name="author"
+                maxlength={FIELDS.author}
+                value={value("author")}
+                placeholder="Your name"
+                autocomplete="name"
+                aria-invalid={invalid("author")}
+                required
+              />
+            </label>
+            <label class="blog-field">
+              <span class="blog-label">
+                Slug <em>optional</em>
+              </span>
+              <span class="blog-slug">
+                <span aria-hidden="true">/blog/</span>
+                <input
+                  type="text"
+                  name="slug"
+                  maxlength={FIELDS.slug}
+                  value={value("slug")}
+                  placeholder="created-from-the-title"
+                />
+              </span>
+            </label>
+          </div>
+          <label class="blog-field">
+            <span class="blog-label">Body</span>
+            <textarea
+              name="body"
+              class="blog-body-input"
+              placeholder="Tell your story… Separate paragraphs with a blank line."
+              rows={12}
+              maxlength={FIELDS.body}
+              aria-invalid={invalid("body")}
+              required
+            >
+              {value("body")}
+            </textarea>
+            <small>Up to {FIELDS.body} characters</small>
+          </label>
+          <div class="blog-form-actions">
+            <a href="/blog">Cancel</a>
+            <button class="btn btn-primary" type="submit">
+              🚀 Publish post
+            </button>
+          </div>
+        </form>
+        <aside class="blog-tips">
+          <h2>Tips</h2>
+          <ul>
+            <li>
+              <b>Paragraphs:</b> leave a blank line between them.
+            </li>
+            <li>
+              <b>HTML</b> is shown as text, so you can safely try <code>&lt;script&gt;</code>.
+            </li>
+            <li>
+              <b>Space is limited:</b> once the cookie is full, the oldest posts are dropped.
+            </li>
+            <li>
+              <b>Clear the cookie</b> on the overview page to get the example posts back.
+            </li>
+          </ul>
+        </aside>
+      </div>
     </Layout>
   );
 }

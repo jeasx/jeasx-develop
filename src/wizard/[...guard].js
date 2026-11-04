@@ -108,11 +108,12 @@ export default function ({ request, reply }) {
           break;
         // Saving and finishing delete the current answers. This only happens on form submissions,
         // so a plain GET (e.g. a link prefetch or a reload) never loses any answers.
+        // 303 makes the browser load the target with GET, so a reload doesn't resubmit the form.
         case "Save":
-          return reply.redirect(`${SLUGS.SAVE}?token=${save(request, reply, props.data)}`);
+          return reply.redirect(`${SLUGS.SAVE}?token=${save(request, reply, props.data)}`, 303);
         case "Back":
           // Steps outside of the current flow have no previous step.
-          return reply.redirect(props.previous || SLUGS.START);
+          return reply.redirect(props.previous || SLUGS.START, 303);
         default:
           props.errors = validator(step, props.data[step]);
           if (Object.keys(props.errors).length === 0) {
@@ -120,7 +121,7 @@ export default function ({ request, reply }) {
               // The claim is complete, so its answers aren't needed anymore.
               reply.clearCookie("data", COOKIE_OPTIONS);
             }
-            return reply.redirect(props.next);
+            return reply.redirect(props.next, 303);
           }
       }
     }

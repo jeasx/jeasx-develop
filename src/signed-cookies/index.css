@@ -1,0 +1,53 @@
+.notes {
+  max-width: 36rem;
+  margin: 2rem auto;
+}
+.notes-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.notes-list {
+  padding: 0;
+}
+.notes-list li {
+  list-style: none;
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 0.5rem;
+  border-left: 3px solid var(--mu-primary);
+  border-radius: var(--mu-border-radius);
+  background: color-mix(in srgb, currentColor 5%, transparent);
+}
+.notes-empty {
+  color: var(--mu-muted-color);
+  font-style: italic;
+}
+.notes form {
+  margin: 0;
+}
+.cookie-value {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.8rem;
+  word-break: break-all;
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 1rem;
+}
+.action {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
+  margin: 0;
+  text-align: center;
+  border: var(--mu-border-width) solid var(--mu-border-color);
+  border-radius: var(--mu-border-radius);
+}
+.action small {
+  color: var(--mu-muted-color);
+}

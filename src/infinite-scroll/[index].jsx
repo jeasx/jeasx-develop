@@ -13,31 +13,36 @@ export default function ({ request }) {
     <Layout
       title="Infinite scroll with HTMX and async generators"
       description="Load more rows while scrolling with HTMX, streamed by an async generator."
+      css="/infinite-scroll/index.css"
       script="/infinite-scroll/index.js"
     >
-      <h1>Infinite scroll with HTMX and async generators</h1>
-      <p>
-        Scroll down: as soon as the last row comes into view, HTMX fetches the next page from the
-        server and puts it in its place. The rows come from an <code>async function*</code>, which
-        loads one page after another from a slow API and streams every row as soon as it is ready.
-      </p>
-      <p>
-        Without JavaScript, the "Load more releases" link reloads the page with one more page. As
-        the address is updated while scrolling, a reload keeps all releases loaded so far.
-      </p>
-      <table>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Release</th>
-            <th>Date</th>
-            <th>Page</th>
-          </tr>
-        </thead>
-        <tbody>
-          <Releases from={1} to={page} />
-        </tbody>
-      </table>
+      <div class="is">
+        <h1>Infinite scroll with HTMX and async generators</h1>
+        <p>
+          Scroll down: as soon as the last row comes into view, HTMX fetches the
+          next page from the server and puts it in its place. The rows come from
+          an <code>async function*</code>, which loads one page after another
+          from a slow API and streams every row as soon as it is ready.
+        </p>
+        <p>
+          Without JavaScript, the "Load more releases" link reloads the page
+          with one more page. As the address is updated while scrolling, a
+          reload keeps all releases loaded so far.
+        </p>
+        <table class="is-table">
+          <thead>
+            <tr>
+              <th class="is-num">#</th>
+              <th>Release</th>
+              <th>Date</th>
+              <th class="is-num">Page</th>
+            </tr>
+          </thead>
+          <tbody>
+            <Releases from={1} to={page} />
+          </tbody>
+        </table>
+      </div>
     </Layout>
   );
 }

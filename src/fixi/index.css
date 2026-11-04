@@ -1,0 +1,141 @@
+:root {
+  --fx-accent: #10b981;
+  --fx-accent-2: #0ea5e9;
+  --fx-line: rgba(127, 127, 127, 0.2);
+  --fx-soft: rgba(127, 127, 127, 0.07);
+  --fx-muted: rgba(127, 127, 127, 0.9);
+  --fx-error: #ef4444;
+}
+
+.fx {
+  margin: 0 auto;
+  max-width: 52rem;
+
+  & > h1 {
+    background: linear-gradient(120deg, var(--fx-accent), var(--fx-accent-2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-align: center;
+  }
+}
+
+.fx-list {
+  border: 1px solid var(--fx-line);
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.fx-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr) 11rem;
+  gap: 0.75rem;
+  align-items: center;
+  margin: 0;
+  border-bottom: 1px solid var(--fx-line);
+  padding: 0.6rem 1rem;
+  animation: fx-fade-in 0.3s ease-out;
+
+  &:hover {
+    background: var(--fx-soft);
+  }
+
+  & input {
+    width: 100%;
+    margin: 0;
+  }
+}
+
+.fx-head {
+  background: var(--fx-soft);
+  color: var(--fx-muted);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  animation: none;
+}
+
+.fx-editing {
+  background: var(--fx-soft);
+  box-shadow: inset 3px 0 0 var(--fx-accent);
+}
+
+.fx-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.fx-btn {
+  margin: 0;
+  border: 1px solid var(--fx-line);
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  padding: 0.35rem 1rem;
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--fx-accent);
+  }
+}
+
+.fx-primary {
+  border-color: transparent;
+  background: linear-gradient(120deg, var(--fx-accent), var(--fx-accent-2));
+  color: #fff;
+}
+
+.fx-add {
+  display: flex;
+  justify-content: flex-end;
+  margin: 0;
+  padding: 0.75rem 1rem;
+}
+
+.fx-empty {
+  margin: 0;
+  padding: 1rem;
+  color: var(--fx-muted);
+  text-align: center;
+}
+
+.fx-error {
+  margin: 0;
+  border-bottom: 1px solid var(--fx-line);
+  padding: 0.75rem 1rem;
+  color: var(--fx-error);
+}
+
+@keyframes fx-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (max-width: 40rem) {
+  .fx-head {
+    display: none;
+  }
+
+  .fx-row {
+    grid-template-columns: 1fr;
+    gap: 0.4rem;
+  }
+
+  .fx-row > [data-label]::before {
+    content: attr(data-label) ": ";
+    color: var(--fx-muted);
+    font-size: 0.8rem;
+  }
+
+  .fx-editing > [data-label]::before {
+    content: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fx-row {
+    animation: none;
+  }
+}

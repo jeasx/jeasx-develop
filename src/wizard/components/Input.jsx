@@ -9,7 +9,7 @@ export default function Input({
 }) {
   const labelAfter = type === "radio" || type === "checkbox";
   return (
-    <label>
+    <label class={labelAfter ? "wizard-choice" : undefined}>
       {!labelAfter && label}
       <input
         type={type || "text"}

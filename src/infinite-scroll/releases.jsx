@@ -23,11 +23,17 @@ export async function* Releases({ from, to }) {
     const page = await fetchPage(number);
     for (const release of page.items) {
       yield (
-        <tr>
-          <td>{release.id}</td>
-          <td>{release.name}</td>
-          <td>{release.date}</td>
-          <td>{page.number}</td>
+        <tr class="is-row">
+          <td class="is-num">{release.id}</td>
+          <td>
+            <span class="is-version">{release.name}</span>
+          </td>
+          <td>
+            <time datetime={release.date}>{release.date}</time>
+          </td>
+          <td class="is-num">
+            <span class="is-page">{page.number}</span>
+          </td>
         </tr>
       );
     }
@@ -45,19 +51,24 @@ export async function* Releases({ from, to }) {
         hx-trigger="revealed"
         hx-swap="outerHTML"
         hx-push-url={url}
+        class="is-more"
       >
-        <td colspan="4" class="center">
-          <a href={url} aria-busy="true">
-            Load more releases
+        <td colspan="4">
+          <a href={url}>
+            <span class="is-spinner" aria-hidden="true"></span>
+            Loading page {next} of {PAGES}…
           </a>
         </td>
       </tr>
     );
   } else {
     yield (
-      <tr>
-        <td colspan="4" class="center">
-          <strong>You have reached the end: all {PAGES * PAGE_SIZE} releases are loaded.</strong>
+      <tr class="is-end">
+        <td colspan="4">
+          <strong>
+            You have reached the end: all {PAGES * PAGE_SIZE} releases are
+            loaded.
+          </strong>
         </td>
       </tr>
     );
@@ -72,7 +83,9 @@ async function fetchPage(number) {
     items: Array.from({ length: PAGE_SIZE }, (_, i) => {
       const id = (number - 1) * PAGE_SIZE + i + 1;
       // Newest release first, one release per week.
-      const date = new Date(Date.UTC(2026, 9, 26) - (id - 1) * 7 * 24 * 60 * 60 * 1000);
+      const date = new Date(
+        Date.UTC(2026, 9, 26) - (id - 1) * 7 * 24 * 60 * 60 * 1000,
+      );
       return {
         id,
         name: `v${Math.floor((PAGES * PAGE_SIZE - id) / 10) + 1}.${(PAGES * PAGE_SIZE - id) % 10}.0`,

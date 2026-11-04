@@ -24,6 +24,7 @@
 
 .timer-tabs {
   display: flex;
+  align-items: center;
   gap: 4px;
   border-radius: 10px;
   background: rgba(255, 255, 255, 0.1);
@@ -35,12 +36,14 @@
   cursor: pointer;
   border: 0;
   border-radius: 8px;
+  margin: 0;
   background: transparent;
   padding: 8px 28px;
   color: rgba(255, 255, 255, 0.6);
   font: inherit;
   font-weight: 600;
   font-size: 15px;
+  line-height: 1.2;
 }
 
 .timer-tab--on {
@@ -50,8 +53,8 @@
 
 .timer-face {
   position: relative;
-  width: 280px;
-  height: 280px;
+  width: min(280px, 70vw);
+  aspect-ratio: 1;
 }
 
 .timer-ring {
@@ -77,14 +80,16 @@
 
 .timer-digits {
   font-weight: 700;
-  font-size: 4.5rem;
+  font-size: clamp(3rem, 14vw, 4.5rem);
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.02em;
 }
 
 .timer-controls {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 10px;
+  width: min(320px, 100%);
 }
 
 .timer-btn {
@@ -93,7 +98,8 @@
   border: 0;
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.2);
-  padding: 16px 52px;
+  margin: 0;
+  padding: 16px;
   color: #fff;
   font: inherit;
   font-weight: 700;
@@ -106,8 +112,6 @@
 
 .timer-btn--sec {
   background: rgba(255, 255, 255, 0.1);
-  padding: 16px 28px;
-  font-size: 16px;
 }
 
 .timer-btn--sec:hover {

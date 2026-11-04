@@ -1,11 +1,11 @@
 export default function ErrorMessage({ message }) {
   return (
     Object.keys(message).length > 0 && (
-      <section role="alert">
+      <ul role="alert" class="wizard-errors">
         {Object.keys(message).map((key) => (
-          <b>{message[key]}</b>
+          <li>{message[key]}</li>
         ))}
-      </section>
+      </ul>
     )
   );
 }

@@ -23,18 +23,31 @@ const groups = [
 
 export default function Header({ path, data }) {
   const currentStep = groups.findIndex(({ links }) => links?.includes(path));
+  // On the last page all steps are completed, so "Thank you" is shown as done, too.
+  const doneSteps = currentStep === groups.length - 1 ? groups.length : currentStep;
 
   return (
-    <header>
+    <header class="wizard-header">
       <h1>Report a car insurance claim</h1>
-      <nav aria-label="breadcrumb">
-        <ul>
-          {groups.slice(0, currentStep + 1).map(({ label, links }) => (
-            <li>
-              <a href={links[0]}>{label}</a>
+      <nav aria-label="Steps">
+        <ol class="wizard-steps">
+          {/* Reached steps are links; later steps are shown, but can't be skipped to. */}
+          {groups.map(({ label, links }, index) => (
+            <li class={index < doneSteps ? "done" : index === currentStep ? "current" : ""}>
+              {index <= currentStep ? (
+                <a href={links[0]} aria-current={index === currentStep ? "step" : undefined}>
+                  <span class="wizard-step-dot">{index < doneSteps ? "✓" : index + 1}</span>
+                  <span class="wizard-step-label">{label}</span>
+                </a>
+              ) : (
+                <span>
+                  <span class="wizard-step-dot">{index + 1}</span>
+                  <span class="wizard-step-label">{label}</span>
+                </span>
+              )}
             </li>
           ))}
-        </ul>
+        </ol>
       </nav>
       <Progress url={path} data={data} />
     </header>

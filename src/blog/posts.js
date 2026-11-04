@@ -2,7 +2,13 @@ import { fitsCookie, readListCookie, writeListCookie } from "../@helpers/cookies
 import data from "./data.json";
 
 /** Fields of a post and their maximum length. */
-export const FIELDS = { slug: 100, title: 100, author: 100, description: 200, body: 1000 };
+export const FIELDS = {
+  slug: 100,
+  title: 100,
+  author: 100,
+  description: 200,
+  body: 1000,
+};
 /** Fields which must not be empty. Without a slug, it is created from the title. */
 export const REQUIRED_FIELDS = ["title", "author", "description", "body"];
 // Slugs end up in links, so only allow safe characters (no "javascript:" etc.).
@@ -69,6 +75,24 @@ export function writePosts(reply, posts) {
 }
 
 /**
+ * Tells whether the visitor has stored own posts, or sees the example posts.
+ *
+ * @param {import("fastify").FastifyRequest} request
+ */
+export function hasOwnPosts(request) {
+  return request.cookies.posts !== undefined;
+}
+
+/**
+ * Deletes the cookie with the posts, so the example posts are shown again.
+ *
+ * @param {import("fastify").FastifyReply} reply
+ */
+export function clearPosts(reply) {
+  reply.clearCookie("posts", { path: "/blog" });
+}
+
+/**
  * Returns the names of required fields which are empty in the submitted form data.
  * The form uses "novalidate", so the server is the only place where this is checked.
  *
@@ -111,4 +135,70 @@ function slugify(text) {
       .slice(0, FIELDS.slug)
       .replace(/^-|-$/g, "")
   );
+}
+
+/**
+ * Formats the date of a post, e.g. "October 28, 2026". Invalid dates become an empty string.
+ *
+ * @param {string} date
+ */
+export function formatDate(date) {
+  const value = new Date(date);
+  return isNaN(value.getTime())
+    ? ""
+    : value.toLocaleDateString("en-US", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      });
+}
+
+/**
+ * Estimates the reading time in minutes at about 200 words per minute.
+ *
+ * @param {string} text
+ */
+export function readingTime(text) {
+  return Math.max(1, Math.round(text.split(/\s+/).filter(Boolean).length / 200));
+}
+
+/**
+ * Splits the body into paragraphs at blank lines.
+ *
+ * @param {string} body
+ */
+export function paragraphs(body) {
+  return body
+    .split(/\r?\n\s*\r?\n/)
+    .map((text) => text.trim())
+    .filter(Boolean);
+}
+
+/**
+ * Returns up to two initials for the avatar of an author, e.g. "Ada Lindqvist" => "AL".
+ *
+ * @param {string} name
+ */
+export function initials(name) {
+  return (
+    name
+      .split(/\s+/)
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((word) => [...word][0].toUpperCase())
+      .join("") || "?"
+  );
+}
+
+/**
+ * Derives a stable hue (0-359) from a text, so every post gets its own cover gradient.
+ *
+ * @param {string} text
+ */
+export function hue(text) {
+  let hash = 0;
+  for (const char of text) {
+    hash = (hash * 31 + char.codePointAt(0)) % 360;
+  }
+  return hash;
 }

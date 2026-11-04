@@ -1,0 +1,10 @@
+@import "../streaming/shared.css";
+
+.px-axis {
+  display: flex;
+  justify-content: space-between;
+  margin: -0.5rem 0 0.75rem;
+  color: var(--sx-muted);
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+}

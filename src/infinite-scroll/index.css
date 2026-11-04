@@ -1,0 +1,133 @@
+:root {
+  --is-accent: #8b5cf6;
+  --is-accent-2: #ec4899;
+  --is-line: rgba(127, 127, 127, 0.2);
+  --is-soft: rgba(127, 127, 127, 0.07);
+  --is-muted: rgba(127, 127, 127, 0.9);
+}
+
+.is {
+  margin: 0 auto;
+  max-width: 48rem;
+
+  & > h1 {
+    background: linear-gradient(120deg, var(--is-accent), var(--is-accent-2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-align: center;
+  }
+}
+
+.is-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid var(--is-line);
+  border-radius: 0.75rem;
+  overflow: hidden;
+
+  & th {
+    position: sticky;
+    top: 0;
+    background: var(--is-soft);
+    backdrop-filter: blur(8px);
+    color: var(--is-muted);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  & th,
+  & td {
+    border-bottom: 1px solid var(--is-line);
+    padding: 0.6rem 1rem;
+    text-align: left;
+  }
+
+  & tr:last-child td {
+    border-bottom: none;
+  }
+
+  & .is-num {
+    width: 4rem;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  & time {
+    color: var(--is-muted);
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* New rows fade in as they are streamed */
+.is-row {
+  animation: is-fade-in 0.4s ease-out;
+
+  &:hover {
+    background: var(--is-soft);
+  }
+}
+
+@keyframes is-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.4rem);
+  }
+}
+
+.is-version {
+  font-family: ui-monospace, monospace;
+  font-weight: 600;
+}
+
+.is-page {
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--is-accent) 15%, transparent);
+  padding: 0.1rem 0.55rem;
+  color: var(--is-accent);
+  font-size: 0.75rem;
+}
+
+/* Loading row, replaced by the next page */
+.is-more td,
+.is-end td {
+  padding: 1.25rem;
+  text-align: center;
+}
+
+.is-more a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--is-muted);
+  text-decoration: none;
+}
+
+.is-spinner {
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid var(--is-line);
+  border-top-color: var(--is-accent);
+  border-radius: 50%;
+  animation: is-spin 0.8s linear infinite;
+}
+
+@keyframes is-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.is-end td {
+  background: color-mix(in srgb, var(--is-accent) 8%, transparent);
+  color: var(--is-accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .is-row,
+  .is-spinner {
+    animation: none;
+  }
+}

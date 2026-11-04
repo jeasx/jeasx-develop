@@ -1,6 +1,10 @@
 import Layout from "../Layout";
 
+const USERS = ["Ada", "Grace", "Linus"];
 const DELAY = 1000;
+
+/** Time span of the waterfall in ms: long enough for the sequential mode. */
+const SCALE = USERS.length * DELAY + 300;
 
 /**
  * @this {import("../types").ThisContext}
@@ -14,90 +18,105 @@ export default async function ({ request }) {
     <Layout
       title="Load data in parallel with async components"
       description="Async JSX components render in order; start promises early to load data in parallel."
+      css="/parallel/index.css"
     >
-      <h1>Load data in parallel with async components</h1>
-      <p>
-        Components in Jeasx can be <code>async</code> and simply <code>await</code> their data. The
-        renderer resolves them one after another, so three components that each wait one second take
-        three seconds in total.
-      </p>
-      <p>
-        As JSX also accepts promises as children, you can kick off all requests up front and hand
-        the pending promises to your markup. Now everything loads at the same time while the output
-        order stays the same.
-      </p>
-      <div class="row center">
-        <a
-          href="?mode=sequential"
-          role="button"
-          aria-disabled={mode === "sequential" ? "true" : "false"}
-        >
-          Sequential
-        </a>
-        &nbsp;
-        <a
-          href="?mode=parallel"
-          role="button"
-          aria-disabled={mode === "parallel" ? "true" : "false"}
-        >
-          Parallel
-        </a>
+      <div class="sx">
+        <h1>Load data in parallel with async components</h1>
+        <p>
+          Components in Jeasx can be <code>async</code> and simply{" "}
+          <code>await</code> their data. The renderer resolves them one after
+          another, so three components that each wait one second take three
+          seconds in total.
+        </p>
+        <p>
+          As JSX also accepts promises as children, you can kick off all
+          requests up front and hand the pending promises to your markup. Now
+          everything loads at the same time while the output order stays the
+          same. The bars below show when each request started and finished.
+        </p>
+        <nav class="sx-toggle" aria-label="Loading mode">
+          <a
+            href="?mode=sequential"
+            aria-current={mode === "sequential" ? "page" : undefined}
+          >
+            Sequential
+          </a>
+          <a
+            href="?mode=parallel"
+            aria-current={mode === "parallel" ? "page" : undefined}
+          >
+            Parallel
+          </a>
+        </nav>
+        <section class="sx-card">
+          <header>
+            <h2>Requests</h2>
+            <small>{mode}</small>
+          </header>
+          <div class="px-axis" aria-hidden="true">
+            <span>0 s</span>
+            <span>1 s</span>
+            <span>2 s</span>
+            <span>3 s</span>
+          </div>
+          {mode === "sequential" ? (
+            <Sequential start={start} />
+          ) : (
+            <Parallel start={start} />
+          )}
+        </section>
+        <Elapsed start={start} />
       </div>
-      <hr />
-      {mode === "sequential" ? <Sequential start={start} /> : <Parallel start={start} />}
-      <Elapsed start={start} />
     </Layout>
   );
 }
 
 /** Each component fetches its own data when it is rendered. */
 function Sequential({ start }) {
-  return (
-    <div class="row">
-      {[1, 2, 3].map((id) => (
-        <Loader>
-          <User id={id} start={start} />
-        </Loader>
-      ))}
-    </div>
-  );
+  return USERS.map((name) => (
+    <Loader name={name}>
+      <User name={name} start={start} />
+    </Loader>
+  ));
 }
 
 /** All requests are started immediately, the markup just awaits the promises. */
 function Parallel({ start }) {
-  const users = [1, 2, 3].map(async (id) => <Card {...await loadUser(id, start)} />);
-  return (
-    <div class="row">
-      {users.map((user) => (
-        <Loader>{user}</Loader>
-      ))}
-    </div>
-  );
+  const users = USERS.map(async (name) => (
+    <Row {...await loadUser(name, start)} />
+  ));
+  return users.map((user, index) => (
+    <Loader name={USERS[index]}>{user}</Loader>
+  ));
 }
 
-async function User({ id, start }) {
-  return <Card {...await loadUser(id, start)} />;
+async function User({ name, start }) {
+  return <Row {...await loadUser(name, start)} />;
 }
 
-/** Shows a spinner until the children are streamed in after it. */
-function Loader({ children }) {
+/** Shows a placeholder until the children are streamed in after it. */
+function Loader({ name, children }) {
   return (
-    <div class="loader col-12 col-md-4">
-      <p aria-busy="true" class="center">
-        Loading...
+    <div class="loader">
+      <p class="sx-pending" aria-busy="true">
+        Waiting for {name}...
       </p>
       {children}
     </div>
   );
 }
 
-function Card({ name, loadedAt }) {
+function Row({ name, startedAt, loadedAt }) {
   return (
-    <article class="center">
-      <header>
-        <strong>{name}</strong>
-      </header>
-      <small>loaded at +{loadedAt} ms</small>
+    <article class="sx-result">
+      <strong>{name}</strong>{" "}
+      <small>
+        requested at +{startedAt} ms, loaded at +{loadedAt} ms
+      </small>
+      <div
+        class="sx-bar"
+        style={`--from: ${(startedAt / SCALE).toFixed(3)}; --to: ${(loadedAt / SCALE).toFixed(3)}`}
+      ></div>
     </article>
   );
 }
@@ -107,18 +126,12 @@ function Card({ name, loadedAt }) {
  * i.e. after all previous siblings are resolved.
  */
 function Elapsed({ start }) {
-  return (
-    <p class="center">
-      <strong>Rendered in {Date.now() - start} ms</strong>
-    </p>
-  );
+  return <output class="sx-done">Rendered in {Date.now() - start} ms</output>;
 }
 
 /** Simulates a slow API call. */
-async function loadUser(id, start) {
+async function loadUser(name, start) {
+  const startedAt = Date.now() - start;
   await new Promise((resolve) => setTimeout(resolve, DELAY));
-  return {
-    name: ["Ada", "Grace", "Linus"][id - 1],
-    loadedAt: Date.now() - start,
-  };
+  return { name, startedAt, loadedAt: Date.now() - start };
 }

@@ -1,0 +1,111 @@
+:root {
+  --cte-accent: #3b82f6;
+  --cte-accent-2: #8b5cf6;
+  --cte-line: rgba(127, 127, 127, 0.2);
+  --cte-soft: rgba(127, 127, 127, 0.07);
+  --cte-muted: rgba(127, 127, 127, 0.9);
+}
+
+.cte {
+  margin: 0 auto;
+  max-width: 40rem;
+
+  & > h1 {
+    background: linear-gradient(120deg, var(--cte-accent), var(--cte-accent-2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-align: center;
+  }
+}
+
+/* Card that holds either the view or the edit form */
+.cte-card {
+  transition: border-color 0.2s;
+  margin: 1.5rem 0;
+  border: 1px solid var(--cte-line);
+  border-radius: 0.75rem;
+  background: var(--cte-soft);
+  padding: 1.25rem 1.5rem;
+
+  &.editing {
+    border-color: color-mix(in srgb, var(--cte-accent) 60%, transparent);
+  }
+}
+
+/* Fade each newly inserted card in, so the swap is noticeable. */
+@keyframes cte-fade-in {
+  from {
+    transform: translateY(0.25rem);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .cte-card {
+    animation: cte-fade-in 0.3s ease-out;
+  }
+}
+
+.cte-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 1rem 1.5rem;
+  margin: 0;
+
+  & dt {
+    color: var(--cte-muted);
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  & dd {
+    margin: 0.15rem 0 0;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+}
+
+.cte-empty {
+  color: var(--cte-muted);
+  font-weight: 400;
+  font-style: italic;
+}
+
+.cte-inputs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 0 1.5rem;
+
+  & input {
+    width: 100%;
+  }
+}
+
+.cte-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+
+  & button {
+    margin: 0;
+  }
+}
+
+/* Server time, updated by HTMX every second */
+.cte-time {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: baseline;
+  gap: 0.5rem;
+  color: var(--cte-muted);
+
+  & output {
+    color: var(--cte-accent);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    font-family: ui-monospace, monospace;
+  }
+}

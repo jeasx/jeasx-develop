@@ -37,14 +37,20 @@ export default function ({ request, reply }) {
     <Layout
       title="Post-process HTML with Prettier"
       description="Format the resulting HTML with Prettier via a response handler."
+      css="/prettier/index.css"
     >
       <h1>Post-process HTML with Prettier</h1>
       <p>
-        Jeasx lets you post-process the finished HTML with a response handler. This example uses
-        Prettier to format the markup of this very page: change the widths below and submit to see
-        the result in the frame. Have a look at the source to see how it is wired up.
+        Jeasx lets you post-process the finished HTML with a{" "}
+        <a href="https://www.jeasx.dev/faq#response-handler">response handler</a>. This example uses{" "}
+        <a href="https://prettier.io">Prettier</a> to format the markup of this very page.
       </p>
-      <form action="" method="post">
+      <p>
+        The handler is set on <code>this.responseHandler</code>, receives the rendered payload and
+        returns the formatted text. Change the widths below and submit to see the result in the
+        frame, and have a look at the source to see how it is wired up.
+      </p>
+      <form action="" method="post" class="options">
         <label>
           Print width
           <input
@@ -65,11 +71,12 @@ export default function ({ request, reply }) {
             value={form["tabWidth"]}
           />
         </label>
-        <input type="submit" value="Submit" />
+        <input type="submit" value="Format" />
       </form>
       <iframe
+        class="preview"
+        title="Formatted markup of this page"
         src={`?printWidth=${form["printWidth"]}&tabWidth=${form["tabWidth"]}`}
-        style="width: 100%; height: 300px; border: 1px solid lightgray;"
       ></iframe>
     </Layout>
   );

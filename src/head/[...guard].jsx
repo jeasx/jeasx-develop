@@ -59,13 +59,14 @@ function unifyHead(jsxElements) {
       case "meta":
         switch (jsxElement?.["props"]?.["name"]) {
           case "keywords":
-          case "description":
+          case "description": {
             const name = jsxElement["props"]["name"];
             if (lastIndex[name] !== undefined) {
               delete jsxElements[lastIndex[name]];
             }
             lastIndex[name] = i;
             break;
+          }
         }
         break;
     }

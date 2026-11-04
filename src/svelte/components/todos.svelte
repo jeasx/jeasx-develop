@@ -1,169 +1,208 @@
 <script>
-    import { flip } from "svelte/animate";
-    import { quintOut } from "svelte/easing";
-    import { crossfade } from "svelte/transition";
+	import { flip } from "svelte/animate";
+	import { quintOut } from "svelte/easing";
+	import { crossfade } from "svelte/transition";
 
-    const [send, receive] = crossfade({
-        fallback(node, params) {
-            const style = getComputedStyle(node);
-            const transform = style.transform === "none" ? "" : style.transform;
+	const [send, receive] = crossfade({
+		fallback(node) {
+			const style = getComputedStyle(node);
+			const transform = style.transform === "none" ? "" : style.transform;
 
-            return {
-                duration: 600,
-                easing: quintOut,
-                css: (t) => `
+			return {
+				duration: 600,
+				easing: quintOut,
+				css: (t) => `
 					transform: ${transform} scale(${t});
 					opacity: ${t}
 				`,
-            };
-        },
-    });
+			};
+		},
+	});
 
-    let todos = $state([
-        { id: 1, done: false, description: "write some docs" },
-        { id: 2, done: false, description: "start writing JSConf talk" },
-        { id: 3, done: true, description: "buy some milk" },
-        { id: 4, done: false, description: "mow the lawn" },
-        { id: 5, done: false, description: "feed the turtle" },
-        { id: 6, done: false, description: "fix some bugs" },
-    ]);
+	let todos = $state([
+		{ id: 1, done: false, description: "write some docs" },
+		{ id: 2, done: false, description: "start writing JSConf talk" },
+		{ id: 3, done: true, description: "buy some milk" },
+		{ id: 4, done: false, description: "mow the lawn" },
+		{ id: 5, done: false, description: "feed the turtle" },
+		{ id: 6, done: false, description: "fix some bugs" },
+	]);
 
-    // svelte-ignore state_referenced_locally
-    let uid = todos.length + 1;
+	// svelte-ignore state_referenced_locally
+	let uid = todos.length + 1;
+	let draft = $state("");
 
-    function add(input) {
-        // Ignore todos without any text, e.g. only spaces.
-        if (!input.value.trim()) return;
+	let open = $derived(todos.filter((t) => !t.done));
+	let done = $derived(todos.filter((t) => t.done));
 
-        const todo = {
-            id: uid++,
-            done: false,
-            description: input.value.trim(),
-        };
+	function add(event) {
+		event.preventDefault();
+		// Ignore todos without any text, e.g. only spaces.
+		if (!draft.trim()) return;
+		todos = [{ id: uid++, done: false, description: draft.trim() }, ...todos];
+		draft = "";
+	}
 
-        todos = [todo, ...todos];
-        input.value = "";
-    }
+	function remove(todo) {
+		todos = todos.filter((t) => t !== todo);
+	}
 
-    function remove(todo) {
-        todos = todos.filter((t) => t !== todo);
-    }
+	function clearDone() {
+		todos = todos.filter((t) => !t.done);
+	}
 </script>
 
 <div class="board">
-    <input
-        class="new-todo"
-        placeholder="What needs to be done? Press Enter to add it."
-        onkeydown={(event) => event.key === "Enter" && add(event.target)}
-    />
+	<form class="new" onsubmit={add}>
+		<input bind:value={draft} placeholder="What needs to be done?" aria-label="New todo" />
+		<button type="submit" disabled={!draft.trim()}>Add</button>
+	</form>
 
-    <div class="left">
-        <h2>todo</h2>
-        {#each todos.filter((t) => !t.done) as todo (todo.id)}
-            <label
-                in:receive={{ key: todo.id }}
-                out:send={{ key: todo.id }}
-                animate:flip
-            >
-                <input type="checkbox" bind:checked={todo.done} />
-                {todo.description}
-                <button onclick={() => remove(todo)}>x</button>
-            </label>
-        {/each}
-    </div>
-
-    <div class="right">
-        <h2>done</h2>
-        {#each todos.filter((t) => t.done) as todo (todo.id)}
-            <label
-                in:receive={{ key: todo.id }}
-                out:send={{ key: todo.id }}
-                animate:flip
-            >
-                <input type="checkbox" bind:checked={todo.done} />
-                {todo.description}
-                <button onclick={() => remove(todo)}>x</button>
-            </label>
-        {/each}
-    </div>
-
-    <div class="clear"></div>
+	{#each [{ title: "To do", list: open, kind: "open" }, { title: "Done", list: done, kind: "done" }] as column (column.kind)}
+		<section class={column.kind}>
+			<h3>
+				{column.title} <span class="count">{column.list.length}</span>
+				{#if column.kind === "done" && done.length}
+					<button type="button" class="clear" onclick={clearDone}>Clear</button>
+				{/if}
+			</h3>
+			{#each column.list as todo (todo.id)}
+				<label in:receive={{ key: todo.id }} out:send={{ key: todo.id }} animate:flip={{ duration: 300 }}>
+					<input type="checkbox" bind:checked={todo.done} />
+					<span>{todo.description}</span>
+					<button type="button" class="remove" onclick={() => remove(todo)} aria-label="Remove {todo.description}">×</button>
+				</label>
+			{:else}
+				<p class="empty">{column.kind === "open" ? "All done. 🎉" : "Nothing done yet."}</p>
+			{/each}
+		</section>
+	{/each}
 </div>
 
 <style>
-    .new-todo {
-        margin: 0.5em 0;
-        width: 100%;
-        font-size: 1.4em;
-    }
+	.board {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+		gap: 1rem;
+	}
 
-    .board {
-        margin: 0 auto;
-    }
+	.new {
+		display: grid;
+		grid-template-columns: 1fr auto;
+		grid-column: 1 / -1;
+		gap: 0.5rem;
+		margin: 0;
+		width: 100%;
+	}
 
-    .left,
-    .right {
-        float: left;
-        box-sizing: border-box;
-        padding: 0 1em 0 0;
-        width: 50%;
-    }
+	.new input {
+		box-sizing: border-box;
+		margin: 0;
+		width: 100%;
+		min-width: 0;
+	}
 
-    h2 {
-        font-weight: 200;
-        font-size: 2em;
-        user-select: none;
-    }
+	.new button {
+		margin: 0;
+		border: 0;
+		border-radius: 999px;
+		background: var(--sv-accent);
+		padding: 0 1.5rem;
+		color: #fff;
+	}
 
-    label {
-        display: block;
-        top: 0;
-        left: 0;
-        margin: 0 0 0.5em 0;
-        border-radius: 2px;
-        background-color: #eee;
-        padding: 0.5em;
-        width: 100%;
-        color: black;
-        font-size: 1em;
-        line-height: 1;
-        text-align: left;
-    }
+	section {
+		display: grid;
+		align-content: start;
+		gap: 0.5rem;
+		border-radius: 0.75rem;
+		background: var(--sv-soft);
+		padding: 0.75rem;
+	}
 
-    input {
-        margin: 0;
-    }
+	h3 {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		margin: 0 0 0.25rem;
+		font-size: 1rem;
+	}
 
-    .right label {
-        background-color: rgb(180, 240, 100);
-    }
+	.count {
+		border-radius: 999px;
+		background: var(--sv-line);
+		padding: 0 0.5rem;
+		font-size: 0.8rem;
+	}
 
-    button {
-        float: right;
-        opacity: 0;
-        transition: opacity 0.2s;
-        box-sizing: border-box;
-        border: none;
-        background-color: transparent;
-        padding: 0 0.5em;
-        height: 1em;
-        color: rgb(170, 30, 30);
-        line-height: 1;
-    }
+	.clear {
+		margin: 0 0 0 auto;
+		border: 0;
+		background: transparent;
+		padding: 0;
+		color: var(--sv-muted);
+		font-weight: normal;
+		font-size: 0.8rem;
+	}
 
-    label:hover button,
-    button:focus-visible {
-        opacity: 1;
-    }
+	label {
+		display: flex;
+		align-items: center;
+		gap: 0.6rem;
+		margin: 0;
+		border-left: 3px solid var(--sv-accent);
+		border-radius: 0.5rem;
+		background: var(--sv-soft);
+		padding: 0.55rem 0.75rem;
+		cursor: pointer;
+	}
 
-    /* Touch screens can't hover, so always show the delete buttons there. */
-    @media (hover: none) {
-        button {
-            opacity: 1;
-        }
-    }
+	.done label {
+		border-left-color: var(--sv-success);
+	}
 
-    .clear {
-        clear: left;
-    }
+	.done label span {
+		opacity: 0.6;
+		text-decoration: line-through;
+	}
+
+	label input {
+		margin: 0;
+	}
+
+	label span {
+		flex: 1;
+	}
+
+	.remove {
+		opacity: 0;
+		transition: opacity 0.2s;
+		margin: 0;
+		border: 0;
+		background: transparent;
+		padding: 0 0.25rem;
+		color: var(--sv-error);
+		font-size: 1.2rem;
+		line-height: 1;
+	}
+
+	label:hover .remove,
+	.remove:focus-visible {
+		opacity: 1;
+	}
+
+	/* Touch screens can't hover, so always show the delete buttons there. */
+	@media (hover: none) {
+		.remove {
+			opacity: 1;
+		}
+	}
+
+	.empty {
+		margin: 0;
+		padding: 0.5rem;
+		color: var(--sv-muted);
+		font-size: 0.9rem;
+		text-align: center;
+	}
 </style>

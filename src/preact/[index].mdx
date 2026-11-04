@@ -1,7 +1,9 @@
 import Layout from "../Layout";
 import Preact from "./assets/Preact";
 
-<Layout title="Use Preact with Jeasx" description="Add interactive Preact islands with shared signals to server-rendered pages." script="/preact/assets/index.js">
+<Layout title="Use Preact with Jeasx" description="Add interactive Preact islands with shared signals to server-rendered pages." css="/preact/assets/index.css" script="/preact/assets/index.js">
+<div class="pr">
+
 # Use Preact with Jeasx
 
 [Preact](https://preactjs.com) lets you embed interactive islands into server-rendered pages. Components keep their own state, and signals let separate islands share state across the page.
@@ -30,23 +32,32 @@ Have a look at the [source code of this page](https://github.com/jeasx/jeasx-exp
 
 </details>
 
-<article>
-## Jokes
+## Joke machine
 
-This widget keeps its counter in component state and loads the jokes from the jokes API.
+This island keeps its counter and loading state in component state and fetches the jokes from the jokes API.
 
 <Preact component="Jokes" api="/jokes/api" initial={3} />
-</article>
 
-<article>
-## Clocks
+## World clocks
 
-Both clocks read the same signal, so they always tick together. Use this pattern whenever separate islands on a page need to share state.
+Each clock is a separate island, but all of them read the same signal, so they always tick together. Use this pattern whenever separate islands on a page need to share state.
 
-<div style="display:flex; flex-direction:row; gap:2rem; justify-content: center;">
-  <Preact component="Clock" locale="en-US" />
-  <Preact component="Clock" locale="de-DE" />
+<div class="pr-clocks">
+  <Preact
+    component="Clock"
+    city="New York"
+    locale="en-US"
+    timeZone="America/New_York"
+  />
+  <Preact
+    component="Clock"
+    city="Berlin"
+    locale="de-DE"
+    timeZone="Europe/Berlin"
+  />
+  <Preact component="Clock" city="Tokyo" locale="ja-JP" timeZone="Asia/Tokyo" />
 </div>
-</article>
+
+</div>
 
 </Layout>

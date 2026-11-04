@@ -88,9 +88,17 @@ export default {
     fastify
       .register(import("@fastify/multipart"), {
         attachFieldsToBody: "keyValues",
-        // All parts are buffered in memory and bodyLimit only applies to each file,
-        // so limit the number and size of parts per request (up to about 8 MB).
-        limits: { files: 1, fields: 100, fieldSize: 64 * 1024 },
+        // All parts are buffered in memory, so limit the number and size of parts
+        // per request (up to about 10 MB). Without fileSize, files are limited to bodyLimit.
+        limits: { files: 1, fileSize: 8 * 1024 * 1024, fields: 20, fieldSize: 64 * 1024 },
+        // A larger file would fail the request with a JSON error before any route runs.
+        // Instead, it arrives as null in request.body, so the route can answer with a page
+        // of its own (see "src/upload"). Bytes beyond fileSize are never buffered.
+        throwFileSizeLimit: false,
+        onFile: async (part) => {
+          const buffer = await part.toBuffer();
+          part.value = part.file.truncated ? null : buffer;
+        },
       })
       .register(import("@fastify/cookie"), {
         // Signed cookies are only valid as long as the secret stays the same, so set

@@ -19,6 +19,7 @@ export default function () {
     <Layout
       title="Unit tests for JSX components"
       description="Test JSX components and whole routes with node:test and jsxToString, without a browser."
+      css="/testing/index.css"
     >
       <h1>Unit tests for JSX components</h1>
       <p>
@@ -46,21 +47,35 @@ export default function () {
       </ul>
 
       <h2>The components</h2>
-      <article>
-        <Greeting name="<script>alert('Escaped!')</script>" />
-        <p>
-          Price: <Price amount={1234.5} />
-        </p>
-        <UserCard id={1} />
-      </article>
+      <div class="showcase">
+        <article>
+          <header>
+            <code>&lt;Greeting&gt;</code>
+          </header>
+          <Greeting name="<script>alert('Escaped!')</script>" />
+        </article>
+        <article>
+          <header>
+            <code>&lt;Price&gt;</code>
+          </header>
+          <Price amount={1234.5} />
+        </article>
+        <article>
+          <header>
+            <code>&lt;UserCard&gt;</code>
+          </header>
+          <UserCard id={1} />
+        </article>
+      </div>
 
       <h2>The tests</h2>
       <p>
         Test files end with <code>.test.js</code> or <code>.test.jsx</code> and live next to the
         code they test, e.g. for the <a href="/i18n">i18n</a>,{" "}
-        <a href="/negotiation">content negotiation</a> and <a href="/svg">SVG charts</a> examples.
-        Node.js can't run JSX directly, so <code>npm test</code> bundles the test files with esbuild
-        first and then runs them with <code>node --test</code>:
+        <a href="/negotiation">content negotiation</a>, <a href="/csp">Content Security Policy</a>{" "}
+        and <a href="/svg">SVG charts</a> examples. Node.js can't run JSX directly, so{" "}
+        <code>npm test</code> bundles the test files with esbuild first and then runs them with{" "}
+        <code>node --test</code>:
       </p>
       <pre>
         <code>npm test</code>

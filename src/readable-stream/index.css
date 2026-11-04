@@ -1,0 +1,45 @@
+@import "../streaming/shared.css";
+
+.rs-chat {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.rs-bubble {
+  margin: 0;
+  border-radius: 1rem;
+  padding: 0.75rem 1rem;
+  max-width: 85%;
+}
+
+.rs-question {
+  justify-self: end;
+  border-bottom-right-radius: 0.25rem;
+  background: var(--sx-gradient);
+  color: #fff;
+}
+
+.rs-answer {
+  justify-self: start;
+  border: 1px solid var(--sx-line);
+  border-bottom-left-radius: 0.25rem;
+  background: var(--sx-soft);
+}
+
+/* A blinking caret while the stream is running: the end marker is only rendered after it. */
+.rs-answer:not(:has(.rs-end))::after {
+  display: inline-block;
+  animation: rs-blink 1s steps(1) infinite;
+  margin-left: 0.15rem;
+  background: var(--sx-accent);
+  width: 0.5rem;
+  height: 1em;
+  vertical-align: text-bottom;
+  content: "";
+}
+
+@keyframes rs-blink {
+  50% {
+    opacity: 0;
+  }
+}

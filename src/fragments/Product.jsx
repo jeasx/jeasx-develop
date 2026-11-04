@@ -6,15 +6,15 @@ export async function Product({ id }) {
   // network error or timeout) ends up in the same message instead of an error status.
   const product = await loadProduct(id).catch(() => undefined);
   if (!product) {
-    return <p>The product couldn't be loaded right now. Please try again later.</p>;
+    return (
+      <p class="tf-empty">
+        The product couldn't be loaded right now. Please try again later.
+      </p>
+    );
   }
 
   return (
-    <article>
-      <header>
-        <h3>{product.title}</h3>
-        <b>${product.price}</b>
-      </header>
+    <article class="tf-product">
       <Image
         src={product.thumbnail}
         alt={product.title}
@@ -24,7 +24,11 @@ export async function Product({ id }) {
         immutable
         loading="lazy"
       />
-      <p>{product.description}</p>
+      <div>
+        <h3>{product.title}</h3>
+        <b class="tf-price">${product.price}</b>
+        <p>{product.description}</p>
+      </div>
     </article>
   );
 }

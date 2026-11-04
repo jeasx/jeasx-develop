@@ -1,5 +1,6 @@
 import { jsxToString } from "jsx-async-runtime";
 import Layout from "../Layout";
+import avatarUrl from "./avatar.svg";
 
 /**
  * @this {import("../types").ThisContext}
@@ -9,6 +10,7 @@ export default function () {
     <Layout
       title="What JSX can render"
       description="Promises, iterables, bytes, dates, URLs and more as JSX children and attribute values."
+      css="/values/index.css"
     >
       <h1>What JSX can render</h1>
       <p>
@@ -167,18 +169,23 @@ export default function () {
 async function Sample({ title, render, children }) {
   const markup = await jsxToString(render());
   return (
-    <article>
+    <article class="sample">
       <header>
         <strong>{title}</strong>
-        <br />
         <small>{children}</small>
       </header>
-      {render()}
-      <footer>
-        <pre>
-          <code>{markup}</code>
-        </pre>
-      </footer>
+      <div class="sample-body">
+        <div>
+          <span class="sample-label">Result</span>
+          <div class="sample-result">{render()}</div>
+        </div>
+        <div>
+          <span class="sample-label">HTML</span>
+          <pre>
+            <code>{markup}</code>
+          </pre>
+        </div>
+      </div>
     </article>
   );
 }
@@ -198,7 +205,7 @@ async function loadGreeting() {
 
 async function loadAvatarUrl() {
   await sleep(100);
-  return "/svg/logo.svg?text=JSX";
+  return avatarUrl;
 }
 
 async function loadAvatarAlt() {

@@ -13,6 +13,7 @@ export default function ({ request }) {
     <Layout
       title="Content Security Policy with nonces"
       description="Block injected scripts with a Content Security Policy and a fresh nonce for every request."
+      css="/csp/index.css"
     >
       <h1>Content Security Policy with nonces</h1>
       <p>
@@ -29,23 +30,24 @@ export default function ({ request }) {
         <code>nonce={"{this.nonce}"}</code> to its script tags. Injected markup can't know the
         nonce, as it changes with every reload, so the browser refuses to run it.
       </p>
-      <div class="row center">
+      <p class="toggle">
         <a href="?csp=on" role="button" aria-disabled={enabled ? "true" : "false"}>
           Policy on
         </a>
-        &nbsp;
         <a href="?csp=off" role="button" aria-disabled={enabled ? "false" : "true"}>
           Policy off
         </a>
-      </div>
+      </p>
 
       <h2>The policy of this page</h2>
       {enabled ? (
-        <pre>
+        <pre class="policy">
           <code>Content-Security-Policy: {createPolicy(this.nonce).replaceAll("; ", ";\n  ")}</code>
         </pre>
       ) : (
-        <p>No policy is sent, so the browser runs every script on this page.</p>
+        <p class="alert alert-warning">
+          No policy is sent, so the browser runs every script on this page.
+        </p>
       )}
 
       {/* Lists what the browser blocked. It runs first, so it sees all violations below. */}
@@ -58,16 +60,18 @@ export default function ({ request }) {
       </script>
 
       <h2>Try it</h2>
-      <div class="row">
+      <div class="checks">
         <Check
           id="with-nonce"
+          wanted
           title="Script with nonce"
           initial="Didn't run"
           description="An inline script rendered with nonce={this.nonce}, like the layout's scripts."
         >
           <script nonce={this.nonce}>
-            {html(/* js */ `document.getElementById("with-nonce").textContent =
-              "Ran, as it carries the nonce.";`)}
+            {html(/* js */ `const status = document.getElementById("with-nonce");
+              status.textContent = "Ran, as it carries the nonce.";
+              status.dataset.state = "ran";`)}
           </script>
         </Check>
         <Check
@@ -77,8 +81,9 @@ export default function ({ request }) {
           description="The same inline script, but without the nonce, like an injected one."
         >
           <script>
-            {html(/* js */ `document.getElementById("without-nonce").textContent =
-              "Ran, as there is no policy.";`)}
+            {html(/* js */ `const status = document.getElementById("without-nonce");
+              status.textContent = "Ran, as there is no policy.";
+              status.dataset.state = "ran";`)}
           </script>
         </Check>
         <Check
@@ -88,8 +93,9 @@ export default function ({ request }) {
           description="Simulates a bug: untrusted markup with an onerror handler, inserted via html()."
         >
           {html(/* html */ `<img src="/csp/missing.png" alt="" hidden
-            onerror="document.getElementById('injected').textContent =
-              'Ran: injected code could read the page and send it anywhere.'">`)}
+            onerror="const status = document.getElementById('injected');
+              status.textContent = 'Ran: injected code could read the page and send it anywhere.';
+              status.dataset.state = 'ran';">`)}
         </Check>
       </div>
 
@@ -98,28 +104,35 @@ export default function ({ request }) {
         The browser reports every violation as a <code>securitypolicyviolation</code> event (and in
         the console). With a <code>report-to</code> directive, it can also send them to your server.
       </p>
-      {enabled ? <ul id="violations"></ul> : <p>Nothing is blocked without a policy.</p>}
+      {enabled ? (
+        <ul id="violations" class="violations"></ul>
+      ) : (
+        <p class="violations-off">Nothing is blocked without a policy.</p>
+      )}
     </Layout>
   );
 }
 
 /**
  * A demo whose status is replaced by its script, if the browser runs it.
+ * "wanted" marks scripts that should run; all others should be blocked.
  *
- * @param {{ id: string, title: string, initial: string, description: string, children: unknown }} props
+ * @param {{ id: string, title: string, initial: string, description: string, wanted?: boolean, children: unknown }} props
  */
-function Check({ id, title, initial, description, children }) {
+function Check({ id, title, initial, description, wanted = false, children }) {
   return (
-    <article class="col-12 col-md-4">
+    <article class={wanted ? "check check-wanted" : "check"}>
       <header>
         <strong>{title}</strong>
       </header>
       <p>
         <small>{description}</small>
       </p>
-      <p>
-        <strong id={id}>{initial}</strong>
-      </p>
+      <footer>
+        <strong id={id} class="check-status" role="status">
+          {initial}
+        </strong>
+      </footer>
       {children}
     </article>
   );

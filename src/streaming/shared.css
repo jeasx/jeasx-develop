@@ -1,0 +1,183 @@
+/* Shared look of the "Streaming and Server-Sent Events" examples. */
+:root {
+  --sx-accent: #22d3ee;
+  --sx-accent-2: #a855f7;
+  --sx-line: rgba(127, 127, 127, 0.2);
+  --sx-soft: rgba(127, 127, 127, 0.07);
+  --sx-muted: rgba(127, 127, 127, 0.9);
+  --sx-ok: #22c55e;
+  --sx-warn: #f59e0b;
+  --sx-error: #ef4444;
+  --sx-gradient: linear-gradient(120deg, var(--sx-accent), var(--sx-accent-2));
+}
+
+.sx {
+  margin: 0 auto;
+  max-width: 48rem;
+
+  & > h1 {
+    background: var(--sx-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+}
+
+/* Segmented control made of links, e.g. to switch between two modes. */
+.sx-toggle {
+  display: flex;
+  margin: 1.5rem auto;
+  border: 1px solid var(--sx-line);
+  border-radius: 999px;
+  background: var(--sx-soft);
+  padding: 0.25rem;
+  width: fit-content;
+
+  & a {
+    border-radius: 999px;
+    padding: 0.4rem 1.25rem;
+    color: inherit;
+    font-weight: 600;
+    text-decoration: none;
+
+    &[aria-current="page"] {
+      background: var(--sx-gradient);
+      color: #fff;
+    }
+  }
+}
+
+.sx-button {
+  display: inline-block;
+  border-radius: 0.5rem;
+  background: var(--sx-gradient);
+  padding: 0.5rem 1.25rem;
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+
+  &:hover {
+    filter: brightness(1.1);
+  }
+}
+
+.sx-card {
+  margin: 1.5rem 0;
+  border: 1px solid var(--sx-line);
+  border-radius: 0.75rem;
+  background: var(--sx-soft);
+  padding: 1.25rem 1.5rem;
+
+  & > header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+
+    & h2 {
+      margin: 0;
+      font-size: 1.15rem;
+      text-align: left;
+    }
+  }
+}
+
+/* One streamed result: name, value and a bar showing when it arrived. */
+.sx-result {
+  animation: sx-fade 0.3s ease-out both;
+  margin: 0 0 0.75rem;
+  border-left: 3px solid var(--sx-accent);
+  border-radius: 0.25rem;
+  background: var(--sx-soft);
+  padding: 0.6rem 0.9rem;
+
+  & p {
+    margin: 0.25rem 0;
+  }
+
+  & small {
+    color: var(--sx-muted);
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.sx-pending {
+  margin: 0 0 0.75rem;
+  border: 1px dashed var(--sx-line);
+  border-radius: 0.25rem;
+  padding: 0.6rem 0.9rem;
+  color: var(--sx-muted);
+}
+
+/* Time bar: set --from and --to as fractions (0..1) of the time scale. */
+.sx-bar {
+  position: relative;
+  margin-top: 0.4rem;
+  border-radius: 999px;
+  background: var(--sx-line);
+  height: 0.4rem;
+  overflow: hidden;
+
+  &::after {
+    position: absolute;
+    inset: 0 auto 0 calc(var(--from, 0) * 100%);
+    border-radius: inherit;
+    background: var(--sx-gradient);
+    width: calc((var(--to, 0) - var(--from, 0)) * 100%);
+    content: "";
+  }
+}
+
+.sx-done {
+  display: block;
+  animation: sx-fade 0.3s ease-out both;
+  margin: 1.5rem auto;
+  border: 1px solid var(--sx-ok);
+  border-radius: 999px;
+  padding: 0.4rem 1.25rem;
+  width: fit-content;
+  color: var(--sx-ok);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Connection status with a coloured dot: set data-state to "open", "connecting" or "closed". */
+.sx-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--sx-muted);
+  font-size: 0.85rem;
+
+  &::before {
+    border-radius: 50%;
+    background: var(--sx-warn);
+    width: 0.6rem;
+    height: 0.6rem;
+    content: "";
+  }
+
+  &[data-state="open"]::before {
+    animation: sx-pulse 2s ease-in-out infinite;
+    background: var(--sx-ok);
+  }
+
+  &[data-state="closed"]::before {
+    background: var(--sx-error);
+  }
+}
+
+@keyframes sx-fade {
+  from {
+    transform: translateY(0.25rem);
+    opacity: 0;
+  }
+}
+
+@keyframes sx-pulse {
+  50% {
+    opacity: 0.4;
+  }
+}

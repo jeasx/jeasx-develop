@@ -6,6 +6,9 @@ const SOURCES = [
   { name: "Weather service", delay: 1500 },
 ];
 
+/** Time span of the bars in ms, a bit longer than the slowest source. */
+const SCALE = 1800;
+
 /**
  * @this {import("../types").ThisContext & { jsxStream?: boolean }}
  * @param {import("../types").RouteProps} props
@@ -19,76 +22,106 @@ export default async function ({ request }) {
     <Layout
       title="Streaming vs. string rendering"
       description="Compare streamed JSX with JSX rendered to a string."
+      css="/streaming/index.css"
+      script="/streaming/index.js"
     >
-      <h1>Streaming vs. string rendering</h1>
-      <p>
-        Jeasx streams JSX by default: the page shell is flushed immediately and slow parts follow as
-        soon as they are ready. In v2, the complete markup was rendered to a string first and sent
-        in one go.
-      </p>
-      <p>
-        Open the network tab of your browser's developer tools and reload the page in both modes.
-        When streaming, the first byte arrives almost instantly, while the download keeps going
-        until the last result is sent. When rendering to a string, the time to first byte equals the
-        time of the slowest result, and the complete document arrives in one go.
-      </p>
-      <p>
-        The guard of this example shows how to restore the former string rendering in userland: it
-        wraps <code>this.jsxToString</code> and calls <code>jsxToString</code> from{" "}
-        <code>jsx-async-runtime</code> when a route sets <code>this.jsxStream = false</code>.
-      </p>
-      <div class="row center">
-        <a href="?stream=true" role="button" aria-disabled={this.jsxStream ? "true" : "false"}>
-          Streaming
-        </a>
-        &nbsp;
-        <a href="?stream=false" role="button" aria-disabled={this.jsxStream ? "false" : "true"}>
-          String
-        </a>
-      </div>
-      <p>
-        Current mode: <strong>{this.jsxStream ? "streaming" : "string"}</strong>.{" "}
-        {this.jsxStream
-          ? "Watch the results appear one after another."
-          : "The browser shows nothing until every result is ready."}
-      </p>
-      {SOURCES.map((source) => (
-        <div class="loader">
-          <p aria-busy="true">Loading {source.name.toLowerCase()}...</p>
-          {query(source).then((result) => (
-            <Result {...result} start={start} />
+      <div class="sx">
+        <h1>Streaming vs. string rendering</h1>
+        <p>
+          Jeasx streams JSX by default: the page shell is flushed immediately
+          and slow parts follow as soon as they are ready. In v2, the complete
+          markup was rendered to a string first and sent in one go.
+        </p>
+        <p>
+          Switch between both modes and compare the numbers below. When
+          streaming, the first byte arrives almost instantly and the results
+          appear one after another. When rendering to a string, the browser
+          waits for the slowest result before it receives anything at all.
+        </p>
+        <p>
+          The guard of this example shows how to restore the former string
+          rendering in userland: it wraps <code>this.jsxToString</code> and
+          calls <code>jsxToString</code> from <code>jsx-async-runtime</code>{" "}
+          when a route sets <code>this.jsxStream = false</code>.
+        </p>
+        <nav class="sx-toggle" aria-label="Rendering mode">
+          <a
+            href="?stream=true"
+            aria-current={this.jsxStream ? "page" : undefined}
+          >
+            Streaming
+          </a>
+          <a
+            href="?stream=false"
+            aria-current={this.jsxStream ? undefined : "page"}
+          >
+            String
+          </a>
+        </nav>
+        <section class="sx-card">
+          <header>
+            <h2>Slow sources</h2>
+            <small>rendered on the server</small>
+          </header>
+          {SOURCES.map((source) => (
+            <div class="loader">
+              <p class="sx-pending" aria-busy="true">
+                Loading {source.name.toLowerCase()}...
+              </p>
+              {query(source).then((result) => (
+                <Result {...result} start={start} />
+              ))}
+            </div>
           ))}
-        </div>
-      ))}
-      <Done start={start} />
+        </section>
+        <Done start={start} />
+        <section class="sx-card">
+          <header>
+            <h2>Measured by your browser</h2>
+            <small>{this.jsxStream ? "streaming" : "string"} mode</small>
+          </header>
+          <dl class="sx-metrics">
+            <div>
+              <dt>First byte</dt>
+              <dd id="ttfb">…</dd>
+            </div>
+            <div>
+              <dt>Complete page</dt>
+              <dd id="complete">…</dd>
+            </div>
+          </dl>
+        </section>
+      </div>
     </Layout>
   );
 }
 
 function Result({ name, value, start }) {
+  const time = Date.now() - start;
   return (
-    <article>
-      <header>
-        <strong>{name}</strong>
-      </header>
+    <article class="sx-result">
+      <strong>{name}</strong>
       <p>{value}</p>
-      <footer>
-        <small>rendered after {Date.now() - start} ms</small>
-      </footer>
+      <small>rendered after {time} ms</small>
+      <div
+        class="sx-bar"
+        style={`--to: ${Math.min(time / SCALE, 1).toFixed(3)}`}
+      ></div>
     </article>
   );
 }
 
 function Done({ start }) {
   return (
-    <p class="center">
-      <strong>All done after {Date.now() - start} ms.</strong>
-    </p>
+    <output class="sx-done">All done after {Date.now() - start} ms</output>
   );
 }
 
 /** Simulates a slow backend call. */
 async function query({ name, delay }) {
   await new Promise((resolve) => setTimeout(resolve, delay));
-  return { name, value: `Result from ${name.toLowerCase()} (took ${delay} ms)` };
+  return {
+    name,
+    value: `Result from ${name.toLowerCase()} (took ${delay} ms)`,
+  };
 }

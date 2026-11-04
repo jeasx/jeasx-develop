@@ -1,0 +1,131 @@
+/* Only the text is morphed, not a line as wide as the page. */
+.product-title {
+  display: inline-block;
+}
+
+/* Image beside the facts on wide screens, above them on narrow ones. */
+.product-intro {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr));
+  gap: 2rem;
+  align-items: start;
+  margin-bottom: 1rem;
+}
+
+.product-hero {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+}
+
+/* Content without a counterpart on the list fades in after the image has landed. */
+.product-details {
+  animation: product-fade-in 0.4s 0.2s both;
+}
+
+@keyframes product-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+}
+
+::view-transition-group(*) {
+  animation-duration: 0.4s;
+  animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .product-details,
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none;
+  }
+}
+
+.product-meta {
+  opacity: 0.75;
+}
+
+.product-price {
+  font-size: 1.5rem;
+}
+
+.product-price s,
+.product-price small {
+  font-size: 1rem;
+  opacity: 0.7;
+}
+
+.product-out {
+  text-decoration: line-through;
+}
+
+/* A bordered grid: labels on a tint of the primary color, values on alternating rows. */
+.product-specs {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  margin: 0;
+  border: var(--mu-border-width) solid var(--mu-border-color);
+  border-radius: var(--mu-border-radius);
+  overflow: hidden;
+}
+
+.product-specs dt,
+.product-specs dd {
+  margin: 0;
+  padding: 0.5rem 1rem;
+  border-bottom: var(--mu-border-width) solid var(--mu-border-color);
+}
+
+.product-specs dt {
+  font-weight: bold;
+  color: var(--mu-primary);
+  background: color-mix(in srgb, var(--mu-primary) 12%, transparent);
+  border-right: var(--mu-border-width) solid var(--mu-border-color);
+}
+
+.product-specs dd:nth-of-type(even) {
+  background: color-mix(in srgb, var(--mu-color) 5%, transparent);
+}
+
+.product-specs dt:last-of-type,
+.product-specs dd:last-of-type {
+  border-bottom: none;
+}
+
+.product-review footer {
+  font-size: 0.875rem;
+  opacity: 0.75;
+}
+
+.product-back {
+  display: flex;
+  justify-content: flex-start;
+}
+
+/* Opened at its anchor, a card stops below the sticky header instead of under it. */
+.product-card {
+  scroll-margin-top: 6rem;
+}
+
+/* Details and reviews side by side in one row; stacked only on phones. */
+.product-columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 2rem;
+  align-items: start;
+}
+
+@media (max-width: 768px) {
+  .product-columns {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Jump straight to a product's anchor, so the morph doesn't race a smooth scroll. */
+html {
+  scroll-behavior: auto;
+}

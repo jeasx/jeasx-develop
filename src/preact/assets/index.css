@@ -1,0 +1,181 @@
+:root {
+  --pr-accent: #ad7bff;
+  --pr-accent-2: #673ab8;
+  --pr-line: rgba(127, 127, 127, 0.2);
+  --pr-soft: rgba(127, 127, 127, 0.07);
+  --pr-muted: rgba(127, 127, 127, 0.9);
+  --pr-error: #ef4444;
+}
+
+.pr {
+  margin: 0 auto;
+  max-width: 44rem;
+
+  & > h1 {
+    background: linear-gradient(120deg, var(--pr-accent), var(--pr-accent-2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+}
+
+.pr-card {
+  display: grid;
+  gap: 1.25rem;
+  border: 1px solid var(--pr-line);
+  border-radius: 1rem;
+  background: var(--pr-soft);
+  padding: 1.5rem;
+}
+
+.pr-stepper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+
+  & button {
+    margin: 0;
+    border: 1px solid var(--pr-line);
+    border-radius: 50%;
+    background: transparent;
+    padding: 0;
+    width: 2.5rem;
+    height: 2.5rem;
+    color: inherit;
+    font-size: 1.25rem;
+    line-height: 1;
+
+    &:hover:not(:disabled) {
+      border-color: var(--pr-accent);
+    }
+  }
+
+  & output {
+    min-width: 5rem;
+    text-align: center;
+  }
+
+  & strong {
+    display: block;
+    color: var(--pr-accent);
+    font-size: 2rem;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  & span {
+    color: var(--pr-muted);
+    font-size: 0.85rem;
+  }
+}
+
+.pr-actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 0.75rem;
+}
+
+.pr-btn {
+  margin: 0;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(120deg, var(--pr-accent), var(--pr-accent-2));
+  padding: 0.7rem 1.25rem;
+  color: #fff;
+  font-weight: 600;
+}
+
+.pr-jokes {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: joke;
+
+  & li {
+    position: relative;
+    border-left: 3px solid var(--pr-accent);
+    border-radius: 0.5rem;
+    background: var(--pr-soft);
+    padding: 0.75rem 1rem 0.75rem 3rem;
+    animation: pr-slide-in 0.35s ease-out backwards;
+    counter-increment: joke;
+
+    &::before {
+      position: absolute;
+      top: 0.75rem;
+      left: 1rem;
+      color: var(--pr-accent);
+      font-weight: 700;
+      content: counter(joke);
+    }
+  }
+}
+
+.pr-empty {
+  margin: 0;
+  color: var(--pr-muted);
+  text-align: center;
+}
+
+.pr-error {
+  margin: 0;
+  color: var(--pr-error);
+  text-align: center;
+}
+
+.pr-clocks {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 1rem;
+}
+
+/* The cards sit inside the island wrappers, so let those stretch them to the same height. */
+.pr-clocks > [data-component] {
+  display: grid;
+}
+
+.pr-clock {
+  margin: 0;
+  border: 1px solid var(--pr-line);
+  border-radius: 1rem;
+  background: var(--pr-soft);
+  padding: 1.5rem 1rem;
+  text-align: center;
+
+  & time {
+    display: block;
+    background: linear-gradient(120deg, var(--pr-accent), var(--pr-accent-2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-weight: 700;
+    font-size: 2.25rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  & figcaption {
+    display: grid;
+    margin-top: 0.5rem;
+  }
+
+  & figcaption span {
+    color: var(--pr-muted);
+    font-size: 0.85rem;
+  }
+}
+
+@keyframes pr-slide-in {
+  from {
+    transform: translateY(0.5rem);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pr-jokes li {
+    animation: none;
+  }
+}

@@ -32,17 +32,19 @@ export default async function ({ reply }) {
       title="Products"
       description="Browse products loaded from a remote API and rendered on the server."
       robots="index,nofollow"
+      css="/products/index.css"
     >
       <h1>Products</h1>
       <p>
         The products are loaded on the server from the <a href="https://dummyjson.com">DummyJSON</a>{" "}
         API and cached for a few minutes. Their images are cropped and converted on the fly by the
         image component of the <a href="/sharp">sharp example</a>. Click a product to see its
-        details.
+        details: its image and title morph into the detail page with a{" "}
+        <a href="/view-transitions">view transition</a>.
       </p>
       <div class="row center">
         {products.map(({ id, title, price, description, thumbnail }) => (
-          <article class="col-12 col-md-6 col-lg-4">
+          <article id={`product-${id}`} class="col-12 col-md-6 col-lg-4 product-card">
             <header>
               <Image
                 src={thumbnail}
@@ -52,13 +54,20 @@ export default async function ({ reply }) {
                 alt={title}
                 immutable
                 loading="lazy"
+                style={`view-transition-name: product-image-${id}`}
               />
               <hr />
               <b>${price}</b>
             </header>
             <div>
               <h3>
-                <a href={id}>{title}</a>
+                <a
+                  href={id}
+                  class="product-title"
+                  style={`view-transition-name: product-title-${id}`}
+                >
+                  {title}
+                </a>
               </h3>
               <p>{description}</p>
             </div>

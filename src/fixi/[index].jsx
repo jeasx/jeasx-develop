@@ -22,17 +22,21 @@ export default function ({ request, reply }) {
     <Layout
       title="Use Fixi.js with Jeasx"
       description="Edit a list in place with Fixi.js, with a full page reload as fallback."
+      css="/fixi/index.css"
       script="/fixi/index.js"
     >
-      <h1>Use Fixi.js with Jeasx</h1>
-      <p>
-        <a href="https://github.com/bigskysoftware/fixi">Fixi.js</a> is a minimalist alternative to
-        HTMX, developed by the creators of HTMX. This example shows progressive enhancement: with
-        JavaScript, Fixi.js swaps only the edited list; without it, the same forms reload the whole
-        page and still work.
-      </p>
-      <h2>Recipe editor</h2>
-      <Fragment request={request} reply={reply} />
+      <div class="fx">
+        <h1>Use Fixi.js with Jeasx</h1>
+        <p>
+          <a href="https://github.com/bigskysoftware/fixi">Fixi.js</a> is a
+          minimalist alternative to HTMX, developed by the creators of HTMX.
+          This example shows progressive enhancement: with JavaScript, Fixi.js
+          swaps only the edited list; without it, the same forms reload the
+          whole page and still work.
+        </p>
+        <h2>Recipe editor</h2>
+        <Fragment request={request} reply={reply} />
+      </div>
     </Layout>
   );
 }
@@ -57,7 +61,11 @@ async function readEntries(request) {
 
 /** @param {Record<string, unknown>} value */
 function toEntry({ name, cuisine, difficulty }) {
-  return { name: toText(name), cuisine: toText(cuisine), difficulty: toText(difficulty) };
+  return {
+    name: toText(name),
+    cuisine: toText(cuisine),
+    difficulty: toText(difficulty),
+  };
 }
 
 /** @param {unknown} value */
@@ -78,7 +86,8 @@ async function Fragment({ request, reply }) {
   const isValidId =
     Number.isInteger(id) &&
     id >= 0 &&
-    (id < entries.length || (id === entries.length && entries.length < MAX_ENTRIES));
+    (id < entries.length ||
+      (id === entries.length && entries.length < MAX_ENTRIES));
 
   const action = String(body["action"]);
   const isNew = id === entries.length;
@@ -102,7 +111,8 @@ async function Fragment({ request, reply }) {
       } else {
         // Changes which don't fit into the cookie (e.g. lots of emojis) aren't stored.
         // Keep the row open with the entered values, so they can be shortened.
-        error = "Your changes are too long to be stored in a cookie. Please shorten them.";
+        error =
+          "Your changes are too long to be stored in a cookie. Please shorten them.";
         editing = entry;
       }
     }
@@ -121,13 +131,26 @@ async function Fragment({ request, reply }) {
   const isAdding = rows.length > entries.length;
 
   return (
-    <article id="entries" class="card-secondary">
-      {error && <p role="alert">{error}</p>}
+    <article id="entries" class="fx-list">
+      {error && (
+        <p class="fx-error" role="alert">
+          {error}
+        </p>
+      )}
+      <div class="fx-row fx-head" aria-hidden="true">
+        <div>Name</div>
+        <div>Cuisine</div>
+        <div>Difficulty</div>
+        <div></div>
+      </div>
+      {rows.length === 0 && (
+        <p class="fx-empty">No recipes yet. Add the first one!</p>
+      )}
       {rows.map(({ name, cuisine, difficulty }, index) => {
         const isEditMode = editing !== undefined && index === id;
         return (
           <form
-            class="row"
+            class={isEditMode ? "fx-row fx-editing" : "fx-row"}
             action="."
             method="post"
             fx-action="."
@@ -135,23 +158,36 @@ async function Fragment({ request, reply }) {
             fx-target="#entries"
           >
             <input type="hidden" name="id" value={index} />
-            <div class="col-md-3 col-sm-12">
+            <div data-label="Name">
               {isEditMode ? (
-                <input type="text" name="name" value={name} placeholder="Name..." />
+                <input
+                  aria-label="Name"
+                  type="text"
+                  name="name"
+                  value={name}
+                  placeholder="Name..."
+                />
               ) : (
                 name
               )}
             </div>
-            <div class="col-md-3 col-sm-12">
+            <div data-label="Cuisine">
               {isEditMode ? (
-                <input type="text" name="cuisine" value={cuisine} placeholder="Cuisine..." />
+                <input
+                  aria-label="Cuisine"
+                  type="text"
+                  name="cuisine"
+                  value={cuisine}
+                  placeholder="Cuisine..."
+                />
               ) : (
                 cuisine
               )}
             </div>
-            <div class="col-md-3 col-sm-12">
+            <div data-label="Difficulty">
               {isEditMode ? (
                 <input
+                  aria-label="Difficulty"
                   type="text"
                   name="difficulty"
                   value={difficulty}
@@ -161,13 +197,28 @@ async function Fragment({ request, reply }) {
                 difficulty
               )}
             </div>
-            <div class="col-md-3 col-sm-12">
+            <div class="fx-actions">
               {isEditMode ? (
-                <button class="btn btn-primary" type="submit" name="action" value="save">
-                  Save
-                </button>
+                <>
+                  <button
+                    class="fx-btn fx-primary"
+                    type="submit"
+                    name="action"
+                    value="save"
+                  >
+                    Save
+                  </button>
+                  <button
+                    class="fx-btn"
+                    type="submit"
+                    name="action"
+                    value="cancel"
+                  >
+                    Cancel
+                  </button>
+                </>
               ) : (
-                <button class="btn btn-primary" type="submit" name="action" value="edit">
+                <button class="fx-btn" type="submit" name="action" value="edit">
                   Edit
                 </button>
               )}
@@ -177,23 +228,28 @@ async function Fragment({ request, reply }) {
       })}
       {isAdding ? null : entries.length < MAX_ENTRIES ? (
         <form
-          class="row"
+          class="fx-add"
           action="."
           method="post"
           fx-action="."
           fx-method="post"
           fx-target="#entries"
         >
-          <div class="offset-md-9 col-md-3 col-sm-12">
-            <input type="hidden" name="id" value={entries.length} />
-            <button class="btn btn-primary" type="submit" name="action" value="create">
-              Add
-            </button>
-          </div>
+          <input type="hidden" name="id" value={entries.length} />
+          <button
+            class="fx-btn fx-primary"
+            type="submit"
+            name="action"
+            value="create"
+          >
+            + Add recipe
+          </button>
         </form>
       ) : (
-        <p class="center">
-          <small>The list is full: at most {MAX_ENTRIES} recipes can be stored.</small>
+        <p class="fx-empty">
+          <small>
+            The list is full: at most {MAX_ENTRIES} recipes can be stored.
+          </small>
         </p>
       )}
     </article>

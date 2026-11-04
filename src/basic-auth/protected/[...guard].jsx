@@ -20,13 +20,23 @@ export default function ({ request, reply }) {
       // An absolute path, as this guard answers deeper paths like "/basic-auth/protected/a/b" too,
       // where "./index.css" would point to a file that doesn't exist.
       <Layout title="Error 401" css="/basic-auth/protected/index.css">
-        <section class="center">
-          <h1 class="access-denied">Error 401</h1>
-          <p>You are not allowed to view the protected content.</p>
+        <article class="card-error status">
+          <div class="status-icon" aria-hidden="true">
+            &times;
+          </div>
+          <h1>Access denied</h1>
           <p>
-            Please <a href="">reload the page</a> and enter the correct credentials (demo / demo).
+            Error 401: the credentials are missing or wrong, so the protected content stays hidden.
           </p>
-        </section>
+          <footer>
+            <a href="" class="btn btn-primary">
+              Try again
+            </a>{" "}
+            <a href="/basic-auth" class="btn btn-secondary">
+              Back to the example
+            </a>
+          </footer>
+        </article>
       </Layout>
     );
   } else if (reply.file) {
@@ -35,10 +45,21 @@ export default function ({ request, reply }) {
   } else {
     return (
       <Layout title="Access granted" css="/basic-auth/protected/index.css">
-        <section class="center">
-          <h1 class="access-granted">Access granted</h1>
-          <p>You are allowed to view the protected content.</p>
-        </section>
+        <article class="card-success status">
+          <div class="status-icon" aria-hidden="true">
+            &#10003;
+          </div>
+          <h1>Access granted</h1>
+          <p>
+            Your browser sent valid credentials, so the guard let the request through to the
+            protected content.
+          </p>
+          <footer>
+            <a href="/basic-auth" class="btn btn-secondary">
+              Back to the example
+            </a>
+          </footer>
+        </article>
       </Layout>
     );
   }

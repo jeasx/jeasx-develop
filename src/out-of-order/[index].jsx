@@ -1,5 +1,8 @@
 import Layout from "../Layout";
 
+/** Time span of the bars in ms, a bit longer than the slowest possible delay. */
+const SCALE = 2100;
+
 const SOURCES = [
   { id: "weather", name: "Weather service" },
   { id: "news", name: "News feed" },
@@ -17,7 +20,11 @@ export default function () {
   const results = SOURCES.map((source) =>
     query(source).then(
       (value) => ({ ...source, value, time: Date.now() - start }),
-      () => ({ ...source, value: "Couldn't be loaded.", time: Date.now() - start }),
+      () => ({
+        ...source,
+        value: "Couldn't be loaded.",
+        time: Date.now() - start,
+      }),
     ),
   );
 
@@ -25,40 +32,58 @@ export default function () {
     <Layout
       title="Out-of-order streaming"
       description="Stream slow parts of a page in the order they finish, while they still appear in their place."
+      css="/out-of-order/index.css"
     >
-      <h1>Out-of-order streaming</h1>
-      <p>
-        Jeasx streams markup in order, so a slow component holds back everything after it (see{" "}
-        <a href="/streaming">Streaming HTML</a>). Here, the results show up in the order they finish
-        and still appear in their place on the page. <a href="">Reload</a> for new random delays.
-      </p>
-      <p>
-        This works without client-side JavaScript, thanks to{" "}
-        <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/template#shadowrootmode">
-          Declarative Shadow DOM
-        </a>
-        : the container is sent first, with a <code>&lt;slot&gt;</code> for each source and a
-        loading indicator inside it. An async generator then streams each result as soon as it's
-        ready, marked with <code>slot="…"</code>, and the browser moves it into the matching slot.
-      </p>
-      {/* µCSS styles a shadow host without data-theme as light, so repeat the theme of the page. */}
-      <div data-theme="dark">
-        <template shadowrootmode="open">
-          {/* Page styles don't reach into a shadow root, so it links them itself. */}
-          <link rel="stylesheet" href={`/index.css?v=${process.env.BUILD_ID}`} />
-          <div class="row">
-            {SOURCES.map(({ id, name }) => (
-              <div class="col-12 col-md-4">
+      <div class="sx">
+        <h1>Out-of-order streaming</h1>
+        <p>
+          Jeasx streams markup in order, so a slow component holds back
+          everything after it (see <a href="/streaming">Streaming HTML</a>).
+          Here, the results show up in the order they finish and still appear in
+          their place on the page.
+        </p>
+        <p>
+          This works without client-side JavaScript, thanks to{" "}
+          <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/template#shadowrootmode">
+            Declarative Shadow DOM
+          </a>
+          : the container is sent first, with a <code>&lt;slot&gt;</code> for
+          each source and a loading indicator inside it. An async generator then
+          streams each result as soon as it's ready, marked with{" "}
+          <code>slot="…"</code>, and the browser moves it into the matching
+          slot.
+        </p>
+        <p class="center">
+          <a class="sx-button" href="">
+            Reload with new delays
+          </a>
+        </p>
+        {/* µCSS styles a shadow host without data-theme as light, so repeat the theme of the page. */}
+        <div data-theme="dark">
+          <template shadowrootmode="open">
+            {/* Page styles don't reach into a shadow root, so it links them itself. */}
+            <link
+              rel="stylesheet"
+              href={`/index.css?v=${process.env.BUILD_ID}`}
+            />
+            <link
+              rel="stylesheet"
+              href={`/out-of-order/index.css?v=${process.env.BUILD_ID}`}
+            />
+            <div class="oo-grid">
+              {SOURCES.map(({ id, name }) => (
                 <slot name={id}>
-                  <p aria-busy="true">Loading {name.toLowerCase()}...</p>
+                  <p class="sx-pending" aria-busy="true">
+                    Loading {name.toLowerCase()}...
+                  </p>
                 </slot>
-              </div>
-            ))}
-          </div>
-        </template>
-        <InOrderOfCompletion results={results} />
+              ))}
+            </div>
+          </template>
+          <InOrderOfCompletion results={results} />
+        </div>
+        <Done start={start} />
       </div>
-      <Done start={start} />
     </Layout>
   );
 }
@@ -70,24 +95,30 @@ export default function () {
  */
 async function* InOrderOfCompletion({ results }) {
   const pending = new Map(
-    results.map((result, index) => [index, result.then((r) => /** @type {const} */ ([index, r]))]),
+    results.map((result, index) => [
+      index,
+      result.then((r) => /** @type {const} */ ([index, r])),
+    ]),
   );
   let position = 0;
   while (pending.size > 0) {
-    const [index, { id, name, value, time }] = await Promise.race(pending.values());
+    const [index, { id, name, value, time }] = await Promise.race(
+      pending.values(),
+    );
     pending.delete(index);
     position++;
     yield (
-      <article slot={id}>
-        <header>
-          <strong>{name}</strong>
-        </header>
+      <article slot={id} class="sx-result">
+        <span class="oo-rank" title="Order of arrival">
+          #{position}
+        </span>
+        <strong>{name}</strong>
         <p>{value}</p>
-        <footer>
-          <small>
-            Arrived as #{position} after {time} ms
-          </small>
-        </footer>
+        <small>arrived after {time} ms</small>
+        <div
+          class="sx-bar"
+          style={`--to: ${Math.min(time / SCALE, 1).toFixed(3)}`}
+        ></div>
       </article>
     );
   }
@@ -96,9 +127,7 @@ async function* InOrderOfCompletion({ results }) {
 /** Rendered after all results are streamed. */
 function Done({ start }) {
   return (
-    <p class="center">
-      <strong>All done after {Date.now() - start} ms.</strong>
-    </p>
+    <output class="sx-done">All done after {Date.now() - start} ms</output>
   );
 }
 

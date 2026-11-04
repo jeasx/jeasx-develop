@@ -43,6 +43,7 @@ export default async function ({ request, reply, csrfToken, session }) {
     <Layout
       title="Login and sessions"
       description="Sign in with a session cookie, validate forms on the server and protect them against CSRF."
+      css="/login/index.css"
     >
       <h1>Login and sessions</h1>
       <p>
@@ -53,34 +54,51 @@ export default async function ({ request, reply, csrfToken, session }) {
       </p>
 
       {session ? (
-        <section>
-          <h2>Welcome, {session.username}</h2>
-          <p>You are signed in. Your session ends after 30 minutes without requests.</p>
-          <ul>
-            <li>
-              Email: <code>{session.email}</code>
-            </li>
-            <li>
-              Session expires: <code>{new Date(session.expires).toISOString()}</code>
-            </li>
-          </ul>
-          <form method="post" action={`${PATH}/logout`} class="center">
-            <input type="hidden" name="_csrf" value={csrfToken} />
-            <button class="btn btn-primary" type="submit">
-              Sign out
-            </button>
-          </form>
-        </section>
+        <article class="card-success account">
+          <header class="account-header">
+            <span class="avatar" aria-hidden="true">
+              {session.username.charAt(0).toUpperCase()}
+            </span>
+            <div>
+              <strong>Welcome, {session.username}</strong>
+              <br />
+              <small>You are signed in.</small>
+            </div>
+          </header>
+          <dl class="account-details">
+            <dt>Email</dt>
+            <dd>
+              <code>{session.email}</code>
+            </dd>
+            <dt>Session expires</dt>
+            <dd>
+              <time datetime={new Date(session.expires).toISOString()}>
+                {new Date(session.expires).toISOString().replace("T", " ").slice(0, 19)} UTC
+              </time>
+              <br />
+              <small>Every request extends it by 30 minutes.</small>
+            </dd>
+          </dl>
+          <footer>
+            <form method="post" action={`${PATH}/logout`}>
+              <input type="hidden" name="_csrf" value={csrfToken} />
+              <button class="btn btn-secondary" type="submit">
+                Sign out
+              </button>
+            </form>
+          </footer>
+        </article>
       ) : (
-        <section>
-          <h2>Sign in</h2>
-          <p>
-            Use <code>demo</code> / <code>jsx-with-ease</code> or{" "}
-            <a href={`${PATH}/register`}>create an account</a>.
+        <article class="auth-card">
+          <header>
+            <strong>Sign in</strong>
+          </header>
+          <p class="alert alert-info">
+            Use the demo account <kbd>demo</kbd> / <kbd>jsx-with-ease</kbd>.
           </p>
           {error && (
-            <p role="alert">
-              <mark>{error}</mark>
+            <p class="alert alert-error" role="alert">
+              {error}
             </p>
           )}
           <form method="post">
@@ -100,11 +118,16 @@ export default async function ({ request, reply, csrfToken, session }) {
               autocomplete="current-password"
               required
             />
-            <button class="btn btn-primary" type="submit">
+            <button class="btn btn-primary wide" type="submit">
               Sign in
             </button>
           </form>
-        </section>
+          <footer class="center">
+            <small>
+              No account yet? <a href={`${PATH}/register`}>Create one</a>
+            </small>
+          </footer>
+        </article>
       )}
     </Layout>
   );

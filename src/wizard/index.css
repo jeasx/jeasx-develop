@@ -1,0 +1,281 @@
+:root {
+  --wiz-accent: #6366f1;
+  --wiz-accent-2: #06b6d4;
+  --wiz-line: rgba(127, 127, 127, 0.2);
+  --wiz-soft: rgba(127, 127, 127, 0.07);
+  --wiz-muted: rgba(127, 127, 127, 0.9);
+  --wiz-error: #ef4444;
+}
+
+.wizard {
+  margin: 0 auto;
+  max-width: 44rem;
+}
+
+/* Header with title, step indicator and progress */
+.wizard-header {
+  margin-bottom: 1.5rem;
+
+  & h1 {
+    background: linear-gradient(120deg, var(--wiz-accent), var(--wiz-accent-2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-align: center;
+  }
+}
+
+/* mu.css lays out lists in a nav as a compact menu; the steps span the full width instead. */
+nav:has(> .wizard-steps) {
+  display: block;
+}
+
+nav .wizard-steps {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.25rem;
+  margin: 0 0 1rem;
+  width: 100%;
+  padding: 0;
+  list-style: none;
+  counter-reset: none;
+
+  & li {
+    display: flex;
+    position: relative;
+    flex: 1;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    /* Connector line between the dots */
+    &:not(:first-child)::before {
+      position: absolute;
+      top: 1rem;
+      right: 50%;
+      left: -50%;
+      z-index: 0;
+      background: var(--wiz-line);
+      height: 2px;
+      content: "";
+    }
+
+    &.done::before,
+    &.current::before {
+      background: var(--wiz-accent);
+    }
+  }
+
+  & a,
+  & li > span {
+    display: flex;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    z-index: 1;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--wiz-muted);
+    text-align: center;
+    text-decoration: none;
+  }
+
+  & a:hover .wizard-step-dot {
+    transform: scale(1.1);
+  }
+}
+
+.wizard-step-dot {
+  display: grid;
+  place-items: center;
+  transition: transform 0.15s;
+  border: 2px solid var(--wiz-line);
+  border-radius: 50%;
+  background: var(--pico-background-color, #13171f);
+  width: 2rem;
+  height: 2rem;
+  font-weight: 600;
+  font-size: 0.85rem;
+
+  .done & {
+    border-color: var(--wiz-accent);
+    background: var(--wiz-accent);
+    color: #fff;
+  }
+
+  .current & {
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.25);
+    border-color: var(--wiz-accent);
+    color: var(--wiz-accent);
+  }
+}
+
+.wizard-step-label {
+  font-size: 0.8rem;
+  line-height: 1.2;
+
+  .current & {
+    color: var(--pico-color);
+    font-weight: 600;
+  }
+}
+
+@media (max-width: 576px) {
+  .wizard-step-label {
+    display: none;
+  }
+
+  .current .wizard-step-label {
+    display: block;
+  }
+}
+
+.wizard-progress {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+
+  & progress {
+    margin: 0;
+    width: 100%;
+    height: 0.4rem;
+  }
+
+  & small {
+    color: var(--wiz-muted);
+  }
+}
+
+/* Form card */
+.wizard-card {
+  border: 1px solid var(--wiz-line);
+  border-radius: 1rem;
+  background: var(--wiz-soft);
+  padding: 1.5rem;
+
+  & h2 {
+    margin-bottom: 1rem;
+  }
+
+  & h3 {
+    margin: 1.75rem 0 0.75rem;
+    border-bottom: 1px solid var(--wiz-line);
+    padding-bottom: 0.4rem;
+    color: var(--wiz-accent-2);
+    font-size: 1rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  & small {
+    color: var(--wiz-muted);
+  }
+
+  & > button[type="submit"]:not([aria-hidden]) {
+    width: 100%;
+  }
+}
+
+/* Radios and checkboxes as selectable tiles */
+.wizard-field {
+  margin-bottom: var(--pico-spacing, 1rem);
+
+  & > span {
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+}
+
+.wizard-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+
+  & label {
+    flex: 1 1 8rem;
+    width: auto;
+  }
+}
+
+.wizard-choices label,
+.wizard-choice {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  cursor: pointer;
+  box-sizing: border-box;
+  margin: 0 0 0.5rem;
+  border: 1px solid var(--wiz-line);
+  /* mu.css sizes these labels to their text; tiles span the full width instead. */
+  width: 100%;
+  border-radius: 0.6rem;
+  padding: 0.75rem 1rem;
+  transition:
+    border-color 0.15s,
+    background 0.15s;
+
+  & input[type] {
+    flex: none;
+    margin: 0;
+  }
+
+  &:hover {
+    border-color: var(--wiz-accent);
+  }
+
+  &:has(input:checked) {
+    border-color: var(--wiz-accent);
+    background: rgba(99, 102, 241, 0.12);
+  }
+
+  &:has(input:focus-visible) {
+    outline: 2px solid var(--wiz-accent);
+    outline-offset: 2px;
+  }
+}
+
+.wizard-choices label {
+  margin: 0;
+}
+
+/* Back on the left, Save and Next on the right */
+.wizard-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-top: 2rem;
+  border-top: 1px solid var(--wiz-line);
+  padding-top: 1.25rem;
+
+  & button {
+    margin: 0;
+    width: auto;
+  }
+}
+
+.wizard-actions-end {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.wizard-errors {
+  margin: 1.25rem 0 0;
+  border: 1px solid var(--wiz-error);
+  border-left-width: 4px;
+  border-radius: 0.6rem;
+  background: rgba(239, 68, 68, 0.1);
+  padding: 0.75rem 1rem 0.75rem 2rem;
+
+  & li {
+    margin: 0.15rem 0;
+    color: var(--wiz-error);
+  }
+}

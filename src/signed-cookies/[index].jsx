@@ -48,6 +48,7 @@ export default function ({ request, reply, csrfToken }) {
     <Layout
       title="Signed cookies and CSRF tokens"
       description="Detect edited cookies with signatures and protect forms against cross-site request forgery."
+      css="/signed-cookies/index.css"
     >
       <h1>Signed cookies and CSRF tokens</h1>
       <p>
@@ -63,63 +64,76 @@ export default function ({ request, reply, csrfToken }) {
         field. Have a look at the source to see how it works.
       </p>
 
-      <h2>Notes</h2>
-      <p role={cookie.status === "invalid" ? "alert" : undefined}>
-        {cookie.status === "missing" && "No notes cookie yet. Add a note to create one."}
-        {cookie.status === "valid" && "The signature of the notes cookie is valid."}
-        {cookie.status === "invalid" &&
-          "The notes cookie was changed after it was signed, so it is ignored."}
-      </p>
-      {notes.length > 0 && (
-        <ul>
-          {notes.map((note) => (
-            <li>{note}</li>
-          ))}
-        </ul>
-      )}
-      <form method="post">
-        <input type="hidden" name="_csrf" value={csrfToken} />
-        <input type="hidden" name="action" value="add" />
-        <fieldset role="group">
-          <input name="note" maxlength={MAX_LENGTH} placeholder="Write a note..." required />
-          <button class="btn btn-primary" type="submit">
-            Add
-          </button>
-        </fieldset>
-      </form>
-      {request.cookies["notes"] && (
-        <p>
-          Cookie value: <code>{request.cookies["notes"]}</code>
-        </p>
-      )}
+      <article class="notes">
+        <header class="notes-header">
+          <strong>Notes</strong>
+          {cookie.status === "missing" && <span class="badge badge-secondary">No cookie</span>}
+          {cookie.status === "valid" && <span class="badge badge-success">Signature valid</span>}
+          {cookie.status === "invalid" && <span class="badge badge-error">Signature invalid</span>}
+        </header>
+        {cookie.status === "invalid" && (
+          <p class="alert alert-error" role="alert">
+            The notes cookie was changed after it was signed, so it is ignored.
+          </p>
+        )}
+        {notes.length > 0 ? (
+          <ul class="notes-list">
+            {notes.map((note) => (
+              <li>{note}</li>
+            ))}
+          </ul>
+        ) : (
+          <p class="notes-empty">
+            {cookie.status === "missing"
+              ? "No notes yet. Add one to create the cookie."
+              : "No notes."}
+          </p>
+        )}
+        <form method="post">
+          <input type="hidden" name="_csrf" value={csrfToken} />
+          <input type="hidden" name="action" value="add" />
+          <fieldset role="group">
+            <input
+              name="note"
+              maxlength={MAX_LENGTH}
+              placeholder="Write a note..."
+              aria-label="Note"
+              required
+            />
+            <button class="btn btn-primary" type="submit">
+              Add
+            </button>
+          </fieldset>
+        </form>
+        {request.cookies["notes"] && (
+          <footer>
+            <small>Cookie value (value.signature)</small>
+            <code class="cookie-value">{request.cookies["notes"]}</code>
+          </footer>
+        )}
+      </article>
 
       <h2>Try it</h2>
-      <div class="row center">
-        <form method="post" class="col-12 col-md-4">
+      <div class="actions">
+        <form method="post" class="action">
           <input type="hidden" name="_csrf" value={csrfToken} />
-          <button class="btn btn-secondary" type="submit" name="action" value="tamper">
+          <button class="btn btn-warning" type="submit" name="action" value="tamper">
             Edit the cookie
           </button>
-          <p>
-            <small>Changes the value like an attacker would, but keeps the signature.</small>
-          </p>
+          <small>Changes the value like an attacker would, but keeps the signature.</small>
         </form>
-        <form method="post" class="col-12 col-md-4">
-          <button class="btn btn-secondary" type="submit" name="action" value="add">
+        <form method="post" class="action">
+          <button class="btn btn-error" type="submit" name="action" value="add">
             Send without token
           </button>
-          <p>
-            <small>Posts a form without CSRF token, like a forged form on another site.</small>
-          </p>
+          <small>Posts a form without CSRF token, like a forged form on another site.</small>
         </form>
-        <form method="post" class="col-12 col-md-4">
+        <form method="post" class="action">
           <input type="hidden" name="_csrf" value={csrfToken} />
           <button class="btn btn-secondary" type="submit" name="action" value="clear">
             Clear notes
           </button>
-          <p>
-            <small>Deletes the notes cookie.</small>
-          </p>
+          <small>Deletes the notes cookie.</small>
         </form>
       </div>
     </Layout>

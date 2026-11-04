@@ -33,7 +33,9 @@ const POSITIONS = new Set([
  * @param {import("../types").RouteProps} props
  */
 export default async function ({ request, reply }) {
-  const query = /** @type {Record<string, string | undefined>} */ (request.query);
+  const query = /** @type {Record<string, string | undefined>} */ (
+    request.query
+  );
 
   const position = query["position"] || undefined;
   if (position && !POSITIONS.has(position)) {
@@ -71,7 +73,9 @@ export default async function ({ request, reply }) {
           return;
         }
         try {
-          const converted = await sharp(input, { limitInputPixels: MAX_INPUT_PIXELS })
+          const converted = await sharp(input, {
+            limitInputPixels: MAX_INPUT_PIXELS,
+          })
             .resize({ width, height, position })
             .toFormat(format, { quality: 70 })
             .toBuffer();
@@ -84,7 +88,10 @@ export default async function ({ request, reply }) {
       });
     } catch (error) {
       if (error instanceof QueueFullError) {
-        reply.status(503).header("retry-after", "10").type("text/plain; charset=utf-8");
+        reply
+          .status(503)
+          .header("retry-after", "10")
+          .type("text/plain; charset=utf-8");
         return "Too many images are being converted right now. Please try again in a moment.";
       }
       throw error;
@@ -97,7 +104,10 @@ export default async function ({ request, reply }) {
   reply.type(`image/${format}`);
   // The format depends on the Accept header, so caches must store one copy per value.
   reply.header("vary", "accept");
-  reply.header("cache-control", "public, max-age=31536000, s-maxage=31536000, immutable");
+  reply.header(
+    "cache-control",
+    "public, max-age=31536000, s-maxage=31536000, immutable",
+  );
   return image;
 }
 
@@ -115,7 +125,10 @@ async function loadImage(src) {
   // Local image: resolve the path and make sure it stays inside the image folder.
   if (src.startsWith("/")) {
     const path = join(LOCAL_IMAGE_DIR, src.replace(/^\/images\//, "/"));
-    if (!src.startsWith("/images/") || !path.startsWith(LOCAL_IMAGE_DIR + sep)) {
+    if (
+      !src.startsWith("/images/") ||
+      !path.startsWith(LOCAL_IMAGE_DIR + sep)
+    ) {
       return;
     }
     // Missing files end up as 404 instead of failing in sharp.
@@ -131,7 +144,10 @@ async function loadImage(src) {
   } catch {
     return;
   }
-  if (url.protocol !== "https:" || !ALLOWED_REMOTE_HOSTS.includes(url.hostname)) {
+  if (
+    url.protocol !== "https:" ||
+    !ALLOWED_REMOTE_HOSTS.includes(url.hostname)
+  ) {
     return;
   }
 

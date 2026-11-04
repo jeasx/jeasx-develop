@@ -1,0 +1,145 @@
+.recipe-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+  gap: 0.75rem;
+  margin: 1rem 0 2rem;
+  padding: 0;
+  list-style: none;
+}
+.recipe-cards li {
+  list-style: none;
+}
+.recipe-cards li::marker {
+  content: none;
+}
+.recipe-cards a {
+  display: block;
+  height: 100%;
+  padding: 0.75rem;
+  border: 2px solid transparent;
+  border-radius: 0.75rem;
+  background: color-mix(in srgb, currentColor 6%, transparent);
+  color: inherit;
+  text-decoration: none;
+  transition:
+    transform 0.15s,
+    border-color 0.15s;
+}
+.recipe-cards a:hover {
+  transform: translateY(-3px);
+}
+.recipe-cards a[aria-current="page"] {
+  border-color: #f97316;
+}
+.recipe-cards .emoji {
+  display: block;
+  font-size: 2rem;
+}
+.recipe-cards small {
+  display: block;
+  opacity: 0.7;
+}
+
+.recipe {
+  position: relative;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  background: color-mix(in srgb, #f97316 8%, transparent);
+}
+.recipe h2 {
+  margin-top: 0;
+  padding-right: 4rem;
+}
+.recipe-emoji {
+  position: absolute;
+  top: 1rem;
+  right: 1.5rem;
+  font-size: 3.5rem;
+  animation: wobble 3s ease-in-out infinite;
+}
+@keyframes wobble {
+  50% {
+    transform: rotate(-12deg) scale(1.1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .recipe-emoji {
+    animation: none;
+  }
+}
+.recipe-meta {
+  margin-bottom: 1rem;
+}
+.recipe-meta span:first-child {
+  color: #f59e0b;
+}
+.difficulty {
+  padding: 0.1rem 0.5rem;
+  border-radius: 1rem;
+  color: #fff;
+  font-size: 0.85em;
+}
+.difficulty.easy {
+  background: #16a34a;
+}
+.difficulty.medium {
+  background: #d97706;
+}
+.difficulty.hard {
+  background: #dc2626;
+}
+
+.ingredients {
+  columns: 14rem;
+  padding: 0;
+  list-style: none;
+}
+.ingredients li {
+  list-style: none;
+}
+.ingredients label:has(:checked) {
+  opacity: 0.5;
+  text-decoration: line-through;
+}
+
+.instructions {
+  counter-reset: step;
+  padding: 0;
+  list-style: none;
+}
+.instructions li {
+  list-style: none;
+  counter-increment: step;
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+.instructions li::before {
+  content: counter(step);
+  flex: none;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  background: #f97316;
+  color: #fff;
+  font-weight: bold;
+  line-height: 1.75rem;
+  text-align: center;
+}
+
+.tip {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-left: 4px solid #f97316;
+  border-radius: 0.5rem;
+  background: color-mix(in srgb, #f97316 12%, transparent);
+}
+.tip p {
+  margin: 0;
+}
+
+/* Keep the recipe headline below the sticky top bar when jumping to #recipe. */
+#recipe {
+  scroll-margin-top: 5rem;
+}

@@ -9,33 +9,43 @@ export default function ({ number, delta, numbers, submit }) {
       css="/lottery/index.module.css"
     >
       <div class={styles.lottery}>
-        <h1>Lottery (6 out of 49)</h1>
-        <p>
+        <h1>
+          Lottery <span class={styles.badge}>6 out of 49</span>
+        </h1>
+        <p class={styles.lead}>
           Pick six numbers, then reveal the draw. Every click submits a plain HTML form and the
           server renders the updated page, so this works without any JavaScript in the browser.
         </p>
         <form method="post">
           <input type="hidden" name="numbers" value={JSON.stringify(numbers)} />
+          <div class={styles.status}>
+            <span>Your picks</span>
+            <strong>{numbers.length} / 6</strong>
+          </div>
           <div
             class={styles.progressbar}
             style={`--currentValue: ${numbers.length}; --previousValue: ${
               numbers.length - delta
             }; --maxValue: 6`}
           />
-          <div class={styles.grid}>
-            {Array.from({ length: 49 }, (_, index) => (
-              <button
-                class={`${styles.box}${numbers.includes(index + 1) ? " " + styles.checked : ""}${number === index + 1 ? " " + styles.last : ""}`}
-                type="submit"
-                name="number"
-                value={index + 1}
-                disabled={numbers.length === 6 && !numbers.includes(index + 1)}
-                autofocus={number === index + 1}
-              >
-                {numbers.includes(index + 1) ? "✓" : index + 1}
-              </button>
-            ))}
-          </div>
+          {submit && numbers.length === 6 ? (
+            <Draw numbers={numbers} />
+          ) : (
+            <div class={`${styles.grid}${numbers.length === 6 ? " " + styles.full : ""}`}>
+              {Array.from({ length: 49 }, (_, index) => (
+                <button
+                  class={`${styles.box}${numbers.includes(index + 1) ? " " + styles.checked : ""}${number === index + 1 ? " " + styles.last : ""}`}
+                  type="submit"
+                  name="number"
+                  value={index + 1}
+                  disabled={numbers.length === 6 && !numbers.includes(index + 1)}
+                  autofocus={number === index + 1}
+                >
+                  {numbers.includes(index + 1) ? "✓" : index + 1}
+                </button>
+              ))}
+            </div>
+          )}
           <div>
             <div class={styles.actions}>
               {numbers.length === 6 && !submit && (
@@ -51,7 +61,6 @@ export default function ({ number, delta, numbers, submit }) {
                 </>
               )}
             </div>
-            {submit && numbers.length === 6 && <Draw numbers={numbers} />}
           </div>
         </form>
       </div>
@@ -72,14 +81,21 @@ function Draw({ numbers }) {
   ).sort((a, b) => a - b);
   const matches = numbers.filter((number) => drawn.includes(number));
   return (
-    <p>
-      Drawn numbers: <strong>{drawn.join(", ")}</strong>
-      <br />
-      {matches.length === 0 ? (
-        <>No match this time.</>
-      ) : (
-        `🎉 You matched ${matches.length} of 6: ${matches.sort((a, b) => a - b).join(", ")}`
-      )}
-    </p>
+    <section class={styles.draw}>
+      <h2>The draw</h2>
+      <ol class={styles.balls}>
+        {drawn.map((number, index) => (
+          <li
+            class={`${styles.ball}${matches.includes(number) ? " " + styles.match : ""}`}
+            style={`--delay: ${index * 150}ms`}
+          >
+            {number}
+          </li>
+        ))}
+      </ol>
+      <p class={styles.result}>
+        {matches.length === 0 ? "No match this time." : `🎉 You matched ${matches.length} of 6`}
+      </p>
+    </section>
   );
 }

@@ -1,0 +1,30 @@
+.scenarios {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 1rem;
+}
+.scenario {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  border-top: 4px solid color-mix(in srgb, currentColor 20%, transparent);
+}
+.scenario > p {
+  flex: 1;
+}
+.scenario-active {
+  border-top-color: var(--mu-primary);
+}
+.scenario footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+}
+.scenario-result {
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+.output {
+  margin-top: 2rem;
+}

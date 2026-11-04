@@ -16,7 +16,13 @@ export default function Image({
   );
 }
 
-export function imagePath({ src, width, height, position = "", immutable = false }) {
+export function imagePath({
+  src,
+  width,
+  height,
+  position = "",
+  immutable = false,
+}) {
   const params = new URLSearchParams({
     src,
     width: width || "",

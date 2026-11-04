@@ -26,7 +26,7 @@
     "description": "Every Jeasx route can return an HTML fragment, so hypermedia libraries like HTMX and Fixi can update parts of a page with markup rendered on the server.",
     "links": [
       { "path": "/htmx", "title": "Click to edit" },
-      { "path": "/nominatim", "title": "Active search" },
+      { "path": "/active-search", "title": "Active search" },
       { "path": "/fragments", "title": "Template fragments" },
       { "path": "/infinite-scroll", "title": "Infinite scroll" },
       { "path": "/hx-live", "title": "Reactive scripting" },

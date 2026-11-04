@@ -1,6 +1,30 @@
 import { html, jsxToString } from "jsx-async-runtime";
 import Layout from "../Layout";
 
+const SCENARIOS = [
+  {
+    id: "before",
+    title: "Error before streaming",
+    description:
+      "The route throws before it returns any markup. Nothing is sent yet, so Fastify's error handler answers with status 500.",
+    result: "Fastify's error handler",
+  },
+  {
+    id: "caught",
+    title: "Error while streaming, caught",
+    description:
+      "A component fails after the page has started streaming. An error boundary catches it and renders a fallback instead.",
+    result: "Fallback content",
+  },
+  {
+    id: "uncaught",
+    title: "Error while streaming, uncaught",
+    description:
+      "The same component without a boundary. Status and headers are already sent, so the page simply ends where the error happened.",
+    result: "Truncated page",
+  },
+];
+
 /**
  * @this {import("../types").ThisContext}
  * @param {import("../types").RouteProps} props
@@ -17,6 +41,7 @@ export default async function ({ request }) {
     <Layout
       title="Catch errors at runtime"
       description="Catch errors at runtime and render fallback content instead of a broken page."
+      css="/error-handler/index.css"
     >
       <h1>Catch errors at runtime</h1>
       <p>
@@ -24,32 +49,49 @@ export default async function ({ request }) {
         handled by Fastify's error handler, which answers with the right status code. By default, it
         responds with JSON; register your own via <code>setErrorHandler()</code> in{" "}
         <code>FASTIFY_SERVER</code> of <code>jeasx.config.js</code> to render a user-friendly error
-        page. Once streaming has started, status and headers are already sent: wrap risky components
-        in an error boundary to render a fallback instead. Have a look at the source to see how
-        things are wired up.
+        page.
       </p>
-      <ul>
-        <li>
-          <a href={`${request.path}?error=before`}>Error before streaming</a> → Fastify's error
-          handler
-        </li>
-        <li>
-          <a href={`${request.path}?error=caught`}>Error while streaming, caught</a> → fallback
-          content
-        </li>
-        <li>
-          <a href={`${request.path}?error=uncaught`}>Error while streaming, uncaught</a> → truncated
-          page
-        </li>
-      </ul>
-      {error === "caught" && (
-        <ErrorBoundary
-          fallback={<p class="alert alert-error">This section could not be loaded.</p>}
-        >
-          <ComponentWithError />
-        </ErrorBoundary>
+      <p>
+        Once streaming has started, status and headers are already sent: wrap risky components in an
+        error boundary to render a fallback instead. Pick a scenario below and have a look at the
+        source to see how things are wired up.
+      </p>
+
+      <div class="scenarios">
+        {SCENARIOS.map(({ id, title, description, result }) => (
+          <article class={id === error ? "scenario scenario-active" : "scenario"}>
+            <header>
+              <strong>{title}</strong>
+            </header>
+            <p>
+              <small>{description}</small>
+            </p>
+            <footer>
+              <a href={`?error=${id}`} role="button" aria-current={id === error ? "true" : "false"}>
+                Try it
+              </a>
+              <span class="scenario-result">→ {result}</span>
+            </footer>
+          </article>
+        ))}
+      </div>
+
+      {error && (
+        <section class="output">
+          <h2>Output</h2>
+          {error === "caught" && (
+            <ErrorBoundary
+              fallback={<p class="alert alert-error">This section could not be loaded.</p>}
+            >
+              <ComponentWithError />
+            </ErrorBoundary>
+          )}
+          {error === "uncaught" && <ComponentWithError />}
+          <p>
+            <a href="?">Reset</a>
+          </p>
+        </section>
       )}
-      {error === "uncaught" && <ComponentWithError />}
     </Layout>
   );
 }

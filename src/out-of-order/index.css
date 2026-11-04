@@ -1,0 +1,23 @@
+@import "../streaming/shared.css";
+
+.oo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: 0.75rem;
+
+  & .sx-result,
+  & .sx-pending {
+    margin: 0;
+    height: 100%;
+  }
+}
+
+.oo-rank {
+  float: right;
+  border-radius: 999px;
+  background: var(--sx-gradient);
+  padding: 0 0.6rem;
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+}

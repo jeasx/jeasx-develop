@@ -1,0 +1,38 @@
+:root {
+  --li-accent: #00e8ff;
+  --li-accent-2: #324fff;
+}
+
+.li {
+  margin: 0 auto;
+  max-width: 44rem;
+
+  & > h1 {
+    background: linear-gradient(120deg, var(--li-accent), var(--li-accent-2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* The element gets role="button" for keyboard users, which µCSS styles as a filled button. */
+  & logo-animation[role="button"] {
+    display: block;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+    padding: 0;
+    color: inherit;
+    text-align: initial;
+  }
+
+  /* Reserve the space of the components until the browser bundle defines them. */
+  & logo-animation:not(:defined) {
+    display: block;
+    min-height: 14rem;
+  }
+
+  & list-animation:not(:defined) {
+    display: block;
+    min-height: 12rem;
+  }
+}

@@ -48,6 +48,10 @@ export default function ({ request, reply }) {
     }
   }
 
+  if (body["clearCompleted"]) {
+    todos = todos.filter((todo) => todo.status !== "completed");
+  }
+
   // Only form submissions change todos. The guard also runs for static files
   // like index.css, which shouldn't carry a cookie.
   if (request.method === "POST") {

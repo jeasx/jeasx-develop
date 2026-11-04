@@ -4,43 +4,53 @@ import { LitElement, css, html } from "lit";
 export const styles = [
   css /*css*/ `
     :host {
-      display: flex;
-      height: 100%;
-      width: 100%;
-      align-items: center;
-      position: relative;
-      overflow: hidden;
-      color: #040424;
+      display: block;
+      border-radius: 1rem;
       cursor: pointer;
+      user-select: none;
+    }
+
+    :host(:focus-visible) {
+      outline: 2px solid #00e8ff;
+      outline-offset: 4px;
+    }
+
+    .letters {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 1.3em;
+      overflow: hidden;
+      font-weight: 800;
+      font-size: clamp(3.5rem, 16vw, 9rem);
+      line-height: 1.3;
     }
 
     .letter {
-      flex: 1;
-      font-size: 20vw;
-      text-align: center;
       will-change: transform;
-      background: linear-gradient(
-        0deg,
-        rgba(2, 0, 36, 1) 0%,
-        rgba(9, 33, 121, 1) 35%,
-        rgba(0, 212, 255, 1) 100%
-      );
+      background: linear-gradient(180deg, #00e8ff 0%, #324fff 100%);
       -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hint {
+      margin: 0;
+      padding-bottom: 1rem;
+      opacity: 0.6;
+      font-size: 0.85rem;
+      text-align: center;
     }
   `,
 ];
 
-class MotionLit extends LitElement {
+class LogoAnimation extends LitElement {
   static properties = {
     text: { type: String },
     letters: { state: true },
+    paused: { state: true },
   };
   static styles = styles;
-
-  get textLetters() {
-    return [...this.text];
-  }
 
   duration = 1000;
   controller = new AnimateController(this, {
@@ -52,52 +62,76 @@ class MotionLit extends LitElement {
     },
     onComplete: () => this.changeLayout(),
   });
+
   constructor() {
     super();
     /** @type {string} */
     this.text = "";
-    this.addEventListener("click", () => this.clickHandler());
     this.letters = [];
+    this.paused = false;
+    this.addEventListener("click", () => this.toggle());
+    this.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        this.toggle();
+      }
+    });
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    // The whole element acts as a button, so make it reachable by keyboard.
+    this.tabIndex = 0;
+    this.setAttribute("role", "button");
+    this.setAttribute(
+      "aria-label",
+      `${this.text} logo animation, press to pause or play`,
+    );
   }
 
   /** @param {import("lit").PropertyValues<this>} changed */
   willUpdate(changed) {
     if (changed.has("text")) {
-      this.letters = this.textLetters;
+      this.letters = [...this.text];
     }
   }
 
   render() {
-    const delayTime = this.duration / (this.letters.length * 2.5);
+    const delayTime = this.duration / (this.text.length * 2.5);
     return html`
-      ${this.letters?.map(
-        (letter, i) =>
-          html`<span
-            class="letter"
-            ${animate({
-              keyframeOptions: {
-                delay: i * delayTime,
-              },
-              in: fade,
-              out: flyBelow,
-            })}
-            >${letter}</span
-          >`,
-      )}
+      <div class="letters" aria-hidden="true">
+        ${this.letters.map(
+          (letter, i) =>
+            html`<span
+              class="letter"
+              ${animate({
+                keyframeOptions: { delay: i * delayTime },
+                in: fade,
+                out: flyBelow,
+              })}
+              >${letter}</span
+            >`,
+        )}
+      </div>
+      <p class="hint">
+        ${this.paused ? "▶ Paused, click to play" : "⏸ Click to pause"}
+      </p>
     `;
   }
 
-  clickHandler() {
+  toggle() {
     if (this.controller.isAnimating) {
       this.controller.togglePlay();
+      this.paused = !this.paused;
     } else {
+      this.paused = false;
       this.changeLayout();
     }
   }
 
   changeLayout() {
-    this.letters = this.letters.length ? [] : this.textLetters;
+    this.letters = this.letters.length ? [] : [...this.text];
   }
 }
 
-customElements.define("logo-animation", MotionLit);
+customElements.define("logo-animation", LogoAnimation);

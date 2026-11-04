@@ -1,5 +1,6 @@
 import { randomBytes } from "node:crypto";
 import { readSignedCookie } from "../@helpers/cookies";
+import isCrossSite, { crossSiteResponse } from "../@helpers/crossSite";
 import { FLAGS, PATH, flagsOf, variantOf } from "./flags";
 
 /**
@@ -14,6 +15,11 @@ export default function ({ request, reply }) {
     return;
   }
 
+  // A form of another site comes without the cookie, so it would replace the visitor.
+  if (isCrossSite(request)) {
+    return crossSiteResponse();
+  }
+
   const query = /** @type {Record<string, unknown>} */ (request.query ?? {});
 
   // Signed, so a visitor can't pick a variant by editing the cookie.
@@ -24,6 +30,10 @@ export default function ({ request, reply }) {
     reply.setCookie("visitor", visitor, {
       path: PATH,
       signed: true,
+      // With "strict" (the default in jeasx.config.js), the browser drops the cookie when a
+      // visitor follows a link from another site, e.g. a search engine. Then every such visit
+      // would count as a new visitor, who may see the other variant.
+      sameSite: "lax",
       maxAge: 30 * 24 * 60 * 60,
     });
   }

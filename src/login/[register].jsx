@@ -65,6 +65,7 @@ export default async function ({ request, reply, csrfToken, session }) {
       title="Create an account"
       description="A registration form with validation on the server."
       robots="noindex"
+      css="/login/index.css"
     >
       <h1>Create an account</h1>
       <p>
@@ -74,8 +75,10 @@ export default async function ({ request, reply, csrfToken, session }) {
       </p>
 
       {errorList.length > 0 && (
-        <article role="alert">
-          <strong>Please correct {errorList.length === 1 ? "this error" : "these errors"}:</strong>
+        <div class="alert alert-error auth-card" role="alert">
+          <strong class="alert-title">
+            Please correct {errorList.length === 1 ? "this error" : "these errors"}:
+          </strong>
           <ul>
             {errorList.map(([name, message]) => (
               <li>
@@ -83,87 +86,91 @@ export default async function ({ request, reply, csrfToken, session }) {
               </li>
             ))}
           </ul>
-        </article>
+        </div>
       )}
 
-      <form method="post">
-        <input type="hidden" name="_csrf" value={csrfToken} />
-        <Field
-          label="Username"
-          name="username"
-          value={values.username}
-          error={errors.username}
-          hint="Letters, digits, dashes and underscores."
-          minlength={USERNAME.minLength}
-          maxlength={USERNAME.maxLength}
-          pattern={USERNAME.pattern}
-          autocomplete="username"
-          autocapitalize="none"
-          required
-        />
-        <Field
-          label="Email"
-          name="email"
-          type="email"
-          value={values.email}
-          error={errors.email}
-          maxlength={EMAIL_MAX_LENGTH}
-          autocomplete="email"
-          required
-        />
-        {/* Passwords are never sent back to the browser, not even after an error. */}
-        <Field
-          label="Password"
-          name="password"
-          type="password"
-          error={errors.password}
-          hint={`At least ${PASSWORD.minLength} characters.`}
-          minlength={PASSWORD.minLength}
-          maxlength={PASSWORD.maxLength}
-          autocomplete="new-password"
-          required
-        />
-        <Field
-          label="Repeat password"
-          name="confirm"
-          type="password"
-          error={errors.confirm}
-          autocomplete="new-password"
-          required
-        />
-        <label>
-          <input
-            type="checkbox"
-            name="terms"
-            id="terms"
-            checked={values.terms}
-            aria-invalid={errors.terms ? "true" : undefined}
-            aria-describedby={errors.terms ? "terms-error" : undefined}
+      <article class="auth-card">
+        <form method="post">
+          <input type="hidden" name="_csrf" value={csrfToken} />
+          <Field
+            label="Username"
+            name="username"
+            value={values.username}
+            error={errors.username}
+            hint="Letters, digits, dashes and underscores."
+            minlength={USERNAME.minLength}
+            maxlength={USERNAME.maxLength}
+            pattern={USERNAME.pattern}
+            autocomplete="username"
+            autocapitalize="none"
             required
-          />{" "}
-          I accept that this demo forgets my account on the next restart.
-        </label>
-        {/* Outside the label, as it would overlap the checkbox there.
+          />
+          <Field
+            label="Email"
+            name="email"
+            type="email"
+            value={values.email}
+            error={errors.email}
+            maxlength={EMAIL_MAX_LENGTH}
+            autocomplete="email"
+            required
+          />
+          {/* Passwords are never sent back to the browser, not even after an error. */}
+          <Field
+            label="Password"
+            name="password"
+            type="password"
+            error={errors.password}
+            hint={`At least ${PASSWORD.minLength} characters.`}
+            minlength={PASSWORD.minLength}
+            maxlength={PASSWORD.maxLength}
+            autocomplete="new-password"
+            required
+          />
+          <Field
+            label="Repeat password"
+            name="confirm"
+            type="password"
+            error={errors.confirm}
+            autocomplete="new-password"
+            required
+          />
+          <label>
+            <input
+              type="checkbox"
+              name="terms"
+              id="terms"
+              checked={values.terms}
+              aria-invalid={errors.terms ? "true" : undefined}
+              aria-describedby={errors.terms ? "terms-error" : undefined}
+              required
+            />{" "}
+            I accept that this demo forgets my account on the next restart.
+          </label>
+          {/* Outside the label, as it would overlap the checkbox there.
             µCSS only colors a <small> right after the invalid input, so set the color here. */}
-        {errors.terms && (
-          <p>
-            <small id="terms-error" style="color: var(--mu-del-color)">
-              {errors.terms}
-            </small>
-          </p>
-        )}
-        <div class="row">
-          <button class="btn btn-primary" type="submit">
-            Create account
-          </button>{" "}
-          <button class="btn btn-secondary" type="submit" formnovalidate>
-            Send without browser checks
-          </button>
-        </div>
-      </form>
-      <p>
-        Already registered? <a href={PATH}>Sign in</a>
-      </p>
+          {errors.terms && (
+            <p>
+              <small id="terms-error" style="color: var(--mu-del-color)">
+                {errors.terms}
+              </small>
+            </p>
+          )}
+          <div class="form-actions">
+            <button class="btn btn-primary" type="submit">
+              Create account
+            </button>
+            <button class="btn btn-secondary" type="submit" formnovalidate>
+              Send without browser checks
+            </button>
+          </div>
+        </form>
+        <footer class="center">
+          <small>
+            Already registered? <a href={PATH}>Sign in</a>
+          </small>
+        </footer>
+      </article>
     </Layout>
   );
 }

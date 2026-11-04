@@ -1,5 +1,10 @@
 import Layout from "../Layout";
-import { ERRORS, MAX_NAME_LENGTH, MAX_TEXT_LENGTH, recentMessages } from "./room";
+import {
+  ERRORS,
+  MAX_NAME_LENGTH,
+  MAX_TEXT_LENGTH,
+  recentMessages,
+} from "./room";
 
 /**
  * @param {import("../types").RouteProps} props
@@ -22,64 +27,92 @@ export default function ({ request, reply }) {
       css="/chat/index.css"
       script="/chat/index.js"
     >
-      <h1>Chat with Server-Sent Events</h1>
-      <p>
-        Open this page in two windows and start chatting. Sending a message is a normal{" "}
-        <code>POST</code> request. The server keeps a list of all open{" "}
-        <a href="/sse">Server-Sent Events</a> streams and pushes each new message to every one of
-        them. If the connection drops, the browser reconnects with the id of the last message it
-        received (<code>Last-Event-ID</code>), and the server sends everything it missed.
-      </p>
-      <p>
-        <small>
-          Without JavaScript, the form still works: the page reloads with the new message. The last
-          50 messages of the past hour are kept in the memory of the server, so please be nice.
-        </small>
-      </p>
-      <article class="chat">
-        <header>
-          <span id="presence">Chat</span>
-          <small id="status"></small>
-        </header>
-        <ol id="messages" data-last-id={lastId}>
-          {messages.length === 0 && <li class="empty">No messages yet. Say hello!</li>}
-          {messages.map((message) => (
-            <li data-id={message.id}>
-              <strong>{message.name}</strong>{" "}
-              <time datetime={message.time}>{formatTime(message.time)}</time>
-              <p>{message.text}</p>
-            </li>
-          ))}
-        </ol>
-        <footer>
-          <form id="chat-form" method="post" action="/chat/send">
-            <fieldset role="group">
-              <input
-                name="name"
-                value={name}
-                placeholder="Your name"
-                aria-label="Your name"
-                maxlength={MAX_NAME_LENGTH}
-                required
-                style="max-width: 10rem;"
-              />
-              <input
-                name="text"
-                placeholder="Your message"
-                aria-label="Your message"
-                maxlength={MAX_TEXT_LENGTH}
-                autocomplete="off"
-                required
-                autofocus={Boolean(name)}
-              />
-              <input type="submit" value="Send" />
-            </fieldset>
-            <small id="error" role="alert">
-              {error}
-            </small>
-          </form>
-        </footer>
-      </article>
+      <div class="sx">
+        <h1>Chat with Server-Sent Events</h1>
+        <p>
+          Open this page in two windows and start chatting. Sending a message is
+          a normal <code>POST</code> request. The server keeps a list of all
+          open <a href="/sse">Server-Sent Events</a> streams and pushes each new
+          message to every one of them. If the connection drops, the browser
+          reconnects with the id of the last message it received (
+          <code>Last-Event-ID</code>), and the server sends everything it
+          missed.
+        </p>
+        <p>
+          <small>
+            Without JavaScript, the form still works: the page reloads with the
+            new message. The last 50 messages of the past hour are kept in the
+            memory of the server, so please be nice.
+          </small>
+        </p>
+        <section class="sx-card chat">
+          <header>
+            <h2 id="presence">Chat</h2>
+            <span
+              id="status"
+              class="sx-status"
+              data-state="connecting"
+              role="status"
+            >
+              Connecting...
+            </span>
+          </header>
+          <ol id="messages" data-last-id={lastId} aria-live="polite">
+            {messages.length === 0 && (
+              <li class="empty">No messages yet. Say hello!</li>
+            )}
+            {messages.map((message) => (
+              <li
+                data-id={message.id}
+                class={message.name === name ? "own" : undefined}
+              >
+                <span
+                  class="avatar"
+                  style={`--hue: ${hue(message.name)}`}
+                  aria-hidden="true"
+                >
+                  {message.name.charAt(0).toUpperCase()}
+                </span>
+                <div class="bubble">
+                  <strong>{message.name}</strong>{" "}
+                  <time datetime={message.time}>
+                    {formatTime(message.time)}
+                  </time>
+                  <p>{message.text}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+          <footer>
+            <form id="chat-form" method="post" action="/chat/send">
+              <fieldset role="group">
+                <input
+                  name="name"
+                  value={name}
+                  placeholder="Your name"
+                  aria-label="Your name"
+                  maxlength={MAX_NAME_LENGTH}
+                  required
+                  style="max-width: 10rem;"
+                />
+                <input
+                  name="text"
+                  placeholder="Your message"
+                  aria-label="Your message"
+                  maxlength={MAX_TEXT_LENGTH}
+                  autocomplete="off"
+                  required
+                  autofocus={Boolean(name)}
+                />
+                <input type="submit" value="Send" />
+              </fieldset>
+              <small id="error" role="alert">
+                {error}
+              </small>
+            </form>
+          </footer>
+        </section>
+      </div>
     </Layout>
   );
 }
@@ -91,4 +124,17 @@ export default function ({ request, reply }) {
  */
 function formatTime(time) {
   return `${new Date(time).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: "UTC" })} UTC`;
+}
+
+/**
+ * A colour per name for the avatars. The script of the page uses the same formula.
+ *
+ * @param {string} name
+ */
+function hue(name) {
+  let hash = 0;
+  for (const char of name) {
+    hash = (hash * 31 + char.codePointAt(0)) % 360;
+  }
+  return hash;
 }

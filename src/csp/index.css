@@ -1,0 +1,60 @@
+.toggle {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+.policy {
+  max-width: 40rem;
+  margin-inline: auto;
+}
+
+.checks {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 1rem;
+}
+.check {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+.check > p {
+  flex: 1;
+}
+/* Green if a wanted script ran or an unwanted one was blocked, red otherwise. */
+.check {
+  --check-color: var(--mu-success);
+  --check-icon: "\2713";
+  border-top: 4px solid var(--check-color);
+}
+.check:not(.check-wanted):has([data-state="ran"]),
+.check-wanted:not(:has([data-state="ran"])) {
+  --check-color: var(--mu-error);
+  --check-icon: "\2717";
+}
+.check-status {
+  color: var(--check-color);
+}
+.check-status::before {
+  content: var(--check-icon) "\00a0";
+}
+
+.violations {
+  padding: 0;
+  font-family: var(--mu-font-family-monospace);
+  font-size: 0.85rem;
+}
+.violations li {
+  list-style: none;
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 0.5rem;
+  border-left: 3px solid var(--mu-error);
+  border-radius: var(--mu-border-radius);
+  background: color-mix(in srgb, var(--mu-error) 10%, transparent);
+}
+.violations:empty::before,
+.violations-off {
+  content: "Nothing blocked yet.";
+  color: var(--mu-muted-color);
+  font-style: italic;
+}

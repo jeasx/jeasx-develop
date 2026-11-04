@@ -1,0 +1,53 @@
+.auth-card,
+.account {
+  max-width: 26rem;
+  margin: 2rem auto;
+}
+.wide {
+  width: 100%;
+}
+.auth-card .alert ul {
+  margin: 0.25rem 0 0;
+}
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.form-actions .btn {
+  flex: 1 1 auto;
+}
+
+.account-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.avatar {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--mu-primary-inverse);
+  background: linear-gradient(135deg, var(--mu-primary), var(--mu-secondary));
+}
+.account-details {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.5rem 1rem;
+  margin: 0;
+}
+.account-details dt {
+  font-weight: 600;
+}
+.account-details dd {
+  margin: 0;
+}
+.account footer form {
+  margin: 0;
+  text-align: center;
+}

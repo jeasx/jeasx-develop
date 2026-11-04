@@ -1,0 +1,146 @@
+.planets {
+  display: flex;
+  gap: 1rem;
+  padding: 1.5rem;
+  overflow-x: auto;
+  border-radius: 1rem;
+  background: radial-gradient(circle at 0 50%, #fbbf24 0, #7c2d12 4rem, #0f172a 9rem, #020617);
+  /* The sun scrolls along with the planets. */
+  background-attachment: local;
+  color: #e2e8f0;
+}
+/* Placeholders and loaded planets share one size, so nothing moves while loading. */
+.planet {
+  position: relative;
+  box-sizing: border-box;
+  flex: none;
+  width: 200px;
+  height: 290px;
+  margin: 0;
+  text-align: center;
+  animation: appear 0.6s ease-out both;
+}
+.planet svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+/* Hover: the planet lifts and glows in its own color, the others dim. */
+/* The cards use role="button", so undo the framework's button styles. */
+.planet:not(.placeholder) {
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  color: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  cursor: pointer;
+  outline: none;
+}
+.globe {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition:
+    transform 0.3s ease-out,
+    filter 0.3s;
+}
+.planet:hover .globe,
+.planet:focus .globe {
+  transform: scale(1.12);
+  filter: drop-shadow(0 0 calc(var(--size) / 3) var(--color));
+}
+/* Dim the card's sides, not the card: a filter on the card would break the 3D flip. */
+.planets:has(.planet:hover) .planet:not(:hover, .placeholder) > * {
+  opacity: 0.5;
+}
+
+/* Click: the card flips over and shows more facts on its back. */
+.planet:not(.placeholder) {
+  perspective: 800px;
+}
+.front,
+.back {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  /* The side turning away is hidden at the halfway point, so it never shows through. */
+  transition:
+    transform 0.6s ease-in-out,
+    opacity 0.3s,
+    visibility 0s 0.3s;
+}
+.back,
+.planet.flipped .front {
+  visibility: hidden;
+}
+.planet.flipped .back {
+  visibility: visible;
+}
+.back {
+  box-sizing: border-box;
+  padding: 3rem 1rem;
+  transform: rotateY(180deg);
+}
+.back dl {
+  margin: 0.75rem 0 0;
+  font-size: 0.85rem;
+}
+.back dt {
+  opacity: 0.7;
+}
+.back dd {
+  margin: 0 0 0.5rem;
+  font-weight: 600;
+}
+.planet.flipped .front {
+  transform: rotateY(-180deg);
+}
+.planet.flipped .back {
+  transform: rotateY(0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .globe,
+  .front,
+  .back {
+    transition: none;
+  }
+}
+.caption {
+  margin: 0;
+}
+.planet small {
+  display: block;
+  opacity: 0.7;
+}
+.stats {
+  font-family: monospace;
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+.placeholder {
+  animation: none;
+}
+@keyframes appear {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+}
+.planet-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+}
+.planet-picker label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0;
+}
+.planet-picker input {
+  margin: 0;
+}

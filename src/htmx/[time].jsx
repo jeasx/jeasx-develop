@@ -1,3 +1,3 @@
 export default function () {
-  return new Date().toTimeString();
+  return new Date().toLocaleTimeString("en-GB");
 }

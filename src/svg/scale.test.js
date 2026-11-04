@@ -14,7 +14,7 @@ describe("scaleLinear", () => {
 describe("niceTicks", () => {
   it("returns round ticks which include min and max", () => {
     assert.deepEqual(niceTicks(-4.3, 25.6, 6), [-5, 0, 5, 10, 15, 20, 25, 30]);
-    assert.deepEqual(niceTicks(0, 146, 5), [0, 50, 100, 150]);
+    assert.deepEqual(niceTicks(0, 285, 5), [0, 100, 200, 300]);
   });
 
   it("avoids floating point noise", () => {

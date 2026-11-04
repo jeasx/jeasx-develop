@@ -68,7 +68,13 @@ export const PasswordGenerator = component(() => {
   let copyTimer = 0;
 
   const regenerate = () => {
-    state.password = generate(state.length, state.lower, state.upper, state.digits, state.symbols);
+    state.password = generate(
+      state.length,
+      state.lower,
+      state.upper,
+      state.digits,
+      state.symbols,
+    );
     window.clearTimeout(copyTimer);
     state.copyLabel = "Copy";
   };
@@ -76,7 +82,13 @@ export const PasswordGenerator = component(() => {
   regenerate();
 
   const strength = () =>
-    scoreStrength(state.length, state.lower, state.upper, state.digits, state.symbols);
+    scoreStrength(
+      state.length,
+      state.lower,
+      state.upper,
+      state.digits,
+      state.symbols,
+    );
 
   const copy = async () => {
     try {
@@ -97,7 +109,9 @@ export const PasswordGenerator = component(() => {
   // At least one character set stays selected, so the options always match the password.
   const toggle = (key: CharSet) => (e: Event) => {
     const input = e.target as HTMLInputElement;
-    const others = (["lower", "upper", "digits", "symbols"] as CharSet[]).filter((k) => k !== key);
+    const others = (
+      ["lower", "upper", "digits", "symbols"] as CharSet[]
+    ).filter((k) => k !== key);
     if (state[key] && !others.some((k) => state[k])) {
       input.checked = true;
       return;
@@ -117,11 +131,23 @@ export const PasswordGenerator = component(() => {
         >${() =>
           state.password
             .split("")
-            .map((ch) => html /*html*/ `<span class="${charClass(ch)}">${ch}</span>`)}</code
+            .map(
+              (ch) =>
+                html /*html*/ `<span class="${charClass(ch)}">${ch}</span>`,
+            )}</code
       >
       <div class="gen-actions">
-        <button class="gen-copy" @click="${copy}">${() => state.copyLabel}</button>
-        <button class="gen-new" @click="${regenerate}">Regenerate</button>
+        <button
+          type="button"
+          class="gen-copy"
+          @click="${copy}"
+          aria-live="polite"
+        >
+          ${() => state.copyLabel}
+        </button>
+        <button type="button" class="gen-new" @click="${regenerate}">
+          Regenerate
+        </button>
       </div>
     </section>
     <div class="strength-meter">
@@ -132,7 +158,10 @@ export const PasswordGenerator = component(() => {
             `width: ${((strength() + 1) / 5) * 100}%; background: ${COLORS[strength()]}`}"
         ></div>
       </div>
-      <span class="strength-label" style="${() => `color: ${COLORS[strength()]}`}">
+      <span
+        class="strength-label"
+        style="${() => `color: ${COLORS[strength()]}`}"
+      >
         ${() => LABELS[strength()]}
       </span>
     </div>
@@ -150,22 +179,38 @@ export const PasswordGenerator = component(() => {
       </label>
       <div class="gen-toggles">
         <label class="gen-sw">
-          <input type="checkbox" checked="${() => state.lower}" @change="${toggle("lower")}" />
+          <input
+            type="checkbox"
+            checked="${() => state.lower}"
+            @change="${toggle("lower")}"
+          />
           <span class="gen-sw-track"></span>
           <span>Lowercase</span>
         </label>
         <label class="gen-sw">
-          <input type="checkbox" checked="${() => state.upper}" @change="${toggle("upper")}" />
+          <input
+            type="checkbox"
+            checked="${() => state.upper}"
+            @change="${toggle("upper")}"
+          />
           <span class="gen-sw-track"></span>
           <span>Uppercase</span>
         </label>
         <label class="gen-sw">
-          <input type="checkbox" checked="${() => state.digits}" @change="${toggle("digits")}" />
+          <input
+            type="checkbox"
+            checked="${() => state.digits}"
+            @change="${toggle("digits")}"
+          />
           <span class="gen-sw-track"></span>
           <span>Numbers</span>
         </label>
         <label class="gen-sw">
-          <input type="checkbox" checked="${() => state.symbols}" @change="${toggle("symbols")}" />
+          <input
+            type="checkbox"
+            checked="${() => state.symbols}"
+            @change="${toggle("symbols")}"
+          />
           <span class="gen-sw-track"></span>
           <span>Symbols</span>
         </label>

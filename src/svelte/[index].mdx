@@ -2,6 +2,7 @@ import Layout from "../Layout";
 import Svelte from "./Svelte";
 
 <Layout title="Use Svelte with Jeasx" description="Render Svelte components on the server and hydrate them in the browser." css="/svelte/index.css" script="/svelte/index.js">
+<div class="sv">
 
 # Use Svelte with Jeasx
 
@@ -43,16 +44,19 @@ View the [source code of this page](https://github.com/jeasx/jeasx-expo/tree/mai
 
 </details>
 
----
+## Counter
 
-## Counter example
+`$state` holds the count, `$derived` computes values from it, and `bind:value` keeps the input in sync both ways.
 
-<Svelte component="Counter" init={5} />
+<div class="sv-card">
+  <Svelte component="Counter" init={5} />
+</div>
 
----
+## CRUD
 
-## CRUD example
+The filter, the list and the form are wired together with `$derived` and `$effect`. Select a person to edit or delete them.
 
+<div class="sv-card">
 <Svelte
   component="Crud"
   data={[
@@ -61,10 +65,15 @@ View the [source code of this page](https://github.com/jeasx/jeasx-expo/tree/mai
     { first: "Roman", last: "Tisch" },
   ]}
 />
+</div>
 
----
+## Todos
 
-## Todos example
+Check a todo to move it to the other column: `crossfade` and `animate:flip` make it fly across.
 
-<Svelte component="Todos" />
+<div class="sv-card">
+  <Svelte component="Todos" />
+</div>
+
+</div>
 </Layout>

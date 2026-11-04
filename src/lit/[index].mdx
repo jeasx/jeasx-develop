@@ -3,14 +3,26 @@ import Layout from "../Layout";
 <Layout
   title="Use Lit with Jeasx"
   description="Use Lit web components in server-rendered Jeasx pages."
+  css="/lit/index.css"
   script="/lit/index.js"
 >
+<div class="li">
+
 # Use Lit with Jeasx
 
-[Lit](https://lit.dev) builds on the Web Components standard and adds reactive properties and declarative templates with little boilerplate. Jeasx renders the custom elements as plain tags, and the browser bundle brings them to life.
+[Lit](https://lit.dev) builds on the Web Components standard and adds reactive properties and declarative templates with little boilerplate. Jeasx renders the custom elements as plain tags, and the browser bundle brings them to life. Both components below animate with [@lit-labs/motion](https://www.npmjs.com/package/@lit-labs/motion).
 
-Click the logo to pause or restart its animation.
+## Animated logo
+
+The text is passed as a plain HTML attribute (`<logo-animation text="Jeasx">`), which Lit turns into a reactive property. Click the logo to pause or play its animation.
 
 <logo-animation text="Jeasx" />
+
+## Animated list
+
+Every change of the list is a new array in a reactive property. The `animate` directive moves each item smoothly from its old to its new position.
+
 <list-animation />
+
+</div>
 </Layout>

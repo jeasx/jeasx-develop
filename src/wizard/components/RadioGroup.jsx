@@ -10,9 +10,9 @@ export default function RadioGroup({
   // together with each option (like a <legend>, without changing the layout).
   const labelId = `${name}-label`;
   return (
-    <div>
+    <div class="wizard-field">
       <span id={labelId}>{label}</span>
-      <div role="group" aria-labelledby={labelId}>
+      <div role="group" aria-labelledby={labelId} class="wizard-choices">
         {options.map((item) => (
           <label>
             <input

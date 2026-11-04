@@ -1,0 +1,22 @@
+@import "../streaming/shared.css";
+
+.ai-table {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+
+  & tbody tr {
+    animation: sx-fade 0.3s ease-out both;
+  }
+
+  /* Separate the pages of the API visually. */
+  & tbody tr[data-first] td {
+    border-top: 2px solid var(--sx-accent);
+  }
+}
+
+.ai-page {
+  border-radius: 999px;
+  background: var(--sx-soft);
+  padding: 0 0.6rem;
+  font-size: 0.8rem;
+}

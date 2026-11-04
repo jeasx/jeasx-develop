@@ -1,0 +1,41 @@
+.sample header small {
+  display: block;
+  margin-top: 0.25rem;
+  opacity: 0.8;
+}
+.sample-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  align-items: start;
+}
+.sample-body > div {
+  min-width: 0;
+}
+.sample-label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+.sample-result {
+  padding: 0.75rem;
+  border: 1px dashed color-mix(in srgb, currentColor 25%, transparent);
+  border-radius: 0.4rem;
+}
+.sample-result > :last-child {
+  margin-bottom: 0;
+}
+.sample-body pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+@media (max-width: 640px) {
+  .sample-body {
+    grid-template-columns: 1fr;
+  }
+}

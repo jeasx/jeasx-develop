@@ -27,6 +27,7 @@ export default function ({ request, reply }) {
     <Layout
       title="Extract inline styles with Cheerio"
       description="Post-process the resulting HTML with Cheerio to move inline styles into the head."
+      css="/cheerio/index.css"
     >
       <div style="--mu-h1-color:orange; text-align: center">
         <h1>Extract inline styles with Cheerio</h1>
@@ -35,18 +36,15 @@ export default function ({ request, reply }) {
         Jeasx lets you post-process the finished HTML with a{" "}
         <a href="https://www.jeasx.dev/faq#response-handler">response handler</a>. This example uses{" "}
         <a href="https://cheerio.js.org">Cheerio</a> to turn all inline styles into CSS classes in
-        the head of the page. Compare the original and the rewritten markup below, and have a look
-        at the source to see how it is wired up.
+        the head of the page.
       </p>
-      <style>{
-        /*css*/ `
-        .iframe-wrapper {
-          flex: 1 1 20rem;
-        }
-      `
-      }</style>
+      <p>
+        Identical declarations share one class, so repeated inline styles shrink to a single rule.
+        This page itself uses a few inline styles on purpose: compare the original and the rewritten
+        markup below, and have a look at the source to see how it is wired up.
+      </p>
       {/* Side by side on wide screens, stacked on phones. */}
-      <div style="display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center;">
+      <div class="compare">
         <IFrame title="Original source" src="?text=plain&source=raw" />
         <IFrame title="Rewritten markup" src="?text=plain" />
       </div>
@@ -56,11 +54,9 @@ export default function ({ request, reply }) {
 
 function IFrame({ title, src }) {
   return (
-    <>
-      <div class="iframe-wrapper">
-        <h3 style="text-align:center">{title}</h3>
-        <iframe src={src} style="width: 100%; height: 300px; border: 1px solid lightgray;"></iframe>
-      </div>
-    </>
+    <figure class="compare-item">
+      <iframe title={title} src={src}></iframe>
+      <figcaption>{title}</figcaption>
+    </figure>
   );
 }

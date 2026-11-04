@@ -27,9 +27,8 @@ const MESSAGES = {
     pluralHeadline: "Plural forms",
     pluralHint:
       "Languages have different plural rules: Intl.PluralRules picks the right form. Try 0, 1, 2, 5, 22 and 1000000 in every language.",
-    count: "Number of apples",
-    submit: "Count",
     apples: { one: "{count} apple", other: "{count} apples" },
+    category: "Plural category:",
     formatsHeadline: "Dates, numbers and lists",
     formatsHint:
       "The Intl API of JavaScript formats values for each locale, without any additional library.",
@@ -55,9 +54,8 @@ const MESSAGES = {
     pluralHeadline: "Pluralformen",
     pluralHint:
       "Jede Sprache hat eigene Pluralregeln: Intl.PluralRules wählt die passende Form. Probiere 0, 1, 2, 5, 22 und 1000000 in jeder Sprache aus.",
-    count: "Anzahl der Äpfel",
-    submit: "Zählen",
     apples: { one: "{count} Apfel", other: "{count} Äpfel" },
+    category: "Pluralkategorie:",
     formatsHeadline: "Datum, Zahlen und Listen",
     formatsHint:
       "Die Intl-API von JavaScript formatiert Werte für jede Sprache, ganz ohne zusätzliche Bibliothek.",
@@ -83,10 +81,9 @@ const MESSAGES = {
     pluralHeadline: "Formes du pluriel",
     pluralHint:
       "Chaque langue a ses propres règles de pluriel : Intl.PluralRules choisit la bonne forme. Essayez 0, 1, 2, 5, 22 et 1000000 dans chaque langue.",
-    count: "Nombre de pommes",
-    submit: "Compter",
     // French uses the singular for 0 and "de" for large round numbers ("1 000 000 de pommes").
     apples: { one: "{count} pomme", many: "{count} de pommes", other: "{count} pommes" },
+    category: "Catégorie de pluriel :",
     formatsHeadline: "Dates, nombres et listes",
     formatsHint:
       "L'API Intl de JavaScript formate les valeurs pour chaque langue, sans aucune bibliothèque supplémentaire.",
@@ -112,8 +109,6 @@ const MESSAGES = {
     pluralHeadline: "Formy liczby mnogiej",
     pluralHint:
       "Każdy język ma własne reguły liczby mnogiej: Intl.PluralRules wybiera właściwą formę. Wypróbuj 0, 1, 2, 5, 22 i 1000000 w każdym języku.",
-    count: "Liczba jabłek",
-    submit: "Policz",
     // Polish has three plural forms for whole numbers: 1 jabłko, 2 jabłka, 5 jabłek.
     apples: {
       one: "{count} jabłko",
@@ -121,6 +116,7 @@ const MESSAGES = {
       many: "{count} jabłek",
       other: "{count} jabłka",
     },
+    category: "Kategoria liczby mnogiej:",
     formatsHeadline: "Daty, liczby i listy",
     formatsHint:
       "API Intl w JavaScripcie formatuje wartości dla każdego języka bez żadnej dodatkowej biblioteki.",

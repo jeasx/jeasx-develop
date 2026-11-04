@@ -8,9 +8,17 @@ export const CATEGORIES = new Set(data.map(({ type }) => type));
  * @param {number} amount
  */
 export default function jokes(category, amount) {
-  return shuffle(data.filter(({ type }) => category === type))
-    .map(({ setup, punchline }) => `${setup} - ${punchline}`)
-    .slice(0, amount);
+  return pick(category, amount).map(({ setup, punchline }) => `${setup} - ${punchline}`);
+}
+
+/**
+ * Random jokes with setup and punchline kept apart.
+ * @param {string} category
+ * @param {number} amount
+ * @returns {{ setup: string, punchline: string }[]}
+ */
+export function pick(category, amount) {
+  return shuffle(data.filter(({ type }) => category === type)).slice(0, amount);
 }
 
 /**

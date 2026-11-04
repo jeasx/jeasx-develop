@@ -22,7 +22,9 @@ export default function ({ request, reply }) {
   let token = cookie.value;
   if (!token) {
     token = randomBytes(32).toString("base64url");
-    reply.setCookie("csrf", token, { path: "/signed-cookies", signed: true });
+    // "lax", so following a link from another site keeps the token: with "strict",
+    // the cookie would be missing and a new token would break forms open in other tabs.
+    reply.setCookie("csrf", token, { path: "/signed-cookies", signed: true, sameSite: "lax" });
   }
 
   if (request.method === "POST") {

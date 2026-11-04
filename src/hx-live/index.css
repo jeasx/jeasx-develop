@@ -1,0 +1,122 @@
+:root {
+  --hl-accent: #3b82f6;
+  --hl-accent-2: #8b5cf6;
+  --hl-line: rgba(127, 127, 127, 0.2);
+  --hl-soft: rgba(127, 127, 127, 0.07);
+  --hl-muted: rgba(127, 127, 127, 0.9);
+}
+
+.hl-title {
+  background: linear-gradient(120deg, var(--hl-accent), var(--hl-accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-align: center;
+}
+
+.hl-card {
+  margin: 1.5rem 0;
+  border: 1px solid var(--hl-line);
+  border-radius: 0.75rem;
+  background: var(--hl-soft);
+  padding: 1.25rem 1.5rem;
+}
+
+.hl-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+
+  & h2 {
+    margin: 0;
+    font-size: 1.25rem;
+  }
+
+  & nav {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  & nav button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    margin: 0;
+    padding: 0;
+    line-height: 1;
+    border: 1px solid var(--hl-line);
+    border-radius: 999px;
+    background: transparent;
+    width: 2.25rem;
+    height: 2.25rem;
+    color: inherit;
+    font-size: 1.1rem;
+
+    &:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+  }
+
+  & output {
+    min-width: 3.5rem;
+    line-height: 1;
+    color: var(--hl-muted);
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+  }
+}
+
+.hl-actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: 0.75rem;
+
+  & button {
+    cursor: pointer;
+    border: 0;
+    border-radius: 0.5rem;
+    background: linear-gradient(120deg, var(--hl-accent), var(--hl-accent-2));
+    padding: 0.75rem 1rem;
+    color: #fff;
+    font-weight: 600;
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: wait;
+    }
+  }
+}
+
+.hl-error:not(:empty) {
+  margin: 1rem 0 0;
+  color: #dc2626;
+}
+
+.hl-jokes {
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+
+  & li {
+    list-style: none;
+    animation: hl-fade 0.3s ease-out both;
+    margin-top: 0.5rem;
+    border-left: 3px solid var(--hl-accent);
+    border-radius: 0.25rem;
+    background: var(--hl-soft);
+    padding: 0.6rem 0.9rem;
+  }
+}
+
+@keyframes hl-fade {
+  from {
+    transform: translateY(0.25rem);
+    opacity: 0;
+  }
+}

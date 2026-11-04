@@ -1,0 +1,58 @@
+/* Side by side on wide screens, below each other on phones. */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  align-items: start;
+  gap: 1.5rem;
+}
+
+.gallery figure {
+  margin: 0;
+}
+
+/* The blurred placeholder is the background of the image itself, so it shows up with the
+   HTML and disappears once the full image has loaded and paints over it. No JavaScript. */
+.blur-up {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  background-size: cover;
+  transition:
+    transform 0.4s ease,
+    box-shadow 0.4s ease;
+}
+
+.blur-up:hover {
+  transform: scale(1.02);
+  box-shadow: 0 1rem 2rem rgb(0 0 0 / 0.5);
+}
+
+/* Only the placeholder: to see what visitors see before the image arrives. */
+.placeholder-only {
+  aspect-ratio: var(--ratio);
+  border-radius: 0.5rem;
+  background-size: cover;
+}
+
+.gallery figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-top: 0.5rem;
+  color: var(--pico-muted-color, #898781);
+  font-size: 0.875rem;
+}
+
+.strategies {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.strategies a[aria-current] {
+  font-weight: bold;
+  text-decoration: none;
+}

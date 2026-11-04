@@ -1,0 +1,27 @@
+@import "./shared.css";
+
+.sx-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+  margin: 0;
+
+  & div {
+    border: 1px solid var(--sx-line);
+    border-radius: 0.5rem;
+    padding: 0.6rem 0.9rem;
+    text-align: center;
+  }
+
+  & dt {
+    color: var(--sx-muted);
+    font-size: 0.8rem;
+  }
+
+  & dd {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+}

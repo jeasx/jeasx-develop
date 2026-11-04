@@ -1,21 +1,24 @@
 import Layout from "../Layout";
 
 <Layout title="Use ArrowJS with Jeasx" description="Build islands of interactivity with ArrowJS in Jeasx." css="/arrowjs/index.css" script="/arrowjs/index.js">
+<div class="ar">
 
 # Use ArrowJS with Jeasx
 
 [ArrowJS](https://arrow-js.com/) is a tiny reactive UI library without dependencies that works with plain template literals. Jeasx renders an empty placeholder for each island, and the browser bundle mounts the matching component into it.
 
----
-
 ## Password generator
 
-<div data-arrowjs="PasswordGenerator" />
+`reactive()` holds the options, and every `${() => …}` expression in the template re-renders on its own when the state it reads changes. The password is generated with `crypto.getRandomValues()`.
 
----
+<div class="ar-island" data-arrowjs="PasswordGenerator" />
 
 ## Pomodoro timer
 
-<div data-arrowjs="PomodoroTimer" />
+Focus for 25 minutes, then take a 5 minute break. The ring and the colors follow the reactive state, and the remaining time is computed from the clock, so it stays correct in background tabs.
+
+<div class="ar-island" data-arrowjs="PomodoroTimer" />
+
+</div>
 
 </Layout>
