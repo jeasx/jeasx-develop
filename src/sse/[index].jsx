@@ -14,27 +14,21 @@ export default function () {
           <a href="https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events">
             Server-Sent Events
           </a>{" "}
-          keep a single HTTP connection open, so the server can push updates
-          whenever it wants. In Jeasx a route simply returns a standard{" "}
-          <code>Response</code> wrapping a <code>ReadableStream</code>.
+          keep a single HTTP connection open, so the server can push updates whenever it wants. In
+          Jeasx a route simply returns a standard <code>Response</code> wrapping a{" "}
+          <code>ReadableStream</code>.
         </p>
         <p>
-          The values below are pushed by the server every second and rendered by
-          a few lines of vanilla JavaScript using <code>EventSource</code>.
-          Disconnect to see the stream being cancelled on the server: its timer
-          is cleaned up and the client counter goes down in all other open
-          windows.
+          The values below are pushed by the server every second and rendered by a few lines of
+          vanilla JavaScript using <code>EventSource</code>. Disconnect to see the stream being
+          cancelled on the server: its timer is cleaned up and the client counter goes down in all
+          other open windows.
         </p>
         <section class="sx-card">
           <header>
             <h2>Server stats</h2>
-            <span
-              id="status"
-              class="sx-status"
-              data-state="connecting"
-              role="status"
-            >
-              Connecting...
+            <span id="status" class="sx-status" data-state="connecting" role="status">
+              Connecting…
             </span>
           </header>
           <dl class="se-tiles">

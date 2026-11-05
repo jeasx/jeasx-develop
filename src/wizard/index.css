@@ -15,17 +15,9 @@
 /* Header with title, step indicator and progress */
 .wizard-header {
   margin-bottom: 1.5rem;
-
-  & h1 {
-    background: linear-gradient(120deg, var(--wiz-accent), var(--wiz-accent-2));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    text-align: center;
-  }
 }
 
-/* mu.css lays out lists in a nav as a compact menu; the steps span the full width instead. */
+/* The base styles lay out a nav as a compact flex row; the steps span the full width instead. */
 nav:has(> .wizard-steps) {
   display: block;
 }
@@ -93,7 +85,7 @@ nav .wizard-steps {
   transition: transform 0.15s;
   border: 2px solid var(--wiz-line);
   border-radius: 50%;
-  background: var(--pico-background-color, #13171f);
+  background: var(--bg);
   width: 2rem;
   height: 2rem;
   font-weight: 600;
@@ -117,7 +109,7 @@ nav .wizard-steps {
   line-height: 1.2;
 
   .current & {
-    color: var(--pico-color);
+    color: var(--heading);
     font-weight: 600;
   }
 }
@@ -185,7 +177,7 @@ nav .wizard-steps {
 
 /* Radios and checkboxes as selectable tiles */
 .wizard-field {
-  margin-bottom: var(--pico-spacing, 1rem);
+  margin-bottom: 1rem;
 
   & > span {
     display: block;
@@ -200,7 +192,6 @@ nav .wizard-steps {
 
   & label {
     flex: 1 1 8rem;
-    width: auto;
   }
 }
 
@@ -209,12 +200,8 @@ nav .wizard-steps {
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  cursor: pointer;
-  box-sizing: border-box;
   margin: 0 0 0.5rem;
   border: 1px solid var(--wiz-line);
-  /* mu.css sizes these labels to their text; tiles span the full width instead. */
-  width: 100%;
   border-radius: 0.6rem;
   padding: 0.75rem 1rem;
   transition:

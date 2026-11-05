@@ -15,12 +15,12 @@
   list-style: none;
   padding: 0.5rem 0.75rem;
   margin-bottom: 0.5rem;
-  border-left: 3px solid var(--mu-primary);
-  border-radius: var(--mu-border-radius);
+  border-left: 3px solid var(--primary);
+  border-radius: var(--radius);
   background: color-mix(in srgb, currentColor 5%, transparent);
 }
 .notes-empty {
-  color: var(--mu-muted-color);
+  color: var(--muted);
   font-style: italic;
 }
 .notes form {
@@ -45,9 +45,9 @@
   padding: 1rem;
   margin: 0;
   text-align: center;
-  border: var(--mu-border-width) solid var(--mu-border-color);
-  border-radius: var(--mu-border-radius);
+  border: var(--border-width) solid var(--border);
+  border-radius: var(--radius);
 }
 .action small {
-  color: var(--mu-muted-color);
+  color: var(--muted);
 }

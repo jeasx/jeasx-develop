@@ -64,7 +64,9 @@ export default function () {
         </p>
         <p>
           Have a look at the{" "}
-          <a href="https://github.com/jeasx/jeasx-expo/tree/main/src/vue">source code of this page</a>{" "}
+          <a href="https://github.com/jeasx/jeasx-expo/tree/main/src/vue">
+            source code of this page
+          </a>{" "}
           to see how the components are rendered on the server and hydrated in the browser.
         </p>
       </details>

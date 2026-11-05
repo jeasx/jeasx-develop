@@ -29,7 +29,7 @@ export default function ({ request, reply }) {
       description="Post-process the resulting HTML with Cheerio to move inline styles into the head."
       css="/cheerio/index.css"
     >
-      <div style="--mu-h1-color:orange; text-align: center">
+      <div style="--heading:orange; text-align: center">
         <h1>Extract inline styles with Cheerio</h1>
       </div>
       <p style="color:green; text-align:left">

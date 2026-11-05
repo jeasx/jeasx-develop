@@ -76,7 +76,7 @@ export default function ({ request }) {
  */
 function LanguageSwitcher({ count }) {
   return (
-    // µCSS lays out <nav> for the page header, so use a plain block with the same role.
+    // The base styles lay out <nav> for the page header, so use a plain block with the same role.
     <div role="navigation" aria-label={this.t("language")} class="languages">
       {Object.entries(LOCALES).map(([locale, name]) => (
         <a

@@ -37,7 +37,7 @@
   --hue: 220;
   position: relative;
   min-height: 10rem;
-  border-radius: var(--mu-border-radius);
+  border-radius: var(--radius);
   overflow: hidden;
 }
 
@@ -75,13 +75,14 @@
 
 .blog-card {
   display: flex;
+  position: relative;
   flex-direction: column;
   gap: 1rem;
   margin: 0;
   padding: 1rem;
-  border: var(--mu-border-width) solid var(--mu-border-color);
-  border-radius: calc(var(--mu-border-radius) * 1.5);
-  background: color-mix(in srgb, var(--mu-color) 3%, transparent);
+  border: var(--border-width) solid var(--border);
+  border-radius: calc(var(--radius) * 1.5);
+  background: color-mix(in srgb, var(--color) 3%, transparent);
   transition:
     transform 0.2s,
     border-color 0.2s;
@@ -90,7 +91,7 @@
 .blog-card:hover,
 .blog-card:focus-within {
   transform: translateY(-4px);
-  border-color: var(--mu-primary);
+  border-color: var(--primary);
 }
 
 /* On hover, the cover slowly zooms in and gets brighter. */
@@ -121,11 +122,8 @@
   inset: 0;
 }
 
-.blog-card {
-  position: relative;
-}
-
-.blog-card p {
+.blog-card p,
+.blog-storage p {
   margin: 0;
   opacity: 0.8;
 }
@@ -162,8 +160,8 @@
   font-weight: bold;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: var(--mu-primary);
-  background: color-mix(in srgb, var(--mu-primary) 15%, transparent);
+  color: var(--primary);
+  background: color-mix(in srgb, var(--primary) 15%, transparent);
 }
 
 .blog-meta {
@@ -244,7 +242,7 @@
   line-height: 0.9;
   margin: 0.05em 0.1em 0 0;
   font-weight: bold;
-  color: var(--mu-primary);
+  color: var(--primary);
 }
 
 .blog-post-footer {
@@ -254,7 +252,7 @@
   gap: 1rem;
   margin-top: 3rem;
   padding-top: 1.5rem;
-  border-top: var(--mu-border-width) solid var(--mu-border-color);
+  border-top: var(--border-width) solid var(--border);
 }
 
 .blog-post-footer a {
@@ -309,9 +307,9 @@
   flex-direction: column;
   gap: 1.5rem;
   padding: clamp(1.25rem, 4vw, 2.5rem);
-  border: var(--mu-border-width) solid var(--mu-border-color);
-  border-radius: calc(var(--mu-border-radius) * 1.5);
-  background: color-mix(in srgb, var(--mu-color) 3%, transparent);
+  border: var(--border-width) solid var(--border);
+  border-radius: calc(var(--radius) * 1.5);
+  background: color-mix(in srgb, var(--color) 3%, transparent);
 }
 
 .blog-field {
@@ -323,26 +321,22 @@
 
 .blog-field input,
 .blog-field textarea {
-  width: 100%;
   margin: 0;
-  transition:
-    border-color 0.15s,
-    box-shadow 0.15s;
 }
 
 .blog-field input:focus,
 .blog-field textarea:focus {
-  border-color: var(--mu-primary);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--mu-primary) 25%, transparent);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 25%, transparent);
   outline: none;
 }
 
 .blog-field [aria-invalid="true"] {
-  border-color: var(--mu-error, #e5484d);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--mu-error, #e5484d) 25%, transparent);
+  border-color: var(--error);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--error) 25%, transparent);
 }
 
-/* mu.css pulls a <small> after a field up with a negative margin; the flex gap spaces it here. */
+/* The base styles pull a <small> after a field up with a negative margin; the flex gap spaces it here. */
 .blog-field small {
   margin: 0;
   opacity: 0.6;
@@ -364,18 +358,18 @@
   opacity: 0.7;
 }
 
-/* The title looks like the headline it will become. */
-.blog-title-input {
+/* The title looks like the headline it will become. Two classes beat the base input rule,
+   and the field grows with its text instead of keeping the base height. */
+.blog-field .blog-title-input {
+  height: auto;
   font-size: clamp(1.25rem, 3vw, 1.75rem);
   font-weight: bold;
-  padding: 0.75rem 1rem;
 }
 
 .blog-body-input {
   font-size: 1.05rem;
   line-height: 1.7;
   min-height: 14rem;
-  resize: vertical;
 }
 
 .blog-field-row {
@@ -396,10 +390,10 @@
   padding: 0 0.6rem;
   font-size: 0.9rem;
   opacity: 0.7;
-  border: var(--mu-border-width) solid var(--mu-border-color);
+  border: var(--border-width) solid var(--border);
   border-right: none;
-  border-radius: var(--mu-border-radius) 0 0 var(--mu-border-radius);
-  background: color-mix(in srgb, var(--mu-color) 6%, transparent);
+  border-radius: var(--radius) 0 0 var(--radius);
+  background: color-mix(in srgb, var(--color) 6%, transparent);
 }
 
 .blog-slug input {
@@ -410,9 +404,9 @@
 .blog-error {
   margin: 0;
   padding: 0.75rem 1rem;
-  border: var(--mu-border-width) solid var(--mu-error, #e5484d);
-  border-radius: var(--mu-border-radius);
-  background: color-mix(in srgb, var(--mu-error, #e5484d) 15%, transparent);
+  border: var(--border-width) solid var(--error);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--error) 15%, transparent);
 }
 
 .blog-form-actions {
@@ -421,7 +415,7 @@
   align-items: center;
   gap: 1.5rem;
   padding-top: 1rem;
-  border-top: var(--mu-border-width) solid var(--mu-border-color);
+  border-top: var(--border-width) solid var(--border);
 }
 
 .blog-form-actions .btn {
@@ -432,9 +426,9 @@
   position: sticky;
   top: 6rem;
   padding: 1.25rem;
-  border-radius: calc(var(--mu-border-radius) * 1.5);
-  background: color-mix(in srgb, var(--mu-primary) 10%, transparent);
-  border: var(--mu-border-width) solid color-mix(in srgb, var(--mu-primary) 30%, transparent);
+  border-radius: calc(var(--radius) * 1.5);
+  background: color-mix(in srgb, var(--primary) 10%, transparent);
+  border: var(--border-width) solid color-mix(in srgb, var(--primary) 30%, transparent);
   font-size: 0.9rem;
 }
 
@@ -444,7 +438,7 @@
   text-align: left;
 }
 
-/* mu.css styles lists in an aside as navigation (block items with padding), so undo that. */
+/* The flex gap spaces the tips, not the margins of the items. */
 .blog-tips ul {
   display: flex;
   flex-direction: column;
@@ -454,9 +448,7 @@
 }
 
 .blog-tips li {
-  display: list-item;
   margin: 0;
-  padding: 0;
 }
 
 /* Explains the cookie storage below the posts. */
@@ -468,8 +460,8 @@
   gap: 1rem 2rem;
   margin-top: 3rem;
   padding: 1.5rem;
-  border: var(--mu-border-width) dashed var(--mu-border-color);
-  border-radius: calc(var(--mu-border-radius) * 1.5);
+  border: var(--border-width) dashed var(--border);
+  border-radius: calc(var(--radius) * 1.5);
 }
 
 .blog-storage div {
@@ -480,11 +472,6 @@
   margin: 0 0 0.5rem;
   font-size: 1.25rem;
   text-align: left;
-}
-
-.blog-storage p {
-  margin: 0;
-  opacity: 0.8;
 }
 
 .blog-storage form,

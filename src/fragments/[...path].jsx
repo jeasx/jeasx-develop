@@ -19,10 +19,7 @@ export default function ({ request }) {
   this.fragment = match.pathname.groups.fragment;
 
   // Keep the product id between 1 and 10, even for tampered query parameters.
-  const id = Math.min(
-    Math.max(Math.trunc(Number(request.query["id"])) || 1, 1),
-    10,
-  );
+  const id = Math.min(Math.max(Math.trunc(Number(request.query["id"])) || 1, 1), 10);
 
   return (
     <Fragments
@@ -38,32 +35,22 @@ export default function ({ request }) {
       )}
     >
       <Fragment>
-        <h1 class="tf-title">Template fragments</h1>
+        <h1>Template fragments</h1>
         <p>
-          Creating routes that emit HTML fragments is straightforward in Jeasx,
-          which makes it a perfect match for{" "}
-          <a href="https://four.htmx.org">HTMX</a>. Sometimes, however, creating
+          Creating routes that emit HTML fragments is straightforward in Jeasx, which makes it a
+          perfect match for <a href="https://four.htmx.org">HTMX</a>. Sometimes, however, creating
           many routes by hand can be tedious.
         </p>
         <p>
-          <a href="https://htmx.org/essays/template-fragments">
-            Template fragments
-          </a>{" "}
-          allow you to render a fragment or partial bit of the content within a
-          template, rather than the entire template. In Jeasx you can implement
-          this feature in userland with just a few lines of code bundled in two
-          simple components. Each part below is requested from this very route:
-          the buttons ask for <code>~product</code>, the clock for{" "}
-          <code>~time</code>.
+          <a href="https://htmx.org/essays/template-fragments">Template fragments</a> allow you to
+          render a fragment or partial bit of the content within a template, rather than the entire
+          template. In Jeasx you can implement this feature in userland with just a few lines of
+          code bundled in two simple components. Each part below is requested from this very route:
+          the buttons ask for <code>~product</code>, the clock for <code>~time</code>.
         </p>
       </Fragment>
       <Fragment name="product">
-        <form
-          hx-get="./~product"
-          hx-swap="outerHTML"
-          hx-target="closest form"
-          class="tf-card"
-        >
+        <form hx-get="./~product" hx-swap="outerHTML" hx-target="closest form" class="tf-card">
           <header class="tf-bar">
             <h2>Product browser</h2>
             <nav>
@@ -77,13 +64,7 @@ export default function ({ request }) {
                 &laquo;
               </button>
               <output>{id} / 10</output>
-              <button
-                name="id"
-                type="submit"
-                value={id + 1}
-                disabled={id === 10}
-                aria-label="Next"
-              >
+              <button name="id" type="submit" value={id + 1} disabled={id === 10} aria-label="Next">
                 &raquo;
               </button>
             </nav>
@@ -92,12 +73,7 @@ export default function ({ request }) {
         </form>
       </Fragment>
       <Fragment name="time">
-        <p
-          hx-get="./~time"
-          hx-trigger="every 1s"
-          hx-swap="outerHTML"
-          class="tf-time"
-        >
+        <p hx-get="./~time" hx-trigger="every 1s" hx-swap="outerHTML" class="tf-time">
           Current server time
           <output>{new Date().toLocaleTimeString("en-GB")}</output>
         </p>

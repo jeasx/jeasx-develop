@@ -7,12 +7,7 @@ export default function ({ request }) {
   const body = request.body || {};
 
   return (
-    <form
-      hx-post="./view"
-      hx-swap="outerHTML"
-      method="post"
-      class="cte-card editing"
-    >
+    <form hx-post="./view" hx-swap="outerHTML" method="post" class="cte-card editing">
       <input type="hidden" name="action" value="view" />
       <div class="cte-inputs">
         {fields.map(({ label, name, type, value }) => (

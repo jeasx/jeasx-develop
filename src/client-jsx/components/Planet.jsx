@@ -1,7 +1,6 @@
 /** Renders one planet as soon as its data has arrived. */
 export default async function Planet({ planet }) {
-  const { name, color, diameter, distance, year, moons, gravity } =
-    await planet;
+  const { name, color, diameter, distance, year, moons, gravity } = await planet;
   // Square root keeps Jupiter on screen without shrinking Mercury to a dot.
   const size = Math.round(Math.sqrt(diameter) * 0.18);
   const id = name.toLowerCase();
@@ -41,9 +40,8 @@ export default async function Planet({ planet }) {
         <p class="caption">
           <strong>{name}</strong>
           <small>
-            {diameter.toLocaleString("en-US")} km · {distance} AU ·{" "}
-            {year.toLocaleString("en-US")} days · {moons}{" "}
-            {moons === 1 ? "moon" : "moons"}
+            {diameter.toLocaleString("en-US")} km · {distance} AU · {year.toLocaleString("en-US")}{" "}
+            days · {moons} {moons === 1 ? "moon" : "moons"}
           </small>
         </p>
       </div>

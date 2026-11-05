@@ -115,7 +115,7 @@ export default function Lottery({ title }) {
             {matches.length === 0
               ? "No match this time. Try again!"
               : `${matches.length} ${matches.length === 1 ? "match" : "matches"}${
-                  matches.length >= 3 ? " — you win! 🎉" : "."
+                  matches.length >= 3 ? " - you win! 🎉" : "."
                 }`}
           </p>
         </div>

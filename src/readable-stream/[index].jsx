@@ -2,8 +2,7 @@ import Layout from "../Layout";
 
 const WORD_DELAY = 60;
 
-const ANSWER =
-  `ReadableStreams are rendered chunk by chunk as they arrive. This text comes from a
+const ANSWER = `ReadableStreams are rendered chunk by chunk as they arrive. This text comes from a
 ReadableStream which emits one word every ${WORD_DELAY} ms. Text chunks are escaped like any other
 string, so <b>this markup</b> shows up as plain text. A fetch response body works the same way:
 response.body.pipeThrough(new TextDecoderStream()).`.replace(/\s+/g, " ");
@@ -23,19 +22,16 @@ export default function () {
       <div class="sx">
         <h1>ReadableStream as children</h1>
         <p>
-          Besides promises, JSX children can be a <code>ReadableStream</code>.
-          Items are rendered in order as they arrive. The markup rendered so far
-          is sent to the browser while waiting for the next item.
+          Besides promises, JSX children can be a <code>ReadableStream</code>. Items are rendered in
+          order as they arrive. The markup rendered so far is sent to the browser while waiting for
+          the next item.
         </p>
         <p>
-          A <code>ReadableStream</code> of strings or JSX can be used as
-          children directly, e.g. a streamed answer from an AI service or the
-          decoded body of a <code>fetch</code> response.
+          A <code>ReadableStream</code> of strings or JSX can be used as children directly, e.g. a
+          streamed answer from an AI service or the decoded body of a <code>fetch</code> response.
         </p>
         <section class="sx-card rs-chat" aria-live="polite">
-          <p class="rs-bubble rs-question">
-            How does Jeasx render a ReadableStream?
-          </p>
+          <p class="rs-bubble rs-question">How does Jeasx render a ReadableStream?</p>
           <p class="rs-bubble rs-answer">
             {answerStream()}
             <span class="rs-end"></span>
@@ -54,9 +50,7 @@ export default function () {
 
 /** Rendered after the stream is finished. */
 function Done({ start }) {
-  return (
-    <output class="sx-done">All done after {Date.now() - start} ms</output>
-  );
+  return <output class="sx-done">All done after {Date.now() - start} ms</output>;
 }
 
 /** Emits the answer word by word. `pull` is only called when the renderer wants more. */

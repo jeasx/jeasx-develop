@@ -13,6 +13,7 @@ export default function () {
     <Layout
       title="Content negotiation: one URL, many formats"
       description="Answer the same URL with HTML, JSON, CSV or plain text, depending on the Accept header."
+      css="/negotiation/index.css"
       script="/negotiation/index.js"
     >
       <h1>Content negotiation: one URL, many formats</h1>
@@ -46,13 +47,16 @@ export default function () {
           <input type="submit" value="Send request" />
         </fieldset>
       </form>
-      <p class="center">
+      <p class="presets">
         {PRESETS.map((accept) => (
-          <>
-            <button type="button" class="btn-outline" data-accept={accept}>
-              {accept}
-            </button>{" "}
-          </>
+          <button
+            type="button"
+            class="btn-outline"
+            data-accept={accept}
+            aria-pressed={String(accept === "application/json")}
+          >
+            {accept}
+          </button>
         ))}
       </p>
       <article>

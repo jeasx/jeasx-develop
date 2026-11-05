@@ -9,14 +9,6 @@
 .as {
   margin: 0 auto;
   max-width: 48rem;
-
-  & > h1 {
-    background: linear-gradient(120deg, var(--as-accent), var(--as-accent-2));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    text-align: center;
-  }
 }
 
 /* Search field with an inline progress indicator */
@@ -39,19 +31,19 @@
   & .htmx-indicator {
     position: absolute;
     top: 50%;
-    right: var(--mu-form-element-spacing-horizontal);
+    right: var(--input-px);
     transform: translateY(-50%);
     border-radius: 999px;
-    background: var(--mu-form-element-background-color);
+    background: var(--input-bg);
     padding-left: 0.5rem;
     color: var(--as-muted);
     font-size: 0.85rem;
   }
 
-  /* The browser's clear button can't be resized, so draw it with the close icon of µCSS. */
+  /* The browser's clear button can't be resized, so draw it with the close icon of the base styles. */
   & input::-webkit-search-cancel-button {
     -webkit-appearance: none;
-    background: var(--mu-icon-close) center / contain no-repeat;
+    background: var(--icon-close) center / contain no-repeat;
     width: 1.25rem;
     height: 1.25rem;
     cursor: pointer;

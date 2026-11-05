@@ -2,17 +2,15 @@ import sharp from "sharp";
 import limiter, { QueueFullError } from "../sharp/limiter";
 
 export const FORMATS = ["avif", "webp"];
+// The image formats sharp can read from a buffer. "raw" is bare pixel data, and SVG
+// is skipped because rendering it can be costly and exposes the SVG parser.
+// "heif" covers AVIF, as the prebuilt sharp binaries don't decode HEIC.
+export const INPUT_FORMATS = Object.values(sharp.format)
+  .filter((f) => f.input.buffer && !["raw", "svg"].includes(f.id))
+  .map((f) => f.id);
 export const SIZES = [160, 320, 640];
 // How sharp picks the part to keep when cropping to a square.
-export const STRATEGIES = [
-  "entropy",
-  "attention",
-  "centre",
-  "north",
-  "south",
-  "east",
-  "west",
-];
+export const STRATEGIES = ["entropy", "attention", "centre", "north", "south", "east", "west"];
 export const ROTATIONS = [0, 30, 45, 60, 75, 90, 180];
 // Must match limits.fileSize in jeasx.config.js, which drops larger files.
 export const MAX_UPLOAD_MB = 8;
@@ -35,7 +33,7 @@ export class ConvertError extends Error {
 }
 
 /**
- * Validates the form fields and converts the uploaded JPEG.
+ * Validates the form fields and converts the uploaded image.
  * Throws a ConvertError for invalid input or when the server is busy.
  *
  * @param {Record<string, unknown>} body
@@ -70,16 +68,14 @@ export async function convert(body) {
     );
   }
 
-  // Sharp reads many formats (e.g. SVG, TIFF, GIF), but the form only promises JPEG,
-  // so accept nothing else. Sharp detects the format by these leading bytes as well.
-  if (!isJpeg(upload)) {
-    throw new ConvertError(400, "This file isn't a JPEG image.");
-  }
-
   try {
     return await limit(async () => {
       const input = sharp(upload, { limitInputPixels: MAX_INPUT_PIXELS });
+      // Sharp detects the format from the file's content, not its name.
       const original = await input.metadata();
+      if (!INPUT_FORMATS.includes(original.format)) {
+        throw new Error(`Unsupported format: ${original.format}`);
+      }
       const { data, info } = await input
         .resize({ width: size, height: size, position: strategy })
         .rotate(rotate)
@@ -89,6 +85,7 @@ export async function convert(body) {
         format,
         rotate,
         original: {
+          format: original.format,
           bytes: upload.length,
           width: original.width,
           height: original.height,
@@ -104,24 +101,10 @@ export async function convert(body) {
         "Too many images are being converted right now. Please try again in a moment.",
       );
     }
-    // Sharp throws for files that are broken or have too many pixels.
+    // Sharp throws for files that are broken, unsupported or have too many pixels.
     throw new ConvertError(
       400,
-      "The file couldn't be read as an image or is larger than 25 megapixels.",
+      "The file couldn't be read as a supported image or is larger than 25 megapixels.",
     );
   }
-}
-
-/**
- * Checks for the JPEG signature (FF D8 FF).
- *
- * @param {Buffer} buffer
- */
-function isJpeg(buffer) {
-  return (
-    buffer.length >= 3 &&
-    buffer[0] === 0xff &&
-    buffer[1] === 0xd8 &&
-    buffer[2] === 0xff
-  );
 }

@@ -15,7 +15,6 @@
 .blur-up {
   display: block;
   width: 100%;
-  height: auto;
   border-radius: 0.5rem;
   background-size: cover;
   transition:
@@ -41,7 +40,7 @@
   flex-direction: column;
   gap: 0.25rem;
   margin-top: 0.5rem;
-  color: var(--pico-muted-color, #898781);
+  color: #898781;
   font-size: 0.875rem;
 }
 

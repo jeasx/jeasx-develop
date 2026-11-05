@@ -13,13 +13,6 @@
 .re {
   margin: 0 auto;
   max-width: 52rem;
-
-  & > h1 {
-    background: linear-gradient(120deg, var(--re-accent), var(--re-accent-2));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
 }
 
 .re-islands {

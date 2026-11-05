@@ -95,7 +95,7 @@ export default function ({ request }) {
           .head-picker { display: grid; gap: 0.5rem; }
           .head-picker label { box-sizing: border-box; width: 100%; display: flex; gap: 0.6rem; align-items: start; margin: 0; padding: 0.75rem 1rem;
             border: 1px solid color-mix(in srgb, currentColor 20%, transparent); border-radius: 0.6rem; cursor: pointer; }
-          .head-picker label:has(:checked) { border-color: var(--mu-primary); }
+          .head-picker label:has(:checked) { border-color: var(--primary); }
           .head-picker input { margin: 0.2rem 0 0; }
           .head-picker small { display: block; opacity: 0.7; }
           .head-widgets { display: grid; gap: 1rem; margin-top: 1rem; }
@@ -115,8 +115,8 @@ function ProductCard() {
         <title>{`Espresso machine${SUFFIX}`}</title>
         <meta name="description" content="A shiny espresso machine for your kitchen." />
         <style>{
-          /* css */ `.product-card { padding: 1.25rem; border-radius: 0.75rem; border: 1px solid var(--mu-accent);
-            background: color-mix(in srgb, var(--mu-accent) 15%, transparent); text-align: center; }`
+          /* css */ `.product-card { padding: 1.25rem; border-radius: 0.75rem; border: 1px solid var(--accent);
+            background: color-mix(in srgb, var(--accent) 15%, transparent); text-align: center; }`
         }</style>
       </head>
     </section>

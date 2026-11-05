@@ -3,6 +3,17 @@
   display: inline-block;
 }
 
+/*
+ * A view-transition-name paints the title as its own layer, so the h1's
+ * text-clipped gradient no longer reaches it and the transparent text vanishes.
+ * The title carries the gradient itself instead.
+ */
+h1 .product-title {
+  background: inherit;
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
 /* Image beside the facts on wide screens, above them on narrow ones. */
 .product-intro {
   display: grid;
@@ -15,7 +26,6 @@
 .product-hero {
   display: block;
   width: 100%;
-  height: auto;
   border-radius: 0.5rem;
 }
 
@@ -68,8 +78,8 @@
   display: grid;
   grid-template-columns: max-content 1fr;
   margin: 0;
-  border: var(--mu-border-width) solid var(--mu-border-color);
-  border-radius: var(--mu-border-radius);
+  border: var(--border-width) solid var(--border);
+  border-radius: var(--radius);
   overflow: hidden;
 }
 
@@ -77,18 +87,18 @@
 .product-specs dd {
   margin: 0;
   padding: 0.5rem 1rem;
-  border-bottom: var(--mu-border-width) solid var(--mu-border-color);
+  border-bottom: var(--border-width) solid var(--border);
 }
 
 .product-specs dt {
   font-weight: bold;
-  color: var(--mu-primary);
-  background: color-mix(in srgb, var(--mu-primary) 12%, transparent);
-  border-right: var(--mu-border-width) solid var(--mu-border-color);
+  color: var(--primary);
+  background: color-mix(in srgb, var(--primary) 12%, transparent);
+  border-right: var(--border-width) solid var(--border);
 }
 
 .product-specs dd:nth-of-type(even) {
-  background: color-mix(in srgb, var(--mu-color) 5%, transparent);
+  background: color-mix(in srgb, var(--color) 5%, transparent);
 }
 
 .product-specs dt:last-of-type,

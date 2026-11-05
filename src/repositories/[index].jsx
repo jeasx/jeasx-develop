@@ -24,17 +24,16 @@ export default async function ({ request }) {
       <div class="repos">
         <h1>Search GitHub repositories</h1>
         <p class="lead">
-          The page is rendered as a stream: the page shell and a loading
-          indicator are sent to the browser right away, while the repositories
-          are still fetched from the GitHub API. As soon as the results arrive,
-          they are streamed in after the indicator, which is then hidden by a
+          The page is rendered as a stream: the page shell and a loading indicator are sent to the
+          browser right away, while the repositories are still fetched from the GitHub API. As soon
+          as the results arrive, they are streamed in after the indicator, which is then hidden by a
           single CSS rule. No client-side JavaScript is involved.
         </p>
         <form method="get" class="search" role="search">
           <input
             type="search"
             name="search"
-            placeholder="Search repositories by name..."
+            placeholder="Search repositories by name…"
             aria-label="Search repositories"
             maxlength={100}
             value={search}
@@ -44,11 +43,7 @@ export default async function ({ request }) {
         {search ? (
           <div class="loader">
             {/* Flushed immediately; hidden via CSS as soon as the results are streamed in after it. */}
-            <div
-              aria-busy="true"
-              class="skeletons"
-              aria-label="Loading repositories..."
-            >
+            <div aria-busy="true" class="skeletons" aria-label="Loading repositories…">
               {[1, 2, 3].map(() => (
                 <div class="skeleton">
                   <span />
@@ -61,8 +56,7 @@ export default async function ({ request }) {
           </div>
         ) : (
           <p class="notice">
-            <span aria-hidden="true">🔍</span> Enter a name to search GitHub
-            repositories.
+            <span aria-hidden="true">🔍</span> Enter a name to search GitHub repositories.
           </p>
         )}
       </div>
@@ -78,8 +72,8 @@ async function Repositories({ search }) {
   if (!items) {
     return (
       <p class="notice">
-        <span aria-hidden="true">⚠️</span> GitHub couldn't be reached right now.
-        Please try again later.
+        <span aria-hidden="true">⚠️</span> GitHub couldn't be reached right now. Please try again
+        later.
       </p>
     );
   }
@@ -97,16 +91,14 @@ async function Repositories({ search }) {
   if (repositories.length === 0) {
     return (
       <p class="notice">
-        <span aria-hidden="true">🔍</span> No repositories found. Try another
-        name.
+        <span aria-hidden="true">🔍</span> No repositories found. Try another name.
       </p>
     );
   }
   return (
     <section>
       <p class="count">
-        {repositories.length}{" "}
-        {repositories.length === 1 ? "repository" : "repositories"}
+        {repositories.length} {repositories.length === 1 ? "repository" : "repositories"}
       </p>
       <ul class="repo-list">
         {repositories.map((repo, i) => (
@@ -137,13 +129,7 @@ function Repository({
     <article class="repo">
       <header>
         {owner?.avatar_url && (
-          <img
-            src={`${owner.avatar_url}&s=64`}
-            alt=""
-            width="32"
-            height="32"
-            loading="lazy"
-          />
+          <img src={`${owner.avatar_url}&s=64`} alt="" width="32" height="32" loading="lazy" />
         )}
         <a href={html_url}>{full_name}</a>
       </header>
@@ -154,14 +140,10 @@ function Repository({
             <i class="dot" aria-hidden="true" /> {language}
           </span>
         )}
-        <span title="Stars">
-          ★ {numberFormat.format(stargazers_count || 0)}
-        </span>
+        <span title="Stars">★ {numberFormat.format(stargazers_count || 0)}</span>
         <span title="Forks">⑂ {numberFormat.format(forks_count || 0)}</span>
         {updated && !isNaN(updated.getTime()) && (
-          <time datetime={updated.toISOString()}>
-            Updated {dateFormat.format(updated)}
-          </time>
+          <time datetime={updated.toISOString()}>Updated {dateFormat.format(updated)}</time>
         )}
       </footer>
     </article>

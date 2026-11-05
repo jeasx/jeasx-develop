@@ -2,6 +2,9 @@ import Cap from "@cap.js/server";
 
 // Challenges are free to request and expired ones are only removed every few minutes,
 // so cap the memory: once full, the oldest entries are dropped first.
+// Downside: a flood of challenge requests pushes out pending challenges of other visitors,
+// whose widget then fails and has to start over. That's acceptable for a demo; a real app
+// limits challenges per IP address and keeps them in a shared store (e.g. Redis).
 const MAX_ENTRIES = 10_000;
 
 /**

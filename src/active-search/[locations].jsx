@@ -27,9 +27,7 @@ export default async function ({ request }) {
     return "";
   }
   if (search.length < MIN_LENGTH) {
-    return (
-      <p class="as-message">Please enter at least {MIN_LENGTH} characters.</p>
-    );
+    return <p class="as-message">Please enter at least {MIN_LENGTH} characters.</p>;
   }
 
   let features;
@@ -42,17 +40,11 @@ export default async function ({ request }) {
       throw error;
     }
     return (
-      <p class="as-message">
-        There are too many searches right now. Please try again in a moment.
-      </p>
+      <p class="as-message">There are too many searches right now. Please try again in a moment.</p>
     );
   }
   if (!features) {
-    return (
-      <p class="as-message">
-        Photon couldn't be reached right now. Please try again later.
-      </p>
-    );
+    return <p class="as-message">Photon couldn't be reached right now. Please try again later.</p>;
   }
   if (features.length === 0) {
     return <p class="as-message">No addresses found. Try another search.</p>;
@@ -93,9 +85,7 @@ export default async function ({ request }) {
                 <strong>{name || address || place}</strong>
                 <small>{place}</small>
               </div>
-              {type && (
-                <span class="as-type">{String(type).replaceAll("_", " ")}</span>
-              )}
+              {type && <span class="as-type">{String(type).replaceAll("_", " ")}</span>}
             </li>
           );
         })}

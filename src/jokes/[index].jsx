@@ -14,7 +14,7 @@ export default function ({ request }) {
   const category = CATEGORIES.find(({ value }) => value === body["category"]);
   // The -/+ buttons send "change", so "counter" only comes from the hidden field.
   const change = body["change"] === "-1" ? -1 : body["change"] === "1" ? 1 : 0;
-  const requested = (parseInt(body["counter"]) || 3) + change;
+  const requested = (Number.parseInt(body["counter"], 10) || 3) + change;
   const counter = Math.min(Math.max(requested, 1), 5);
   const data = category ? pick(category.value, counter) : [];
 

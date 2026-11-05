@@ -6,14 +6,6 @@
   --tf-muted: rgba(127, 127, 127, 0.9);
 }
 
-.tf-title {
-  background: linear-gradient(120deg, var(--tf-accent), var(--tf-accent-2));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  text-align: center;
-}
-
 /* Product browser, swapped as a whole by the "~product" fragment */
 .tf-card {
   transition: opacity 0.3s;
@@ -74,8 +66,6 @@
 
   & img {
     border-radius: 0.5rem;
-    max-width: 100%;
-    height: auto;
   }
 
   & h3 {

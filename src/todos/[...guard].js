@@ -1,6 +1,7 @@
 import { readListCookie, writeListCookie } from "../@helpers/cookies";
 import isCrossSite, { crossSiteResponse } from "../@helpers/crossSite";
 
+const PATH = "/todos";
 const MAX_LABEL_LENGTH = 200;
 const STATUSES = ["active", "completed"];
 
@@ -52,18 +53,21 @@ export default function ({ request, reply }) {
     todos = todos.filter((todo) => todo.status !== "completed");
   }
 
+  // Unknown filters show all todos instead of an empty list.
+  const status = STATUSES.includes(request.query["status"]) ? request.query["status"] : undefined;
+
   // Only form submissions change todos. The guard also runs for static files
   // like index.css, which shouldn't carry a cookie.
   if (request.method === "POST") {
     // Drop the oldest todos until the cookie fits.
-    todos = writeListCookie(reply, "todos", todos, "/todos");
+    writeListCookie(reply, "todos", todos, PATH);
+    // 303 makes the browser load the list with GET, so a reload doesn't send the form again:
+    // todos are removed by position, so a repeated removal would delete another todo.
+    return reply.redirect(status ? `${PATH}?status=${status}` : PATH, 303);
   }
 
-  return {
-    todos,
-    // Unknown filters show all todos instead of an empty list.
-    status: STATUSES.includes(request.query["status"]) ? request.query["status"] : undefined,
-  };
+  // The page gets the limit too, so its input field allows the same length.
+  return { todos, status, maxLength: MAX_LABEL_LENGTH };
 }
 
 /**

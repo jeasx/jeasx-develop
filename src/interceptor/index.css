@@ -27,7 +27,7 @@
 }
 .weather-place {
   font-weight: 600;
-  color: var(--mu-primary);
+  color: var(--primary);
 }
 .weather-temp {
   font-size: 2.5rem;

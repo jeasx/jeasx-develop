@@ -26,7 +26,6 @@
 .chart {
   display: block;
   width: 100%;
-  height: auto;
   font:
     12px system-ui,
     sans-serif;

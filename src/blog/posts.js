@@ -1,5 +1,8 @@
+import { initial } from "../@helpers/avatar";
 import { fitsCookie, readListCookie, writeListCookie } from "../@helpers/cookies";
 import data from "./data.json";
+
+export { hue } from "../@helpers/avatar";
 
 /** Fields of a post and their maximum length. */
 export const FIELDS = {
@@ -150,6 +153,9 @@ export function formatDate(date) {
         day: "numeric",
         month: "long",
         year: "numeric",
+        // The server doesn't know the visitor's time zone; without one, the date would
+        // depend on the time zone of the server.
+        timeZone: "UTC",
       });
 }
 
@@ -180,25 +186,5 @@ export function paragraphs(body) {
  * @param {string} name
  */
 export function initials(name) {
-  return (
-    name
-      .split(/\s+/)
-      .filter(Boolean)
-      .slice(0, 2)
-      .map((word) => [...word][0].toUpperCase())
-      .join("") || "?"
-  );
-}
-
-/**
- * Derives a stable hue (0-359) from a text, so every post gets its own cover gradient.
- *
- * @param {string} text
- */
-export function hue(text) {
-  let hash = 0;
-  for (const char of text) {
-    hash = (hash * 31 + char.codePointAt(0)) % 360;
-  }
-  return hash;
+  return name.split(/\s+/).filter(Boolean).slice(0, 2).map(initial).join("") || "?";
 }

@@ -14,14 +14,14 @@
 /* The widget reads its look from these custom properties. */
 cap-widget {
   justify-self: center;
-  --cap-background: var(--mu-form-element-background-color);
-  --cap-border-color: var(--mu-form-element-border-color);
-  --cap-border-radius: var(--mu-border-radius);
-  --cap-color: var(--mu-color);
-  --cap-checkbox-background: var(--mu-background-color);
-  --cap-checkbox-border: 1px solid var(--mu-form-element-border-color);
-  --cap-spinner-color: var(--mu-primary);
-  --cap-font: var(--mu-font-family);
+  --cap-background: var(--input-bg);
+  --cap-border-color: var(--input-border);
+  --cap-border-radius: var(--radius);
+  --cap-color: var(--color);
+  --cap-checkbox-background: var(--bg);
+  --cap-checkbox-border: 1px solid var(--input-border);
+  --cap-spinner-color: var(--primary);
+  --cap-font: var(--font);
 }
 .wide {
   width: 100%;

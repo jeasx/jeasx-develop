@@ -24,7 +24,8 @@ export default function ({ request, reply }) {
 
   // Signed, so a visitor can't pick a variant by editing the cookie.
   let visitor = readSignedCookie(request, "visitor");
-  const reset = query["reset"] !== undefined;
+  // Only a form submission starts over: a GET could be triggered by a prefetched link.
+  const reset = request.method === "POST" && query["reset"] !== undefined;
   if (!visitor || reset) {
     visitor = randomBytes(16).toString("base64url");
     reply.setCookie("visitor", visitor, {
@@ -37,7 +38,7 @@ export default function ({ request, reply }) {
       maxAge: 30 * 24 * 60 * 60,
     });
   }
-  // Leave "?reset" behind, otherwise every reload would create (and count) another visitor.
+  // 303 leaves "?reset" behind, so a reload doesn't post again and count another visitor.
   if (reset) {
     return reply.redirect(PATH, 303);
   }

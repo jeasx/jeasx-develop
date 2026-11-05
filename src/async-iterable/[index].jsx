@@ -19,19 +19,16 @@ export default function () {
       <div class="sx">
         <h1>Render async iterables</h1>
         <p>
-          Besides promises, JSX children can be async iterables, e.g. an async
-          generator. Their items are rendered in order as they arrive. The
-          markup rendered so far is sent to the browser while waiting for the
-          next item.
+          Besides promises, JSX children can be async iterables, e.g. an async generator. Their
+          items are rendered in order as they arrive. The markup rendered so far is sent to the
+          browser while waiting for the next item.
         </p>
         <p>
-          A component can be an <code>async function*</code> which yields JSX.
-          This is a natural fit for paginated APIs or database cursors: the next
-          page is only loaded when the renderer needs it, and each page is
-          streamed as soon as it is ready. If the browser stops loading the
-          page, the generator is stopped like a <code>for await</code> loop on{" "}
-          <code>break</code>, so its <code>finally</code> block runs and can
-          release resources.
+          A component can be an <code>async function*</code> which yields JSX. This is a natural fit
+          for paginated APIs or database cursors: the next page is only loaded when the renderer
+          needs it, and each page is streamed as soon as it is ready. If the browser stops loading
+          the page, the generator is stopped like a <code>for await</code> loop on{" "}
+          <code>break</code>, so its <code>finally</code> block runs and can release resources.
         </p>
 
         <p class="center">
@@ -68,9 +65,7 @@ export default function () {
 
 /** Rendered after the async iterable is finished. */
 function Done({ start }) {
-  return (
-    <output class="sx-done">All done after {Date.now() - start} ms</output>
-  );
+  return <output class="sx-done">All done after {Date.now() - start} ms</output>;
 }
 
 /**

@@ -6,14 +6,6 @@
   --hl-muted: rgba(127, 127, 127, 0.9);
 }
 
-.hl-title {
-  background: linear-gradient(120deg, var(--hl-accent), var(--hl-accent-2));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  text-align: center;
-}
-
 .hl-card {
   margin: 1.5rem 0;
   border: 1px solid var(--hl-line);

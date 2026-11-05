@@ -13,7 +13,9 @@ const dragged = ref(null);
 const over = ref(null);
 
 const byColumn = computed(() =>
-  Object.fromEntries(props.columns.map((c) => [c, cards.value.filter((card) => card.column === c)])),
+  Object.fromEntries(
+    props.columns.map((c) => [c, cards.value.filter((card) => card.column === c)]),
+  ),
 );
 const progress = computed(() => {
   const done = byColumn.value[props.columns.at(-1)].length;
@@ -59,7 +61,13 @@ function step(card, direction) {
       <button :disabled="!draft.trim()">Add</button>
     </form>
 
-    <div class="progress" role="progressbar" :aria-valuenow="progress" aria-valuemin="0" aria-valuemax="100">
+    <div
+      class="progress"
+      role="progressbar"
+      :aria-valuenow="progress"
+      aria-valuemin="0"
+      aria-valuemax="100"
+    >
       <span :style="{ width: progress + '%' }" />
     </div>
     <p class="summary">{{ progress }}% done</p>
@@ -89,8 +97,22 @@ function step(card, direction) {
           >
             <span>{{ card.title }}</span>
             <span class="actions">
-              <button type="button" title="Move left" :disabled="column === columns[0]" @click="step(card, -1)">←</button>
-              <button type="button" title="Move right" :disabled="column === columns.at(-1)" @click="step(card, 1)">→</button>
+              <button
+                type="button"
+                title="Move left"
+                :disabled="column === columns[0]"
+                @click="step(card, -1)"
+              >
+                ←
+              </button>
+              <button
+                type="button"
+                title="Move right"
+                :disabled="column === columns.at(-1)"
+                @click="step(card, 1)"
+              >
+                →
+              </button>
               <button type="button" title="Remove" @click="remove(card)">×</button>
             </span>
           </li>
@@ -140,7 +162,9 @@ function step(card, direction) {
   border: 2px dashed transparent;
   border-radius: 0.75rem;
   background: color-mix(in srgb, currentColor 5%, transparent);
-  transition: border-color 0.2s, background 0.2s;
+  transition:
+    border-color 0.2s,
+    background 0.2s;
 }
 .column.over {
   border-color: #42b883;

@@ -14,13 +14,6 @@
 .sx {
   margin: 0 auto;
   max-width: 48rem;
-
-  & > h1 {
-    background: var(--sx-gradient);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
 }
 
 /* Segmented control made of links, e.g. to switch between two modes. */
@@ -143,7 +136,7 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* Connection status with a coloured dot: set data-state to "open", "connecting" or "closed". */
+/* Connection status with a colored dot: set data-state to "open", "connecting" or "closed". */
 .sx-status {
   display: inline-flex;
   align-items: center;

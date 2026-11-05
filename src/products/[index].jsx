@@ -57,7 +57,8 @@ export default async function ({ reply }) {
                 style={`view-transition-name: product-image-${id}`}
               />
               <hr />
-              <b>${price}</b>
+              {/* Two decimals like on the detail page, so $10 reads "$10.00" everywhere. */}
+              {typeof price === "number" && <b>${price.toFixed(2)}</b>}
             </header>
             <div>
               <h3>

@@ -50,38 +50,27 @@ export default async function ({ request, reply }) {
   }
 
   // Keep the chosen options after a POST, so trying another one is quick.
-  const chosen = (name, fallback) =>
-    posted ? String(body[name]) : String(fallback);
+  // A missing field (e.g. a request without the form) falls back to the default.
+  const chosen = (name, fallback) => String((posted ? body[name] : undefined) ?? fallback);
 
   return (
     <Layout
       title="Upload and transform images with sharp"
-      description="Upload a JPEG image and convert, resize and rotate it with sharp."
+      description="Upload an image and convert, resize and rotate it with sharp."
     >
       <h1>Upload and transform images with sharp</h1>
       <p>
-        Choose a JPEG image and the server converts, crops, resizes and rotates
-        it. The form is sent as <code>multipart/form-data</code>, so the route
-        gets the file as a <code>Buffer</code> in <code>request.body</code>.
-        Jeasx doesn't ship an image processor, so the conversion is done in
-        userland with <a href="https://sharp.pixelplumbing.com">sharp</a>. The
-        result is embedded as a <code>data:</code> URI, so your image is never
-        stored.
+        Choose an image (e.g. JPEG, PNG, WebP, AVIF, GIF or TIFF) and the server converts, crops,
+        resizes and rotates it. The form is sent as <code>multipart/form-data</code>, so the route
+        gets the file as a <code>Buffer</code> in <code>request.body</code>. Jeasx doesn't ship an
+        image processor, so the conversion is done in userland with{" "}
+        <a href="https://sharp.pixelplumbing.com">sharp</a>. The result is embedded as a{" "}
+        <code>data:</code> URI, so your image is never stored.
       </p>
       <form method="post" enctype="multipart/form-data">
         <div class="row">
-          <Select
-            name="format"
-            label="Format"
-            options={FORMATS}
-            value={chosen("format", "avif")}
-          />
-          <Select
-            name="size"
-            label="Size (pixels)"
-            options={SIZES}
-            value={chosen("size", 320)}
-          />
+          <Select name="format" label="Format" options={FORMATS} value={chosen("format", "avif")} />
+          <Select name="size" label="Size (pixels)" options={SIZES} value={chosen("size", 320)} />
           <Select
             name="strategy"
             label="Crop strategy"
@@ -96,13 +85,8 @@ export default async function ({ request, reply }) {
           />
         </div>
         <label>
-          JPEG image (up to {MAX_UPLOAD_MB} MB)
-          <input
-            type="file"
-            name="upload"
-            accept=".jpg,.jpeg,image/jpeg"
-            required
-          />
+          Image (up to {MAX_UPLOAD_MB} MB)
+          <input type="file" name="upload" accept="image/*" required />
         </label>
         <button class="btn btn-primary" type="submit">
           Convert image
@@ -142,7 +126,7 @@ export default async function ({ request, reply }) {
             <tbody>
               <tr>
                 <th scope="row">Upload</th>
-                <td>JPEG</td>
+                <td>{result.original.format.toUpperCase()}</td>
                 <td>
                   {result.original.width} × {result.original.height}
                 </td>
@@ -157,8 +141,7 @@ export default async function ({ request, reply }) {
                 </td>
                 <td>
                   {bytes.format(result.result.bytes / 1000)} (
-                  {percent.format(result.result.bytes / result.original.bytes)}{" "}
-                  of the upload)
+                  {percent.format(result.result.bytes / result.original.bytes)} of the upload)
                 </td>
               </tr>
             </tbody>

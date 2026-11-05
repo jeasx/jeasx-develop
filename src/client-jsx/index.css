@@ -12,7 +12,6 @@
 /* Placeholders and loaded planets share one size, so nothing moves while loading. */
 .planet {
   position: relative;
-  box-sizing: border-box;
   flex: none;
   width: 200px;
   height: 290px;
@@ -22,8 +21,6 @@
 }
 .planet svg {
   display: block;
-  max-width: 100%;
-  height: auto;
   overflow: visible;
 }
 
@@ -40,6 +37,7 @@
   line-height: inherit;
   cursor: pointer;
   outline: none;
+  perspective: 800px;
 }
 .globe {
   transform-box: fill-box;
@@ -59,9 +57,6 @@
 }
 
 /* Click: the card flips over and shows more facts on its back. */
-.planet:not(.placeholder) {
-  perspective: 800px;
-}
 .front,
 .back {
   position: absolute;
@@ -79,9 +74,9 @@
 }
 .planet.flipped .back {
   visibility: visible;
+  transform: rotateY(0);
 }
 .back {
-  box-sizing: border-box;
   padding: 3rem 1rem;
   transform: rotateY(180deg);
 }
@@ -98,9 +93,6 @@
 }
 .planet.flipped .front {
   transform: rotateY(-180deg);
-}
-.planet.flipped .back {
-  transform: rotateY(0);
 }
 @media (prefers-reduced-motion: reduce) {
   .globe,

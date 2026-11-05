@@ -28,33 +28,25 @@ export default async function ({ request }) {
       <div class="sx">
         <h1>Streaming vs. string rendering</h1>
         <p>
-          Jeasx streams JSX by default: the page shell is flushed immediately
-          and slow parts follow as soon as they are ready. In v2, the complete
-          markup was rendered to a string first and sent in one go.
+          Jeasx streams JSX by default: the page shell is flushed immediately and slow parts follow
+          as soon as they are ready. In v2, the complete markup was rendered to a string first and
+          sent in one go.
         </p>
         <p>
-          Switch between both modes and compare the numbers below. When
-          streaming, the first byte arrives almost instantly and the results
-          appear one after another. When rendering to a string, the browser
-          waits for the slowest result before it receives anything at all.
+          Switch between both modes and compare the numbers below. When streaming, the first byte
+          arrives almost instantly and the results appear one after another. When rendering to a
+          string, the browser waits for the slowest result before it receives anything at all.
         </p>
         <p>
-          The guard of this example shows how to restore the former string
-          rendering in userland: it wraps <code>this.jsxToString</code> and
-          calls <code>jsxToString</code> from <code>jsx-async-runtime</code>{" "}
-          when a route sets <code>this.jsxStream = false</code>.
+          The guard of this example shows how to restore the former string rendering in userland: it
+          wraps <code>this.jsxToString</code> and calls <code>jsxToString</code> from{" "}
+          <code>jsx-async-runtime</code> when a route sets <code>this.jsxStream = false</code>.
         </p>
         <nav class="sx-toggle" aria-label="Rendering mode">
-          <a
-            href="?stream=true"
-            aria-current={this.jsxStream ? "page" : undefined}
-          >
+          <a href="?stream=true" aria-current={this.jsxStream ? "page" : undefined}>
             Streaming
           </a>
-          <a
-            href="?stream=false"
-            aria-current={this.jsxStream ? undefined : "page"}
-          >
+          <a href="?stream=false" aria-current={this.jsxStream ? undefined : "page"}>
             String
           </a>
         </nav>
@@ -103,18 +95,13 @@ function Result({ name, value, start }) {
       <strong>{name}</strong>
       <p>{value}</p>
       <small>rendered after {time} ms</small>
-      <div
-        class="sx-bar"
-        style={`--to: ${Math.min(time / SCALE, 1).toFixed(3)}`}
-      ></div>
+      <div class="sx-bar" style={`--to: ${Math.min(time / SCALE, 1).toFixed(3)}`}></div>
     </article>
   );
 }
 
 function Done({ start }) {
-  return (
-    <output class="sx-done">All done after {Date.now() - start} ms</output>
-  );
+  return <output class="sx-done">All done after {Date.now() - start} ms</output>;
 }
 
 /** Simulates a slow backend call. */

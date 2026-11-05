@@ -13,7 +13,7 @@
   flex: 1;
 }
 .scenario-active {
-  border-top-color: var(--mu-primary);
+  border-top-color: var(--primary);
 }
 .scenario footer {
   display: flex;

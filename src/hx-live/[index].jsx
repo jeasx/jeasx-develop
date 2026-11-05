@@ -8,23 +8,15 @@ export default function () {
       css="/hx-live/index.css"
       script="/hx-live/index.js"
     >
-      <h1 class="hl-title">Reactive scripting</h1>
+      <h1>Reactive scripting</h1>
       <p>
-        <a href="https://four.htmx.org/extensions/hx-live">hx-live</a> is an
-        HTMX extension to ease reactive scripting for the web. It is inspired by
-        Alpine, jQuery and hyperscript. State lives in <code>data-*</code>{" "}
-        attributes, <code>hx-on:*</code> changes it and <code>hx-live:*</code>{" "}
-        keeps the markup in sync. The widget below works like the one in the{" "}
-        <a href="/alpine">Alpine example</a>, written with hx-live attributes
-        instead.
+        <a href="https://four.htmx.org/extensions/hx-live">hx-live</a> is an HTMX extension to ease
+        reactive scripting for the web. It is inspired by Alpine, jQuery and hyperscript. State
+        lives in <code>data-*</code> attributes, <code>hx-on:*</code> changes it and{" "}
+        <code>hx-live:*</code> keeps the markup in sync. The widget below works like the one in the{" "}
+        <a href="/alpine">Alpine example</a>, written with hx-live attributes instead.
       </p>
-      <section
-        class="hl-card"
-        data-counter="3"
-        data-jokes="[]"
-        data-error=""
-        data-loading="false"
-      >
+      <section class="hl-card" data-counter="3" data-jokes="[]" data-error="" data-loading="false">
         <header class="hl-bar">
           <h2>Joke machine</h2>
           <nav>

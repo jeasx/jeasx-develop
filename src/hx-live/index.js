@@ -11,7 +11,7 @@ window.loadJokes = async function (data, category) {
     data.error = "";
   } catch {
     data.jokes = [];
-    data.error = "The jokes could not be loaded. Please try again.";
+    data.error = "The jokes couldn't be loaded. Please try again.";
   } finally {
     data.loading = false;
   }

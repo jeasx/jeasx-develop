@@ -3,20 +3,7 @@ import { LitElement, css, html } from "lit";
 import { classMap } from "lit/directives/class-map.js";
 import { repeat } from "lit/directives/repeat.js";
 
-const FRUITS = [
-  "🍎",
-  "🍌",
-  "🍇",
-  "🍉",
-  "🍓",
-  "🍍",
-  "🥝",
-  "🍑",
-  "🍒",
-  "🥥",
-  "🍋",
-  "🫐",
-];
+const FRUITS = ["🍎", "🍌", "🍇", "🍉", "🍓", "🍍", "🥝", "🍑", "🍒", "🥥", "🍋", "🫐"];
 const MAX_ITEMS = FRUITS.length;
 
 export const styles = [
@@ -78,11 +65,7 @@ export const styles = [
       align-items: center;
       gap: 0.5rem;
       border-radius: 0.75rem;
-      background: linear-gradient(
-        135deg,
-        rgba(0, 232, 255, 0.18),
-        rgba(50, 79, 255, 0.3)
-      );
+      background: linear-gradient(135deg, rgba(0, 232, 255, 0.18), rgba(50, 79, 255, 0.3));
       padding: 0.75rem;
       font-size: 1.75rem;
     }
@@ -118,21 +101,13 @@ class ListAnimation extends LitElement {
   render() {
     return html`
       <div class="toolbar">
-        <button @click=${this.shuffle} ?disabled=${this.items.length < 2}>
-          🔀 Shuffle
-        </button>
-        <button @click=${this.sort} ?disabled=${this.items.length < 2}>
-          ↕ Sort
-        </button>
+        <button @click=${this.shuffle} ?disabled=${this.items.length < 2}>🔀 Shuffle</button>
+        <button @click=${this.sort} ?disabled=${this.items.length < 2}>↕ Sort</button>
         <button @click=${() => (this.column = !this.column)}>
           ${this.column ? "▦ Grid" : "☰ List"}
         </button>
-        <button @click=${this.add} ?disabled=${this.items.length === MAX_ITEMS}>
-          ＋ Add
-        </button>
-        <button @click=${this.remove} ?disabled=${this.items.length === 0}>
-          − Remove
-        </button>
+        <button @click=${this.add} ?disabled=${this.items.length === MAX_ITEMS}>＋ Add</button>
+        <button @click=${this.remove} ?disabled=${this.items.length === 0}>− Remove</button>
       </div>
       <ul class=${classMap({ column: this.column })}>
         ${repeat(
@@ -146,8 +121,7 @@ class ListAnimation extends LitElement {
                 out: flyBelow,
               })}
             >
-              ${item}
-              ${this.column ? html`<small>#${FRUITS.indexOf(item) + 1}</small>` : null}
+              ${item} ${this.column ? html`<small>#${FRUITS.indexOf(item) + 1}</small>` : null}
             </li>`,
         )}
       </ul>
@@ -166,9 +140,7 @@ class ListAnimation extends LitElement {
   }
 
   sort() {
-    this.items = this.items.toSorted(
-      (a, b) => FRUITS.indexOf(a) - FRUITS.indexOf(b),
-    );
+    this.items = this.items.toSorted((a, b) => FRUITS.indexOf(a) - FRUITS.indexOf(b));
   }
 
   add() {

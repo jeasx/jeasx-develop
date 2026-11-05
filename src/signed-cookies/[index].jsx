@@ -1,5 +1,5 @@
 import Layout from "../Layout";
-import readSigned from "./signed";
+import { readSigned } from "../@helpers/cookies";
 
 const PATH = "/signed-cookies";
 // Small limits keep the cookie well below 4 KB, even for characters like "€"
@@ -96,7 +96,7 @@ export default function ({ request, reply, csrfToken }) {
             <input
               name="note"
               maxlength={MAX_LENGTH}
-              placeholder="Write a note..."
+              placeholder="Write a note…"
               aria-label="Note"
               required
             />

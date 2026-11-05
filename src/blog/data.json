@@ -4,7 +4,7 @@
     "title": "Server-side JSX is back, and it never needed a framework",
     "description": "JSX was always just a nicer way to write HTML. Rendered on the server, it gives you components without shipping a single byte of JavaScript.",
     "body": "For years, writing JSX meant buying into a whole client-side stack: a bundler, a virtual DOM, hydration and a state library on top. But JSX itself is only syntax. It turns markup into function calls, and those functions can just as well return strings on the server.\n\nThat is the idea behind Jeasx. Every route is a plain function which receives the request and returns JSX. The result is HTML, sent straight to the browser. Components, props and composition work exactly as you know them, but there is nothing to hydrate and nothing to download.\n\nWhen a page needs interactivity, you add it where it is needed: a sprinkle of htmx, an Alpine component or a small island rendered with Preact. The rest stays fast, cacheable and accessible by default.",
-    "date": "2026-10-28T09:15:00",
+    "date": "2026-10-28T09:15:00Z",
     "author": "Ada Lindqvist"
   },
   {
@@ -12,7 +12,7 @@
     "title": "Routing by filename: brackets instead of config",
     "description": "How Jeasx maps files to URLs, and why wrapping a filename in brackets is all the routing configuration you need.",
     "body": "In Jeasx, only files with brackets in their name become routes. A file called [index].jsx answers the folder it lives in, while [...path].jsx catches everything below it. This blog uses exactly that: the overview is an index route and every post is answered by a single catch-all route which looks up the slug.\n\nGuards are routes too. A [...guard].jsx runs before all routes in its folder and can stop the request by returning a response. The form for new posts is protected this way with Basic Auth, without touching the form itself.\n\nFiles without brackets, like posts.js next to the routes, are ordinary modules. They can be imported, but never requested from the outside.",
-    "date": "2026-10-14T16:40:00",
+    "date": "2026-10-14T16:40:00Z",
     "author": "Jonas Weber"
   },
   {
@@ -20,7 +20,7 @@
     "title": "Is <b>this</b> bold? Escaping by default",
     "description": "Every value you put into JSX is escaped, so <script>alert('xss')</script> stays text. This post proves it.",
     "body": "Look at the title of this post: it contains a <b> tag, yet it isn't bold. Jeasx escapes every value rendered in JSX, so text written by users, such as the posts on this blog, can never inject markup or scripts into the page.\n\n<script>alert('If you see this as a dialog, something went wrong.')</script>\n\nWhen you really want to output trusted HTML, for example from a Markdown renderer, you opt in explicitly with the html helper. Safe by default, unsafe only on purpose.",
-    "date": "2026-09-30T11:05:00",
+    "date": "2026-09-30T11:05:00Z",
     "author": "Priya Raman"
   },
   {
@@ -28,7 +28,7 @@
     "title": "Streaming HTML: show something before everything is ready",
     "description": "Async components let the browser render the top of a page while the server is still waiting for slow data further down.",
     "body": "Components in Jeasx can be async. Await a database query or an API call right inside the component, and the server waits for it while rendering. Combined with streaming, the browser receives the head and the first sections of a page immediately, and can load stylesheets and paint while the rest is still on its way.\n\nFor a fast time to first byte, put slow content at the end of the page or load it in parallel. The streaming and out-of-order examples in this expo show both techniques side by side.",
-    "date": "2026-09-12T08:30:00",
+    "date": "2026-09-12T08:30:00Z",
     "author": "Ada Lindqvist"
   },
   {
@@ -36,7 +36,7 @@
     "title": "This blog has no database",
     "description": "Where do your posts go when you hit publish? Into a signed cookie in your browser, and nowhere else.",
     "body": "A demo should be easy to deploy and impossible to spam. So instead of a database, this blog stores new posts in a signed cookie. The server can trust its content, since it was signed with a secret, and every visitor only ever sees their own posts.\n\nCookies are small, so the oldest posts are dropped once the cookie is full. Clear your cookies and the blog is back to these example posts. A real blog would of course load its posts from a database or a headless CMS, but the routes would look exactly the same.",
-    "date": "2026-08-25T19:20:00",
+    "date": "2026-08-25T19:20:00Z",
     "author": "Jonas Weber"
   }
 ]

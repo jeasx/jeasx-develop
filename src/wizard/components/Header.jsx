@@ -22,7 +22,7 @@ const groups = [
 ];
 
 export default function Header({ path, data }) {
-  const currentStep = groups.findIndex(({ links }) => links?.includes(path));
+  const currentStep = groups.findIndex(({ links }) => links.includes(path));
   // On the last page all steps are completed, so "Thank you" is shown as done, too.
   const doneSteps = currentStep === groups.length - 1 ? groups.length : currentStep;
 

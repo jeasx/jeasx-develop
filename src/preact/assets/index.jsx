@@ -1,6 +1,6 @@
 /** @jsxImportSource preact */
 import { render } from "preact";
-import Components from "./components/$index";
+import COMPONENTS from "./components/$index";
 
 function init(components) {
   document.querySelectorAll("[data-component]").forEach((el) => {
@@ -18,4 +18,4 @@ function init(components) {
   });
 }
 
-init(Components);
+init(COMPONENTS);

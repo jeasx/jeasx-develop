@@ -69,9 +69,12 @@ export default function ({ request }) {
           description="An inline script rendered with nonce={this.nonce}, like the layout's scripts."
         >
           <script nonce={this.nonce}>
-            {html(/* js */ `const status = document.getElementById("with-nonce");
+            {/* A block, as both demo scripts share the global scope and declare "status". */}
+            {html(/* js */ `{
+              const status = document.getElementById("with-nonce");
               status.textContent = "Ran, as it carries the nonce.";
-              status.dataset.state = "ran";`)}
+              status.dataset.state = "ran";
+            }`)}
           </script>
         </Check>
         <Check
@@ -81,9 +84,11 @@ export default function ({ request }) {
           description="The same inline script, but without the nonce, like an injected one."
         >
           <script>
-            {html(/* js */ `const status = document.getElementById("without-nonce");
+            {html(/* js */ `{
+              const status = document.getElementById("without-nonce");
               status.textContent = "Ran, as there is no policy.";
-              status.dataset.state = "ran";`)}
+              status.dataset.state = "ran";
+            }`)}
           </script>
         </Check>
         <Check

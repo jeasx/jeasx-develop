@@ -65,10 +65,7 @@ export async function* Releases({ from, to }) {
     yield (
       <tr class="is-end">
         <td colspan="4">
-          <strong>
-            You have reached the end: all {PAGES * PAGE_SIZE} releases are
-            loaded.
-          </strong>
+          <strong>You have reached the end: all {PAGES * PAGE_SIZE} releases are loaded.</strong>
         </td>
       </tr>
     );
@@ -83,9 +80,7 @@ async function fetchPage(number) {
     items: Array.from({ length: PAGE_SIZE }, (_, i) => {
       const id = (number - 1) * PAGE_SIZE + i + 1;
       // Newest release first, one release per week.
-      const date = new Date(
-        Date.UTC(2026, 9, 26) - (id - 1) * 7 * 24 * 60 * 60 * 1000,
-      );
+      const date = new Date(Date.UTC(2026, 9, 26) - (id - 1) * 7 * 24 * 60 * 60 * 1000);
       return {
         id,
         name: `v${Math.floor((PAGES * PAGE_SIZE - id) / 10) + 1}.${(PAGES * PAGE_SIZE - id) % 10}.0`,

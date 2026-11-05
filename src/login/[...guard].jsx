@@ -1,6 +1,5 @@
-import { randomBytes } from "node:crypto";
 import { readSignedCookie } from "../@helpers/cookies";
-import isSameToken from "../@helpers/isSameToken";
+import csrf from "../@helpers/csrf";
 import Layout from "../Layout";
 import { countAttempt } from "./attempts";
 import { PATH } from "./session";
@@ -8,7 +7,7 @@ import { getSession } from "./store";
 
 /**
  * Runs before every route of this example:
- * - checks the CSRF token of every POST (see the "signed-cookies" example for details),
+ * - checks the CSRF token of every POST (see "../@helpers/csrf.jsx"),
  * - limits the number of POSTs per IP address, as each one may hash a password,
  * - looks up the session of the visitor.
  *
@@ -23,29 +22,12 @@ export default function ({ request, reply }) {
   // Pages with a login form or personal data must not end up in a shared cache.
   reply.header("cache-control", "no-store");
 
-  let csrfToken = readSignedCookie(request, "csrf");
-  if (!csrfToken) {
-    csrfToken = randomBytes(32).toString("base64url");
-    // "lax", so following a link from another site keeps the token: with "strict",
-    // the cookie would be missing and a new token would break forms open in other tabs.
-    reply.setCookie("csrf", csrfToken, { path: PATH, signed: true, sameSite: "lax" });
+  const { token: csrfToken, rejection } = csrf({ request, reply }, PATH);
+  if (rejection) {
+    return rejection;
   }
 
   if (request.method === "POST") {
-    const body = request.body && typeof request.body === "object" ? request.body : {};
-    if (!isSameToken(String(body["_csrf"] ?? ""), csrfToken)) {
-      reply.status(403);
-      return (
-        <Layout title="Error 403" robots="noindex">
-          <section class="center">
-            <h1>Error 403</h1>
-            <p>The form was rejected, as its CSRF token is missing or doesn't match.</p>
-            <a href={PATH}>Back to the example</a>
-          </section>
-        </Layout>
-      );
-    }
-
     const wait = countAttempt(request.ip);
     if (wait > 0) {
       reply.status(429).header("retry-after", String(wait));

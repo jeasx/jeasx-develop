@@ -13,7 +13,7 @@ export function createNonce() {
  *
  * - script-src: only scripts with the nonce run, no inline event handlers, no eval().
  *   'strict-dynamic' lets these scripts load further modules, so no list of hosts is needed.
- * - img-src: images from this site and data: URLs, which µCSS uses for icons (e.g. checkboxes).
+ * - img-src: images from this site and data: URLs, which the stylesheet uses for icons (e.g. select arrows).
  * - object-src: no plugins.
  * - base-uri: an injected <base> can't redirect relative URLs to another host.
  * - form-action: forms can only be sent to this site.

@@ -32,8 +32,8 @@
   border-radius: 50%;
   font-size: 1.25rem;
   font-weight: 700;
-  color: var(--mu-primary-inverse);
-  background: linear-gradient(135deg, var(--mu-primary), var(--mu-secondary));
+  color: var(--primary-inverse);
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
 }
 .account-details {
   display: grid;

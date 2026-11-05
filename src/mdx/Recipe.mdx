@@ -7,14 +7,22 @@ import { emojiFor } from "./recipes";
 
 <article class="recipe">
 
-<div class="recipe-emoji" aria-hidden="true">{emojiFor(props.recipe)}</div>
+<div class="recipe-emoji" aria-hidden="true">
+  {emojiFor(props.recipe)}
+</div>
 
 ## {props.recipe.name}
 
 <div class="recipe-meta">
-  <span title={`${props.recipe.rating} of 5`}>{"★".repeat(Math.round(props.recipe.rating)).padEnd(5, "☆")}</span> {props.recipe.reviewCount} reviews
-  · ⏱ {props.recipe.prepTimeMinutes + props.recipe.cookTimeMinutes} min · 👥 {props.recipe.servings} servings · 🔥 {props.recipe.caloriesPerServing} kcal
-  · <span class={`difficulty ${props.recipe.difficulty.toLowerCase()}`}>{props.recipe.difficulty}</span>
+  <span title={`${props.recipe.rating} of 5`}>
+    {"★".repeat(Math.round(props.recipe.rating)).padEnd(5, "☆")}
+  </span>{" "}
+  {props.recipe.reviewCount} reviews · ⏱{" "}
+  {props.recipe.prepTimeMinutes + props.recipe.cookTimeMinutes} min · 👥 {props.recipe.servings}{" "}
+  servings · 🔥 {props.recipe.caloriesPerServing} kcal ·{" "}
+  <span class={`difficulty ${props.recipe.difficulty.toLowerCase()}`}>
+    {props.recipe.difficulty}
+  </span>
 </div>
 
 ### Ingredients
@@ -23,14 +31,20 @@ Tick them off while you shop; plain checkboxes and CSS, no JavaScript needed.
 
 <ul class="ingredients">
   {props.recipe.ingredients.map((ingredient) => (
-    <li><label><input type="checkbox" /> {ingredient}</label></li>
+    <li>
+      <label>
+        <input type="checkbox" /> {ingredient}
+      </label>
+    </li>
   ))}
 </ul>
 
 ### Instructions
 
 <ol class="instructions">
-  {props.recipe.instructions.map((step) => <li>{step}</li>)}
+  {props.recipe.instructions.map((step) => (
+    <li>{step}</li>
+  ))}
 </ol>
 
 > **Chef's tip:** Read all steps once before you start. This {props.recipe.cuisine} dish needs {props.recipe.prepTimeMinutes} minutes of prep and {props.recipe.cookTimeMinutes} minutes of cooking.

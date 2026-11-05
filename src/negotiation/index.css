@@ -1,0 +1,7 @@
+/* Presets wrap onto several lines with even spacing in both directions. */
+.presets {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+}

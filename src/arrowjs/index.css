@@ -9,13 +9,6 @@
 .ar {
   margin: 0 auto;
   max-width: 44rem;
-
-  & > h1 {
-    background: linear-gradient(120deg, var(--ar-accent), var(--ar-accent-2));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
 }
 
 /* Islands are mounted in the browser only: reserve their space to avoid layout shifts. */

@@ -13,13 +13,6 @@
 .sv {
   margin: 0 auto;
   max-width: 44rem;
-
-  & > h1 {
-    background: linear-gradient(120deg, var(--sv-accent), var(--sv-accent-2));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
 }
 
 .sv-card {

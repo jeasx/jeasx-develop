@@ -54,11 +54,9 @@ export default function ({ number, delta, numbers, submit }) {
                 </button>
               )}
               {submit && numbers.length === 6 && (
-                <>
-                  <button type="submit" name="restart" value="restart">
-                    Start over
-                  </button>
-                </>
+                <button type="submit" name="restart" value="restart">
+                  Start over
+                </button>
               )}
             </div>
           </div>

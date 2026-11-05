@@ -7,7 +7,10 @@ const FILTERS = [
   { value: "completed", label: "Completed" },
 ];
 
-export default function ({ todos, status }) {
+/**
+ * @param {{ todos: { label: string, status: string }[], status?: string, maxLength: number }} props
+ */
+export default function ({ todos, status, maxLength }) {
   const completed = todos.filter((todo) => todo.status === "completed").length;
   const active = todos.length - completed;
   const counts = { undefined: todos.length, active, completed };
@@ -39,8 +42,8 @@ export default function ({ todos, status }) {
             <input
               name="newTodo"
               placeholder="What needs to be done?"
-              autofocus="autofocus"
-              maxlength="200"
+              autofocus
+              maxlength={maxLength}
               autocomplete="off"
             />
             <button type="submit" aria-label="Add todo">

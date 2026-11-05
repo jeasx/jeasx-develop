@@ -18,11 +18,11 @@
   transition: background 0.15s;
 }
 .languages a:hover {
-  background: color-mix(in srgb, var(--mu-primary) 15%, transparent);
+  background: color-mix(in srgb, var(--primary) 15%, transparent);
 }
 .languages a[aria-current] {
-  background: var(--mu-primary);
-  color: var(--mu-primary-inverse, #fff);
+  background: var(--primary);
+  color: var(--primary-inverse);
   pointer-events: none;
 }
 
@@ -70,8 +70,8 @@
 }
 .examples a:hover,
 .examples a[aria-current] {
-  border-color: var(--mu-primary);
-  color: var(--mu-primary);
+  border-color: var(--primary);
+  color: var(--primary);
 }
 
 .plural-result {
@@ -81,7 +81,7 @@
   margin: 1.5rem 0 0;
   padding: 1.5rem 1rem;
   border-radius: 0.75rem;
-  background: color-mix(in srgb, var(--mu-primary) 10%, transparent);
+  background: color-mix(in srgb, var(--primary) 10%, transparent);
   text-align: center;
 }
 .plural-result .apples {
@@ -90,7 +90,7 @@
 }
 .plural-result strong {
   font-size: 1.75rem;
-  color: var(--mu-primary);
+  color: var(--primary);
 }
 .plural-result .category {
   font-size: 0.8rem;

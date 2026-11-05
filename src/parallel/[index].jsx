@@ -23,28 +23,20 @@ export default async function ({ request }) {
       <div class="sx">
         <h1>Load data in parallel with async components</h1>
         <p>
-          Components in Jeasx can be <code>async</code> and simply{" "}
-          <code>await</code> their data. The renderer resolves them one after
-          another, so three components that each wait one second take three
-          seconds in total.
+          Components in Jeasx can be <code>async</code> and simply <code>await</code> their data.
+          The renderer resolves them one after another, so three components that each wait one
+          second take three seconds in total.
         </p>
         <p>
-          As JSX also accepts promises as children, you can kick off all
-          requests up front and hand the pending promises to your markup. Now
-          everything loads at the same time while the output order stays the
-          same. The bars below show when each request started and finished.
+          As JSX also accepts promises as children, you can kick off all requests up front and hand
+          the pending promises to your markup. Now everything loads at the same time while the
+          output order stays the same. The bars below show when each request started and finished.
         </p>
         <nav class="sx-toggle" aria-label="Loading mode">
-          <a
-            href="?mode=sequential"
-            aria-current={mode === "sequential" ? "page" : undefined}
-          >
+          <a href="?mode=sequential" aria-current={mode === "sequential" ? "page" : undefined}>
             Sequential
           </a>
-          <a
-            href="?mode=parallel"
-            aria-current={mode === "parallel" ? "page" : undefined}
-          >
+          <a href="?mode=parallel" aria-current={mode === "parallel" ? "page" : undefined}>
             Parallel
           </a>
         </nav>
@@ -59,11 +51,7 @@ export default async function ({ request }) {
             <span>2 s</span>
             <span>3 s</span>
           </div>
-          {mode === "sequential" ? (
-            <Sequential start={start} />
-          ) : (
-            <Parallel start={start} />
-          )}
+          {mode === "sequential" ? <Sequential start={start} /> : <Parallel start={start} />}
         </section>
         <Elapsed start={start} />
       </div>
@@ -82,12 +70,8 @@ function Sequential({ start }) {
 
 /** All requests are started immediately, the markup just awaits the promises. */
 function Parallel({ start }) {
-  const users = USERS.map(async (name) => (
-    <Row {...await loadUser(name, start)} />
-  ));
-  return users.map((user, index) => (
-    <Loader name={USERS[index]}>{user}</Loader>
-  ));
+  const users = USERS.map(async (name) => <Row {...await loadUser(name, start)} />);
+  return users.map((user, index) => <Loader name={USERS[index]}>{user}</Loader>);
 }
 
 async function User({ name, start }) {

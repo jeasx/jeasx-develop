@@ -23,17 +23,15 @@ export default function ({ request, visitor, variant, flags }) {
       <div class="ab">
         <h1>Feature flags and A/B testing</h1>
         <p>
-          A guard gives each visitor a random id in a signed cookie. A hash of
-          this id decides which variant of the experiment the visitor sees and
-          which features are turned on. As everything happens on the server, the
-          page doesn't flicker like with client-side testing tools, and visitors
-          without JavaScript take part as well.
+          A guard gives each visitor a random id in a signed cookie. A hash of this id decides which
+          variant of the experiment the visitor sees and which features are turned on. As everything
+          happens on the server, the page doesn't flicker like with client-side testing tools, and
+          visitors without JavaScript take part as well.
         </p>
 
         {flags.banner && (
           <p class="ab-banner" role="status">
-            <strong>New:</strong> our grinders now come with a two-year
-            warranty!
+            <strong>New:</strong> our grinders now come with a two-year warranty!
           </p>
         )}
 
@@ -43,15 +41,12 @@ export default function ({ request, visitor, variant, flags }) {
           <p>Conical burrs, 40 grind settings and a quiet motor.</p>
           {query["bought"] !== undefined ? (
             <p class="ab-thanks" role="status">
-              Thanks for your purchase! (It was counted, but nothing was
-              bought.)
+              Thanks for your purchase! (It was counted, but nothing was bought.)
             </p>
           ) : (
             <form method="post" action={`${PATH}/buy`}>
               <button type="submit">
-                {flags.checkout
-                  ? `${content.button} with the new checkout`
-                  : content.button}
+                {flags.checkout ? `${content.button} with the new checkout` : content.button}
               </button>
             </form>
           )}
@@ -64,11 +59,15 @@ export default function ({ request, visitor, variant, flags }) {
 
         <h2>Your assignment</h2>
         <p>
-          Visitor id <code>{visitor}</code> sees variant{" "}
-          <strong>{variant}</strong>.{" "}
-          <a href={`${PATH}?reset`}>Start as new visitor</a> to get a new id,
-          and maybe another variant.
+          Visitor id <code>{visitor}</code> sees variant <strong>{variant}</strong>.{" "}
+          <button type="submit" form="reset" class="ab-reset">
+            Start as new visitor
+          </button>{" "}
+          to get a new id, and maybe another variant.
         </p>
+        {/* A form, not a link: starting over changes state, which a GET (e.g. a prefetch) must not.
+            It can't sit inside the paragraph, so the button above points to it by its id. */}
+        <form id="reset" method="post" action={`${PATH}?reset`} hidden></form>
         <div class="ab-table">
           <table>
             <thead>
@@ -110,10 +109,9 @@ export default function ({ request, visitor, variant, flags }) {
         </div>
         <p>
           <small>
-            A flag is on if your bucket (0 to 99) is below its rollout. Raising
-            the rollout from 20% to 50% keeps it on for everyone who had it
-            before. Preview links turn a flag on for one request, e.g. for
-            testers.
+            A flag is on if your bucket (0 to 99) is below its rollout. Raising the rollout from 20%
+            to 50% keeps it on for everyone who had it before. Preview links turn a flag on for one
+            request, e.g. for testers.
           </small>
         </p>
 
@@ -130,34 +128,32 @@ export default function ({ request, visitor, variant, flags }) {
               </tr>
             </thead>
             <tbody>
-              {Object.entries(EXPERIMENT.variants).map(
-                ([name, { headline }]) => {
-                  const { views, conversions, rate } = results(name);
-                  return (
-                    <tr class={name === variant ? "ab-mine" : ""}>
-                      <td>
-                        <strong>{name}</strong>
-                      </td>
-                      <td>{headline}</td>
-                      <td class="ab-num">{views}</td>
-                      <td class="ab-num">{conversions}</td>
-                      <td class="ab-num">
-                        {rate.toFixed(1)}%
-                        <div class="ab-bar">
-                          <span style={`width: ${rate}%`} />
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                },
-              )}
+              {Object.entries(EXPERIMENT.variants).map(([name, { headline }]) => {
+                const { views, conversions, rate } = results(name);
+                return (
+                  <tr class={name === variant ? "ab-mine" : ""}>
+                    <td>
+                      <strong>{name}</strong>
+                    </td>
+                    <td>{headline}</td>
+                    <td class="ab-num">{views}</td>
+                    <td class="ab-num">{conversions}</td>
+                    <td class="ab-num">
+                      {rate.toFixed(1)}%
+                      <div class="ab-bar">
+                        <span style={`width: ${rate}%`} />
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
         <p>
           <small>
-            Each visitor counts once per column. The counts live in memory and
-            start over when the server restarts.
+            Each visitor counts once per column. The counts live in memory and start over when the
+            server restarts.
           </small>
         </p>
       </div>

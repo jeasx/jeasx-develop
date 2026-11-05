@@ -88,18 +88,11 @@ export default function () {
       <Sample
         title="Nothing at all"
         render={() => (
-          <p>
-            [{null}
-            {undefined}
-            {false}
-            {true}
-            {() => "a function"}
-            {{ plain: "object" }}]
-          </p>
+          <p>{[null, undefined, false, true, [], () => "a function", { plain: "object" }]}</p>
         )}
       >
-        <code>null</code>, <code>undefined</code>, booleans, functions and plain objects render
-        nothing.
+        <code>null</code>, <code>undefined</code>, booleans, empty arrays, functions and plain
+        objects render nothing.
       </Sample>
 
       <h2>Attributes</h2>

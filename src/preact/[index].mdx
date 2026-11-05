@@ -43,18 +43,8 @@ This island keeps its counter and loading state in component state and fetches t
 Each clock is a separate island, but all of them read the same signal, so they always tick together. Use this pattern whenever separate islands on a page need to share state.
 
 <div class="pr-clocks">
-  <Preact
-    component="Clock"
-    city="New York"
-    locale="en-US"
-    timeZone="America/New_York"
-  />
-  <Preact
-    component="Clock"
-    city="Berlin"
-    locale="de-DE"
-    timeZone="Europe/Berlin"
-  />
+  <Preact component="Clock" city="New York" locale="en-US" timeZone="America/New_York" />
+  <Preact component="Clock" city="Berlin" locale="de-DE" timeZone="Europe/Berlin" />
   <Preact component="Clock" city="Tokyo" locale="ja-JP" timeZone="Asia/Tokyo" />
 </div>
 

@@ -14,13 +14,6 @@
 .al {
   margin: 0 auto;
   max-width: 44rem;
-
-  & > h1 {
-    background: linear-gradient(120deg, var(--al-accent), var(--al-accent-2));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
 }
 
 .al-card {

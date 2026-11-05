@@ -12,9 +12,16 @@ for (const button of document.querySelectorAll("[data-accept]")) {
 
 playground.addEventListener("submit", async (event) => {
   event.preventDefault();
-  statusLine.textContent = "Loading...";
+  // Highlight the preset matching the header, also when it was typed by hand.
+  for (const button of document.querySelectorAll("[data-accept]")) {
+    const pressed = /** @type {HTMLElement} */ (button).dataset.accept === input.value.trim();
+    button.setAttribute("aria-pressed", String(pressed));
+  }
+  statusLine.textContent = "Loading…";
   try {
-    const response = await fetch(playground.action, { headers: { accept: input.value } });
+    const response = await fetch(playground.action, {
+      headers: { accept: input.value },
+    });
     statusLine.textContent = `${response.status} ${response.statusText} · Content-Type: ${response.headers.get("content-type")}`;
     const text = await response.text();
     // Indent JSON for reading. textContent shows HTML as source instead of rendering it.

@@ -1,4 +1,4 @@
-import Layout from "../Layout";
+import Layout, { addCacheBuster } from "../Layout";
 
 /** Time span of the bars in ms, a bit longer than the slowest possible delay. */
 const SCALE = 2100;
@@ -37,39 +37,29 @@ export default function () {
       <div class="sx">
         <h1>Out-of-order streaming</h1>
         <p>
-          Jeasx streams markup in order, so a slow component holds back
-          everything after it (see <a href="/streaming">Streaming HTML</a>).
-          Here, the results show up in the order they finish and still appear in
-          their place on the page.
+          Jeasx streams markup in order, so a slow component holds back everything after it (see{" "}
+          <a href="/streaming">Streaming HTML</a>). Here, the results show up in the order they
+          finish and still appear in their place on the page.
         </p>
         <p>
           This works without client-side JavaScript, thanks to{" "}
           <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/template#shadowrootmode">
             Declarative Shadow DOM
           </a>
-          : the container is sent first, with a <code>&lt;slot&gt;</code> for
-          each source and a loading indicator inside it. An async generator then
-          streams each result as soon as it's ready, marked with{" "}
-          <code>slot="…"</code>, and the browser moves it into the matching
-          slot.
+          : the container is sent first, with a <code>&lt;slot&gt;</code> for each source and a
+          loading indicator inside it. An async generator then streams each result as soon as it's
+          ready, marked with <code>slot="…"</code>, and the browser moves it into the matching slot.
         </p>
         <p class="center">
           <a class="sx-button" href="">
             Reload with new delays
           </a>
         </p>
-        {/* µCSS styles a shadow host without data-theme as light, so repeat the theme of the page. */}
-        <div data-theme="dark">
+        <div>
           <template shadowrootmode="open">
             {/* Page styles don't reach into a shadow root, so it links them itself. */}
-            <link
-              rel="stylesheet"
-              href={`/index.css?v=${process.env.BUILD_ID}`}
-            />
-            <link
-              rel="stylesheet"
-              href={`/out-of-order/index.css?v=${process.env.BUILD_ID}`}
-            />
+            <link rel="stylesheet" href={addCacheBuster("/index.css")} />
+            <link rel="stylesheet" href={addCacheBuster("/out-of-order/index.css")} />
             <div class="oo-grid">
               {SOURCES.map(({ id, name }) => (
                 <slot name={id}>
@@ -95,16 +85,11 @@ export default function () {
  */
 async function* InOrderOfCompletion({ results }) {
   const pending = new Map(
-    results.map((result, index) => [
-      index,
-      result.then((r) => /** @type {const} */ ([index, r])),
-    ]),
+    results.map((result, index) => [index, result.then((r) => /** @type {const} */ ([index, r]))]),
   );
   let position = 0;
   while (pending.size > 0) {
-    const [index, { id, name, value, time }] = await Promise.race(
-      pending.values(),
-    );
+    const [index, { id, name, value, time }] = await Promise.race(pending.values());
     pending.delete(index);
     position++;
     yield (
@@ -115,10 +100,7 @@ async function* InOrderOfCompletion({ results }) {
         <strong>{name}</strong>
         <p>{value}</p>
         <small>arrived after {time} ms</small>
-        <div
-          class="sx-bar"
-          style={`--to: ${Math.min(time / SCALE, 1).toFixed(3)}`}
-        ></div>
+        <div class="sx-bar" style={`--to: ${Math.min(time / SCALE, 1).toFixed(3)}`}></div>
       </article>
     );
   }
@@ -126,9 +108,7 @@ async function* InOrderOfCompletion({ results }) {
 
 /** Rendered after all results are streamed. */
 function Done({ start }) {
-  return (
-    <output class="sx-done">All done after {Date.now() - start} ms</output>
-  );
+  return <output class="sx-done">All done after {Date.now() - start} ms</output>;
 }
 
 /** Simulates a slow backend call with a random delay. */

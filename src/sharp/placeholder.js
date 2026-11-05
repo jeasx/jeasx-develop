@@ -1,7 +1,7 @@
 import { join } from "node:path";
 import sharp from "sharp";
 
-const LOCAL_IMAGE_DIR = join(process.cwd(), "public");
+const PUBLIC_DIR = join(process.cwd(), "public");
 
 /** @type {Map<string, Promise<string>>} The example uses a few fixed images, so keep them all. */
 const cache = new Map();
@@ -16,7 +16,7 @@ export function placeholder({ src, width, height, position }) {
   const key = JSON.stringify([src, width, height, position]);
   if (!cache.has(key)) {
     const scale = 24 / Math.max(width, height);
-    const promise = sharp(join(LOCAL_IMAGE_DIR, src))
+    const promise = sharp(join(PUBLIC_DIR, src))
       .resize({
         width: Math.round(width * scale),
         height: Math.round(height * scale),

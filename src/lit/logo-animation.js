@@ -83,10 +83,7 @@ class LogoAnimation extends LitElement {
     // The whole element acts as a button, so make it reachable by keyboard.
     this.tabIndex = 0;
     this.setAttribute("role", "button");
-    this.setAttribute(
-      "aria-label",
-      `${this.text} logo animation, press to pause or play`,
-    );
+    this.setAttribute("aria-label", `${this.text} logo animation, press to pause or play`);
   }
 
   /** @param {import("lit").PropertyValues<this>} changed */
@@ -113,9 +110,7 @@ class LogoAnimation extends LitElement {
             >`,
         )}
       </div>
-      <p class="hint">
-        ${this.paused ? "▶ Paused, click to play" : "⏸ Click to pause"}
-      </p>
+      <p class="hint">${this.paused ? "▶ Paused, click to play" : "⏸ Click to pause"}</p>
     `;
   }
 

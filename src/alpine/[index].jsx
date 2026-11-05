@@ -5,7 +5,7 @@ const CATEGORIES = [
   { key: "general", icon: "🥁", one: "a pun", many: "puns" },
 ];
 
-export default async function () {
+export default function () {
   return (
     <Layout
       title="Use Alpine.js with Jeasx"
@@ -16,11 +16,10 @@ export default async function () {
       <div class="al">
         <h1>Use Alpine.js with Jeasx</h1>
         <p>
-          <a href="https://alpinejs.dev">Alpine.js</a> is a minimal tool for
-          composing behavior directly in your markup. To use it with Jeasx,
-          import it in a browser bundle (see <code>index.js</code> of this
-          example) and add <code>x-</code> attributes to your JSX. The whole
-          state of the widget below lives in its <code>x-data</code> attribute.
+          <a href="https://alpinejs.dev">Alpine.js</a> is a minimal tool for composing behavior
+          directly in your markup. To use it with Jeasx, import it in a browser bundle (see{" "}
+          <code>index.js</code> of this example) and add <code>x-</code> attributes to your JSX. The
+          whole state of the widget below lives in its <code>x-data</code> attribute.
         </p>
         <h2>Joke machine</h2>
         <div
@@ -39,7 +38,7 @@ export default async function () {
                 this.error = '';
               } catch {
                 this.jokes = [];
-                this.error = 'The jokes could not be loaded. Please try again.';
+                this.error = `The jokes couldn't be loaded. Please try again.`;
               } finally {
                 this.loading = '';
               }
@@ -78,27 +77,16 @@ export default async function () {
                 x-bind:aria-busy={`loading === '${key}'`}
               >
                 <span aria-hidden="true">{icon}</span>{" "}
-                <span
-                  x-text={`counter === 1 ? 'Tell me ${one}' : \`Tell me \${counter} ${many}\``}
-                >
+                <span x-text={`counter === 1 ? 'Tell me ${one}' : \`Tell me \${counter} ${many}\``}>
                   Tell me 3 {many}
                 </span>
               </button>
             ))}
           </div>
-          <p
-            class="al-error"
-            role="alert"
-            x-show="error"
-            x-text="error"
-            x-cloak
-          />
+          <p class="al-error" role="alert" x-show="error" x-text="error" x-cloak />
           <ol class="al-jokes" aria-live="polite" x-show="jokes.length" x-cloak>
             <template x-for="(joke, index) in jokes" x-bind:key="index">
-              <li
-                x-text="joke"
-                x-bind:style="`animation-delay: ${index * 80}ms`"
-              />
+              <li x-text="joke" x-bind:style="`animation-delay: ${index * 80}ms`" />
             </template>
           </ol>
           <p class="al-empty" x-show="!jokes.length && !error">

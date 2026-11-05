@@ -13,9 +13,7 @@ function angles(seconds) {
 
 /** Seconds since the last midnight in the local time zone. */
 function secondsOfDay(date) {
-  return Math.round(
-    (date.getTime() - new Date(date).setHours(0, 0, 0, 0)) / 1000,
-  );
+  return Math.round((date.getTime() - new Date(date).setHours(0, 0, 0, 0)) / 1000);
 }
 
 export default function Clock() {
@@ -40,11 +38,7 @@ export default function Clock() {
 
   return (
     <figure className={`clock${now ? " ready" : ""}`}>
-      <svg
-        viewBox="0 0 200 200"
-        role="img"
-        aria-label={now ? now.toLocaleTimeString() : "Clock"}
-      >
+      <svg viewBox="0 0 200 200" role="img" aria-label={now ? now.toLocaleTimeString() : "Clock"}>
         <circle className="clock-face" cx="100" cy="100" r="96" />
         {TICKS.map((tick) => (
           <line

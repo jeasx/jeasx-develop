@@ -21,8 +21,7 @@ export const PomodoroTimer = component(() => {
 
   const total = () => (state.mode === "work" ? WORK_SECONDS : BREAK_SECONDS);
   const progress = () => 1 - state.remaining / total();
-  const minutes = () =>
-    String(Math.floor(state.remaining / 60)).padStart(2, "0");
+  const minutes = () => String(Math.floor(state.remaining / 60)).padStart(2, "0");
   const seconds = () => String(state.remaining % 60).padStart(2, "0");
 
   const tick = () => {
@@ -113,20 +112,13 @@ export const PomodoroTimer = component(() => {
       </div>
     </section>
     <div class="timer-controls">
-      <button
-        type="button"
-        class="timer-btn"
-        @click="${() => (state.running ? pause() : start())}"
-      >
+      <button type="button" class="timer-btn" @click="${() => (state.running ? pause() : start())}">
         ${() => (state.running ? "Pause" : "Start")}
       </button>
-      <button type="button" class="timer-btn timer-btn--sec" @click="${reset}">
-        Reset
-      </button>
+      <button type="button" class="timer-btn timer-btn--sec" @click="${reset}">Reset</button>
     </div>
     <p class="timer-sessions">
-      ${() => state.sessions}
-      ${() => (state.sessions === 1 ? "session" : "sessions")} completed
+      ${() => state.sessions} ${() => (state.sessions === 1 ? "session" : "sessions")} completed
     </p>
   </div>`;
 });

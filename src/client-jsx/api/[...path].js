@@ -13,8 +13,6 @@ export default async function ({ request, reply }) {
     reply.status(404);
     return {};
   }
-  await new Promise((resolve) =>
-    setTimeout(resolve, 200 + Math.random() * 600),
-  );
+  await new Promise((resolve) => setTimeout(resolve, 200 + Math.random() * 600));
   return planet;
 }

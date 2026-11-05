@@ -12,13 +12,10 @@ export default function () {
       <h1>Asynchronous JSX components in the browser</h1>
       <p>
         You can also use JSX components built with{" "}
-        <a href="https://github.com/jeasx/jsx-async-runtime">
-          jsx-async-runtime
-        </a>{" "}
-        in the browser for lightweight rendering of client-side markup. Pick
-        some planets: each one is an async component that fetches its own data
-        from a slow API, and all of them load in parallel before the markup is
-        rendered right in your browser.
+        <a href="https://github.com/jeasx/jsx-async-runtime">jsx-async-runtime</a> in the browser
+        for lightweight rendering of client-side markup. Pick some planets: each one is an async
+        component that fetches its own data from a slow API, and all of them load in parallel before
+        the markup is rendered right in your browser.
       </p>
       <form
         onsubmit={

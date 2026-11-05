@@ -18,10 +18,9 @@ export default function ({ request, reply }) {
       <div class="cte">
         <h1>Use HTMX with Jeasx</h1>
         <p>
-          Jeasx is a perfect match for <a href="https://four.htmx.org">HTMX</a>,
-          as every route can return an HTML fragment. Click "Save" to see your
-          entries and "Edit" to change them again: HTMX swaps only the form,
-          while the server time below updates itself every second. Without
+          Jeasx is a perfect match for <a href="https://four.htmx.org">HTMX</a>, as every route can
+          return an HTML fragment. Click "Save" to see your entries and "Edit" to change them again:
+          HTMX swaps only the form, while the server time below updates itself every second. Without
           JavaScript, the same forms reload the whole page.
         </p>
         {body["action"] === "edit" ? (
