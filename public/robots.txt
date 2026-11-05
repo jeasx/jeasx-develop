@@ -1,3 +1,2 @@
 User-agent: *
-Allow: /
-Sitemap: https://expo.jeasx.dev/sitemap.xml
+Disallow: /
