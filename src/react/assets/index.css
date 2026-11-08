@@ -1,13 +1,10 @@
-@import "./components/Clock.css";
-@import "./components/Lottery.css";
-
 :root {
   --re-accent: #58c4dc;
   --re-accent-2: #087ea4;
   --re-gold: #fbbf24;
-  --re-line: rgba(127, 127, 127, 0.2);
+  --re-line: rgba(127, 127, 127, 0.25);
   --re-soft: rgba(127, 127, 127, 0.07);
-  --re-muted: rgba(127, 127, 127, 0.9);
+  --re-muted: rgba(127, 127, 127, 0.95);
 }
 
 .re {
@@ -15,18 +12,239 @@
   max-width: 52rem;
 }
 
-.re-islands {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr));
-  align-items: start;
-  gap: 2rem;
+.re-card {
+  margin-bottom: 2rem;
+  border: 1px solid var(--re-line);
+  border-radius: 1rem;
+  background:
+    radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--re-accent) 14%, transparent), transparent 45%),
+    var(--re-soft);
+  padding: 1.5rem;
+}
 
-  & h2 {
-    margin-bottom: 0.5rem;
+.re-btn {
+  margin: 0;
+  width: auto;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(120deg, var(--re-accent), var(--re-accent-2));
+  padding: 0.55rem 1.3rem;
+  color: #fff;
+  font-weight: 600;
+
+  &.ghost {
+    border: 1px solid var(--re-line);
+    background: transparent;
+    color: inherit;
+    font-weight: normal;
   }
 
-  & p {
-    min-height: 3em;
-    font-size: 0.9rem;
+  &.playing {
+    background: linear-gradient(120deg, #f472b6, #db2777);
+  }
+}
+
+/* Memory */
+.memory-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.25rem;
+  margin-bottom: 1rem;
+  color: var(--re-muted);
+  font-variant-numeric: tabular-nums;
+
+  & b {
+    color: var(--re-accent);
+    font-size: 1.2rem;
+  }
+
+  & button {
+    margin-left: auto;
+  }
+}
+
+.memory-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.6rem;
+  max-width: 26rem;
+  margin: 0 auto;
+}
+
+.memory-card {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  aspect-ratio: 1;
+  perspective: 600px;
+}
+
+.memory-inner {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.45s cubic-bezier(0.3, 1.4, 0.5, 1);
+  transform-style: preserve-3d;
+}
+
+.memory-card.up .memory-inner {
+  transform: rotateY(180deg);
+}
+
+.memory-back,
+.memory-front {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 0.75rem;
+  backface-visibility: hidden;
+}
+
+.memory-back {
+  background: linear-gradient(135deg, var(--re-accent-2), #0b3b4f);
+  color: rgb(255 255 255 / 0.5);
+  font-size: 1.8rem;
+  box-shadow: inset 0 0 0 2px rgb(255 255 255 / 0.1);
+}
+
+.memory-card:hover:not(.up) .memory-back {
+  box-shadow: inset 0 0 0 2px var(--re-accent);
+}
+
+.memory-front {
+  transform: rotateY(180deg);
+  border: 2px solid var(--re-line);
+  background: var(--re-soft);
+  font-size: 2.2rem;
+}
+
+.memory-card.matched .memory-front {
+  border-color: var(--re-gold);
+  background: color-mix(in srgb, var(--re-gold) 15%, transparent);
+  animation: memory-pop 0.4s 0.3s;
+}
+
+.memory-win {
+  margin: 1.25rem 0 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-align: center;
+  animation: memory-win 0.5s;
+}
+
+@keyframes memory-pop {
+  50% {
+    transform: rotateY(180deg) scale(1.12);
+  }
+}
+
+@keyframes memory-win {
+  from {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+}
+
+/* Beats */
+.beats-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.25rem;
+  margin-bottom: 1.25rem;
+
+  & label {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 0;
+    min-width: 12rem;
+  }
+
+  & label span {
+    white-space: nowrap;
+    color: var(--re-muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  & label b {
+    color: var(--re-accent);
+  }
+
+  & input {
+    margin: 0;
+    accent-color: var(--re-accent);
+  }
+}
+
+.beats-grid {
+  display: grid;
+  gap: 0.4rem;
+  overflow-x: auto;
+}
+
+.beats-row {
+  display: grid;
+  grid-template-columns: 4.5rem repeat(16, minmax(1.4rem, 1fr));
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.beats-name {
+  color: var(--c);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.beats-pad {
+  margin: 0;
+  padding: 0;
+  height: 2.2rem;
+  border: 1px solid var(--re-line);
+  border-radius: 0.35rem;
+  background: var(--re-soft);
+  transition:
+    background 0.1s,
+    transform 0.1s,
+    box-shadow 0.1s;
+
+  &.beat {
+    border-color: color-mix(in srgb, var(--re-muted) 60%, transparent);
+  }
+
+  &:hover {
+    border-color: var(--c);
+  }
+
+  &.on {
+    border-color: transparent;
+    background: var(--c);
+    box-shadow: 0 0 0.6rem color-mix(in srgb, var(--c) 60%, transparent);
+  }
+
+  &.now {
+    transform: scaleY(1.1);
+    background: color-mix(in srgb, var(--c) 30%, transparent);
+  }
+
+  &.on.now {
+    background: #fff;
+    box-shadow: 0 0 1rem var(--c);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .memory-inner,
+  .beats-pad {
+    transition: none;
+  }
+  .memory-card.matched .memory-front,
+  .memory-win {
+    animation: none;
   }
 }

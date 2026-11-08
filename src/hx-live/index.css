@@ -1,114 +1,215 @@
 :root {
   --hl-accent: #3b82f6;
   --hl-accent-2: #8b5cf6;
-  --hl-line: rgba(127, 127, 127, 0.2);
+  --hl-line: rgba(127, 127, 127, 0.22);
   --hl-soft: rgba(127, 127, 127, 0.07);
-  --hl-muted: rgba(127, 127, 127, 0.9);
+  --hl-muted: rgba(127, 127, 127, 0.95);
+  --hue-track: linear-gradient(
+    90deg,
+    hsl(0 90% 60%),
+    hsl(60 90% 60%),
+    hsl(120 90% 60%),
+    hsl(180 90% 60%),
+    hsl(240 90% 60%),
+    hsl(300 90% 60%),
+    hsl(360 90% 60%)
+  );
 }
 
-.hl-card {
-  margin: 1.5rem 0;
+/* Preview and controls side by side, the code below; stacked on phones. */
+.hl-playground {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1.25rem;
+  margin: 2rem 0;
+  padding: 1.5rem;
   border: 1px solid var(--hl-line);
-  border-radius: 0.75rem;
+  border-radius: 1rem;
   background: var(--hl-soft);
-  padding: 1.25rem 1.5rem;
 }
 
-.hl-bar {
+@media (max-width: 48rem) {
+  .hl-playground {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.hl-preview-wrap {
+  display: grid;
+  place-items: center;
+  min-height: 18rem;
+  border-radius: 0.75rem;
+  /* A checkerboard, so the glow stands out. */
+  background: repeating-conic-gradient(var(--hl-soft) 0 25%, transparent 0 50%) 0 0 / 1.5rem 1.5rem;
+}
+
+.hl-preview {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 0.25rem;
+  width: min(14rem, 80%);
+  aspect-ratio: 1;
+  color: #fff;
+  text-shadow: 0 1px 4px rgb(0 0 0 / 0.3);
+  transition:
+    background 0.3s,
+    border-radius 0.3s,
+    box-shadow 0.3s;
+
+  & span {
+    font-size: 1.6rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+
+  & small {
+    opacity: 0.85;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.hl-controls {
+  display: grid;
+  align-content: start;
+  gap: 0.9rem;
+}
+
+.hl-presets {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
+  gap: 0.4rem;
 
-  & h2 {
+  & button {
     margin: 0;
-    font-size: 1.25rem;
-  }
-
-  & nav {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  & nav button {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    margin: 0;
-    padding: 0;
-    line-height: 1;
-    border: 1px solid var(--hl-line);
+    width: auto;
+    padding: 0.35rem 0.8rem;
+    border: 2px solid transparent;
     border-radius: 999px;
-    background: transparent;
-    width: 2.25rem;
-    height: 2.25rem;
-    color: inherit;
-    font-size: 1.1rem;
+    background: linear-gradient(120deg, var(--a), var(--b)) padding-box;
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgb(0 0 0 / 0.3);
+    transition: transform 0.15s;
 
-    &:disabled {
-      opacity: 0.35;
-      cursor: not-allowed;
+    &:hover {
+      transform: translateY(-1px);
     }
+
+    &.active {
+      border-color: currentColor;
+      box-shadow: 0 0 0 2px var(--hl-line);
+    }
+  }
+
+  & .hl-random {
+    border: 1px solid var(--hl-line);
+    background: transparent;
+    color: inherit;
+    text-shadow: none;
+  }
+}
+
+.hl-slider {
+  display: grid;
+  gap: 0.3rem;
+  margin: 0;
+  font-size: 0.85rem;
+
+  & span {
+    display: flex;
+    justify-content: space-between;
+    color: var(--hl-muted);
   }
 
   & output {
-    min-width: 3.5rem;
-    line-height: 1;
-    color: var(--hl-muted);
+    color: inherit;
+    font-weight: 600;
     font-variant-numeric: tabular-nums;
-    text-align: center;
+  }
+
+  & input {
+    margin: 0;
+    accent-color: var(--hl-accent);
+  }
+
+  /* Hue sliders show the whole color wheel on their track. */
+  & input[style*="--track"] {
+    height: 0.6rem;
+    border-radius: 999px;
+    background: var(--track);
+    appearance: none;
+  }
+
+  & input[style*="--track"]::-webkit-slider-thumb {
+    appearance: none;
+    width: 1.1rem;
+    height: 1.1rem;
+    border: 3px solid #fff;
+    border-radius: 50%;
+    background: transparent;
+    box-shadow: 0 0 0 1px rgb(0 0 0 / 0.3);
+  }
+
+  & input[style*="--track"]::-moz-range-thumb {
+    width: 0.8rem;
+    height: 0.8rem;
+    border: 3px solid #fff;
+    border-radius: 50%;
+    background: transparent;
+    box-shadow: 0 0 0 1px rgb(0 0 0 / 0.3);
   }
 }
 
-.hl-actions {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
-  gap: 0.75rem;
+.hl-code {
+  grid-column: 1 / -1;
+  overflow: hidden;
+  border: 1px solid var(--hl-line);
+  border-radius: 0.75rem;
+  background: #1e1f26;
+  color: #f8f8f2;
+
+  & header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0.9rem;
+    border-bottom: 1px solid rgb(255 255 255 / 0.08);
+    color: rgb(255 255 255 / 0.6);
+    font-size: 0.8rem;
+  }
 
   & button {
-    cursor: pointer;
-    border: 0;
-    border-radius: 0.5rem;
-    background: linear-gradient(120deg, var(--hl-accent), var(--hl-accent-2));
-    padding: 0.75rem 1rem;
-    color: #fff;
-    font-weight: 600;
+    margin: 0;
+    width: auto;
+    padding: 0.2rem 0.75rem;
+    border: 1px solid rgb(255 255 255 / 0.2);
+    border-radius: 999px;
+    background: transparent;
+    color: inherit;
+    font-size: 0.8rem;
+  }
 
-    &:disabled {
-      opacity: 0.6;
-      cursor: wait;
-    }
+  & pre {
+    margin: 0;
+    padding: 1rem;
+    background: none;
+    overflow-x: auto;
+  }
+
+  & code {
+    padding: 0;
+    background: none;
+    color: inherit;
+    font-size: 0.85rem;
+    white-space: pre;
   }
 }
 
-.hl-error:not(:empty) {
-  margin: 1rem 0 0;
-  color: #dc2626;
-}
-
-.hl-jokes {
-  margin: 1rem 0 0;
-  padding: 0;
-  list-style: none;
-
-  & li {
-    list-style: none;
-    animation: hl-fade 0.3s ease-out both;
-    margin-top: 0.5rem;
-    border-left: 3px solid var(--hl-accent);
-    border-radius: 0.25rem;
-    background: var(--hl-soft);
-    padding: 0.6rem 0.9rem;
-  }
-}
-
-@keyframes hl-fade {
-  from {
-    transform: translateY(0.25rem);
-    opacity: 0;
+@media (prefers-reduced-motion: reduce) {
+  .hl-preview,
+  .hl-presets button {
+    transition: none;
   }
 }

@@ -1,10 +1,9 @@
 :root {
-  --al-accent: #77c1d2;
-  --al-accent-2: #2d8fa6;
-  --al-line: rgba(127, 127, 127, 0.2);
+  --al-accent: #c8864a;
+  --al-accent-2: #8a4f24;
+  --al-line: rgba(127, 127, 127, 0.25);
   --al-soft: rgba(127, 127, 127, 0.07);
-  --al-muted: rgba(127, 127, 127, 0.9);
-  --al-error: #ef4444;
+  --al-muted: rgba(127, 127, 127, 0.95);
 }
 
 [x-cloak] {
@@ -13,7 +12,22 @@
 
 .al {
   margin: 0 auto;
-  max-width: 44rem;
+  max-width: 60rem;
+}
+
+/* Builder and order side by side; stacked on narrow screens. */
+.al-bar {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: 1.25rem;
+  align-items: start;
+  margin-top: 2rem;
+}
+
+@media (max-width: 768px) {
+  .al-bar {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 .al-card {
@@ -23,104 +37,242 @@
   border-radius: 1rem;
   background: var(--al-soft);
   padding: 1.5rem;
-}
 
-.al-stepper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 1rem;
-
-  & button {
+  & h2 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
     margin: 0;
-    border: 1px solid var(--al-line);
-    border-radius: 50%;
-    background: transparent;
-    padding: 0;
-    width: 2.5rem;
-    height: 2.5rem;
-    color: inherit;
     font-size: 1.25rem;
-    line-height: 1;
-
-    &:hover:not(:disabled) {
-      border-color: var(--al-accent);
-    }
-  }
-
-  & output {
-    min-width: 5rem;
-    text-align: center;
-  }
-
-  & strong {
-    display: block;
-    color: var(--al-accent);
-    font-size: 2rem;
-    line-height: 1;
-    font-variant-numeric: tabular-nums;
-  }
-
-  & span {
-    color: var(--al-muted);
-    font-size: 0.85rem;
   }
 }
 
-.al-actions {
+.al-card fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.al-card legend {
+  margin-bottom: 0.5rem;
+  color: var(--al-muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* The native inputs stay for keyboard and screen readers, but are visually hidden. */
+.al-card label input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.al-card label {
+  margin: 0;
+  cursor: pointer;
+}
+
+.al-card label:has(input:focus-visible) {
+  outline: 2px solid var(--al-accent);
+  outline-offset: 2px;
+}
+
+.al-drinks {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr));
   gap: 0.75rem;
+}
+
+.al-tile {
+  display: grid;
+  justify-items: center;
+  gap: 0.15rem;
+  padding: 1rem 0.5rem;
+  border: 2px solid var(--al-line);
+  border-radius: 0.75rem;
+  text-align: center;
+  transition: border-color 0.2s, transform 0.2s, background 0.2s;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+
+  & .al-icon {
+    font-size: 2rem;
+  }
+
+  & small {
+    color: var(--al-muted);
+  }
+
+  &:has(input:checked) {
+    border-color: var(--al-accent);
+    background: color-mix(in srgb, var(--al-accent) 15%, transparent);
+  }
+}
+
+.al-segments {
+  display: flex;
+  border: 1px solid var(--al-line);
+  border-radius: 999px;
+  padding: 0.25rem;
+}
+
+.al-seg {
+  flex: 1;
+  padding: 0.45rem;
+  border-radius: 999px;
+  text-align: center;
+  transition: background 0.2s, color 0.2s;
+
+  &:has(input:checked) {
+    background: var(--al-accent);
+    color: #fff;
+  }
+}
+
+.al-extras {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.al-chip span {
+  display: inline-block;
+  padding: 0.4rem 0.85rem;
+  border: 1px solid var(--al-line);
+  border-radius: 999px;
+  font-size: 0.9rem;
+  transition: border-color 0.2s, background 0.2s;
+
+  & small {
+    color: var(--al-muted);
+  }
+}
+
+.al-chip:has(input:checked) span {
+  border-color: var(--al-accent);
+  background: color-mix(in srgb, var(--al-accent) 15%, transparent);
+}
+
+.al-chip:has(input:checked) span::before {
+  content: "✓ ";
+  color: var(--al-accent);
+}
+
+.al-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 1.25rem;
+  border-top: 1px dashed var(--al-line);
+
+  & > div {
+    display: grid;
+  }
+}
+
+.al-price {
+  color: var(--al-accent);
+  font-size: 1.75rem;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
 }
 
 .al-btn {
   margin: 0;
+  width: auto;
   border: 0;
   border-radius: 999px;
   background: linear-gradient(120deg, var(--al-accent), var(--al-accent-2));
-  padding: 0.7rem 1.25rem;
+  padding: 0.75rem 1.5rem;
   color: #fff;
   font-weight: 600;
 }
 
-.al-jokes {
-  display: grid;
-  gap: 0.75rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  counter-reset: joke;
+.al-muted {
+  color: var(--al-muted);
+}
+
+.al-count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.6rem;
+  height: 1.6rem;
+  padding: 0 0.4rem;
+  border-radius: 999px;
+  background: var(--al-accent);
+  color: #fff;
+  font-size: 0.85rem;
+}
+
+.al-order {
+  & p {
+    margin: 0;
+  }
+
+  & ul {
+    display: grid;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
 
   & li {
-    position: relative;
-    border-left: 3px solid var(--al-accent);
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 0;
+    padding: 0.6rem 0.75rem;
     border-radius: 0.5rem;
     background: var(--al-soft);
-    padding: 0.75rem 1rem 0.75rem 3rem;
-    animation: al-slide-in 0.35s ease-out backwards;
-    counter-increment: joke;
+    animation: al-slide-in 0.3s ease-out;
+    font-variant-numeric: tabular-nums;
 
-    &::before {
-      position: absolute;
-      top: 0.75rem;
-      left: 1rem;
-      color: var(--al-accent);
-      font-weight: 700;
-      content: counter(joke);
+    & > span:nth-child(2) {
+      display: grid;
+    }
+
+    & .al-icon {
+      font-size: 1.5rem;
     }
   }
 }
 
-.al-empty {
+.al-remove {
   margin: 0;
-  color: var(--al-muted);
-  text-align: center;
+  width: 1.8rem;
+  height: 1.8rem;
+  padding: 0;
+  border: 1px solid var(--al-line);
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  line-height: 1;
+
+  &:hover {
+    border-color: var(--al-accent);
+    color: var(--al-accent);
+  }
 }
 
-.al-error {
-  margin: 0;
-  color: var(--al-error);
-  text-align: center;
+.al-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-top: 1rem;
+  border-top: 1px dashed var(--al-line);
+
+  & strong {
+    color: var(--al-accent);
+    font-size: 1.5rem;
+  }
 }
 
 @keyframes al-slide-in {
@@ -131,7 +283,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .al-jokes li {
+  .al-tile,
+  .al-order li {
     animation: none;
+    transition: none;
   }
 }

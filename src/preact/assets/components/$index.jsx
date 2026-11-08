@@ -1,4 +1,4 @@
 import Clock from "./Clock";
-import Jokes from "./Jokes";
+import Palette from "./Palette";
 
-export default { Clock, Jokes };
+export default { Clock, Palette };

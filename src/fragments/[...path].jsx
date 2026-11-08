@@ -45,39 +45,81 @@ export default function ({ request }) {
           <a href="https://htmx.org/essays/template-fragments">Template fragments</a> allow you to
           render a fragment or partial bit of the content within a template, rather than the entire
           template. In Jeasx you can implement this feature in userland with just a few lines of
-          code bundled in two simple components. Each part below is requested from this very route:
-          the buttons ask for <code>~product</code>, the clock for <code>~time</code>.
+          code bundled in two simple components. Both cards below come from this very route: the
+          pager asks for <code>~product</code>, the clock for <code>~time</code>. Watch the log to
+          see how small the answers are.
         </p>
       </Fragment>
-      <Fragment name="product">
-        <form hx-get="./~product" hx-swap="outerHTML" hx-target="closest form" class="tf-card">
-          <header class="tf-bar">
-            <h2>Product browser</h2>
-            <nav>
-              <button
-                name="id"
-                type="submit"
-                value={id - 1}
-                disabled={id === 1}
-                aria-label="Previous"
-              >
-                &laquo;
+      <Wrapper class="tf-layout">
+        <Fragment name="product">
+          <form
+            hx-get="./~product"
+            hx-swap="outerHTML"
+            hx-target="closest form"
+            class="tf-card tf-products"
+          >
+            <header class="tf-bar">
+              <h2>Product browser</h2>
+              <a class="tf-raw" href={`./~product?id=${id}`} target="_blank">
+                raw fragment ↗
+              </a>
+            </header>
+            <div class="tf-stage">
+              <Product id={id} />
+              <span class="tf-spinner" aria-hidden="true"></span>
+            </div>
+            <nav class="tf-pager" aria-label="Products">
+              <button name="id" type="submit" value={id - 1} disabled={id === 1} aria-label="Previous">
+                ‹
               </button>
-              <output>{id} / 10</output>
+              {Array.from({ length: 10 }, (_, index) => index + 1).map((page) => (
+                <button
+                  name="id"
+                  type="submit"
+                  value={page}
+                  class={page === id ? "current" : undefined}
+                  aria-current={page === id ? "page" : undefined}
+                >
+                  {page}
+                </button>
+              ))}
               <button name="id" type="submit" value={id + 1} disabled={id === 10} aria-label="Next">
-                &raquo;
+                ›
               </button>
             </nav>
-          </header>
-          <Product id={id} />
-        </form>
-      </Fragment>
-      <Fragment name="time">
-        <p hx-get="./~time" hx-trigger="every 1s" hx-swap="outerHTML" class="tf-time">
-          Current server time
-          <output>{new Date().toLocaleTimeString("en-GB")}</output>
-        </p>
-      </Fragment>
+          </form>
+        </Fragment>
+        <Wrapper class="tf-side">
+          <Fragment name="time">
+            <div hx-get="./~time" hx-trigger="every 1s" hx-swap="outerHTML" class="tf-card tf-time">
+              <header class="tf-bar">
+                <h2>Server time</h2>
+                <a class="tf-raw" href="./~time" target="_blank">
+                  raw fragment ↗
+                </a>
+              </header>
+              <output>
+                {new Date()
+                  .toLocaleTimeString("en-GB")
+                  .split("")
+                  .map((char) => (char === ":" ? <i>:</i> : <b>{char}</b>))}
+              </output>
+              <small>refreshed every second</small>
+            </div>
+          </Fragment>
+          <Fragment>
+            <section class="tf-card tf-log">
+              <header class="tf-bar">
+                <h2>Fragment log</h2>
+                <span class="tf-pulse" aria-hidden="true"></span>
+              </header>
+              <ol id="tf-log" aria-live="off">
+                <li class="tf-log-empty">Waiting for the first request…</li>
+              </ol>
+            </section>
+          </Fragment>
+        </Wrapper>
+      </Wrapper>
     </Fragments>
   );
 }
@@ -101,4 +143,12 @@ function Fragment({ name = undefined, children }) {
   if (!this.fragment || name === this.fragment) {
     return <>{children}</>;
   }
+}
+
+/**
+ * A layout wrapper which only exists on the full page, so fragments come without it.
+ * @this {import("../types").ThisContext & { fragment?: string }}
+ */
+function Wrapper({ children, ...props }) {
+  return this.fragment ? <>{children}</> : <div {...props}>{children}</div>;
 }

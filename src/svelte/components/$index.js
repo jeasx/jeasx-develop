@@ -1,5 +1,5 @@
-import Todos from "./todos.svelte";
-import Counter from "./counter.svelte";
-import Crud from "./crud.svelte";
+import Budget from "./budget.svelte";
+import Card from "./card.svelte";
+import Quiz from "./quiz.svelte";
 
-export default { Todos, Counter, Crud };
+export default { Budget, Card, Quiz };

@@ -1,29 +1,43 @@
 :root {
   --tf-accent: #3b82f6;
   --tf-accent-2: #8b5cf6;
-  --tf-line: rgba(127, 127, 127, 0.2);
+  --tf-line: rgba(127, 127, 127, 0.22);
   --tf-soft: rgba(127, 127, 127, 0.07);
-  --tf-muted: rgba(127, 127, 127, 0.9);
+  --tf-muted: rgba(127, 127, 127, 0.95);
 }
 
-/* Product browser, swapped as a whole by the "~product" fragment */
-.tf-card {
-  transition: opacity 0.3s;
-  margin: 1.5rem 0;
-  border: 1px solid var(--tf-line);
-  border-radius: 0.75rem;
-  background: var(--tf-soft);
-  padding: 1.25rem 1.5rem;
+/* Product browser beside the clock and the log; stacked on narrow screens. */
+.tf-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  align-items: start;
+  gap: 1.25rem;
+  margin-top: 2rem;
+}
 
-  /* Fade the swapped-in fragment in, so the change is noticeable. */
-  &.htmx-added {
-    opacity: 0;
+@media (max-width: 52rem) {
+  .tf-layout {
+    grid-template-columns: minmax(0, 1fr);
   }
+}
+
+.tf-side {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.tf-card {
+  margin: 0;
+  border: 1px solid var(--tf-line);
+  border-radius: 1rem;
+  background:
+    radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--tf-accent) 12%, transparent), transparent 50%),
+    var(--tf-soft);
+  padding: 1.25rem 1.5rem;
 }
 
 .tf-bar {
   display: flex;
-  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
   gap: 0.75rem;
@@ -31,49 +45,86 @@
 
   & h2 {
     margin: 0;
+    font-size: 1.1rem;
   }
+}
 
-  & nav {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
+.tf-raw {
+  font-size: 0.8rem;
+  text-decoration: none;
+  color: var(--tf-muted);
 
-  & button {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    margin: 0;
-    padding: 0.25rem 0.9rem;
-    line-height: 1;
+  &:hover {
+    color: var(--tf-accent);
   }
+}
 
-  & output {
-    min-width: 4rem;
-    line-height: 1;
-    color: var(--tf-muted);
-    font-variant-numeric: tabular-nums;
-    text-align: center;
+/* Product browser, swapped as a whole by the "~product" fragment */
+.tf-products {
+  transition: opacity 0.3s;
+
+  /* Fade the swapped-in fragment in, so the change is noticeable. */
+  &.htmx-added {
+    opacity: 0;
   }
+}
+
+.tf-stage {
+  position: relative;
+  min-height: 12rem;
+}
+
+/* While a request runs, the product dims and a spinner shows up. */
+.tf-spinner {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: 2rem;
+  height: 2rem;
+  margin: -1rem 0 0 -1rem;
+  border: 3px solid var(--tf-line);
+  border-top-color: var(--tf-accent);
+  border-radius: 50%;
+  opacity: 0;
+  animation: tf-spin 0.8s linear infinite;
+  transition: opacity 0.2s;
+}
+
+.htmx-request .tf-spinner {
+  opacity: 1;
+}
+
+.htmx-request .tf-product {
+  opacity: 0.35;
+  filter: blur(2px);
 }
 
 .tf-product {
   display: grid;
-  grid-template-columns: 200px 1fr;
+  grid-template-columns: 160px 1fr;
   align-items: start;
   gap: 1.25rem;
   margin: 0;
+  transition:
+    opacity 0.2s,
+    filter 0.2s;
 
   & img {
-    border-radius: 0.5rem;
+    width: 160px;
+    height: 160px;
+    border-radius: 0.75rem;
+    background: #fff;
+    box-shadow: 0 0.5rem 1.5rem rgb(7 8 12 / 0.3);
   }
 
   & h3 {
     margin: 0 0 0.25rem;
+    font-size: 1.15rem;
   }
 
   & p {
     margin: 0.5rem 0 0;
+    color: var(--tf-muted);
+    font-size: 0.9rem;
   }
 
   @media (max-width: 32rem) {
@@ -84,8 +135,12 @@
 }
 
 .tf-price {
-  color: var(--tf-accent);
-  font-size: 1.25rem;
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  background: linear-gradient(120deg, var(--tf-accent), var(--tf-accent-2));
+  color: #fff;
+  font-size: 1rem;
 }
 
 .tf-empty {
@@ -93,19 +148,167 @@
   font-style: italic;
 }
 
-/* Server time, swapped every second by the "~time" fragment */
-.tf-time {
+.tf-pager {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  align-items: baseline;
-  gap: 0.5rem;
-  color: var(--tf-muted);
+  gap: 0.3rem;
+  margin-top: 1.25rem;
+
+  & button {
+    display: grid;
+    place-items: center;
+    width: 2.1rem;
+    height: 2.1rem;
+    margin: 0;
+    padding: 0;
+    border: 1px solid var(--tf-line);
+    border-radius: 50%;
+    background: transparent;
+    color: inherit;
+    font-size: 0.85rem;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+
+    &:hover:not(:disabled) {
+      border-color: var(--tf-accent);
+    }
+
+    &.current {
+      border-color: transparent;
+      background: linear-gradient(120deg, var(--tf-accent), var(--tf-accent-2));
+      color: #fff;
+      font-weight: 700;
+    }
+  }
+}
+
+/* Server time, swapped every second by the "~time" fragment */
+.tf-time {
+  text-align: center;
 
   & output {
-    color: var(--tf-accent);
-    font-weight: 600;
-    font-variant-numeric: tabular-nums;
+    display: flex;
+    justify-content: center;
+    gap: 0.2rem;
     font-family: ui-monospace, monospace;
+    font-variant-numeric: tabular-nums;
+  }
+
+  & b {
+    display: grid;
+    place-items: center;
+    width: 1.9rem;
+    height: 2.6rem;
+    border-radius: 0.4rem;
+    background: color-mix(in srgb, var(--tf-accent) 18%, transparent);
+    color: var(--tf-accent);
+    font-size: 1.6rem;
+  }
+
+  /* The last digit changes on every swap, so it gets a little flip. */
+  & b:last-child {
+    animation: tf-flip 0.4s ease-out;
+  }
+
+  & i {
+    align-self: center;
+    color: var(--tf-muted);
+    font-style: normal;
+    font-size: 1.4rem;
+  }
+
+  & small {
+    display: block;
+    margin-top: 0.6rem;
+    color: var(--tf-muted);
+  }
+}
+
+/* Log of all fragment requests, filled by index.js */
+.tf-log ol {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tf-log li {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0.4rem 0.6rem;
+  border-left: 3px solid var(--tf-accent-2);
+  border-radius: 0.4rem;
+  background: var(--tf-soft);
+  font-size: 0.8rem;
+  animation: tf-in 0.3s ease-out;
+
+  &.product {
+    border-left-color: var(--tf-accent);
+  }
+
+  & code {
+    padding: 0;
+    background: none;
+    font-size: 0.8rem;
+  }
+
+  & span {
+    color: var(--tf-muted);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+
+  &.tf-log-empty {
+    border: 0;
+    color: var(--tf-muted);
+  }
+}
+
+.tf-pulse {
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 0 0 rgb(34 197 94 / 0.6);
+  animation: tf-pulse 1.6s infinite;
+}
+
+@keyframes tf-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes tf-flip {
+  from {
+    transform: rotateX(90deg);
+  }
+}
+
+@keyframes tf-in {
+  from {
+    transform: translateX(-0.5rem);
+    opacity: 0;
+  }
+}
+
+@keyframes tf-pulse {
+  70% {
+    box-shadow: 0 0 0 0.5rem rgb(34 197 94 / 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgb(34 197 94 / 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tf-time b:last-child,
+  .tf-log li,
+  .tf-pulse {
+    animation: none;
   }
 }

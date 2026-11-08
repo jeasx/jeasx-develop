@@ -32,11 +32,11 @@ Have a look at the [source code of this page](https://github.com/jeasx/jeasx-exp
 
 </details>
 
-## Joke machine
+## Palette generator
 
-This island keeps its counter and loading state in component state and fetches the jokes from the jokes API.
+This island keeps its colors, locks and copy feedback in component state, and uses effects for the keyboard shortcut and the timer. The starting colors are props from the server, so the page shows a palette before any JavaScript runs.
 
-<Preact component="Jokes" api="/jokes/api" initial={3} />
+<Preact component="Palette" colors={["#264653", "#2a9d8f", "#e9c46a", "#f4a261", "#e76f51"]} />
 
 ## World clocks
 

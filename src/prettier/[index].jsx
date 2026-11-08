@@ -1,4 +1,5 @@
 import * as prettier from "prettier";
+import highlightMarkup from "../@helpers/highlightMarkup";
 import toText from "../@helpers/toText";
 import Layout from "../Layout";
 
@@ -24,12 +25,12 @@ export default function ({ request, reply }) {
       if (html === undefined) {
         return payload;
       }
-      reply.type("text/plain; charset=utf-8");
-      return await prettier.format(html, {
+      const markup = await prettier.format(html, {
         parser: "html",
         printWidth: toOption(request.query["printWidth"], PRINT_WIDTH),
         tabWidth: toOption(request.query["tabWidth"], TAB_WIDTH),
       });
+      return highlightMarkup(markup);
     };
   }
 

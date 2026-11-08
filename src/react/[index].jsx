@@ -45,23 +45,31 @@ export default function () {
             to see how the components are rendered on the server and hydrated in the browser.
           </p>
         </details>
-        <div class="re-islands">
-          <section>
-            <h2>Lottery</h2>
-            <p class="center">
-              Pick six numbers or let chance decide, then draw. Everything is derived from two
-              pieces of state.
-            </p>
-            <React component="Lottery" title="6 out of 49" />
-          </section>
-          <section>
-            <h2>Analog clock</h2>
-            <p class="center">
-              An effect starts the timer after hydration and cleans it up when the component
-              unmounts.
-            </p>
-            <React component="Clock" />
-          </section>
+        <h2>Memory</h2>
+        <p>
+          All rules live in one <code>useReducer</code>, an effect flips mismatched cards back, and
+          the deck is shuffled with a seed from the server, so the hydrated markup matches.
+        </p>
+        <div class="re-card">
+          <React component="Memory" seed={Math.floor(Math.random() * 1e9)} />
+        </div>
+        <h2>Beat sequencer</h2>
+        <p>
+          Click the pads and press play: the sounds are synthesized with the Web Audio API, an effect
+          runs the timer, and refs let it read the latest pattern without restarting. Turn your
+          sound on!
+        </p>
+        <div class="re-card">
+          <React
+            component="Beats"
+            tempo={110}
+            pattern={[
+              "x...x...x...x...",
+              "....x.......x...",
+              "..x...x...x...xx",
+              "x.....x...x.....",
+            ].map((row) => [...row].map((char) => char === "x"))}
+          />
         </div>
       </div>
     </Layout>

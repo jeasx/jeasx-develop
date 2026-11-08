@@ -16,8 +16,8 @@ export async function Product({ id }) {
       <Image
         src={product.thumbnail}
         alt={product.title}
-        width="200"
-        height="200"
+        width="160"
+        height="160"
         position="entropy"
         immutable
         loading="lazy"

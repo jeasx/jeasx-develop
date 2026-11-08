@@ -1,4 +1,4 @@
-import Clock from "./Clock";
-import Lottery from "./Lottery";
+import Beats from "./Beats";
+import Memory from "./Memory";
 
-export default { Clock, Lottery };
+export default { Beats, Memory };

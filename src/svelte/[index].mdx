@@ -44,35 +44,44 @@ View the [source code of this page](https://github.com/jeasx/jeasx-expo/tree/mai
 
 </details>
 
-## Counter
+## Holo card
 
-`$state` holds the count, `$derived` computes values from it, and `bind:value` keeps the input in sync both ways.
+Move the pointer over the card. Two `Spring`s from `svelte/motion` follow it, so the tilt and the foil glare glide instead of jumping, and `style:` directives feed them into CSS.
 
 <div class="sv-card">
-  <Svelte component="Counter" init={5} />
+  <Svelte component="Card" emoji="🦄" title="Jeasx" subtitle="Server-rendered, hydrated by Svelte" />
 </div>
 
-## CRUD
+## Budget
 
-The filter, the list and the form are wired together with `$derived` and `$effect`. Select a person to edit or delete them.
+Drag the sliders: `$derived` sums up the spending, and `Tween.of` animates the number and the donut ring towards each new value.
 
 <div class="sv-card">
   <Svelte
-    component="Crud"
-    data={[
-      { first: "Hans", last: "Emil" },
-      { first: "Max", last: "Mustermann" },
-      { first: "Roman", last: "Tisch" },
+    component="Budget"
+    income={3000}
+    categories={[
+      { name: "Rent", amount: 1100, max: 1600, color: "#ff3e00" },
+      { name: "Food", amount: 450, max: 900, color: "#ff8a00" },
+      { name: "Travel", amount: 300, max: 900, color: "#a855f7" },
+      { name: "Fun", amount: 250, max: 900, color: "#06b6d4" },
     ]}
   />
 </div>
 
-## Todos
+## Quiz
 
-Check a todo to move it to the other column: `crossfade` and `animate:flip` make it fly across.
+`{#key}` recreates the question on every step, so `fly` transitions slide the old one out and the new one in, and the result pops up with `scale`.
 
 <div class="sv-card">
-  <Svelte component="Todos" />
+  <Svelte
+    component="Quiz"
+    questions={[
+      { text: "Who created Svelte?", options: ["Rich Harris", "Evan You", "Dan Abramov", "Jason Miller"], answer: "Rich Harris" },
+      { text: "What does Svelte compile components into?", options: ["Plain JavaScript", "WebAssembly", "A virtual DOM", "JSON"], answer: "Plain JavaScript" },
+      { text: "Which rune declares reactive state?", options: ["$state", "$signal", "$ref", "$reactive"], answer: "$state" },
+    ]}
+  />
 </div>
 
 </div>

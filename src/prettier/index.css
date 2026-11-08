@@ -18,4 +18,5 @@
   height: 24rem;
   border: 1px solid color-mix(in srgb, currentColor 20%, transparent);
   border-radius: 0.5rem;
+  background: #1e1f26;
 }
