@@ -34,6 +34,10 @@ export default async function ({ request, reply }) {
     return <Unavailable />;
   }
 
+  // Keeps the list's category filter for the back link; the list ignores unknown values.
+  const category =
+    typeof request.query["category"] === "string" && request.query["category"];
+
   return (
     <Layout
       title={product.title}
@@ -43,12 +47,19 @@ export default async function ({ request, reply }) {
     >
       <nav class="product-back">
         {/* The anchor scrolls the list to this product, so the image morphs back into its card. */}
-        <a href={`../#product-${id}`}>← Show all products</a>
+        <a
+          href={`../${category ? `?category=${encodeURIComponent(category)}` : ""}#product-${id}`}
+        >
+          ← Show all products
+        </a>
       </nav>
       <article>
         <header class="center">
           <h1>
-            <span class="product-title" style={`view-transition-name: product-title-${id}`}>
+            <span
+              class="product-title"
+              style={`view-transition-name: product-title-${id}`}
+            >
               {product.title}
             </span>
           </h1>
@@ -69,7 +80,10 @@ export default async function ({ request, reply }) {
             style={`view-transition-name: product-image-${id}`}
           />
           <div class="product-details">
-            <Price price={product.price} discount={product.discountPercentage} />
+            <Price
+              price={product.price}
+              discount={product.discountPercentage}
+            />
             <p class="product-meta">
               {typeof product.rating === "number" && (
                 <span title={`${product.rating} of 5`}>
@@ -94,7 +108,10 @@ export default async function ({ request, reply }) {
             <h2>Details</h2>
             <dl class="product-specs">
               <Spec label="SKU" value={product.sku} />
-              <Spec label="Weight" value={product.weight && `${product.weight} g`} />
+              <Spec
+                label="Weight"
+                value={product.weight && `${product.weight} g`}
+              />
               <Spec
                 label="Dimensions"
                 value={
@@ -102,7 +119,10 @@ export default async function ({ request, reply }) {
                   `${product.dimensions.width} × ${product.dimensions.height} × ${product.dimensions.depth} cm`
                 }
               />
-              <Spec label="Minimum order" value={product.minimumOrderQuantity} />
+              <Spec
+                label="Minimum order"
+                value={product.minimumOrderQuantity}
+              />
               <Spec label="Warranty" value={product.warrantyInformation} />
               <Spec label="Shipping" value={product.shippingInformation} />
               <Spec label="Returns" value={product.returnPolicy} />
@@ -116,13 +136,19 @@ export default async function ({ request, reply }) {
                 {product.reviews.map((review) => (
                   <blockquote class="product-review">
                     <p>
-                      <span title={`${review.rating} of 5`}>{stars(review.rating)}</span>{" "}
+                      <span title={`${review.rating} of 5`}>
+                        {stars(review.rating)}
+                      </span>{" "}
                       {review.comment}
                     </p>
                     {/* Reviewer emails are left out on purpose. */}
                     <footer>
                       {review.reviewerName}
-                      {review.date && <>, {new Date(review.date).toLocaleDateString("en-US")}</>}
+                      {review.date && (
+                        <>
+                          , {new Date(review.date).toLocaleDateString("en-US")}
+                        </>
+                      )}
                     </footer>
                   </blockquote>
                 ))}

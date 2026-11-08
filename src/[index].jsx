@@ -55,10 +55,10 @@ export default function () {
           </p>
         </article>
         <article>
-          <h3>Minimal markup</h3>
+          <h3>Learn by doing</h3>
           <p>
-            Styled with a small hand-written stylesheet that targets plain HTML elements, so the
-            markup stays short and easy to read.
+            Each example focuses on a single concept: routing, data fetching, forms, and more. Start
+            anywhere, read the source, and copy what you need into your own project.
           </p>
         </article>
       </section>

@@ -13,7 +13,9 @@
 }
 /* The widget reads its look from these custom properties. */
 cap-widget {
-  justify-self: center;
+  display: block;
+  width: 100%;
+  --cap-widget-width: 100%;
   --cap-background: var(--input-bg);
   --cap-border-color: var(--input-border);
   --cap-border-radius: var(--radius);

@@ -139,3 +139,196 @@ h1 .product-title {
 html {
   scroll-behavior: auto;
 }
+
+/* Product list: a responsive grid of cards with the image edge to edge. */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(17rem, 100%), 1fr));
+  gap: 1.25rem;
+  margin-top: 2rem;
+}
+
+.product-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border-radius: 0.5rem;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+}
+
+.product-card:hover,
+.product-card:focus-within {
+  transform: translateY(-3px);
+  box-shadow:
+    0 0 0 1px var(--primary),
+    0 0.75rem 2rem rgb(7 8 12 / 0.4);
+}
+
+.product-media {
+  position: relative;
+  background: #fff;
+}
+
+.product-media img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 2 / 1;
+  object-fit: cover;
+}
+
+.product-badge {
+  position: absolute;
+  right: 0.75rem;
+  bottom: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.65rem;
+  line-height: 1;
+  border-radius: 999px;
+  background: var(--primary);
+  color: var(--primary-inverse);
+  font-size: 0.9rem;
+  box-shadow: 0 0.25rem 0.75rem rgb(7 8 12 / 0.3);
+}
+
+.product-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem 1.25rem 1.25rem;
+}
+
+.product-body > * {
+  margin: 0;
+}
+
+.product-body h3 {
+  font-size: 1.1rem;
+}
+
+.product-card-meta {
+  display: flex;
+  gap: 0.5rem;
+  line-height: 1;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+}
+
+.product-chip {
+  /* No pill padding, so the label lines up with the title and text below. */
+  color: var(--primary);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.product-link {
+  color: var(--heading);
+  text-decoration: none;
+}
+
+.product-link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.product-card:hover .product-link {
+  color: var(--primary-hover);
+}
+
+.product-desc {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+/* Detail page: give the hero image a white backdrop like the cards. */
+.product-hero {
+  background: #fff;
+  box-shadow: 0 0.75rem 2rem rgb(7 8 12 / 0.35);
+}
+
+.product-price b {
+  color: var(--primary);
+}
+
+.product-price small {
+  display: inline-block;
+  vertical-align: middle;
+  padding: 0.2rem 0.4rem;
+  line-height: 1;
+  border-radius: var(--radius);
+  background: var(--success-bg);
+  color: var(--success);
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .product-card {
+    transition: none;
+  }
+  .product-card:hover,
+  .product-card:focus-within {
+    transform: none;
+  }
+}
+
+/* Category filter: a row of pills; the active one is filled. */
+.product-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+.product-filter a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  height: 2.2rem;
+  padding: 0 0.9rem;
+  border: var(--border-width) solid var(--input-border);
+  border-radius: 999px;
+  background: var(--input-bg);
+  color: var(--color);
+  font-size: 0.9rem;
+  text-decoration: none;
+  text-transform: capitalize;
+  transition:
+    border-color 0.2s,
+    background 0.2s,
+    color 0.2s;
+}
+
+.product-filter a:hover {
+  border-color: var(--primary);
+  color: var(--heading);
+}
+
+.product-filter a[aria-current="page"] {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: var(--primary-inverse);
+}
+
+.product-filter small {
+  min-width: 1.4rem;
+  padding: 0.1rem 0.35rem;
+  border-radius: 999px;
+  background: rgb(0 0 0 / 0.25);
+  font-size: 0.75rem;
+  line-height: 1.2;
+  text-align: center;
+}
