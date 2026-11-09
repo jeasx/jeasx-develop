@@ -47,18 +47,19 @@ export default function () {
 
       <section class="home-intro">
         <article>
+          <h3>Less framework, fewer headaches</h3>
+          <p>
+            Jeasx keeps its core small: asynchronous JSX on the server, file-based routing, and
+            little else. Everything beyond that is integrated in userland with code you own and can
+            adapt.
+          </p>
+        </article>
+        <article>
           <h3>Run it yourself</h3>
           <p>
             All examples are on <a href="https://github.com/jeasx/jeasx-expo">GitHub</a>. Clone the
             repository to run them locally. Every example links to its source in the top right
-            corner.
-          </p>
-        </article>
-        <article>
-          <h3>Learn by doing</h3>
-          <p>
-            Each example focuses on a single concept: routing, data fetching, forms, and more. Start
-            anywhere, read the source, and copy what you need into your own project.
+            corner. Change the code freely and see what happens.
           </p>
         </article>
       </section>
