@@ -1,5 +1,5 @@
-import Layout from "../Layout";
 import { PLANETS } from "../@helpers/planets";
+import Layout from "../Layout";
 import Vue from "./Vue";
 
 export default function () {
@@ -70,7 +70,6 @@ export default function () {
           to see how the components are rendered on the server and hydrated in the browser.
         </p>
       </details>
-      <hr />
       <section>
         <h2>Planet explorer</h2>
         <p>

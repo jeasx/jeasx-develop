@@ -67,9 +67,9 @@
       { "path": "/sharp", "title": "Image scaling" },
       { "path": "/svg", "title": "SVG charts" },
       { "path": "/og", "title": "Open Graph images" },
-      { "path": "/json/request.json?foo=bar", "title": "JSON response" },
-      { "path": "/response", "title": "Response objects" },
       { "path": "/negotiation", "title": "Content negotiation" },
+      { "path": "/response", "title": "Response objects" },
+      { "path": "/json/request.json?foo=bar", "title": "JSON response" },
       { "path": "/sitemap.xml", "title": "XML sitemap" }
     ]
   },

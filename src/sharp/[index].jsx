@@ -1,29 +1,41 @@
 import Layout from "../Layout";
 import Image from "./Image";
+import { cropArea } from "./cropArea";
 import { placeholder } from "./placeholder";
 
-/** Public domain photos from the NASA Image and Video Library (images.nasa.gov). */
+/**
+ * CC0 photos from Wikimedia Commons. All of them are landscape photos with the subject off
+ * the middle, so cutting out a portrait shows how differently the strategies decide.
+ */
 const IMAGES = [
   {
-    src: "/images/saturn.jpg",
-    width: 400,
-    height: 267,
-    title: "Saturn, seen by Cassini in 2016",
-    credit: "https://images.nasa.gov/details/PIA21046",
+    src: "/images/beach.jpg",
+    width: 300,
+    height: 450,
+    title: "Child on the beach",
+    hint: "The child in red stands at the right edge: centre loses them.",
+    author: "Danielle MacInnes",
+    credit:
+      "https://commons.wikimedia.org/wiki/File:Child_on_the_beach_(Unsplash).jpg",
   },
   {
-    src: "/images/blue-marble.jpg",
-    width: 400,
-    height: 400,
-    title: "The Blue Marble, seen by Apollo 17 in 1972",
-    credit: "https://images.nasa.gov/details/as17-148-22727",
+    src: "/images/barn.jpg",
+    width: 300,
+    height: 450,
+    title: "Barn in Färlev",
+    hint: "Only entropy finds the barn, attention goes for the bright sky.",
+    author: "W.carter",
+    credit: "https://commons.wikimedia.org/wiki/File:Barn_in_F%C3%A4rlev_2.jpg",
   },
   {
-    src: "/images/earthrise.jpg",
-    width: 400,
-    height: 600,
-    title: "Earthrise, seen by Apollo 8 in 1968",
-    credit: "https://images.nasa.gov/details/as08-14-2383",
+    src: "/images/sailboat.jpg",
+    width: 300,
+    height: 450,
+    title: "Sailboat from above",
+    hint: "The waves are full of detail, so entropy misses the boat. Attention finds it.",
+    author: "Lance Asper",
+    credit:
+      "https://commons.wikimedia.org/wiki/File:Lost_at_Sea_(Unsplash).jpg",
   },
 ];
 
@@ -38,17 +50,26 @@ const STRATEGIES = {
  * @param {import("../types").RouteProps} props
  */
 export default async function ({ request }) {
-  const query = /** @type {Record<string, string | undefined>} */ (request.query);
-  const position = Object.hasOwn(STRATEGIES, query["crop"] ?? "") ? query["crop"] : "entropy";
+  const query = /** @type {Record<string, string | undefined>} */ (
+    request.query
+  );
+  const position = Object.hasOwn(STRATEGIES, query["crop"] ?? "")
+    ? query["crop"]
+    : "entropy";
   const showPlaceholders = query["placeholders"] === "only";
 
-  // Placeholders are tiny, so all of them are created in parallel before rendering.
+  // Placeholders and crop areas are cached, so all of them are created in parallel.
   const images = await Promise.all(
     IMAGES.map(async (image) => ({
       ...image,
       placeholder: await placeholder({ ...image, position }),
+      crop: await cropArea({ ...image, position }),
     })),
   );
+
+  /** @param {{ crop?: string, placeholders?: boolean }} params */
+  const link = ({ crop = position, placeholders = showPlaceholders }) =>
+    `?crop=${crop}${placeholders ? "&placeholders=only" : ""}`;
 
   return (
     <Layout
@@ -58,71 +79,114 @@ export default async function ({ request }) {
     >
       <h1>Scale images with sharp</h1>
       <p>
-        With the <a href="https://sharp.pixelplumbing.com">sharp</a> library, you can build an image
-        component and converter in userland. The images below are cropped, resized and converted to
-        AVIF or WebP on the fly, depending on what your browser accepts. The image converter is also
-        used in the <a href="/products">products</a> example.
+        With the <a href="https://sharp.pixelplumbing.com">sharp</a> library,
+        you can build an image component and converter in userland. The images
+        below are cropped, resized and converted to AVIF or WebP on the fly,
+        depending on what your browser accepts. The image converter is also used
+        in the <a href="/products">products</a> example.
       </p>
       <p>
-        Each image starts as a blurred placeholder: a 24 pixel version, inlined into the HTML as{" "}
-        <code>data:</code> URI of a few hundred bytes. It shows up instantly and keeps the layout
-        stable, until the full image has loaded and covers it. No JavaScript is involved.
+        Each image starts as a blurred placeholder: a 24 pixel version, inlined
+        into the HTML as <code>data:</code> URI of a few hundred bytes. It shows
+        up instantly and keeps the layout stable, until the full image has
+        loaded and covers it. No JavaScript is involved.
       </p>
 
-      <nav class="strategies" aria-label="Crop strategy">
-        {Object.entries(STRATEGIES).map(([name, description]) => (
-          <a
-            href={`?crop=${name}${showPlaceholders ? "&placeholders=only" : ""}`}
-            title={description}
-            aria-current={name === position ? "true" : undefined}
-          >
-            {name}
-          </a>
-        ))}
-        <span aria-hidden="true">·</span>
-        <a href={`?crop=${position}${showPlaceholders ? "" : "&placeholders=only"}`}>
-          {showPlaceholders ? "show full images" : "show placeholders only"}
+      <article class="controls">
+        <div>
+          <span class="controls-label">Crop strategy</span>
+          <nav role="group" aria-label="Crop strategy">
+            {Object.keys(STRATEGIES).map((name) => (
+              <a
+                class={name === position ? "btn btn-primary" : "btn secondary"}
+                href={link({ crop: name })}
+                aria-current={name === position ? "page" : undefined}
+              >
+                {name}
+              </a>
+            ))}
+          </nav>
+          <small>{STRATEGIES[position]}</small>
+        </div>
+        <a
+          class="toggle"
+          href={link({ placeholders: !showPlaceholders })}
+          role="switch"
+          aria-checked={showPlaceholders ? "true" : "false"}
+        >
+          Placeholders only
         </a>
-      </nav>
+      </article>
+
       <p class="center">
         <small>
-          Crop strategy <strong>{position}</strong>: {STRATEGIES[position]}.
+          The originals are landscape photos, cut to portraits. The frame on
+          each original shows which part sharp keeps.
         </small>
       </p>
 
       <section class="gallery">
-        {images.map(({ src, width, height, title, credit, placeholder }, index) => (
-          <figure>
-            {showPlaceholders ? (
-              <div
-                class="placeholder-only"
-                style={`background-image: url(${placeholder}); --ratio: ${width} / ${height}`}
-                role="img"
-                aria-label={`Blurred placeholder: ${title}`}
-              ></div>
-            ) : (
-              <Image
-                class="blur-up"
-                style={`background-image: url(${placeholder})`}
-                src={src}
-                width={width}
-                height={height}
-                position={position}
-                alt={title}
-                loading={index === 0 ? "eager" : "lazy"}
-              />
-            )}
-            <figcaption>
-              <span>
-                {title} (<a href={credit}>NASA, public domain</a>)
-              </span>
-              <span>
-                {width} × {height} pixels
-              </span>
-              <span>placeholder: {Math.round((placeholder.length * 3) / 4)} bytes</span>
-            </figcaption>
-          </figure>
-        ))}
+        {images.map(
+          (
+            {
+              src,
+              width,
+              height,
+              title,
+              hint,
+              author,
+              credit,
+              placeholder,
+              crop,
+            },
+            index,
+          ) => (
+            <figure>
+              {showPlaceholders ? (
+                <div
+                  class="placeholder-only"
+                  style={`background-image: url(${placeholder}); --ratio: ${width} / ${height}`}
+                  role="img"
+                  aria-label={`Blurred placeholder: ${title}`}
+                ></div>
+              ) : (
+                <Image
+                  class="blur-up"
+                  style={`background-image: url(${placeholder})`}
+                  src={src}
+                  width={width}
+                  height={height}
+                  position={position}
+                  alt={title}
+                  loading={index === 0 ? "eager" : "lazy"}
+                />
+              )}
+              <div class="original">
+                <Image
+                  src={src}
+                  width={300}
+                  height={Math.round(
+                    (300 * crop.originalHeight) / crop.originalWidth,
+                  )}
+                  alt=""
+                  loading="lazy"
+                />
+                <span
+                  class="crop-frame"
+                  style={`left: ${+(crop.left * 100).toFixed(2)}%; top: ${+(crop.top * 100).toFixed(2)}%; width: ${+(crop.width * 100).toFixed(2)}%; height: ${+(crop.height * 100).toFixed(2)}%`}
+                ></span>
+              </div>
+              <figcaption>
+                <p>{hint}</p>
+                <small>
+                  {title} by <a href={credit}>{author}</a> (CC0) · {width} ×{" "}
+                  {height} px · placeholder{" "}
+                  {Math.round((placeholder.length * 3) / 4)} bytes
+                </small>
+              </figcaption>
+            </figure>
+          ),
+        )}
       </section>
     </Layout>
   );
