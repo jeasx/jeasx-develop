@@ -1,7 +1,7 @@
 import { html } from "jsx-async-runtime";
 import { createSSRApp } from "vue";
 import { renderToString } from "vue/server-renderer";
-import COMPONENTS from "./components/$index";
+import COMPONENTS from "./$components";
 
 export default async function Vue({ component, ...props }) {
   // Only own keys, so names like "toString" don't pick up inherited functions.

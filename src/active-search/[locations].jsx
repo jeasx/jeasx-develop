@@ -56,7 +56,7 @@ export default async function ({ request }) {
         {features.length} {features.length === 1 ? "result" : "results"}
       </p>
       <ul class="as-list">
-        {features.map(({ properties = {} }) => {
+        {features.map(({ properties = /** @type {Record<string, string>} */ ({}) }) => {
           const {
             name,
             street,

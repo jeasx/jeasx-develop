@@ -1,16 +1,16 @@
-/** @jsxImportSource preact */
+/** @jsxImportSource react */
 import { html } from "jsx-async-runtime";
-import { render } from "preact-render-to-string";
-import COMPONENTS from "./components/$index";
+import { renderToString } from "react-dom/server";
+import COMPONENTS from "./$components";
 
-export default function Preact({ component, ...props }) {
+export default function React({ component, ...props }) {
   // Only own keys, so names like "toString" don't pick up inherited functions.
   if (!Object.hasOwn(COMPONENTS, component)) {
     throw new Error(`Unknown component "${component}".`);
   }
   const Component = COMPONENTS[component];
   return html(
-    render(
+    renderToString(
       <div data-component={component} data-props={JSON.stringify(props)}>
         <Component {...props} />
       </div>,

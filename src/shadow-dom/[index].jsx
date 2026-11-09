@@ -7,9 +7,6 @@ const PLANETS = [
   { name: "Jupiter", moons: 95, color: "#f59e0b" },
 ];
 
-/**
- * @param {import("../types").RouteProps} props
- */
 export default function () {
   return (
     <Layout
@@ -50,19 +47,11 @@ export default function () {
         <code>&lt;slot&gt;</code>. Content without a slot name goes into the default slot, as in
         this callout:
       </p>
-      <info-callout>
-        <ShadowRoot styles={CALLOUT_STYLES}>
-          <div class="callout">
-            <strong>
-              <slot name="title">Note</slot>
-            </strong>
-            <slot></slot>
-          </div>
-        </ShadowRoot>
+      <InfoCallout>
         <span slot="title">Good to know</span>
         Light DOM content stays in the document, so search engines and the browser's find in page
         still see it.
-      </info-callout>
+      </InfoCallout>
 
       <h2>Progressive enhancement</h2>
       <p>
@@ -93,6 +82,25 @@ function PlanetCard({ name, color, children }) {
       </ShadowRoot>
       {children}
     </planet-card>
+  );
+}
+
+/**
+ * @param {{ children?: any }} props
+ */
+function InfoCallout({ children }) {
+  return (
+    <info-callout>
+      <ShadowRoot styles={CALLOUT_STYLES}>
+        <div class="callout">
+          <strong>
+            <slot name="title">Note</slot>
+          </strong>
+          <slot></slot>
+        </div>
+      </ShadowRoot>
+      {children}
+    </info-callout>
   );
 }
 

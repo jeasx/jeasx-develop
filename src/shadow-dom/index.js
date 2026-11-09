@@ -5,7 +5,7 @@ customElements.define(
     connectedCallback() {
       const root = this.shadowRoot;
       if (!root) return; // Browser without Declarative Shadow DOM: leave the light DOM alone.
-      const visits = root.querySelector("[part=visits]");
+      const visits = /** @type {HTMLElement} */ (root.querySelector("[part=visits]"));
       const output = root.querySelector("output");
       root.querySelector("button").addEventListener("click", () => {
         output.value = String(Number(output.value) + 1);

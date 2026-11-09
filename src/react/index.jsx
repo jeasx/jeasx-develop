@@ -1,6 +1,6 @@
-/** @jsxImportSource preact */
-import { render } from "preact";
-import COMPONENTS from "./components/$index";
+/** @jsxImportSource react */
+import { hydrateRoot } from "react-dom/client";
+import COMPONENTS from "./$components";
 
 function init(components) {
   document.querySelectorAll("[data-component]").forEach((el) => {
@@ -10,9 +10,8 @@ function init(components) {
       if (Object.hasOwn(components, name)) {
         const Component = components[name];
         const props = el.dataset.props ? JSON.parse(el.dataset.props) : {};
-        // Using render instead of hydrate to avoid hydration mismatches.
-        // For single components it is fast and avoids lots of headaches.
-        render(<Component {...props} />, el);
+        // The server rendered the same markup, so React only attaches its event handlers.
+        hydrateRoot(el, <Component {...props} />);
       }
     }
   });

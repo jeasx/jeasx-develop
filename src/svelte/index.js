@@ -1,6 +1,6 @@
-import "./page.css";
 import { hydrate } from "svelte";
-import COMPONENTS from "./components/$index";
+import COMPONENTS from "./$components";
+import "./page.css";
 
 document.querySelectorAll("[data-component]").forEach((target) => {
   if (target instanceof HTMLElement) {

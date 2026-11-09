@@ -34,7 +34,10 @@ export default function ({ request, reply }) {
   const value = (name) => String(body?.[name] ?? "");
   // Mark empty required fields after a failed submit, so they stand out.
   const missing = request.method === "POST" && body ? missingFields(body) : [];
-  /** @param {string} name */
+  /**
+   * @param {string} name
+   * @returns {"true" | undefined}
+   */
   const invalid = (name) => (missing.includes(name) ? "true" : undefined);
 
   return (

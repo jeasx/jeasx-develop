@@ -1,5 +1,5 @@
 import { createSSRApp } from "vue";
-import COMPONENTS from "./components/$index";
+import COMPONENTS from "./$components";
 
 document.querySelectorAll("[data-component]").forEach((target) => {
   if (target instanceof HTMLElement) {

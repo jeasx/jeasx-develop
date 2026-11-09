@@ -1,6 +1,6 @@
 import { html } from "jsx-async-runtime";
 import { render } from "svelte/server";
-import COMPONENTS from "./components/$index";
+import COMPONENTS from "./$components";
 
 export default function Svelte({ component, ...props }) {
   // Only own keys, so names like "toString" don't pick up inherited functions.

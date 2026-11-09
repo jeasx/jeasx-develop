@@ -1,7 +1,7 @@
 import Layout from "../Layout";
-import Preact from "./assets/Preact";
+import Preact from "./Preact";
 
-<Layout title="Use Preact with Jeasx" description="Add interactive Preact islands with shared signals to server-rendered pages." css="/preact/assets/index.css" script="/preact/assets/index.js">
+<Layout title="Use Preact with Jeasx" description="Add interactive Preact islands with shared signals to server-rendered pages." css="/preact/index.css" script="/preact/index.js">
 <div class="pr">
 
 # Use Preact with Jeasx
@@ -16,16 +16,10 @@ Install Preact, its signals and the server renderer:
 npm install @preact/signals preact preact-render-to-string
 ```
 
-Preact brings its own JSX runtime, so add a `tsconfig.json` to the folder that holds your Preact components:
+Preact brings its own JSX runtime, so start every file that holds Preact JSX with a pragma comment:
 
-```json
-{
-  "extends": "jeasx/tsconfig.json",
-  "compilerOptions": {
-    "jsxImportSource": "preact"
-  },
-  "include": ["**/*"]
-}
+```jsx
+/** @jsxImportSource preact */
 ```
 
 Have a look at the [source code of this page](https://github.com/jeasx/jeasx-expo/tree/main/src/preact) to see how the components are rendered on the server and mounted in the browser.

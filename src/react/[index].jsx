@@ -1,13 +1,13 @@
 import Layout from "../Layout";
-import React from "./assets/React";
+import React from "./React";
 
 export default function () {
   return (
     <Layout
       title="Use React with Jeasx"
       description="Render React components on the server and hydrate them as interactive islands."
-      css="/react/assets/index.css"
-      script="/react/assets/index.js"
+      css="/react/index.css"
+      script="/react/index.js"
     >
       <div class="re">
         <h1>Use React with Jeasx</h1>
@@ -23,19 +23,11 @@ export default function () {
             <code>npm install react react-dom</code>
           </pre>
           <p>
-            React brings its own JSX runtime, so add a <code>tsconfig.json</code> to the folder that
-            holds your React components:
+            React brings its own JSX runtime, so start every file that holds React JSX with a
+            pragma comment:
           </p>
           <pre>
-            <code>
-              {`{
-  "extends": "jeasx/tsconfig.json",
-  "compilerOptions": {
-    "jsxImportSource": "react"
-  },
-  "include": ["**/*"]
-}`}
-            </code>
+            <code>{"/** @jsxImportSource react */"}</code>
           </pre>
           <p>
             Have a look at the{" "}
@@ -55,9 +47,9 @@ export default function () {
         </div>
         <h2>Beat sequencer</h2>
         <p>
-          Click the pads and press play: the sounds are synthesized with the Web Audio API, an effect
-          runs the timer, and refs let it read the latest pattern without restarting. Turn your
-          sound on!
+          Click the pads and press play: the sounds are synthesized with the Web Audio API, an
+          effect runs the timer, and refs let it read the latest pattern without restarting. Turn
+          your sound on!
         </p>
         <div class="re-card">
           <React

@@ -1,5 +1,5 @@
 import { html } from "@arrow-js/core";
-import COMPONENTS from "./components/$index";
+import COMPONENTS from "./$components";
 
 document.querySelectorAll("[data-arrowjs]").forEach((el) => {
   if (el instanceof HTMLElement) {
