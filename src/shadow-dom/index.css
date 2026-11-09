@@ -1,0 +1,12 @@
+/* Deliberately loud page styles: they don't reach into the shadow roots of the cards. */
+h3 {
+  text-decoration: line-through dashed;
+  color: #dc2626;
+}
+
+.planet-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: 1rem;
+  margin: 1rem 0;
+}

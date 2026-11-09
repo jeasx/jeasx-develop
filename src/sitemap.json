@@ -83,6 +83,7 @@
       { "path": "/interceptor", "title": "Intercept JSX" },
       { "path": "/head", "title": "Manage the head" },
       { "path": "/i18n", "title": "Internationalization" },
+      { "path": "/shadow-dom", "title": "Declarative Shadow DOM" },
       { "path": "/client-jsx", "title": "Client-side JSX" },
       { "path": "/testing", "title": "Unit tests" }
     ]
