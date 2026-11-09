@@ -1,9 +1,25 @@
 import { jsxToString } from "jsx-async-runtime";
-import fetchPlanet from "./components/fetchPlanet";
-import Planet from "./components/Planet";
-import Planets from "./components/Planets";
+import Planet from "./Planet";
+import Planets from "./Planets";
 
-globalThis.renderPlanets = async (container, names) => {
+document.addEventListener("submit", (event) => {
+  const form = event.target;
+  if (!(form instanceof HTMLFormElement) || form.id !== "planet-form") {
+    return;
+  }
+  event.preventDefault();
+  const button = form.querySelector("button");
+  button.setAttribute("aria-busy", "true");
+  button.disabled = true;
+  renderPlanets(document.getElementById("planets"), new FormData(form).getAll("planet")).finally(
+    () => {
+      button.removeAttribute("aria-busy");
+      button.disabled = false;
+    },
+  );
+});
+
+async function renderPlanets(container, names) {
   if (names.length === 0) {
     container.innerHTML = await jsxToString(<p>Pick at least one planet.</p>);
     return;
@@ -24,7 +40,15 @@ globalThis.renderPlanets = async (container, names) => {
   const loaded = results.filter(({ status }) => status === "fulfilled").length;
   container.querySelector(".stats").textContent =
     `${loaded} of ${names.length} planets rendered in ${Math.round(performance.now() - start)} ms`;
-};
+}
+
+async function fetchPlanet(name) {
+  const response = await fetch(`/client-jsx/api/${encodeURIComponent(name)}`);
+  if (!response.ok) {
+    throw new Error(`Loading ${name} failed: ${response.status}`);
+  }
+  return await response.json();
+}
 
 // Clicking a planet (or pressing Enter or Space on it) flips its card
 // and turns all other cards back to their front.
@@ -48,5 +72,6 @@ function setFlipped(card, flipped) {
   card.querySelector(".front").setAttribute("aria-hidden", String(flipped));
   card.querySelector(".back").setAttribute("aria-hidden", String(!flipped));
 }
+
 document.addEventListener("click", flip);
 document.addEventListener("keydown", flip);

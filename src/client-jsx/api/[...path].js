@@ -1,4 +1,4 @@
-import planets from "../planets";
+import planetData from "../planet-data";
 
 const PATTERN = new URLPattern({ pathname: "/client-jsx/api/:name{/}?" });
 
@@ -8,7 +8,7 @@ const PATTERN = new URLPattern({ pathname: "/client-jsx/api/:name{/}?" });
  */
 export default async function ({ request, reply }) {
   const name = PATTERN.exec({ pathname: request.path })?.pathname.groups.name;
-  const planet = planets.find((planet) => planet.name === name);
+  const planet = planetData.find((planet) => planet.name === name);
   if (!planet) {
     reply.status(404);
     return {};

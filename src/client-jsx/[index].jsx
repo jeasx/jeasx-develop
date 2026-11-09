@@ -1,5 +1,5 @@
 import Layout from "../Layout";
-import planets from "./planets";
+import planetData from "./planet-data";
 
 export default function () {
   return (
@@ -17,25 +17,10 @@ export default function () {
         component that fetches its own data from a slow API, and all of them load in parallel before
         the markup is rendered right in your browser.
       </p>
-      <form
-        onsubmit={
-          /* js */ `
-          event.preventDefault();
-          const button = event.target.querySelector("button");
-          button.setAttribute("aria-busy", "true");
-          button.disabled = true;
-          renderPlanets(
-            document.getElementById("planets"),
-            new FormData(event.target).getAll("planet")
-          ).finally(() => {
-            button.removeAttribute("aria-busy");
-            button.disabled = false;
-          });`
-        }
-      >
+      <form id="planet-form">
         <fieldset class="planet-picker">
           <legend>Planets</legend>
-          {planets.map(({ name }) => (
+          {planetData.map(({ name }) => (
             <label>
               <input type="checkbox" name="planet" value={name} checked />
               {name}
