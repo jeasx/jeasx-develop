@@ -13,10 +13,9 @@ const WIDGETS = {
  * @param {import("../types").RouteProps} props
  */
 export default function ({ request }) {
-  // Without a submitted form, all components are shown.
-  const submitted = request.query["submitted"] !== undefined;
+  // All components start switched off; the form adds the picked ones to the query.
   const picked = new Set([request.query["widget"] ?? []].flat().map(String));
-  const active = Object.keys(WIDGETS).filter((key) => !submitted || picked.has(key));
+  const active = Object.keys(WIDGETS).filter((key) => picked.has(key));
 
   return (
     <Layout
@@ -45,7 +44,6 @@ export default function ({ request }) {
             class="head-picker"
             onchange="this.requestSubmit()"
           >
-            <input type="hidden" name="submitted" value="1" />
             {Object.entries(WIDGETS).map(([key, { label, adds }]) => (
               <label>
                 <input type="checkbox" name="widget" value={key} checked={active.includes(key)} />
@@ -77,7 +75,7 @@ export default function ({ request }) {
             <small>Title, meta tags and styles of the merged head, read in your browser.</small>
           </p>
           <pre>
-            <code id="head-result">Loading…</code>
+            <code id="head-result" class="language-markup">Loading…</code>
           </pre>
         </aside>
       </div>

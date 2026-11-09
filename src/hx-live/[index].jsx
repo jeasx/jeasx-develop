@@ -61,7 +61,7 @@ export default function () {
           </div>
         </div>
         <div class="hl-controls">
-          <div class="hl-presets" role="group" aria-label="Presets">
+          <div class="hl-presets">
             {PRESETS.map(({ name, ...values }) => (
               <button
                 type="button"

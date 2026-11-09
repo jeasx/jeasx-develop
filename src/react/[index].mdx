@@ -1,0 +1,51 @@
+import Layout from "../Layout";
+import React from "./React";
+
+<Layout title="Use React with Jeasx" description="Render React components on the server and hydrate them as interactive islands." css="/react/index.css" script="/react/index.js">
+<div class="re">
+
+# Use React with Jeasx
+
+Jeasx lets you add [React](https://react.dev) in userland: components are rendered on the server and hydrated in the browser. This gives you islands of interactivity without rendering the whole application in the browser.
+
+<details>
+<summary>How do I integrate React with Jeasx?</summary>
+Install React and React DOM:
+
+```bash
+npm install react react-dom
+```
+
+React brings its own JSX runtime, so start every file that holds React JSX with a pragma comment:
+
+```jsx
+/** @jsxImportSource react */
+```
+
+Have a look at the [source code of this page](https://github.com/jeasx/jeasx-expo/tree/main/src/react) to see how the components are rendered on the server and hydrated in the browser.
+
+</details>
+
+## Memory
+
+All rules live in one `useReducer`, an effect flips mismatched cards back, and the deck is shuffled with a seed from the server, so the hydrated markup matches.
+
+<div class="re-card">
+  <React component="Memory" seed={Math.floor(Math.random() * 1e9)} />
+</div>
+
+## Beat sequencer
+
+Click the pads and press play: the sounds are synthesized with the Web Audio API, an effect runs the timer, and refs let it read the latest pattern without restarting. Turn your sound on!
+
+<div class="re-card">
+  <React
+    component="Beats"
+    tempo={110}
+    pattern={["x...x...x...x...", "....x.......x...", "..x...x...x...xx", "x.....x...x....."].map((row) => [...row].map((char) => char === "x"))}
+  />
+</div>
+
+</div>
+
+</Layout>

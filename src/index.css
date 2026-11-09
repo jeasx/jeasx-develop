@@ -330,8 +330,14 @@ pre {
   overflow: auto;
   color: var(--code);
 }
-/* The Prism theme sets 1em, so code blocks get the same size as other code again. */
+/* The Prism theme sets 1em and an olive background, so code blocks match other code again. */
+pre[class*="language-"],
+:not(pre) > code[class*="language-"] {
+  background: var(--code-bg);
+}
+/* The Prism theme also pads the <pre>, but the <code> inside already has padding. */
 pre[class*="language-"] {
+  padding: 0;
   font-size: 0.875em;
 }
 code[class*="language-"] {
@@ -1329,4 +1335,77 @@ dialog::backdrop {
   .home-number {
     font-size: 1.75rem;
   }
+}
+
+/* MDX code blocks (rehype-prism-plus marks them with .code-highlight): editor window with traffic lights,
+   a language label, line numbers and highlighted lines ("```js {5,8-13}" in Markdown). */
+pre:has(> code.code-highlight) {
+  position: relative;
+  margin: 1rem 0;
+  padding-top: 2.25rem;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  box-shadow: 0 0.75rem 2rem rgb(0 0 0 / 0.35);
+  background:
+    radial-gradient(circle at 1rem 1.125rem, #ff5f57 0.3rem, transparent 0.33rem),
+    radial-gradient(circle at 1.75rem 1.125rem, #febc2e 0.3rem, transparent 0.33rem),
+    radial-gradient(circle at 2.5rem 1.125rem, #28c840 0.3rem, transparent 0.33rem),
+    linear-gradient(color-mix(in srgb, var(--secondary) 10%, var(--code-bg)) 0 2.25rem, var(--code-bg) 0);
+}
+pre:has(> code.code-highlight)::before {
+  position: absolute;
+  top: 0.55rem;
+  right: 1rem;
+  color: var(--muted);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+pre:has(> code.code-highlight).language-js::before,
+pre:has(> code.code-highlight).language-javascript::before {
+  content: "JavaScript";
+}
+pre:has(> code.code-highlight).language-jsx::before {
+  content: "JSX";
+}
+pre:has(> code.code-highlight).language-ts::before,
+pre:has(> code.code-highlight).language-typescript::before {
+  content: "TypeScript";
+}
+pre:has(> code.code-highlight).language-css::before {
+  content: "CSS";
+}
+pre:has(> code.code-highlight).language-html::before {
+  content: "HTML";
+}
+pre:has(> code.code-highlight).language-bash::before,
+pre:has(> code.code-highlight).language-sh::before {
+  content: "Shell";
+}
+pre:has(> code.code-highlight) > code {
+  padding: 0.75rem 0;
+  min-width: max-content;
+}
+pre:has(> code.code-highlight) .code-line {
+  display: block;
+  padding: 0 1rem;
+  border-left: 3px solid transparent;
+}
+pre:has(> code.code-highlight) .line-number::before {
+  content: attr(line);
+  display: inline-block;
+  width: 1.5rem;
+  margin-right: 1rem;
+  color: var(--muted);
+  opacity: 0.6;
+  text-align: right;
+  user-select: none;
+}
+pre:has(> code.code-highlight) .highlight-line {
+  border-left-color: var(--primary);
+  background: color-mix(in srgb, var(--primary) 10%, transparent);
+}
+pre:has(> code.code-highlight) .highlight-line.line-number::before {
+  color: var(--primary-hover);
+  opacity: 1;
 }

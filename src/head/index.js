@@ -1,10 +1,15 @@
+import Prism from "prismjs";
+
 // Shows title, meta tags and styles of the merged head, one tag per line.
 const tags = document.head.querySelectorAll("title, meta[name], style");
-document.getElementById("head-result").textContent = [...tags]
+const result = document.getElementById("head-result");
+result.textContent = [...tags]
   .map((tag) =>
     tag.tagName === "STYLE" ? `<style>\n${formatCss(tag.textContent)}</style>` : tag.outerHTML,
   )
   .join("\n");
+// Prism's core includes HTML and CSS, so the styles inside <style> are highlighted too.
+Prism.highlightElement(result);
 
 /**
  * A tiny CSS formatter: one declaration per line, indented by nesting depth.

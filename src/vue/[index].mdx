@@ -1,0 +1,87 @@
+import { PLANETS } from "../@helpers/planets";
+import Layout from "../Layout";
+import Vue from "./Vue";
+
+<Layout title="Use Vue with Jeasx" description="Render Vue components on the server and hydrate them as interactive islands." css="/vue/index.css" script="/vue/index.js">
+<section class="center">
+
+# Use Vue with Jeasx
+
+[Vue](https://vuejs.org) is a reactive UI framework. Jeasx renders Vue components on the server and hydrates them in the browser, so you get islands of interactivity in otherwise static pages.
+
+</section>
+
+<details>
+<summary>How do I integrate Vue with Jeasx?</summary>
+Install Vue and the esbuild plugin for single-file components:
+
+```bash
+npm install vue unplugin-vue
+```
+
+Then register the plugin for the server and the browser build in `jeasx.config.js`:
+
+```js
+export default {
+  // The server imports this config at startup too, so import build-only plugins lazily.
+  ESBUILD_SERVER_OPTIONS: async () => {
+    const { default: vuePlugin } = await import("unplugin-vue/esbuild");
+    return { plugins: [vuePlugin({ ssr: true, sourceMap: false })] };
+  },
+
+  ESBUILD_BROWSER_OPTIONS: async () => {
+    const { default: vuePlugin } = await import("unplugin-vue/esbuild");
+    return {
+      // Vue's feature flags: avoid a console warning and drop unused code.
+      define: {
+        __VUE_OPTIONS_API__: "false",
+        __VUE_PROD_DEVTOOLS__: "false",
+        __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: "false",
+      },
+      plugins: [vuePlugin({ sourceMap: false })],
+    };
+  },
+};
+```
+
+The styles of all components imported by a browser bundle end up in a CSS file next to it (e.g. `index.css` next to `index.js`). Link it in your page, so the components are styled before hydration and without JavaScript.
+
+On the server, `renderToString` from `vue/server-renderer` turns a component into HTML. In the browser, `createSSRApp(...).mount()` takes over this markup without rendering it again.
+
+Have a look at the [source code of this page](https://github.com/jeasx/jeasx-expo/tree/main/src/vue) to see how the components are rendered on the server and hydrated in the browser.
+
+</details>
+
+<section>
+
+## Planet explorer
+
+Search, filter and sort the planets. `computed` derives the visible list, and `<TransitionGroup>` animates the cards to their new positions. Click a planet to reveal a fact.
+
+<Vue component="Planets" planets={PLANETS} />
+
+</section>
+
+---
+
+<section>
+
+## Kanban board
+
+Drag tasks between columns, or use the arrow buttons. The counts and the progress bar update on their own, because they are computed from the same reactive state.
+
+<Vue
+  component="Kanban"
+  columns={["To do", "Doing", "Done"]}
+  cards={[
+    { title: "Install Vue", column: "Done" },
+    { title: "Register unplugin-vue", column: "Done" },
+    { title: "Render on the server", column: "Doing" },
+    { title: "Hydrate in the browser", column: "To do" },
+    { title: "Ship it", column: "To do" },
+  ]}
+/>
+
+</section>
+
+</Layout>
