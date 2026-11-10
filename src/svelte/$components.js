@@ -1,5 +1,5 @@
-import Budget from "./budget.svelte";
-import Card from "./card.svelte";
-import Quiz from "./quiz.svelte";
+import Budget from "./Budget.svelte";
+import Card from "./Card.svelte";
+import Quiz from "./Quiz.svelte";
 
 export default { Budget, Card, Quiz };

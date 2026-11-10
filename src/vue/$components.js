@@ -1,4 +1,4 @@
-import Kanban from "./kanban.vue";
-import Planets from "./planets.vue";
+import Kanban from "./Kanban.vue";
+import Planets from "./Planets.vue";
 
 export default { Kanban, Planets };
