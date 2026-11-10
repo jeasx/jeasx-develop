@@ -2,7 +2,13 @@
 	import { Tween } from "svelte/motion";
 	import { cubicOut } from "svelte/easing";
 
-	let { income, categories } = $props();
+	let { income: initialIncome, categories } = $props();
+
+	// The overall budget is adjustable, up to twice the initial value.
+	// svelte-ignore state_referenced_locally
+	let income = $state(initialIncome);
+	// svelte-ignore state_referenced_locally
+	const maxIncome = initialIncome * 2;
 
 	// svelte-ignore state_referenced_locally
 	let items = $state(categories.map((c) => ({ ...c })));
@@ -59,7 +65,10 @@
 				<input type="range" min="0" max={item.max} step="10" bind:value={item.amount} />
 			</label>
 		{/each}
-		<p>Monthly income: <b>{euro(income)}</b></p>
+		<label class="total" style:--c="var(--sv-muted)">
+			<span>Monthly budget<b>{euro(income)}</b></span>
+			<input type="range" min="500" max={maxIncome} step="50" bind:value={income} />
+		</label>
 	</div>
 </div>
 
@@ -142,9 +151,12 @@
 		accent-color: var(--c);
 	}
 
-	p {
-		margin: 0;
-		color: var(--sv-muted);
-		font-size: 0.9rem;
+	.total {
+		padding-top: 0.9rem;
+		border-top: 1px solid var(--sv-line);
+	}
+
+	.total span {
+		font-weight: 600;
 	}
 </style>
