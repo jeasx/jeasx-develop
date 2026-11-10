@@ -3,9 +3,6 @@ import sitemap from "./sitemap.json";
 
 const EXAMPLE_COUNT = sitemap.reduce((sum, { links }) => sum + links.length, 0);
 
-/** @param {string} title */
-const slug = (title) => title.toLowerCase().replace(/[^a-z0-9]+/g, "-");
-
 export default function () {
   return (
     <Layout
@@ -38,13 +35,11 @@ export default function () {
           </li>
         </ul>
       </section>
-
       <nav id="examples" class="home-topics" aria-label="Topics">
         {sitemap.map(({ title }) => (
           <a href={`#${slug(title)}`}>{title}</a>
         ))}
       </nav>
-
       <section class="home-intro">
         <article>
           <h3>Less framework, fewer headaches</h3>
@@ -63,7 +58,6 @@ export default function () {
           </p>
         </article>
       </section>
-
       {sitemap.map(({ title, description, links }, index) => (
         <section id={slug(title)} class="home-topic">
           <header>
@@ -85,4 +79,9 @@ export default function () {
       ))}
     </Layout>
   );
+}
+
+/** @param {string} title */
+function slug(title) {
+  return title.toLowerCase().replace(/[^a-z0-9]+/g, "-");
 }

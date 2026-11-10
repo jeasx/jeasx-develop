@@ -2,9 +2,6 @@ import { html } from "jsx-async-runtime";
 import GithubIcon from "./github.svg";
 import sitemap from "./sitemap.json";
 
-const REPOSITORY = "https://github.com/jeasx/jeasx-expo";
-const ORIGIN = "https://expo.jeasx.dev";
-
 // Top-level folders of all examples, e.g. "blog" for "/blog".
 const EXAMPLES = new Set(
   sitemap.flatMap(({ links }) => links.map(({ path }) => path.split(/[/?]/)[1])),
@@ -30,7 +27,7 @@ export default function Layout({
 
   // Link to the source of the current example; unknown paths (e.g. 404 pages) get the repository.
   const example = path.split("/")[1];
-  const sourceUrl = EXAMPLES.has(example) ? `${REPOSITORY}/tree/main/src/${example}` : REPOSITORY;
+  const sourcePath = EXAMPLES.has(example) ? `/tree/main/src/${example}` : "";
 
   return (
     <>
@@ -46,7 +43,7 @@ export default function Layout({
           {css && <link rel="stylesheet" href={addCacheBuster(css)} />}
           <link
             rel="canonical"
-            href={`${ORIGIN}${url.length > 1 && url.endsWith("/") ? url.slice(0, -1) : url}`}
+            href={`https://expo.jeasx.dev${url.length > 1 && url.endsWith("/") ? url.slice(0, -1) : url}`}
           />
           {/* The nonce is only set by pages with a Content Security Policy (see "/csp"). */}
           <script type="module" src={addCacheBuster("/index.js")} nonce={this.nonce}></script>
@@ -73,7 +70,11 @@ export default function Layout({
                 </ul>
                 <ul>
                   <li>
-                    <a href={sourceUrl} class="shell-source" title="View source code">
+                    <a
+                      href={`https://github.com/jeasx/jeasx-expo${sourcePath}`}
+                      class="shell-source"
+                      title="View source code"
+                    >
                       <img src={GithubIcon} width="20" height="20" alt="" />
                       <span>Source</span>
                     </a>
@@ -87,7 +88,7 @@ export default function Layout({
             <p>
               <a href="https://www.jeasx.dev">jeasx.dev</a>
               <span aria-hidden="true">·</span>
-              <a href={REPOSITORY}>GitHub</a>
+              <a href="https://github.com/jeasx/jeasx-expo">GitHub</a>
             </p>
             <p>
               &copy; {new Date().getFullYear()} · powered by Jeasx on{" "}

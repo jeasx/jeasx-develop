@@ -1,4 +1,5 @@
 import Prism from "prismjs";
+
 /**
  * Wraps the markup in a small standalone page with Prism highlighting.
  * When `changed` is given, those lines are marked and all others dimmed.
@@ -13,12 +14,16 @@ export default function highlightMarkup(markup, changed, kind = "added") {
   const lines = code.split("\n").map((line, index) => {
     const prefix = open.join("");
     for (const [tag] of line.matchAll(/<span[^>]*>|<\/span>/g)) {
-      tag === "</span>" ? open.pop() : open.push(tag);
+      if (tag === "</span>") {
+        open.pop();
+      } else {
+        open.push(tag);
+      }
     }
     const body = prefix + line + "</span>".repeat(open.length);
     return `<span class="line${changed?.has(index) ? " " + kind : ""}">${body}</span>`;
   });
-  return `<!doctype html>
+  return /*html*/ `<!doctype html>
 <html>
 <head>
 <meta charset="utf-8">
