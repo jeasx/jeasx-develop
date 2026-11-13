@@ -10,7 +10,7 @@
   ],
   "functions": {
     "api/vercel.js": {
-      "includeFiles": "{jeasx.config.js,dist/**,public/**,node_modules/**}"
+      "includeFiles": "./**/*"
     }
   },
   "outputDirectory": "api/public"
