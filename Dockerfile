@@ -1,8 +1,5 @@
 FROM node:lts-alpine
 
-# Libraries like React check NODE_ENV at runtime and otherwise load their slower development builds.
-ENV NODE_ENV=production
-
 # Alpine has no fonts, so sharp would draw SVG text as empty boxes (see "src/og").
 RUN apk add --no-cache fontconfig font-liberation
 
@@ -13,6 +10,8 @@ COPY --chown=node:node package.json package-lock.json ./
 RUN npm ci --omit=dev && npm cache clean --force
 COPY --chown=node:node . ./
 
+# Libraries like React check NODE_ENV and otherwise load their slower development builds.
+ENV NODE_ENV=production
 RUN node --run build
 
 # Uses the health route of the examples ("src/[health].json"): keep that route or remove this check. wget is part of Alpine.
