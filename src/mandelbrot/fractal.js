@@ -48,8 +48,14 @@ export function toPlane(view, px, py, width = WIDTH, height = HEIGHT) {
  * Neighbouring pixels of the same color in a row are merged into one horizontal line,
  * and all lines of one color share a single path, which keeps the markup small.
  * Resolves to a list of `{ color, d }`, one entry per color.
+ *
+ * `breakAfter` sets how often to let other work run. A Web Worker has a thread of its
+ * own, so it passes Infinity and never takes a break.
  */
-export async function render(view, { width, height, top = 0, rows = height }) {
+export async function render(
+  view,
+  { width, height, top = 0, rows = height, breakAfter = BREAK_AFTER },
+) {
   const max = maxIterations(view.zoom);
   /** @type {Map<string, string[]>} */
   const paths = new Map();
@@ -57,7 +63,7 @@ export async function render(view, { width, height, top = 0, rows = height }) {
   for (let py = 0; py < rows; py++) {
     // Computing blocks the only thread of the server. Take a break every few milliseconds,
     // so other requests (e.g. the stylesheets this page needs to be painted) aren't stuck.
-    if (performance.now() - lastBreak > BREAK_AFTER) {
+    if (performance.now() - lastBreak > breakAfter) {
       await new Promise((resolve) => setImmediate(resolve));
       lastBreak = performance.now();
     }
@@ -90,7 +96,9 @@ export async function render(view, { width, height, top = 0, rows = height }) {
 function escape(cx, cy, max) {
   // Skip the main cardioid and the period-2 bulb, they are always inside.
   const q = (cx - 0.25) ** 2 + cy * cy;
-  if (q * (q + (cx - 0.25)) <= 0.25 * cy * cy || (cx + 1) ** 2 + cy * cy <= 0.0625) return -1;
+  if (q * (q + (cx - 0.25)) <= 0.25 * cy * cy || (cx + 1) ** 2 + cy * cy <= 0.0625) {
+    return -1;
+  }
 
   let x = 0;
   let y = 0;
@@ -104,7 +112,9 @@ function escape(cx, cy, max) {
     y2 = y * y;
     n++;
   }
-  if (n >= max) return -1;
+  if (n >= max) {
+    return -1;
+  }
   return n + 1 - Math.log2(Math.log2(x2 + y2) / 2);
 }
 
@@ -113,7 +123,9 @@ function escape(cx, cy, max) {
  * Channels are rounded to 16 levels, so neighbouring pixels share colors more often.
  */
 function color(n, max) {
-  if (n < 0) return "#011";
+  if (n < 0) {
+    return "#011";
+  }
   const t = Math.sqrt(n / max) * 6;
   const fade = Math.min(1, n / 8);
   return (

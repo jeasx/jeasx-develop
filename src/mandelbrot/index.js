@@ -1,3 +1,5 @@
+import { HEIGHT, STRIP, WIDTH } from "./fractal";
+
 // Click to zoom into a point by a factor of four, or drag a box to zoom into that area.
 // Positions are measured relative to the displayed size of the image, so it works at any size.
 const canvas = document.getElementById("canvas");
@@ -35,13 +37,17 @@ if (canvas) {
   };
 
   canvas.addEventListener("pointerdown", (event) => {
-    if (event.button !== 0) return;
+    if (event.button !== 0) {
+      return;
+    }
     canvas.setPointerCapture(event.pointerId);
     start = point(event);
   });
 
   canvas.addEventListener("pointermove", (event) => {
-    if (!start) return;
+    if (!start) {
+      return;
+    }
     const end = point(event);
     Object.assign(box.style, {
       left: `${Math.min(start.x, end.x)}px`,
@@ -53,7 +59,9 @@ if (canvas) {
   });
 
   canvas.addEventListener("pointerup", (event) => {
-    if (!start) return;
+    if (!start) {
+      return;
+    }
     const end = point(event);
     const { width, height } = canvas.getBoundingClientRect();
     const w = Math.abs(end.x - start.x);
@@ -75,10 +83,86 @@ if (canvas) {
     const { x, y, zoom, span } = canvas.dataset;
     const { width, height } = canvas.getBoundingClientRect();
     saveScroll();
-    location.search = new URLSearchParams({
-      x: String(Number(x) + (fx - 0.5) * Number(span)),
-      y: String(Number(y) + ((fy - 0.5) * Number(span) * height) / width),
-      zoom: String(Number(zoom) * factor),
-    }).toString();
+    const params = new URLSearchParams(location.search);
+    params.set("x", String(Number(x) + (fx - 0.5) * Number(span)));
+    params.set("y", String(Number(y) + ((fy - 0.5) * Number(span) * height) / width));
+    params.set("zoom", String(Number(zoom) * factor));
+    location.search = params.toString();
   }
+
+  if (canvas.dataset.renderer === "browser") {
+    renderInWorkers(canvas).catch((error) => {
+      document.querySelector(".mb-time").textContent = `failed: ${error.message}`;
+    });
+  }
+}
+
+/** The preview is rendered at 1/PREVIEW of the final resolution, as on the server. */
+const PREVIEW = 8;
+
+/**
+ * Fills the empty slots of the page with a pool of Web Workers, one per CPU core.
+ * Every worker takes the next open task until none is left, so fast workers do more.
+ * The preview comes first, then the strips from top to bottom.
+ */
+async function renderInWorkers(canvas) {
+  const start = performance.now();
+  const view = {
+    x: Number(canvas.dataset.x),
+    y: Number(canvas.dataset.y),
+    zoom: Number(canvas.dataset.zoom),
+  };
+  const tasks = [
+    {
+      slot: canvas.querySelector('[data-slot="preview"]'),
+      size: { width: WIDTH / PREVIEW, height: HEIGHT / PREVIEW },
+      props: { class: "mb-preview", label: "Mandelbrot set" },
+    },
+    ...[...canvas.querySelectorAll(".mb-sharp [data-slot]")].map((slot) => ({
+      slot,
+      size: {
+        width: WIDTH,
+        height: HEIGHT,
+        top: Number(slot.dataset.slot),
+        rows: STRIP,
+      },
+    })),
+  ];
+
+  // The worker is bundled like every "index.*" file. Pass on the cache buster of this script.
+  const url = new URL(`worker/index.js${new URL(import.meta.url).search}`, import.meta.url);
+  const count = Math.min(navigator.hardwareConcurrency || 4, tasks.length);
+  const explorer = canvas.closest(".mb-explorer");
+  let next = 0;
+  let done = 0;
+
+  await Promise.all(
+    Array.from({ length: count }, async () => {
+      const worker = new Worker(url, { type: "module" });
+      try {
+        while (next < tasks.length) {
+          const { slot, size, props } = tasks[next++];
+          slot.outerHTML = await ask(worker, { view, size, props });
+          // Strips arrive out of order, so progress counts the finished ones.
+          explorer.style.setProperty("--progress", (++done / tasks.length).toFixed(3));
+        }
+      } finally {
+        worker.terminate();
+      }
+    }),
+  );
+
+  const result = document.createElement("span");
+  result.className = "mb-done";
+  result.textContent = `${Math.round(performance.now() - start)} ms · ${count} workers`;
+  document.querySelector(".mb-time").append(result);
+}
+
+/** Sends one task to a worker and resolves to its answer. */
+function ask(worker, message) {
+  return new Promise((resolve, reject) => {
+    worker.onmessage = ({ data }) => resolve(data);
+    worker.onerror = (event) => reject(new Error(event.message || "worker failed"));
+    worker.postMessage(message);
+  });
 }

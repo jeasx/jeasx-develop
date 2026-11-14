@@ -1,0 +1,416 @@
+/* Colors of this example. */
+:root {
+  --pdf-accent: #22d3ee;
+  --pdf-gradient: linear-gradient(120deg, var(--pdf-accent), #a855f7);
+  --pdf-line: rgba(127, 127, 127, 0.2);
+  --pdf-soft: rgba(127, 127, 127, 0.07);
+}
+
+/* Hero: short, so the example is visible right away. */
+.pdf-hero {
+  margin: 1rem auto 2rem;
+  max-width: 44rem;
+  text-align: center;
+
+  & h1 {
+    margin: 0.4rem 0 0.6rem;
+    background: var(--pdf-gradient);
+    background-clip: text;
+    color: transparent;
+  }
+
+  & p {
+    margin: 0 auto;
+    color: var(--muted);
+    font-size: 1.05rem;
+  }
+}
+
+.pdf-kicker {
+  color: var(--pdf-accent);
+  font-weight: 600;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.pdf-chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 1.25rem 0 0;
+  padding: 0;
+  list-style: none;
+
+  & li {
+    margin: 0;
+    list-style: none;
+    border: 1px solid var(--pdf-line);
+    border-radius: 999px;
+    background: var(--pdf-soft);
+    padding: 0.25rem 0.8rem;
+    font-size: 0.8rem;
+  }
+
+  & code {
+    background: none;
+    padding: 0;
+  }
+}
+
+/* Studio: form and preview side by side. */
+.pdf-studio {
+  display: grid;
+  grid-template-columns: minmax(0, 23rem) minmax(0, 1fr);
+  align-items: start;
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.pdf-form {
+  margin: 0;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  background: var(--pdf-soft);
+  overflow: hidden;
+
+  & section {
+    border-bottom: 1px solid var(--border);
+    padding: 1.1rem 1.25rem 0.6rem;
+  }
+
+  & h2 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0 0 0.9rem;
+    font-size: 0.95rem;
+    text-align: left;
+
+    & span {
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--pdf-gradient);
+      width: 1.4rem;
+      height: 1.4rem;
+      color: #fff;
+      font-size: 0.75rem;
+    }
+  }
+
+  & label {
+    display: block;
+    margin-bottom: 0.7rem;
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+
+  & input,
+  & textarea {
+    display: block;
+    box-sizing: border-box;
+    margin: 0.25rem 0 0;
+    border: 1px solid var(--border);
+    border-radius: 0.4rem;
+    background: var(--code-bg);
+    padding: 0.4rem 0.6rem;
+    width: 100%;
+    color: inherit;
+    font: inherit;
+    font-size: 0.9rem;
+    line-height: 1.35;
+    transition: border-color 0.15s;
+
+    &:focus {
+      outline: none;
+      border-color: var(--pdf-accent);
+      box-shadow: 0 0 0 3px rgb(34 211 238 / 0.15);
+    }
+
+    &::placeholder {
+      color: var(--muted);
+      opacity: 0.6;
+    }
+  }
+
+  & textarea {
+    resize: vertical;
+  }
+}
+
+.pdf-pair {
+  display: grid;
+  grid-template-columns: 1fr 6rem;
+  gap: 0.6rem;
+}
+
+.pdf-items {
+  display: grid;
+  grid-template-columns: 1fr 3.75rem 5.25rem;
+  gap: 0.35rem;
+  margin-bottom: 0.6rem;
+
+  & span {
+    color: var(--muted);
+    font-size: 0.75rem;
+  }
+
+  & input {
+    margin: 0;
+    font-size: 0.85rem;
+  }
+}
+
+.pdf-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.9rem 1.25rem;
+}
+
+.pdf-update {
+  margin: 0;
+  border: none;
+  border-radius: 0.5rem;
+  background: var(--pdf-gradient);
+  padding: 0.5rem 1.1rem;
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* With JavaScript the preview updates by itself, so the button steps back. */
+.pdf-live .pdf-update {
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.pdf-status {
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Preview in a viewer window; stays in view while scrolling the form. */
+.pdf-viewer {
+  position: sticky;
+  top: 1rem;
+  margin: 0;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  background: var(--code-bg);
+  overflow: hidden;
+  box-shadow: 0 1.5rem 3rem -1rem rgb(0 0 0 / 0.6);
+
+  & figcaption {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    border-bottom: 1px solid var(--border);
+    background: color-mix(in srgb, var(--secondary) 10%, var(--code-bg));
+    padding: 0.5rem 0.75rem 0.5rem 1rem;
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+
+  & iframe {
+    display: block;
+    border: none;
+    background: #525659;
+    aspect-ratio: 1 / 1.3;
+    width: 100%;
+  }
+}
+
+.pdf-file {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pdf-viewer-actions {
+  display: flex;
+  gap: 0.4rem;
+  margin-left: auto;
+
+  & button {
+    margin: 0;
+    border: 1px solid var(--border);
+    border-radius: 0.4rem;
+    background: transparent;
+    padding: 0.3rem 0.75rem;
+    color: inherit;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+
+    &:hover {
+      color: #fff;
+    }
+  }
+
+  & .pdf-primary {
+    border-color: transparent;
+    background: var(--pdf-gradient);
+    color: #fff;
+  }
+}
+
+.pdf-dots {
+  display: flex;
+  gap: 0.4rem;
+
+  & i {
+    border-radius: 50%;
+    background: #ff5f57;
+    width: 0.7rem;
+    height: 0.7rem;
+
+    &:nth-child(2) {
+      background: #febc2e;
+    }
+
+    &:nth-child(3) {
+      background: #28c840;
+    }
+  }
+}
+
+/* How it works */
+.pdf-how > h2 {
+  margin-bottom: 1.25rem;
+  text-align: center;
+}
+
+.pdf-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 1rem;
+  margin: 0 0 1.5rem;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+
+  & li {
+    margin: 0;
+    list-style: none;
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    background: var(--pdf-soft);
+    padding: 1rem 1.15rem;
+    counter-increment: step;
+
+    &::before {
+      display: block;
+      margin-bottom: 0.35rem;
+      background: var(--pdf-gradient);
+      background-clip: text;
+      color: transparent;
+      font-weight: 800;
+      font-size: 1.5rem;
+      content: "0" counter(step);
+    }
+  }
+
+  & p {
+    margin: 0.35rem 0 0;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+}
+
+.pdf-reference {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  align-items: start;
+  gap: 1.5rem;
+}
+
+/* Editor window around the code sample, like the MDX code blocks of this site. */
+.pdf-editor {
+  margin: 0;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  background: var(--code-bg);
+  overflow: hidden;
+  box-shadow: 0 0.75rem 2rem rgb(0 0 0 / 0.35);
+
+  & > figcaption {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    border-bottom: 1px solid var(--border);
+    background: color-mix(in srgb, var(--secondary) 10%, var(--code-bg));
+    padding: 0.55rem 1rem;
+    color: var(--muted);
+    font-size: 0.8rem;
+
+    & code {
+      background: none;
+      padding: 0;
+      color: inherit;
+      font-size: inherit;
+    }
+
+    & small {
+      margin-left: auto;
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+  }
+}
+
+/* Token colors come from the site's Prism theme (Okaidia). */
+.pdf-code {
+  margin: 0;
+  border-radius: 0;
+  background: none;
+  overflow-x: auto;
+  color: #f8f8f2;
+  font-size: 0.8rem;
+  white-space: pre;
+
+  & > code {
+    display: block;
+    padding: 1rem 1.25rem;
+    min-width: max-content;
+    line-height: 1.6;
+  }
+}
+
+.pdf-primitives {
+  margin: 0;
+
+  & div {
+    border-bottom: 1px solid var(--border);
+    padding: 0.55rem 0;
+  }
+
+  & dt code {
+    color: var(--pdf-accent);
+    font-size: 0.8rem;
+  }
+
+  & dd {
+    margin: 0.15rem 0 0;
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 56rem) {
+  .pdf-studio,
+  .pdf-reference {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pdf-viewer {
+    position: static;
+  }
+}

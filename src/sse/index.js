@@ -80,3 +80,6 @@ function disconnect() {
 $("toggle").addEventListener("click", () => (events ? disconnect() : connect()));
 
 connect();
+
+// Makes this file a module, so TypeScript keeps its top-level names out of the global scope.
+export {};

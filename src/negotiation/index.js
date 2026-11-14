@@ -35,3 +35,6 @@ playground.addEventListener("submit", async (event) => {
 });
 
 playground.requestSubmit();
+
+// Makes this file a module, so TypeScript keeps its top-level names out of the global scope.
+export {};

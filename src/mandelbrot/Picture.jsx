@@ -16,9 +16,12 @@ export default function Picture({ paths, width, height, label = "", ...props }) 
       aria-label={label || undefined}
       aria-hidden={label ? undefined : "true"}
     >
-      {paths.map(({ color, d }) => (
-        <path stroke={color} d={d} />
-      ))}
+      <Paths paths={paths} />
     </svg>
   );
+}
+
+/** The paths of a picture, one per color. */
+export function Paths({ paths }) {
+  return paths.map(({ color, d }) => <path stroke={color} d={d} />);
 }

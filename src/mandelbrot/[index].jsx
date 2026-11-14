@@ -33,6 +33,9 @@ const PLACES = [
 export default function ({ request }) {
   const query = /** @type {Record<string, string>} */ (request.query);
   const view = parseView(query);
+  // "browser" computes the image in Web Workers instead of on the server.
+  const workers = query.renderer === "browser";
+  const link = (target) => toLink(target, workers);
 
   const start = Date.now();
 
@@ -56,7 +59,14 @@ export default function ({ request }) {
       <p>
         Click into the image to zoom in by a factor of four, or drag a box to zoom into that area. A
         small script turns your selection into new coordinates and reloads the page, which keeps
-        your scroll position. Everything else happens on the server.
+        your scroll position.
+      </p>
+      <p>
+        Switch to <em>Web Workers</em> to move the work into your browser: the server only sends
+        empty slots, and a pool of workers (one per CPU core) runs the very same{" "}
+        <code>fractal.js</code> and <code>Picture</code> component. Each worker renders its strips
+        to markup with <code>jsxToString</code> from jsx-async-runtime and posts the string back, so
+        the main thread stays free while all cores compute in parallel.
       </p>
 
       <section class="mb-explorer" aria-label="Explorer">
@@ -72,6 +82,22 @@ export default function ({ request }) {
               </a>
             ))}
           </nav>
+          <nav class="mb-renderer" aria-label="Rendered by">
+            <a
+              href={toLink(view, false)}
+              data-keep-scroll
+              aria-current={workers ? undefined : "page"}
+            >
+              Server
+            </a>
+            <a
+              href={toLink(view, true)}
+              data-keep-scroll
+              aria-current={workers ? "page" : undefined}
+            >
+              Web Workers
+            </a>
+          </nav>
           <div class="mb-actions">
             <a
               class="mb-icon"
@@ -84,7 +110,7 @@ export default function ({ request }) {
             </a>
             <a
               class="mb-icon"
-              href={`svg${link(view)}`}
+              href={`svg${toLink(view, false)}`}
               target="_blank"
               title="Open SVG in new tab"
               aria-label="Open SVG in new tab"
@@ -106,12 +132,17 @@ export default function ({ request }) {
           data-y={view.y}
           data-zoom={view.zoom}
           data-span={planeWidth(view)}
+          data-renderer={workers ? "browser" : "server"}
         >
-          <Preview view={view} />
+          {workers ? <div class="mb-preview" data-slot="preview"></div> : <Preview view={view} />}
           <RestoreScroll />
-          <div class="mb-strips" style={`--strip-ratio: ${WIDTH} / ${STRIP}`}>
-            <Strips view={view} />
-          </div>
+          {workers ? (
+            <Slots />
+          ) : (
+            <div class="mb-strips" style={`--strip-ratio: ${WIDTH} / ${STRIP}`}>
+              <Strips view={view} />
+            </div>
+          )}
           <div class="mb-scan" aria-hidden="true"></div>
           <p class="mb-hint" aria-hidden="true">
             Click to zoom · drag to select
@@ -138,8 +169,14 @@ export default function ({ request }) {
           <div>
             <dt>Rendered in</dt>
             <dd class="mb-time">
-              <span class="mb-busy">streaming…</span>
-              <Done start={start} />
+              {workers ? (
+                <span class="mb-busy">computing…</span>
+              ) : (
+                <>
+                  <span class="mb-busy">streaming…</span>
+                  <Done start={start} />
+                </>
+              )}
             </dd>
           </div>
         </dl>
@@ -187,6 +224,30 @@ async function* Strips({ view }) {
 }
 
 /**
+ * Empty slots for the strips, which the Web Workers fill in the browser (see index.js).
+ * All strips share one SVG, so no seams show between them when the image is scaled.
+ */
+function Slots() {
+  const tops = [];
+  for (let top = 0; top < HEIGHT; top += STRIP) {
+    tops.push(top);
+  }
+  return (
+    <svg
+      class="mb-sharp"
+      viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
+      preserveAspectRatio="none"
+      shape-rendering="crispEdges"
+      aria-hidden="true"
+    >
+      {tops.map((top) => (
+        <g data-slot={top}></g>
+      ))}
+    </svg>
+  );
+}
+
+/**
  * Restores the scroll position saved by the zoom script before the page was reloaded.
  * It runs inline right after the preview, so the page jumps back while the strips are
  * still streaming instead of after the whole image is loaded.
@@ -204,7 +265,9 @@ function RestoreScroll() {
     y = sessionStorage.getItem("${SCROLL_KEY}");
     sessionStorage.removeItem("${SCROLL_KEY}");
   } catch {}
-  if (y === null || y === undefined) return;
+  if (y === null || y === undefined) {
+    return;
+  }
   y = Number(y);
   const root = document.documentElement;
   root.style.minHeight = y + innerHeight + "px";
@@ -218,8 +281,12 @@ function RestoreScroll() {
     addEventListener(type, stop, { passive: true }),
   );
   const apply = () => {
-    if (!active) return;
-    if (Math.abs(scrollY - y) > 1) scrollTo(0, y);
+    if (!active) {
+      return;
+    }
+    if (Math.abs(scrollY - y) > 1) {
+      scrollTo(0, y);
+    }
     requestAnimationFrame(apply);
   };
   apply();
@@ -254,9 +321,18 @@ function isAt(view, place) {
   return view.x === place.x && view.y === place.y && view.zoom === place.zoom;
 }
 
-function link(view) {
+/** Link to a view, rendered in Web Workers if `workers` is true. */
+function toLink(view, workers) {
   const { x, y, zoom } = parseView({ x: view.x, y: view.y, zoom: view.zoom });
-  return `?${new URLSearchParams({ x: String(x), y: String(y), zoom: String(zoom) })}`;
+  const params = new URLSearchParams({
+    x: String(x),
+    y: String(y),
+    zoom: String(zoom),
+  });
+  if (workers) {
+    params.set("renderer", "browser");
+  }
+  return `?${params}`;
 }
 
 function formatZoom(zoom) {
