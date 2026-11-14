@@ -1192,6 +1192,21 @@ dialog::backdrop {
   text-align: left;
 }
 
+/* jsx-async-runtime in a topic heading: highlighted and linked to its repository. */
+.home-runtime {
+  background: linear-gradient(90deg, var(--primary), var(--primary-hover));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-family: var(--mono);
+  text-decoration: none;
+}
+
+.home-runtime:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--primary);
+}
+
 .home-topic header p {
   opacity: 0.8;
   margin: 0;

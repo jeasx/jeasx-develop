@@ -63,7 +63,7 @@ export default function () {
           <header>
             <span class="home-number">{String(index + 1).padStart(2, "0")}</span>
             <div>
-              <h2>{title}</h2>
+              <h2>{linkRuntime(title)}</h2>
               <p>{description}</p>
             </div>
           </header>
@@ -78,6 +78,29 @@ export default function () {
         </section>
       ))}
     </Layout>
+  );
+}
+
+const RUNTIME = "jsx-async-runtime";
+
+/**
+ * Highlights and links jsx-async-runtime in a title, e.g. "Server-side JSX with jsx-async-runtime".
+ * @param {string} title
+ */
+function linkRuntime(title) {
+  const [before, ...after] = title.split(RUNTIME);
+  if (!after.length) {
+    return title;
+  }
+  return (
+    <>
+      {before}
+      {/* Shown as a JSX element; JSX escapes the angle brackets. */}
+      <a href={`https://github.com/jeasx/${RUNTIME}`} class="home-runtime">
+        {`<${RUNTIME} />`}
+      </a>
+      {after.join(RUNTIME)}
+    </>
   );
 }
 

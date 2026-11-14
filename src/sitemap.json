@@ -1,24 +1,97 @@
 [
   {
-    "title": "Dynamic websites",
-    "description": "Render pages on the server with content from a remote API, JSON data or Markdown with MDX.",
+    "title": "Server-side JSX with jsx-async-runtime",
+    "description": "Everything jsx-async-runtime renders on the server: promises, iterables and other values as children, render props, request context via 'this', overriding how JSX turns into HTML, head management, i18n, Declarative Shadow DOM and unit tests for components.",
     "links": [
-      { "path": "/view-transitions", "title": "Planet gallery" },
-      { "path": "/blog", "title": "Blog" },
-      { "path": "/products", "title": "Products" },
-      { "path": "/mdx", "title": "MDX support" }
+      { "path": "/values", "title": "What JSX renders" },
+      { "path": "/context", "title": "'this' as context" },
+      { "path": "/render-props", "title": "Render props" },
+      { "path": "/interceptor", "title": "Intercept JSX" },
+      { "path": "/head", "title": "Manage the head" },
+      { "path": "/i18n", "title": "Internationalization" },
+      { "path": "/shadow-dom", "title": "Declarative Shadow DOM" },
+      { "path": "/testing", "title": "Unit tests" }
     ]
   },
   {
-    "title": "Web applications without client-side JavaScript",
-    "description": "Build interactive apps with plain HTML forms. The server does the work, and view transitions make page changes feel smooth.",
+    "title": "Streaming with jsx-async-runtime",
+    "description": "Async components don't block the page: jsx-async-runtime streams HTML as soon as it is ready, in order, in parallel or out of order, from async iterables or a ReadableStream.",
     "links": [
-      { "path": "/lottery", "title": "Lottery" },
+      { "path": "/out-of-order", "title": "Out-of-order streaming" },
+      { "path": "/parallel", "title": "Parallel loading" },
+      { "path": "/streaming", "title": "Streaming HTML" },
+      { "path": "/async-iterable", "title": "Async iterables" },
+      { "path": "/readable-stream", "title": "ReadableStreams" },
+      { "path": "/mandelbrot", "title": "Mandelbrot explorer" }
+    ]
+  },
+  {
+    "title": "Client-side apps with jsx-async-runtime",
+    "description": "Render the same JSX components on the server and in the browser with jsx-async-runtime, without React, a virtual DOM or hydration: from simple widgets to apps that work with and without JavaScript, and streamed async trees.",
+    "links": [
+      { "path": "/client-jsx", "title": "Client-side JSX" },
+      { "path": "/kanban", "title": "Kanban board" },
+      { "path": "/cinema", "title": "Cinema seats" },
+      { "path": "/social-feed", "title": "Social feed" },
+      { "path": "/dependency-tree", "title": "Dependency tree" }
+    ]
+  },
+  {
+    "title": "Client-side games with jsx-async-runtime",
+    "description": "Games where jsx-async-runtime renders every frame in the browser: animation, input and game logic with plain JSX components.",
+    "links": [
+      { "path": "/game-of-life", "title": "Game of Life" },
+      { "path": "/maze-chase", "title": "Maze chase" },
+      { "path": "/racer", "title": "Racer" },
+      { "path": "/sky-fortress", "title": "Sky fortress" },
+      { "path": "/jungle-run", "title": "Jungle run" },
+      { "path": "/air-mail", "title": "Air mail" }
+    ]
+  },
+  {
+    "title": "Server-rendered websites and apps",
+    "description": "Render pages on the server with content from a remote API, JSON data or Markdown with MDX, and build interactive apps with plain HTML forms. No client-side JavaScript needed: view transitions make page changes feel smooth.",
+    "links": [
+      { "path": "/blog", "title": "Blog" },
+      { "path": "/products", "title": "Products" },
+      { "path": "/view-transitions", "title": "Planet gallery" },
+      { "path": "/mdx", "title": "MDX support" },
       { "path": "/todos", "title": "Todos" },
+      { "path": "/wizard", "title": "Wizard" },
+      { "path": "/lottery", "title": "Lottery" },
       { "path": "/jokes", "title": "Jokes" },
       { "path": "/repositories", "title": "GitHub repos" },
-      { "path": "/wizard", "title": "Wizard" },
       { "path": "/ab-testing", "title": "A/B testing" }
+    ]
+  },
+  {
+    "title": "Images, JSON and other content types",
+    "description": "Routes aren't limited to HTML: they can return images, SVG, JSON, XML, a live stream of Server-Sent Events or any other content type.",
+    "links": [
+      { "path": "/og", "title": "Open Graph images" },
+      { "path": "/svg", "title": "SVG charts" },
+      { "path": "/sharp", "title": "Image scaling" },
+      { "path": "/upload", "title": "Image upload" },
+      { "path": "/json/request.json?foo=bar", "title": "JSON response" },
+      { "path": "/sse", "title": "Server-Sent Events" },
+      { "path": "/chat", "title": "Chat with SSE" },
+      { "path": "/negotiation", "title": "Content negotiation" },
+      { "path": "/response", "title": "Response objects" },
+      { "path": "/sitemap.xml", "title": "XML sitemap" }
+    ]
+  },
+  {
+    "title": "Security, errors and post-processing",
+    "description": "Protect routes with basic auth or sessions, sign cookies, block injected scripts and stop bots with a proof-of-work captcha. Catch errors and transform the final HTML before it is sent to the browser.",
+    "links": [
+      { "path": "/login", "title": "Login and sessions" },
+      { "path": "/basic-auth", "title": "Basic auth" },
+      { "path": "/signed-cookies", "title": "Signed cookies" },
+      { "path": "/csp", "title": "Content Security Policy" },
+      { "path": "/cap", "title": "Cap.js" },
+      { "path": "/error-handler", "title": "Catch errors" },
+      { "path": "/prettier", "title": "Prettify HTML" },
+      { "path": "/cheerio", "title": "Extract styles" }
     ]
   },
   {
@@ -34,95 +107,16 @@
     ]
   },
   {
-    "title": "Islands of client-side JavaScript",
-    "description": "Add islands of interactivity to server-rendered pages with the client-side library you already know.",
+    "title": "JavaScript libraries and frameworks",
+    "description": "Add islands of interactivity to server-rendered pages with the JavaScript library or framework you already know.",
     "links": [
-      { "path": "/alpine", "title": "Alpine.js" },
-      { "path": "/arrowjs", "title": "ArrowJS" },
-      { "path": "/lit", "title": "Lit" },
-      { "path": "/preact", "title": "Preact" },
       { "path": "/react", "title": "React" },
+      { "path": "/preact", "title": "Preact" },
+      { "path": "/vue", "title": "Vue" },
       { "path": "/svelte", "title": "Svelte" },
-      { "path": "/vue", "title": "Vue" }
-    ]
-  },
-  {
-    "title": "Streaming and Server-Sent Events",
-    "description": "Use the standards of the web platform: stream HTML with a Response or a ReadableStream or push live updates.",
-    "links": [
-      { "path": "/streaming", "title": "Streaming HTML" },
-      { "path": "/parallel", "title": "Parallel loading" },
-      { "path": "/out-of-order", "title": "Out-of-order streaming" },
-      { "path": "/async-iterable", "title": "Async iterables" },
-      { "path": "/readable-stream", "title": "ReadableStreams" },
-      { "path": "/mandelbrot", "title": "Mandelbrot explorer" },
-      { "path": "/sse", "title": "Server-Sent Events" },
-      { "path": "/chat", "title": "Chat with SSE" }
-    ]
-  },
-  {
-    "title": "Images, JSON and other content types",
-    "description": "Routes aren't limited to HTML: they can return images, SVG, JSON, XML or any other content type.",
-    "links": [
-      { "path": "/upload", "title": "Image upload" },
-      { "path": "/sharp", "title": "Image scaling" },
-      { "path": "/svg", "title": "SVG charts" },
-      { "path": "/og", "title": "Open Graph images" },
-      { "path": "/negotiation", "title": "Content negotiation" },
-      { "path": "/response", "title": "Response objects" },
-      { "path": "/json/request.json?foo=bar", "title": "JSON response" },
-      { "path": "/sitemap.xml", "title": "XML sitemap" }
-    ]
-  },
-  {
-    "title": "Server-side JSX with jsx-async-runtime",
-    "description": "Everything jsx-async-runtime renders on the server: promises, iterables and other values as children, render props, request context via 'this', overriding how JSX turns into HTML, head management, i18n, Declarative Shadow DOM and unit tests for components.",
-    "links": [
-      { "path": "/values", "title": "What JSX renders" },
-      { "path": "/render-props", "title": "Render props" },
-      { "path": "/context", "title": "'this' as context" },
-      { "path": "/interceptor", "title": "Intercept JSX" },
-      { "path": "/head", "title": "Manage the head" },
-      { "path": "/i18n", "title": "Internationalization" },
-      { "path": "/shadow-dom", "title": "Declarative Shadow DOM" },
-      { "path": "/testing", "title": "Unit tests" }
-    ]
-  },
-  {
-    "title": "Client-side JSX with jsx-async-runtime",
-    "description": "Render the same JSX components on the server and in the browser with jsx-async-runtime, without React, a virtual DOM or hydration: from simple widgets to games and streamed async trees.",
-    "links": [
-      { "path": "/client-jsx", "title": "Client-side JSX" },
-      { "path": "/social-feed", "title": "Social feed" },
-      { "path": "/kanban", "title": "Kanban board" },
-      { "path": "/cinema", "title": "Cinema seats" },
-      { "path": "/dependency-tree", "title": "Dependency tree" },
-      { "path": "/game-of-life", "title": "Game of Life" },
-      { "path": "/maze-chase", "title": "Maze chase" },
-      { "path": "/racer", "title": "Racer" },
-      { "path": "/sky-fortress", "title": "Sky fortress" },
-      { "path": "/jungle-run", "title": "Jungle run" },
-      { "path": "/air-mail", "title": "Air mail" }
-    ]
-  },
-  {
-    "title": "Authentication and security",
-    "description": "Protect routes with basic auth or sessions, sign cookies, block injected scripts and stop bots with a proof-of-work captcha.",
-    "links": [
-      { "path": "/basic-auth", "title": "Basic auth" },
-      { "path": "/login", "title": "Login and sessions" },
-      { "path": "/signed-cookies", "title": "Signed cookies" },
-      { "path": "/csp", "title": "Content Security Policy" },
-      { "path": "/cap", "title": "Cap.js" }
-    ]
-  },
-  {
-    "title": "Error handling and post-processing",
-    "description": "Catch errors and transform the final HTML before it is sent to the browser.",
-    "links": [
-      { "path": "/error-handler", "title": "Catch errors" },
-      { "path": "/prettier", "title": "Prettify HTML" },
-      { "path": "/cheerio", "title": "Extract styles" }
+      { "path": "/lit", "title": "Lit" },
+      { "path": "/alpine", "title": "Alpine.js" },
+      { "path": "/arrowjs", "title": "ArrowJS" }
     ]
   }
 ]
