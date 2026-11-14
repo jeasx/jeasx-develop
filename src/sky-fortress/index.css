@@ -1,0 +1,510 @@
+/* Cockpit on the left, controls on the right; stacked on narrow screens. */
+.track {
+  display: grid;
+  grid-template-columns: minmax(0, 720px) 200px;
+  justify-content: center;
+  align-items: start;
+  gap: 1.5rem;
+}
+@media (max-width: 960px) {
+  .track {
+    grid-template-columns: minmax(0, 720px);
+  }
+}
+
+.cockpit {
+  padding: 0.75rem;
+  border: 1px solid #155e75;
+  border-radius: 1rem;
+  background: linear-gradient(160deg, #1e293b, #020617);
+  box-shadow: 0 20px 50px -20px rgb(0 0 0 / 0.8);
+  color: #f8fafc;
+  user-select: none;
+  outline: none;
+  cursor: pointer;
+}
+.cockpit:focus-visible {
+  box-shadow: 0 0 0 3px #22d3ee;
+}
+
+#screen {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 0.5rem;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+.defs {
+  position: absolute;
+}
+
+/* The scene. Colors live here, so every frame of markup stays small. */
+.scene {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.scene .space {
+  fill: url(#sf-space);
+}
+.scene .star {
+  fill: #94a3b8;
+  opacity: 0.7;
+}
+.scene .star.bright {
+  fill: #fff;
+  opacity: 1;
+}
+
+/* The fortress deck and hull. */
+.scene .tile.a {
+  fill: #5b6b80;
+}
+.scene .tile.b {
+  fill: #53627a;
+}
+.scene .tile {
+  stroke: #3b475a;
+  stroke-width: 0.8;
+}
+.scene .seams {
+  stroke: #2f3a4b;
+  stroke-width: 1.4;
+}
+.scene .vent {
+  fill: #283241;
+}
+.scene .slats {
+  stroke: #64748b;
+  stroke-width: 1.2;
+}
+.scene .chevron {
+  fill: #eab308;
+  opacity: 0.85;
+}
+.scene .hatch {
+  fill: #475569;
+  stroke: #94a3b8;
+  stroke-width: 0.8;
+}
+.scene .hatch-line {
+  stroke: #1e293b;
+  stroke-width: 1;
+}
+.scene .lamp {
+  fill: #7f1d1d;
+}
+.scene .lamp.on {
+  fill: #f87171;
+  stroke: rgb(248 113 113 / 0.4);
+  stroke-width: 3;
+}
+.scene .hull {
+  fill: url(#sf-hull);
+}
+.scene .hull.front {
+  fill: #1e293b;
+}
+.scene .ribs,
+.scene .hull-line {
+  stroke: #0f172a;
+  stroke-width: 1.5;
+}
+.scene .window {
+  fill: #1e293b;
+}
+.scene .window.lit {
+  fill: #fde68a;
+}
+.scene .parapet.top {
+  fill: #94a3b8;
+}
+.scene .parapet.side {
+  fill: #475569;
+}
+.scene .parapet.front {
+  fill: #334155;
+}
+.scene .edge {
+  fill: #cbd5e1;
+}
+.scene .cast {
+  fill: rgb(15 23 42 / 0.45);
+}
+.scene .shadow {
+  fill: rgb(2 6 23 / 0.55);
+}
+.scene .altitude {
+  stroke: #22d3ee;
+  stroke-width: 1;
+  stroke-dasharray: 2 3;
+  opacity: 0.6;
+}
+
+/* Boxes: walls, turrets and radar stations. */
+.scene .thing .top {
+  fill: var(--top);
+}
+.scene .thing .front {
+  fill: var(--front);
+}
+.scene .thing .right {
+  fill: var(--side);
+}
+.scene .thing polygon {
+  stroke: rgb(0 0 0 / 0.4);
+  stroke-width: 0.6;
+  stroke-linejoin: round;
+}
+.scene .wall {
+  --top: #fcd34d;
+  --front: #c2410c;
+  --side: #9a3412;
+}
+.scene .wall .bricks {
+  stroke: #7c2d12;
+  stroke-width: 0.9;
+}
+.scene .wall .field {
+  fill: none;
+  stroke: #a5f3fc;
+  stroke-width: 1.6;
+  filter: drop-shadow(0 0 3px #22d3ee);
+}
+.scene .beacon {
+  fill: #7f1d1d;
+}
+.scene .beacon.on {
+  fill: #fecaca;
+  stroke: rgb(239 68 68 / 0.6);
+  stroke-width: 4;
+}
+.scene .turret {
+  --top: #9ca3af;
+  --front: #4b5563;
+  --side: #374151;
+}
+.scene .turret .rim {
+  stroke: #eab308;
+  stroke-width: 1.4;
+}
+.scene .turret .dome {
+  fill: url(#sf-dome);
+  stroke: #450a0a;
+  stroke-width: 0.6;
+}
+.scene .turret .gun {
+  stroke: #1f2937;
+  stroke-width: 2.6;
+  stroke-linecap: round;
+}
+.scene .muzzle {
+  fill: #fef08a;
+  stroke: rgb(251 146 60 / 0.6);
+  stroke-width: 3;
+}
+.scene .radar {
+  --top: #c4b5fd;
+  --front: #6d28d9;
+  --side: #4c1d95;
+}
+.scene .radar .mast,
+.scene .radar .feed {
+  stroke: #e2e8f0;
+  stroke-width: 1.5;
+}
+.scene .radar .dish {
+  fill: #e2e8f0;
+  stroke: #64748b;
+  stroke-width: 0.8;
+}
+.scene .fuel .barrel {
+  fill: url(#sf-tank);
+  stroke: #052e16;
+  stroke-width: 0.6;
+}
+.scene .fuel .lid {
+  fill: #86efac;
+  stroke: #14532d;
+  stroke-width: 0.6;
+}
+.scene .fuel .cap {
+  fill: #166534;
+}
+.scene .fuel .band {
+  fill: none;
+  stroke: #facc15;
+  stroke-width: 2.5;
+}
+.scene .fuel text {
+  font: 800 5.5px sans-serif;
+  fill: #052e16;
+  text-anchor: middle;
+}
+
+/* Ships: the player in cyan and white, fighters in red. */
+.scene .ship polygon {
+  stroke: rgb(2 6 23 / 0.55);
+  stroke-width: 0.5;
+  stroke-linejoin: round;
+}
+.scene .player {
+  --light: #e0f2fe;
+  --mid: #7dd3fc;
+  --dark: #0369a1;
+  --mark: #22d3ee;
+}
+.scene .plane {
+  --light: #fecdd3;
+  --mid: #fb7185;
+  --dark: #9f1239;
+  --mark: #fde047;
+}
+.scene .ship .wing.far {
+  fill: var(--mid);
+}
+.scene .ship .wing.near {
+  fill: var(--dark);
+}
+.scene .ship .body.far {
+  fill: var(--light);
+}
+.scene .ship .body.near {
+  fill: var(--mid);
+}
+.scene .ship .stripe {
+  fill: var(--mark);
+  stroke: none;
+}
+.scene .ship .fin {
+  fill: var(--dark);
+}
+.scene .ship .canopy {
+  fill: #0f172a;
+  stroke: #38bdf8;
+}
+.scene .ship .flame {
+  fill: #fde047;
+  stroke: #f97316;
+  stroke-width: 1.5;
+  opacity: 0.9;
+}
+
+/* Lasers, flak and explosions. */
+.scene .shot-glow {
+  stroke: rgb(253 224 71 / 0.35);
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+.scene .shot {
+  stroke: #fefce8;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+.scene .flak {
+  fill: url(#sf-flak);
+}
+.scene .fireball {
+  fill: url(#sf-blast);
+}
+.scene .ring {
+  fill: none;
+  stroke: #fef3c7;
+  stroke-width: 2;
+}
+.scene .debris {
+  fill: #475569;
+}
+.scene .debris.hot {
+  fill: #fb923c;
+}
+
+.hud {
+  position: absolute;
+  inset: 0 0 auto;
+  display: flex;
+  justify-content: space-between;
+  gap: 0.25rem;
+  padding: 0.4rem 0.6rem;
+  background: linear-gradient(rgb(0 0 0 / 0.6), transparent);
+  pointer-events: none;
+}
+.hud .stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+}
+.hud span,
+.altimeter span {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #67e8f9;
+}
+.hud strong {
+  font-size: clamp(0.8rem, 2.4vw, 1.15rem);
+  text-shadow: 0 1px 2px #000;
+}
+.hud .ships {
+  color: #22d3ee;
+  letter-spacing: 0.15em;
+}
+.hud .fuel i {
+  width: 5rem;
+  height: 0.5rem;
+  margin-top: 0.35rem;
+  border-radius: 1rem;
+  background:
+    linear-gradient(90deg, #ef4444, #facc15, #22c55e) 0 0 / 5rem 100% no-repeat,
+    #3f3f46;
+  clip-path: inset(0 calc((1 - var(--fuel)) * 100%) 0 0 round 1rem);
+}
+.hud .fuel.low span {
+  color: #f87171;
+  animation: blink 0.5s steps(2) infinite;
+}
+@keyframes blink {
+  50% {
+    opacity: 0.3;
+  }
+}
+
+.fps {
+  position: absolute;
+  right: 0.6rem;
+  bottom: 0.6rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.5rem;
+  background: rgb(0 0 0 / 0.55);
+  font-size: 0.7rem;
+  color: #67e8f9;
+  pointer-events: none;
+}
+.fps strong {
+  color: #f8fafc;
+}
+.fps.low strong {
+  color: #f87171;
+}
+
+.altimeter {
+  position: absolute;
+  left: 0.6rem;
+  bottom: 0.6rem;
+  display: grid;
+  justify-items: center;
+  gap: 0.2rem;
+  padding: 0.3rem 0.4rem;
+  border-radius: 0.5rem;
+  background: rgb(0 0 0 / 0.55);
+  pointer-events: none;
+}
+.altimeter div {
+  position: relative;
+  width: 0.5rem;
+  height: 5rem;
+  border-radius: 1rem;
+  background: #334155;
+}
+.altimeter i {
+  position: absolute;
+  left: -0.2rem;
+  right: -0.2rem;
+  bottom: calc(var(--alt) * (100% - 0.3rem));
+  height: 0.3rem;
+  border-radius: 1rem;
+  background: #22d3ee;
+}
+
+.overlay {
+  position: absolute;
+  inset: 35% 15% auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid #22d3ee;
+  border-radius: 0.75rem;
+  background: rgb(2 6 23 / 0.88);
+  text-align: center;
+}
+.overlay strong {
+  font-size: 1.5rem;
+  color: #22d3ee;
+}
+.overlay.over strong {
+  color: #f43f5e;
+}
+.overlay span {
+  font-size: 0.9rem;
+}
+
+/* Stick and trigger for touch screens and mouse users. */
+.pad {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-areas:
+    "start start start"
+    ". up ."
+    "left fire right"
+    ". down ."
+    "help help help";
+  gap: 0.4rem;
+}
+.pad .key {
+  margin: 0;
+  padding: 0.8rem 0.4rem;
+  border: 1px solid #334155;
+  border-radius: 0.6rem;
+  background: #0f172a;
+  color: #f8fafc;
+  font-size: 1.1rem;
+  cursor: pointer;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.pad .key:hover,
+.pad .key.held {
+  border-color: #22d3ee;
+}
+.pad .key.held {
+  background: #334155;
+}
+.pad .start {
+  grid-area: start;
+  font-size: 0.9rem;
+  background: #22d3ee;
+  color: #082f49;
+}
+.pad .up {
+  grid-area: up;
+}
+.pad .down {
+  grid-area: down;
+}
+.pad .left {
+  grid-area: left;
+}
+.pad .right {
+  grid-area: right;
+}
+.pad .fire {
+  grid-area: fire;
+  font-size: 0.85rem;
+  background: #9f1239;
+}
+/* The explanation in a quiet frame, in the colors of the buttons above it. */
+.pad .help {
+  grid-area: help;
+  margin: 0.5rem 0 0;
+  padding: 0.6rem 0.7rem;
+  border: 1px solid #334155;
+  border-radius: 0.6rem;
+  background: #0f172a;
+  font-size: 0.78rem;
+  line-height: 1.45;
+}

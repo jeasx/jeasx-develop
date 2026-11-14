@@ -38,6 +38,8 @@ export default function Layout({
           <meta charset="utf-8" />
           {description && <meta name="description" content={description} />}
           <meta name="viewport" content="width=device-width, initial-scale=1" />
+          {/* Paints a dark canvas before the stylesheet is loaded, avoiding a white flash. */}
+          <meta name="color-scheme" content="dark" />
           {robots && <meta name="robots" content={robots} />}
           <link rel="stylesheet" href={addCacheBuster("/index.css")} />
           {css && <link rel="stylesheet" href={addCacheBuster(css)} />}

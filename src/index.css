@@ -1350,7 +1350,10 @@ pre:has(> code.code-highlight) {
     radial-gradient(circle at 1rem 1.125rem, #ff5f57 0.3rem, transparent 0.33rem),
     radial-gradient(circle at 1.75rem 1.125rem, #febc2e 0.3rem, transparent 0.33rem),
     radial-gradient(circle at 2.5rem 1.125rem, #28c840 0.3rem, transparent 0.33rem),
-    linear-gradient(color-mix(in srgb, var(--secondary) 10%, var(--code-bg)) 0 2.25rem, var(--code-bg) 0);
+    linear-gradient(
+      color-mix(in srgb, var(--secondary) 10%, var(--code-bg)) 0 2.25rem,
+      var(--code-bg) 0
+    );
 }
 pre:has(> code.code-highlight)::before {
   position: absolute;

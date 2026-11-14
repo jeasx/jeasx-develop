@@ -1,0 +1,88 @@
+/* Three columns like a social network: feeds, posts, contacts. */
+.social {
+  --surface: rgb(255 255 255 / 0.035);
+  --surface-strong: rgb(255 255 255 / 0.06);
+  --hover: rgb(255 255 255 / 0.07);
+  --line: rgb(255 255 255 / 0.08);
+  --text: #e7e9ee;
+  --soft: #9aa3b5;
+  --accent: #8b5cf6;
+  --accent-2: #ec4899;
+  --gradient: linear-gradient(135deg, var(--accent), var(--accent-2));
+  --radius-lg: 1.25rem;
+  --radius-md: 0.85rem;
+  --shadow: 0 1px 0 rgb(255 255 255 / 0.04) inset, 0 12px 32px -16px rgb(0 0 0 / 0.6);
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr) 260px;
+  align-items: start;
+  gap: 1.25rem;
+  margin-top: 2rem;
+  color: var(--text);
+}
+/* A soft glow behind the page. */
+.social::before {
+  content: "";
+  position: absolute;
+  inset: -4rem 0 auto;
+  z-index: -1;
+  height: 28rem;
+  background:
+    radial-gradient(40% 60% at 25% 20%, rgb(139 92 246 / 0.16), transparent 70%),
+    radial-gradient(35% 50% at 80% 10%, rgb(236 72 153 / 0.12), transparent 70%);
+  filter: blur(20px);
+  pointer-events: none;
+}
+@media (max-width: 1080px) {
+  .social {
+    grid-template-columns: 200px minmax(0, 1fr);
+  }
+  .social .right {
+    display: none;
+  }
+}
+@media (max-width: 700px) {
+  .social {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .social .left .me {
+    display: none;
+  }
+}
+.social aside {
+  position: sticky;
+  top: 1.25rem;
+  display: grid;
+  gap: 1.25rem;
+}
+/*
+ * In a single column, the sidebar sits above the feed. A sticky element sticks
+ * within its whole grid, not just its row, so it would float over the posts.
+ */
+@media (max-width: 700px) {
+  .social aside {
+    position: static;
+  }
+}
+
+.social .card,
+.social .post {
+  padding: 1.1rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(12px);
+}
+.social h2 {
+  margin: 0 0 0.85rem;
+  color: var(--soft);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.social .muted {
+  color: var(--soft);
+}

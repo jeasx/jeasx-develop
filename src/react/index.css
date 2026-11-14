@@ -17,7 +17,11 @@
   border: 1px solid var(--re-line);
   border-radius: 1rem;
   background:
-    radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--re-accent) 14%, transparent), transparent 45%),
+    radial-gradient(
+      circle at 100% 0%,
+      color-mix(in srgb, var(--re-accent) 14%, transparent),
+      transparent 45%
+    ),
     var(--re-soft);
   padding: 1.5rem;
 }

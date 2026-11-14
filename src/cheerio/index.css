@@ -6,8 +6,16 @@
   border-radius: 1rem;
   overflow: hidden;
   background:
-    radial-gradient(circle at 15% 20%, color-mix(in srgb, orange 30%, transparent), transparent 55%),
-    radial-gradient(circle at 85% 80%, color-mix(in srgb, var(--primary) 30%, transparent), transparent 55%);
+    radial-gradient(
+      circle at 15% 20%,
+      color-mix(in srgb, orange 30%, transparent),
+      transparent 55%
+    ),
+    radial-gradient(
+      circle at 85% 80%,
+      color-mix(in srgb, var(--primary) 30%, transparent),
+      transparent 55%
+    );
   border: var(--border-width) solid var(--border);
 }
 .cheerio-hero h1 {
@@ -36,7 +44,9 @@
   border-radius: 0.75rem;
   background: color-mix(in srgb, var(--color) 4%, transparent);
   counter-increment: step;
-  transition: transform 0.2s, border-color 0.2s;
+  transition:
+    transform 0.2s,
+    border-color 0.2s;
 }
 .cheerio-steps li:hover {
   transform: translateY(-3px);

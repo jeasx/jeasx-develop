@@ -17,7 +17,7 @@ export default function () {
         </p>
         <p class="home-actions">
           <a href="#examples" role="button">
-            Browse {EXAMPLE_COUNT} examples
+            Browse examples
           </a>
           <a href="https://www.jeasx.dev" role="button" class="outline">
             Visit jeasx.dev

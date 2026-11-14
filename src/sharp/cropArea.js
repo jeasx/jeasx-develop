@@ -28,8 +28,7 @@ export function cropArea({ src, width, height, position }) {
   if (!cache.has(key)) {
     const promise = (async () => {
       const image = sharp(join(PUBLIC_DIR, src));
-      const { width: originalWidth = 0, height: originalHeight = 0 } =
-        await image.metadata();
+      const { width: originalWidth = 0, height: originalHeight = 0 } = await image.metadata();
       const { info } = await image
         .resize({ width, height, position })
         .toBuffer({ resolveWithObject: true });
@@ -37,12 +36,8 @@ export function cropArea({ src, width, height, position }) {
       const scale = Math.max(width / originalWidth, height / originalHeight);
       const scaledWidth = originalWidth * scale;
       const scaledHeight = originalHeight * scale;
-      const offsetLeft = Math.abs(
-        info.cropOffsetLeft ?? (scaledWidth - width) / 2,
-      );
-      const offsetTop = Math.abs(
-        info.cropOffsetTop ?? (scaledHeight - height) / 2,
-      );
+      const offsetLeft = Math.abs(info.cropOffsetLeft ?? (scaledWidth - width) / 2);
+      const offsetTop = Math.abs(info.cropOffsetTop ?? (scaledHeight - height) / 2);
       return {
         originalWidth,
         originalHeight,

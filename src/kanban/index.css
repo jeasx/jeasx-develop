@@ -1,0 +1,274 @@
+/* Every column has its own accent color, used for its header, badge and cards. */
+.kanban-column[data-status="todo"] {
+  --accent: #f472b6;
+  --accent-2: #a855f7;
+}
+.kanban-column[data-status="doing"] {
+  --accent: #38bdf8;
+  --accent-2: #6366f1;
+}
+.kanban-column[data-status="done"] {
+  --accent: #34d399;
+  --accent-2: #14b8a6;
+}
+
+.kanban-board {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+  margin-top: 2rem;
+  padding: 1.25rem;
+  border-radius: 1.5rem;
+  background:
+    radial-gradient(circle at 10% 0%, rgba(244, 114, 182, 0.18), transparent 40%),
+    radial-gradient(circle at 50% 100%, rgba(56, 189, 248, 0.16), transparent 45%),
+    radial-gradient(circle at 90% 10%, rgba(52, 211, 153, 0.16), transparent 40%),
+    linear-gradient(160deg, #0f172a, #020617);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 30px 60px -30px rgba(0, 0, 0, 0.8);
+  color: #e2e8f0;
+}
+/* On tablets and phones, columns keep a usable width and the board scrolls sideways,
+   snapping to a column. The next column peeks in, so you see there is more. */
+@media (max-width: 64rem) {
+  .kanban-board {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(17rem, 1fr);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 1.25rem;
+  }
+  .kanban-column {
+    scroll-snap-align: start;
+  }
+}
+@media (max-width: 36rem) {
+  .kanban-board {
+    grid-auto-columns: 85%;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    scroll-padding-inline: 0.75rem;
+  }
+}
+
+.kanban-column {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  min-height: 18rem;
+  padding: 1rem;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1.1rem;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(12px);
+  transition:
+    border-color 0.25s,
+    background 0.25s,
+    transform 0.25s;
+
+  /* A glowing bar in the column's colors along the top edge. */
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    box-shadow: 0 0 18px var(--accent);
+  }
+
+  & header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  & h2 {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 0;
+    font-size: 0.95rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    &::before {
+      content: "";
+      width: 0.6rem;
+      height: 0.6rem;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 10px var(--accent);
+    }
+  }
+  & ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  & .empty {
+    display: grid;
+    place-items: center;
+    flex: 1;
+    margin: 0;
+    border: 2px dashed rgba(255, 255, 255, 0.1);
+    border-radius: 0.8rem;
+    color: rgba(226, 232, 240, 0.45);
+    font-style: italic;
+  }
+  & .rendered {
+    margin-top: auto;
+    color: rgba(226, 232, 240, 0.45);
+    font-size: 0.75rem;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Columns rendered in the browser flash in their color, so you see which ones changed. */
+.kanban-column.browser {
+  animation: rendered 1.2s ease-out;
+  & .rendered {
+    color: var(--accent);
+  }
+}
+@keyframes rendered {
+  from {
+    box-shadow:
+      0 0 0 2px var(--accent),
+      0 0 40px -5px var(--accent);
+  }
+}
+
+.kanban-column.drop-target {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, rgba(15, 23, 42, 0.55));
+  transform: scale(1.015);
+}
+
+.count {
+  min-width: 1.9rem;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #0f172a;
+  font-weight: 700;
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+.kanban-card {
+  position: relative;
+  margin: 0;
+  list-style: none;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-left: 3px solid var(--accent);
+  border-radius: 0.75rem;
+  background: linear-gradient(145deg, rgba(51, 65, 85, 0.75), rgba(30, 41, 59, 0.75));
+  box-shadow: 0 6px 16px -8px rgba(0, 0, 0, 0.7);
+  cursor: grab;
+  animation: card-in 0.35s ease-out both;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s,
+    border-color 0.2s;
+  &:hover {
+    transform: translateY(-2px);
+    border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+    border-left-color: var(--accent);
+    box-shadow: 0 12px 24px -10px color-mix(in srgb, var(--accent) 50%, black);
+  }
+  &:active {
+    cursor: grabbing;
+  }
+
+  & form {
+    display: flex;
+    align-items: center;
+    gap: 0.15rem;
+    margin: 0;
+    padding: 0.55rem 0.4rem;
+  }
+  & .title {
+    flex: 1;
+    padding: 0 0.35rem;
+    overflow-wrap: anywhere;
+    line-height: 1.35;
+  }
+  & button {
+    display: grid;
+    place-items: center;
+    width: 1.8rem;
+    height: 1.8rem;
+    margin: 0;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: none;
+    box-shadow: none;
+    color: rgba(226, 232, 240, 0.6);
+    line-height: 1;
+    transition:
+      background 0.15s,
+      color 0.15s;
+  }
+  & button:hover,
+  & button:focus-visible {
+    background: color-mix(in srgb, var(--accent) 22%, transparent);
+    color: var(--accent);
+  }
+  & button:disabled {
+    visibility: hidden;
+  }
+  & .remove:hover,
+  & .remove:focus-visible {
+    background: rgba(248, 113, 113, 0.2);
+    color: #f87171;
+  }
+}
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+.kanban-column .add {
+  display: flex;
+  gap: 0.5rem;
+  margin: 0;
+  & input {
+    flex: 1;
+    margin: 0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.7rem;
+    background: rgba(2, 6, 23, 0.6);
+    color: inherit;
+    &:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent);
+    }
+  }
+  & button {
+    width: auto;
+    margin: 0;
+    border: none;
+    border-radius: 0.7rem;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: #0f172a;
+    font-weight: 700;
+    box-shadow: 0 6px 18px -8px var(--accent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kanban-card,
+  .kanban-column {
+    animation: none;
+    transition: none;
+  }
+}

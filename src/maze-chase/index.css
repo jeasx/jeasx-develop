@@ -1,0 +1,782 @@
+/* Cabinet on the left, controls on the right; stacked on narrow screens. */
+.arcade {
+  display: grid;
+  grid-template-columns: minmax(0, 520px) 200px;
+  justify-content: center;
+  align-items: start;
+  gap: 1.5rem;
+}
+@media (max-width: 800px) {
+  .arcade {
+    grid-template-columns: minmax(0, 520px);
+  }
+}
+
+.cabinet {
+  position: relative;
+  padding: 1rem;
+  border: 1px solid #4a1d5c;
+  border-radius: 1rem;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgb(217 70 239 / 0.2), transparent 60%),
+    linear-gradient(160deg, #1a0b2e, #0b0614);
+  box-shadow: 0 20px 50px -20px rgb(11 6 20 / 0.8);
+  color: #e9d5ff;
+  touch-action: none;
+  user-select: none;
+  outline: none;
+}
+.cabinet:focus-visible {
+  box-shadow: 0 0 0 3px #34d399;
+}
+
+.hud {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+.hud .stat {
+  display: flex;
+  flex-direction: column;
+}
+.hud .stat span {
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #a78bfa;
+}
+.hud .stat strong {
+  display: flex;
+  gap: 0.25rem;
+  min-height: 1.5rem;
+  align-items: center;
+  font-variant-numeric: tabular-nums;
+  font-size: 1.2rem;
+  color: #f8fafc;
+}
+/* Lives: tiny slimes. */
+.life {
+  width: 0.95rem;
+  height: 0.8rem;
+  border-radius: 50% 50% 40% 40% / 65% 65% 35% 35%;
+  background:
+    radial-gradient(circle at 35% 45%, #064e3b 12%, transparent 14%),
+    radial-gradient(circle at 65% 45%, #064e3b 12%, transparent 14%),
+    radial-gradient(circle at 35% 25%, #a7f3d0, #34d399 50%, #059669);
+}
+
+/* The maze: one grid cell per tile, characters are positioned on top of it. */
+.maze {
+  --tile: calc(100% / var(--cols));
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(var(--cols), 1fr);
+  aspect-ratio: var(--cols) / var(--rows);
+}
+.tile {
+  position: relative;
+}
+.wall {
+  --line: 2px solid #d946ef;
+  border: var(--line);
+  border-radius: 30%;
+  background: rgb(112 26 117 / 0.35);
+  box-shadow: 0 0 6px rgb(217 70 239 / 0.5);
+}
+.wall.n {
+  border-top: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+.wall.s {
+  border-bottom: 0;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.wall.e {
+  border-right: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.wall.w {
+  border-left: 0;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.frightened .wall {
+  --line: 2px solid #22d3ee;
+}
+.door::after {
+  content: "";
+  position: absolute;
+  inset: 45% 0;
+  background: #a3e635;
+}
+/* Gems are small turquoise diamonds, crystals big pulsing purple ones. */
+.gem::after {
+  content: "";
+  position: absolute;
+  inset: 38%;
+  border-radius: 2px;
+  background: linear-gradient(135deg, #cffafe, #22d3ee);
+  rotate: 45deg;
+}
+/*
+ * Crystals float, turn now and then, and a glint sweeps over their facets
+ * while their glow swells. The maze re-renders every tick, so all loops are
+ * offset by the shared clock to keep running instead of restarting.
+ */
+.crystal {
+  animation: glow 1.4s var(--clock) ease-in-out infinite alternate;
+}
+@keyframes glow {
+  from {
+    filter: drop-shadow(0 0 2px #e879f9);
+  }
+  to {
+    filter: drop-shadow(0 0 7px #e879f9) drop-shadow(0 0 2px #fdf4ff);
+  }
+}
+.crystal::before,
+.crystal::after {
+  content: "";
+  position: absolute;
+  inset: 8% 22%;
+  clip-path: polygon(50% 0, 100% 35%, 50% 100%, 0 35%);
+  animation: float 2.4s var(--clock) ease-in-out infinite;
+}
+.crystal::after {
+  background:
+    linear-gradient(90deg, transparent 49%, rgb(255 255 255 / 0.35) 50%, transparent 51%),
+    linear-gradient(transparent 34%, rgb(255 255 255 / 0.35) 35%, transparent 37%),
+    linear-gradient(160deg, #fdf4ff, #e879f9 45%, #7e22ce);
+}
+/* The glint: a bright streak sliding across, drawn on top of the crystal. */
+.crystal::before {
+  z-index: 1;
+  background: linear-gradient(115deg, transparent 40%, rgb(255 255 255 / 0.95) 50%, transparent 60%)
+    0 0 / 300% 100% no-repeat;
+  animation:
+    float 2.4s var(--clock) ease-in-out infinite,
+    glint 1.8s var(--clock) ease-in-out infinite;
+}
+@keyframes float {
+  0%,
+  100% {
+    translate: 0 8%;
+    scale: 1 1;
+  }
+  25% {
+    translate: 0 -8%;
+  }
+  45% {
+    scale: 1 1;
+  }
+  50% {
+    translate: 0 8%;
+    scale: 0.2 1;
+  }
+  55% {
+    scale: 1 1;
+  }
+  75% {
+    translate: 0 -8%;
+  }
+}
+@keyframes glint {
+  0% {
+    background-position: 100% 0;
+  }
+  60%,
+  100% {
+    background-position: 0 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sprite,
+  .sprite *,
+  .sprite::before,
+  .sprite::after,
+  .sprite *::before,
+  .sprite *::after,
+  .overlay {
+    animation: none !important;
+  }
+  .sparkles {
+    display: none;
+  }
+  .crystal,
+  .crystal::before,
+  .crystal::after {
+    animation: none !important;
+  }
+  .points {
+    animation: none;
+    opacity: 0;
+  }
+}
+
+.sprite {
+  position: absolute;
+  left: calc(var(--x) * var(--tile));
+  top: calc(var(--y) * 100% / var(--rows));
+  width: var(--tile);
+  height: calc(100% / var(--rows));
+  padding: 1px;
+  box-sizing: border-box;
+  /* Slide in from the previous tile; translate percentages are one tile each. */
+  /* Slower drones stretch the slide over the ticks until their next step. */
+  /* A drone between steps resumes its slide where the last render left off. */
+  animation: slide calc(var(--tick) * var(--gap, 1)) linear
+    calc(var(--tick) * var(--elapsed, 0) * -1) both;
+}
+@keyframes slide {
+  from {
+    transform: translate(calc(var(--dx) * 100%), calc(var(--dy) * 100%));
+  }
+}
+
+/* The tunnel: the path fades into darkness at both edges of the maze. */
+.maze {
+  overflow-x: clip;
+}
+.tunnel.west {
+  background: linear-gradient(to right, #0b0614 10%, transparent);
+}
+.tunnel.east {
+  background: linear-gradient(to left, #0b0614 10%, transparent);
+}
+
+/* Magic stars burst out of both portals after the player went through. */
+.sparkles {
+  position: absolute;
+  z-index: 1;
+  left: calc(var(--x) * var(--tile));
+  top: calc(var(--y) * 100% / var(--rows));
+  width: var(--tile);
+  height: calc(100% / var(--rows));
+  pointer-events: none;
+}
+.star {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-style: normal;
+  font-size: 0.7rem;
+  color: #a7f3d0;
+  text-shadow:
+    0 0 4px #34d399,
+    0 0 8px #e879f9;
+  opacity: 0;
+  /* Rotate towards the inside of the maze, then fly outwards along the angle. */
+  --direction: rotate(calc(var(--angle) + (var(--side) - 1) * -90deg));
+  animation: star calc(var(--tick) * 6) ease-out both;
+  animation-delay: calc(var(--tick) * (var(--delay) * 10 - var(--elapsed)));
+}
+@keyframes star {
+  0% {
+    opacity: 0;
+    transform: var(--direction) translateX(0) scale(0.3);
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: var(--direction) translateX(calc(var(--reach) * 120%)) scale(1) rotate(180deg);
+  }
+}
+
+/* Characters fade into the dark on one side and out of it on the other. */
+.sprite.tunnel-exit {
+  animation-name: tunnel-exit;
+}
+.sprite.tunnel-enter {
+  animation-name: tunnel-enter;
+}
+@keyframes tunnel-exit {
+  to {
+    transform: translateX(calc(var(--tx) * 100%)) scale(0.4);
+    opacity: 0;
+    filter: blur(2px);
+  }
+}
+@keyframes tunnel-enter {
+  from {
+    transform: translateX(calc(var(--dx) * 100%)) scale(0.4);
+    opacity: 0;
+    filter: blur(2px);
+  }
+}
+.sprite::before {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/*
+ * Blip, the player: a mint slime with eyes that look where it goes. While
+ * moving it bounces softly; the shared clock keeps the bounce running smoothly
+ * across renders instead of restarting on every tile.
+ */
+.player::before {
+  border-radius: 50% 50% 40% 40% / 65% 65% 35% 35%;
+  background: radial-gradient(circle at 35% 25%, #a7f3d0, #34d399 50%, #059669);
+  filter: drop-shadow(0 0 4px rgb(52 211 153 / 0.7));
+  transform-origin: 50% 100%;
+}
+.player.hopping::before,
+.player.hopping .eyes {
+  animation: bounce 0.36s var(--clock) ease-in-out infinite alternate;
+}
+@keyframes bounce {
+  from {
+    scale: 1.04 0.96;
+    translate: 0 0;
+  }
+  to {
+    scale: 0.98 1.03;
+    translate: 0 -4%;
+  }
+}
+.player .eyes {
+  inset: 28% 18% 42%;
+  background:
+    radial-gradient(circle at 30% 50%, #064e3b 22%, #fff 24% 40%, transparent 42%),
+    radial-gradient(circle at 70% 50%, #064e3b 22%, #fff 24% 40%, transparent 42%);
+}
+
+/*
+ * Caught: Blip melts into a puddle and its soul drifts away. No more ticks are
+ * rendered until play continues, so these one-shot animations play out.
+ */
+.player.caught {
+  animation: none;
+}
+.player.caught::before {
+  animation: melt 1.1s 0.3s ease-in both;
+}
+.player.caught .eyes {
+  animation: melt-eyes 1.1s 0.3s ease-in both;
+}
+@keyframes melt {
+  30% {
+    scale: 0.85 1.15;
+  }
+  70% {
+    scale: 1.5 0.3;
+    opacity: 1;
+  }
+  100% {
+    scale: 1.7 0.1;
+    opacity: 0;
+  }
+}
+@keyframes melt-eyes {
+  30% {
+    translate: 0 -15%;
+  }
+  70% {
+    translate: 0 90%;
+    scale: 1.2 0.4;
+    opacity: 1;
+  }
+  100% {
+    translate: 0 120%;
+    opacity: 0;
+  }
+}
+/* Blip's soul, a translucent orb with a halo, drifts up and away. */
+.player.caught::after {
+  content: "";
+  position: absolute;
+  inset: -20% 0 20%;
+  background:
+    radial-gradient(ellipse 32% 9% at 50% 14%, transparent 50%, #a7f3d0 58% 80%, transparent 88%),
+    radial-gradient(
+      circle at 50% 62%,
+      rgb(167 243 208 / 0.85) 0 18%,
+      rgb(52 211 153 / 0.35) 28%,
+      transparent 34%
+    );
+  filter: drop-shadow(0 0 4px #34d399);
+  opacity: 0;
+  animation: soul 1.6s 1.2s ease-out both;
+}
+@keyframes soul {
+  0% {
+    opacity: 0;
+    translate: 0 20%;
+    scale: 0.5;
+  }
+  15% {
+    opacity: 1;
+    scale: 1;
+  }
+  40% {
+    translate: -15% -60%;
+  }
+  65% {
+    translate: 15% -120%;
+    opacity: 0.8;
+  }
+  100% {
+    translate: 0 -200%;
+    opacity: 0;
+    scale: 0.8;
+  }
+}
+.dying .drone {
+  animation: vanish 0.4s 0.2s ease-in both;
+}
+@keyframes vanish {
+  to {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+}
+/* The message waits until the animation is over. */
+.overlay.caught,
+.overlay.over {
+  animation: appear 0.3s 2.2s ease-out both;
+}
+@keyframes appear {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+}
+/*
+ * Drones: cheerful round robots with rosy cheeks, a smile, a big googly eye
+ * and a spinning propeller. They sway as they fly. Looping animations use the
+ * shared clock, so they continue smoothly across renders.
+ */
+.drone {
+  --body: #ef4444;
+  filter: drop-shadow(0 0 4px var(--body));
+}
+.drone.pink {
+  --body: #f472b6;
+}
+.drone.cyan {
+  --body: #22d3ee;
+}
+.drone.orange {
+  --body: #fb923c;
+}
+.drone::before {
+  display: none;
+}
+.bot {
+  position: absolute;
+  inset: 14% 8% 4%;
+  animation: sway 0.7s var(--clock) ease-in-out infinite alternate;
+}
+/* The body is a layer of its own, so it can vanish while the eye flies home. */
+.bot::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50% 50% 44% 44% / 55% 55% 45% 45%;
+  background:
+    radial-gradient(circle at 20% 70%, rgb(255 255 255 / 0.45) 0 9%, transparent 11%),
+    radial-gradient(circle at 80% 70%, rgb(255 255 255 / 0.45) 0 9%, transparent 11%),
+    radial-gradient(
+      circle at 35% 25%,
+      color-mix(in srgb, var(--body), #fff 45%),
+      var(--body) 55%,
+      color-mix(in srgb, var(--body), #000 25%)
+    );
+}
+@keyframes sway {
+  from {
+    rotate: -9deg;
+    translate: 0 -6%;
+  }
+  to {
+    rotate: 9deg;
+    translate: 0 6%;
+  }
+}
+/* The propeller: a blade squeezed back and forth looks like it spins. */
+.prop {
+  position: absolute;
+  top: -34%;
+  left: 15%;
+  width: 70%;
+  height: 22%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, #fef9c3 0 30%, #facc15 32% 60%, transparent 64%);
+  animation: spin 0.12s var(--clock) linear infinite alternate;
+}
+.prop::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 46%;
+  width: 8%;
+  height: 130%;
+  background: #78716c;
+}
+@keyframes spin {
+  to {
+    scale: 0.15 1;
+  }
+}
+/* A googly eye: the pupil looks where the drone goes and it blinks now and then. */
+.eye {
+  position: absolute;
+  inset: 14% 26% 38%;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: inset 0 -1px 0 rgb(0 0 0 / 0.15);
+  animation: blink 3.2s var(--clock) infinite;
+}
+.eye::after {
+  content: "";
+  position: absolute;
+  inset: 26%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #fff 0 14%, #1e1b4b 18%);
+  transform: var(--look);
+}
+@keyframes blink {
+  0%,
+  92%,
+  100% {
+    scale: 1 1;
+  }
+  96% {
+    scale: 1 0.1;
+  }
+}
+.mouth {
+  position: absolute;
+  left: 32%;
+  right: 32%;
+  top: 64%;
+  height: 18%;
+  border-bottom: 2px solid #1e1b4b;
+  border-radius: 0 0 50% 50%;
+}
+
+/*
+ * Fright: the drones panic. The body turns icy and shivers, the eye goes wide
+ * with a tiny jittering pupil, the smile becomes a wobbly line and a sweat drop
+ * runs down. Just before they recover they flash white.
+ */
+.drone.scared {
+  --body: #a5b4fc;
+}
+.drone.ending {
+  --body: #f8fafc;
+}
+.drone.scared .bot {
+  animation: shiver 0.09s var(--clock) linear infinite alternate;
+}
+@keyframes shiver {
+  from {
+    translate: -5% 0;
+    rotate: -3deg;
+  }
+  to {
+    translate: 5% 0;
+    rotate: 3deg;
+  }
+}
+.drone.scared .prop {
+  animation-duration: 0.06s;
+}
+.drone.scared .eye {
+  inset: 8% 20% 34%;
+  animation: none;
+}
+.drone.scared .eye::after {
+  inset: 38%;
+  animation: jitter 0.15s var(--clock) steps(2) infinite;
+}
+@keyframes jitter {
+  from {
+    translate: -60% 0;
+  }
+  to {
+    translate: 60% 20%;
+  }
+}
+.drone.scared .mouth {
+  top: 70%;
+  height: 12%;
+  border: 0;
+  border-radius: 0;
+  background: radial-gradient(circle at 50% 0, transparent 35%, #1e1b4b 40% 58%, transparent 62%) 0
+    0 / 34% 100% repeat-x;
+}
+.drone.scared .bot::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: -4%;
+  width: 18%;
+  height: 22%;
+  border-radius: 0 50% 50% 50%;
+  rotate: 45deg;
+  background: #bae6fd;
+  box-shadow: 0 0 3px #e0f2fe;
+  animation: sweat 0.8s var(--clock) ease-in infinite;
+}
+@keyframes sweat {
+  from {
+    translate: 0 0;
+    opacity: 1;
+  }
+  to {
+    translate: 0 160%;
+    opacity: 0;
+  }
+}
+
+/*
+ * A zapped drone: only the eye flies home, then body, propeller and smile
+ * reassemble. The delay counts from the catch, so it lines up with the end of
+ * the flight and keeps going when the drone starts moving inside the base.
+ */
+.drone.eaten .bot::before,
+.drone.eaten .prop,
+.drone.eaten .mouth {
+  animation: reform calc(var(--tick) * 4) ease-out both;
+  animation-delay: calc(var(--tick) * var(--reform, 0));
+}
+@keyframes reform {
+  from {
+    opacity: 0;
+    scale: 0.2;
+  }
+  60% {
+    opacity: 0.8;
+    scale: 1.15;
+  }
+}
+.drone.eaten .eye {
+  filter: drop-shadow(0 0 3px #fff);
+}
+
+/* Points float up from the spot where a drone was zapped. */
+.points {
+  position: absolute;
+  z-index: 2;
+  left: calc(var(--x) * var(--tile));
+  top: calc(var(--y) * 100% / var(--rows));
+  width: var(--tile);
+  height: calc(100% / var(--rows));
+  display: grid;
+  place-items: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #f0abfc;
+  text-shadow: 0 0 6px #e879f9;
+  pointer-events: none;
+  animation: points calc(var(--tick) * 8) ease-out both;
+  animation-delay: calc(var(--tick) * var(--elapsed) * -1);
+}
+@keyframes points {
+  from {
+    opacity: 0;
+    scale: 0.4;
+  }
+  15% {
+    opacity: 1;
+    scale: 1.3;
+  }
+  30% {
+    scale: 1;
+  }
+  to {
+    opacity: 0;
+    translate: 0 -150%;
+  }
+}
+.eyes {
+  position: absolute;
+  transform: var(--look);
+}
+
+.overlay {
+  position: absolute;
+  inset: 40% 10% auto;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid #34d399;
+  border-radius: 0.75rem;
+  background: rgb(11 6 20 / 0.9);
+  text-align: center;
+}
+.overlay strong {
+  font-size: 1.5rem;
+  color: #34d399;
+}
+.overlay span {
+  font-size: 0.9rem;
+}
+
+/* A d-pad for touch screens and mouse users. */
+.pad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-areas:
+    "start start start"
+    ". up ."
+    "left . right"
+    ". down ."
+    "help help help";
+  gap: 0.4rem;
+}
+.pad .key {
+  margin: 0;
+  padding: 0.6rem;
+  border: 1px solid #334155;
+  border-radius: 0.6rem;
+  background: #0f172a;
+  color: #e2e8f0;
+  font-size: 1.1rem;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.pad .key:hover {
+  border-color: #34d399;
+}
+.pad .start {
+  grid-area: start;
+  font-size: 0.9rem;
+  background: #34d399;
+  color: #022c22;
+}
+.pad .up {
+  grid-area: up;
+}
+.pad .left {
+  grid-area: left;
+}
+.pad .right {
+  grid-area: right;
+}
+.pad .down {
+  grid-area: down;
+}
+/* The explanation in a quiet frame, in the colors of the buttons above it. */
+.pad .help {
+  grid-area: help;
+  margin: 0.5rem 0 0;
+  padding: 0.6rem 0.7rem;
+  border: 1px solid #334155;
+  border-radius: 0.6rem;
+  background: #0f172a;
+  font-size: 0.78rem;
+  line-height: 1.45;
+}

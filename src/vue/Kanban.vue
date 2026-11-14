@@ -82,9 +82,7 @@ function step(card, direction) {
         @dragleave="over = over === column ? null : over"
         @drop.prevent="drop(column)"
       >
-        <h3>
-          {{ column }} <span class="count">{{ byColumn[column].length }}</span>
-        </h3>
+        <h3>{{ column }} <span class="count">{{ byColumn[column].length }}</span></h3>
         <TransitionGroup name="task" tag="ul">
           <li
             v-for="card in byColumn[column]"

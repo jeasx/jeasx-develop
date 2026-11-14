@@ -1,0 +1,294 @@
+/* Jump back to the restored scroll position instead of animating to it. */
+html {
+  scroll-behavior: auto;
+}
+
+.mb-explorer {
+  --mb-glass: rgb(12 14 22 / 0.72);
+  --mb-line: rgb(255 255 255 / 0.08);
+  --mb-glow: rgb(237 42 172 / 0.35);
+  --mb-teal: #22d3c5;
+  --progress: 0;
+
+  position: relative;
+  margin-bottom: 2rem;
+  border: 1px solid transparent;
+  border-radius: calc(var(--radius) * 4);
+  /* A gradient border: the inner background clips to the padding, the gradient shows at the border. */
+  background:
+    linear-gradient(#0b0d15, #0b0d15) padding-box,
+    linear-gradient(135deg, var(--primary), #6d5dfc 50%, var(--mb-teal)) border-box;
+  box-shadow:
+    0 0 0 1px rgb(0 0 0 / 0.4),
+    0 1.5rem 4rem -1.5rem var(--mb-glow),
+    0 0 6rem -2rem rgb(34 211 197 / 0.25);
+  overflow: hidden;
+}
+
+/* Toolbar */
+
+.mb-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border-bottom: 1px solid var(--mb-line);
+  padding: 0.6rem;
+}
+
+.mb-places {
+  display: flex;
+  flex: 1;
+  justify-content: flex-start;
+  gap: 0.4rem;
+  /* Scrolls sideways on small screens instead of wrapping. */
+  overflow-x: auto;
+  scrollbar-width: none;
+
+  & a {
+    flex: none;
+    transition:
+      background 0.2s,
+      color 0.2s,
+      border-color 0.2s;
+    border: 1px solid var(--mb-line);
+    border-radius: 999px;
+    background: rgb(255 255 255 / 0.03);
+    padding: 0.3rem 0.85rem;
+    color: var(--color);
+    font-size: 0.85rem;
+    white-space: nowrap;
+    text-decoration: none;
+  }
+
+  & a:hover {
+    border-color: rgb(237 42 172 / 0.5);
+    color: var(--heading);
+  }
+
+  & a[aria-current] {
+    border-color: transparent;
+    background: linear-gradient(135deg, var(--primary), #6d5dfc);
+    color: #fff;
+  }
+}
+
+.mb-actions {
+  display: flex;
+  flex: none;
+  gap: 0.4rem;
+}
+
+.mb-icon {
+  display: grid;
+  place-items: center;
+  transition:
+    background 0.2s,
+    color 0.2s,
+    box-shadow 0.2s;
+  border: 1px solid var(--mb-line);
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.03);
+  width: 2.25rem;
+  height: 2.25rem;
+  color: var(--color);
+
+  & svg {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  &:hover {
+    background: var(--primary);
+    box-shadow: 0 0 1rem var(--mb-glow);
+    color: #fff;
+  }
+}
+
+/* Progress of the streamed strips, driven by the --progress rules streamed with each strip. */
+.mb-progress {
+  height: 2px;
+
+  & span {
+    display: block;
+    transform: scaleX(var(--progress));
+    transform-origin: left;
+    transition:
+      transform 0.15s linear,
+      opacity 0.6s 0.3s;
+    box-shadow: 0 0 0.75rem var(--mb-teal);
+    background: linear-gradient(90deg, var(--primary), var(--mb-teal));
+    height: 100%;
+  }
+}
+
+/* Canvas */
+
+.mb-canvas {
+  position: relative;
+  background: #080a12;
+  width: 100%;
+  overflow: hidden;
+  cursor: crosshair;
+  /* Dragging draws a zoom box instead of scrolling the page on touch devices. */
+  touch-action: none;
+  user-select: none;
+
+  /* A soft vignette on top of the fractal. */
+  &::after {
+    position: absolute;
+    inset: 0;
+    box-shadow: inset 0 0 5rem rgb(0 0 0 / 0.55);
+    pointer-events: none;
+    content: "";
+  }
+}
+
+.mb-preview {
+  display: block;
+  position: absolute;
+  inset: 0;
+  transform: scale(1.03);
+  filter: blur(6px) saturate(1.3);
+  width: 100%;
+  height: 100%;
+}
+
+/* The sharp strips stack on top of the preview. */
+.mb-strips {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+
+  & svg {
+    display: block;
+    animation: mb-in 0.35s ease-out both;
+    aspect-ratio: var(--strip-ratio);
+    width: 100%;
+    height: auto;
+  }
+}
+
+@keyframes mb-in {
+  from {
+    opacity: 0;
+    filter: brightness(2.5);
+  }
+}
+
+/* A glowing line at the lower edge of the strips rendered so far. */
+.mb-scan {
+  position: absolute;
+  top: calc(var(--progress) * 100%);
+  right: 0;
+  left: 0;
+  transition:
+    top 0.15s linear,
+    opacity 0.6s 0.3s;
+  box-shadow:
+    0 0 0.6rem 0.1rem var(--mb-teal),
+    0 0 2.5rem 0.4rem var(--mb-glow);
+  background: #fff;
+  height: 2px;
+  pointer-events: none;
+}
+
+.mb-hint {
+  position: absolute;
+  bottom: 0.75rem;
+  left: 50%;
+  translate: -50% 0;
+  transition: opacity 0.3s;
+  margin: 0;
+  border: 1px solid var(--mb-line);
+  border-radius: 999px;
+  background: var(--mb-glass);
+  padding: 0.25rem 0.85rem;
+  color: var(--color);
+  font-size: 0.8rem;
+  white-space: nowrap;
+  pointer-events: none;
+  backdrop-filter: blur(8px);
+}
+
+.mb-canvas:hover .mb-hint {
+  opacity: 0;
+}
+
+/* Once the last strip and the render time arrived, the streaming indicators fade out. */
+.mb-explorer:has(.mb-done) {
+  & .mb-scan,
+  & .mb-progress span {
+    opacity: 0;
+  }
+
+  & .mb-busy {
+    display: none;
+  }
+}
+
+/* The zoom box drawn while dragging. */
+.mb-box {
+  position: absolute;
+  z-index: 1;
+  outline: 1px solid #fff;
+  box-shadow:
+    0 0 0 1px rgb(0 0 0 / 0.5),
+    0 0 1.5rem var(--mb-glow),
+    inset 0 0 0 9999px rgb(237 42 172 / 0.15);
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+/* Stats */
+
+.mb-hud {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr));
+  gap: 1px;
+  margin: 0;
+  border-top: 1px solid var(--mb-line);
+  background: var(--mb-line);
+
+  & > div {
+    background: #0b0d15;
+    padding: 0.7rem 1rem;
+  }
+
+  & dt {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  & dd {
+    margin: 0;
+    color: var(--heading);
+    font-family: var(--mono);
+    font-size: 0.9rem;
+    font-variant-numeric: tabular-nums;
+    word-break: break-all;
+  }
+}
+
+.mb-busy {
+  animation: mb-pulse 1s ease-in-out infinite alternate;
+  color: var(--mb-teal);
+}
+
+@keyframes mb-pulse {
+  from {
+    opacity: 0.4;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mb-strips svg,
+  .mb-busy {
+    animation: none;
+  }
+}

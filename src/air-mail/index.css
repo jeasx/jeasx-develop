@@ -1,0 +1,1247 @@
+/* Game on the left, controls on the right; stacked on narrow screens. */
+.track {
+  display: grid;
+  grid-template-columns: minmax(0, 720px) 200px;
+  justify-content: center;
+  align-items: start;
+  gap: 1.5rem;
+}
+@media (max-width: 960px) {
+  .track {
+    grid-template-columns: minmax(0, 720px);
+  }
+  /* Let game, pad and stream info share the grid, with the stream info last. */
+  .display {
+    display: contents;
+  }
+  .track .stream {
+    order: 1;
+    margin-top: 0;
+  }
+}
+
+.defs {
+  position: absolute;
+}
+
+.cockpit {
+  padding: 0.75rem;
+  border: 1px solid #0369a1;
+  border-radius: 1rem;
+  background: linear-gradient(160deg, #1e3a5f, #0b1220);
+  box-shadow: 0 20px 50px -20px rgb(0 0 0 / 0.8);
+  color: #f8fafc;
+  user-select: none;
+  outline: none;
+  cursor: pointer;
+}
+.cockpit:focus-visible {
+  box-shadow: 0 0 0 3px #facc15;
+}
+
+#screen {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 0.5rem;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+/* Three layers: the sky and the plane by the browser, the landscape in between by the server. */
+.layer {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* The sky, rendered by the browser. */
+.sky {
+  fill: url(#am-sky);
+}
+.sun .glow {
+  fill: url(#am-sun-glow);
+}
+.sun .rays {
+  fill: #fef9c3;
+}
+.sun .halo {
+  fill: #fef08a;
+  opacity: 0.45;
+}
+.sun .disc {
+  fill: #fffbeb;
+}
+/* The lens flare is faint, so it never hides the plane or the landscape. */
+.flare circle {
+  mix-blend-mode: screen;
+}
+.flare .warm {
+  fill: #fde68a;
+  opacity: 0.35;
+}
+.flare .cool {
+  fill: #a5f3fc;
+  opacity: 0.35;
+}
+.flare .violet {
+  fill: #e9d5ff;
+  opacity: 0.25;
+}
+.flare .ring {
+  fill: none;
+  stroke: #fef9c3;
+  stroke-width: 1.2;
+  opacity: 0.35;
+}
+.cloud ellipse {
+  fill: #fff;
+  opacity: 0.9;
+}
+.hills.far {
+  fill: #a5c4dc;
+}
+.hills.near {
+  fill: #86b29b;
+}
+
+/* The landscape, rendered and streamed by the server. */
+.chunk .ground {
+  fill: url(#am-ground);
+}
+.chunk .ridge {
+  fill: none;
+  stroke: rgb(255 255 255 / 0.3);
+  stroke-width: 0.8;
+  stroke-linejoin: round;
+}
+.chunk .boulder .stone {
+  fill: #78716c;
+  stroke: #44403c;
+  stroke-width: 0.4;
+  stroke-linejoin: round;
+}
+.chunk .boulder .facet {
+  fill: #a8a29e;
+}
+.chunk .trunk {
+  fill: #5b3416;
+}
+.chunk .needles {
+  fill: #166534;
+}
+.chunk .needles.dark {
+  fill: #14532d;
+}
+.chunk .crown {
+  fill: #4d7c0f;
+}
+.chunk .crown.dark {
+  fill: #3f6212;
+}
+/*
+ * Trees sway in the wind, bending from the foot of the trunk. The server gives
+ * every tree a --delay from its position, so gusts roll across the landscape.
+ */
+.chunk .pine,
+.chunk .oak {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: tree-sway 4s var(--delay) infinite ease-in-out;
+}
+.chunk .pine {
+  animation-name: pine-sway;
+}
+.chunk .oak .crown {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  animation: crown-rustle 1.3s var(--delay) infinite ease-in-out;
+}
+@keyframes tree-sway {
+  0%,
+  100% {
+    transform: skewX(0deg);
+  }
+  30% {
+    transform: skewX(-5deg);
+  }
+  45% {
+    transform: skewX(-3deg);
+  }
+  60% {
+    transform: skewX(-6deg);
+  }
+}
+/* Pines are stiffer than oaks. */
+@keyframes pine-sway {
+  0%,
+  100% {
+    transform: skewX(0deg);
+  }
+  35% {
+    transform: skewX(-3deg);
+  }
+  60% {
+    transform: skewX(-4deg);
+  }
+}
+@keyframes crown-rustle {
+  50% {
+    transform: scale(1.05, 0.97);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .chunk .pine,
+  .chunk .oak,
+  .chunk .oak .crown {
+    animation: none;
+  }
+}
+.chunk .villager .legs {
+  stroke: #1e3a8a;
+  stroke-width: 0.9;
+  stroke-linecap: round;
+}
+.chunk .villager .arm {
+  stroke: #fcd9b6;
+  stroke-width: 0.7;
+  stroke-linecap: round;
+}
+.chunk .villager .head {
+  fill: #fcd9b6;
+}
+/* The raised arm waves in bursts, swinging around the shoulder. */
+.chunk .villager .waving {
+  transform-box: fill-box;
+  transform-origin: 0% 100%;
+  animation: villager-wave 3s var(--delay) infinite ease-in-out;
+}
+@keyframes villager-wave {
+  0%,
+  8%,
+  24%,
+  40%,
+  56% {
+    transform: rotate(-25deg);
+  }
+  16%,
+  32%,
+  48% {
+    transform: rotate(25deg);
+  }
+  /* Then the arm rests at the side until the next burst. */
+  64%,
+  100% {
+    transform: rotate(150deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .chunk .villager .waving {
+    animation: none;
+  }
+}
+/* Snowflakes fall over the mountains, each down to the slope below it (--fall). */
+.chunk .flake {
+  fill: #fff;
+  animation: snowfall linear infinite;
+}
+@keyframes snowfall {
+  0% {
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.95;
+  }
+  50% {
+    transform: translate(calc(var(--drift) * 0.5), calc(var(--fall) * 0.5));
+  }
+  85% {
+    opacity: 0.95;
+  }
+  100% {
+    transform: translate(var(--drift), var(--fall));
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .chunk .flake {
+    display: none;
+  }
+}
+.chunk .water {
+  fill: url(#am-water);
+}
+/* Ripples drift to and fro, stretching and fading, each at its own --delay. */
+.chunk .ripple {
+  stroke: #e0f2fe;
+  stroke-width: 0.6;
+  stroke-linecap: round;
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  animation: ripple 3s var(--delay) infinite ease-in-out;
+}
+.chunk .ripple.row1 {
+  stroke-width: 0.5;
+  animation-duration: 4s;
+  animation-direction: reverse;
+}
+@keyframes ripple {
+  0%,
+  100% {
+    transform: translateX(-2px) scaleX(0.6);
+    opacity: 0.25;
+  }
+  50% {
+    transform: translateX(2px) scaleX(1.2);
+    opacity: 0.85;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .chunk .ripple {
+    animation: none;
+  }
+}
+/*
+ * A fish leaps out of the lake every 7 seconds: nose up out of the water,
+ * level at the top, nose down back in. It is hidden while under water.
+ */
+.chunk .fish {
+  animation: fish-leap 7s var(--delay) infinite;
+}
+.chunk .fish .body {
+  fill: #94a3b8;
+  stroke: #475569;
+  stroke-width: 0.3;
+}
+.chunk .fish .tail,
+.chunk .fish .fin {
+  fill: #64748b;
+}
+.chunk .fish .eye {
+  fill: #0f172a;
+}
+@keyframes fish-leap {
+  0%,
+  100% {
+    transform: translate(-7px, 2px) rotate(-55deg);
+    opacity: 0;
+  }
+  2% {
+    transform: translate(-6px, 0) rotate(-50deg);
+    opacity: 1;
+    animation-timing-function: ease-out;
+  }
+  7% {
+    transform: translate(0, -11px) rotate(0deg);
+    animation-timing-function: ease-in;
+  }
+  12% {
+    transform: translate(6px, 0) rotate(50deg);
+    opacity: 1;
+  }
+  13%,
+  99% {
+    transform: translate(7px, 2px) rotate(55deg);
+    opacity: 0;
+  }
+}
+.chunk .splash {
+  fill: none;
+  stroke: #e0f2fe;
+  stroke-width: 0.5;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+}
+.chunk .splash.out {
+  animation: splash-out 7s var(--delay) infinite;
+}
+.chunk .splash.in {
+  animation: splash-in 7s var(--delay) infinite;
+}
+@keyframes splash-out {
+  0% {
+    transform: scale(0.4);
+    opacity: 0.9;
+  }
+  10% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes splash-in {
+  0%,
+  11% {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.9;
+  }
+  22% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .chunk .leap {
+    display: none;
+  }
+}
+.chunk .reeds {
+  stroke: #3f6212;
+  stroke-width: 0.8;
+}
+.chunk .wall {
+  stroke: #78716c;
+  stroke-width: 0.3;
+}
+.chunk .roof {
+  fill: #b91c1c;
+}
+.chunk .spire {
+  fill: #475569;
+}
+.chunk .chimney,
+.chunk .door {
+  fill: #57534e;
+}
+.chunk .window {
+  fill: #fde047;
+}
+.chunk .mullion {
+  stroke: #f8fafc;
+  stroke-width: 0.3;
+}
+.chunk .sill,
+.chunk .step,
+.chunk .cornice,
+.chunk .chimney-cap {
+  fill: #a8a29e;
+}
+.chunk .shutter {
+  stroke: #1c1917;
+  stroke-width: 0.15;
+}
+.chunk .eave-shade {
+  fill: #000;
+  opacity: 0.15;
+}
+.chunk .tiles {
+  stroke: #000;
+  stroke-opacity: 0.25;
+  stroke-width: 0.3;
+}
+.chunk .flowers {
+  stroke: #ec4899;
+  stroke-width: 0.9;
+  stroke-linecap: round;
+}
+.chunk .knob {
+  fill: #facc15;
+}
+.chunk .belfry {
+  fill: #1e293b;
+}
+.chunk .bell {
+  fill: #ca8a04;
+}
+.chunk .hands {
+  stroke: #1c1917;
+  stroke-width: 0.25;
+  stroke-linecap: round;
+}
+.chunk .cross {
+  stroke: #ca8a04;
+  stroke-width: 0.5;
+}
+/* Smoke curls up from the chimneys and fades away. */
+.chunk .smoke circle {
+  fill: #e2e8f0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: chimney-smoke 3.5s linear infinite;
+  animation-delay: var(--delay);
+}
+.chunk .smoke circle + circle {
+  animation-delay: calc(var(--delay) - 1.75s);
+}
+@keyframes chimney-smoke {
+  from {
+    opacity: 0.8;
+    transform: translate(0, 0) scale(0.6);
+  }
+  to {
+    opacity: 0;
+    transform: translate(2px, -6px) scale(1.6);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .chunk .smoke circle {
+    animation: none;
+    opacity: 0.5;
+  }
+}
+.chunk .clock {
+  fill: #fff;
+  stroke: #1c1917;
+  stroke-width: 0.3;
+}
+.chunk .drop-zone .ring {
+  fill: #fff;
+}
+.chunk .drop-zone .ring.outer {
+  fill: #dc2626;
+}
+.chunk .drop-zone .post {
+  fill: #57534e;
+}
+.chunk .drop-zone .mailbox {
+  fill: #1d4ed8;
+}
+.chunk .drop-zone .flag {
+  fill: #dc2626;
+  stroke: #57534e;
+  stroke-width: 0.4;
+  transform-box: fill-box;
+  transform-origin: 0% 100%;
+  animation: flag-wave 0.6s linear infinite;
+}
+/* The rings of the target pulse to catch the pilot's eye. */
+.chunk .drop-zone .ring {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ring-pulse 1.6s ease-in-out infinite;
+}
+@keyframes flag-wave {
+  0%,
+  100% {
+    transform: skewY(-10deg) scaleX(0.9);
+  }
+  25% {
+    transform: skewY(6deg) scaleX(1);
+  }
+  50% {
+    transform: skewY(-4deg) scaleX(0.8);
+  }
+  75% {
+    transform: skewY(12deg) scaleX(0.95);
+  }
+}
+@keyframes ring-pulse {
+  50% {
+    transform: scale(1.12);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .chunk .drop-zone .flag,
+  .chunk .drop-zone .ring {
+    animation: none;
+  }
+}
+.chunk .runway {
+  fill: #44403c;
+}
+.chunk .dashes,
+.chunk .threshold {
+  stroke: #fafaf9;
+  stroke-width: 0.8;
+}
+.chunk .threshold {
+  stroke-width: 1.6;
+  stroke-dasharray: 1 1;
+}
+.chunk .pole {
+  stroke: #d6d3d1;
+  stroke-width: 0.8;
+}
+.chunk .sock {
+  fill: #f97316;
+}
+.chunk .windsock {
+  transform-box: fill-box;
+  transform-origin: 0% 50%;
+  animation: windsock 0.9s ease-in-out infinite;
+}
+@keyframes windsock {
+  0%,
+  100% {
+    transform: skewY(4deg) scaleX(1);
+  }
+  30% {
+    transform: skewY(-6deg) scaleX(0.92);
+  }
+  60% {
+    transform: skewY(2deg) scaleX(0.97);
+  }
+  80% {
+    transform: skewY(-3deg) scaleX(0.9);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .chunk .windsock {
+    animation: none;
+  }
+}
+.chunk .sock-stripes {
+  stroke: #fff;
+  stroke-width: 1;
+}
+.chunk .hangar {
+  fill: #94a3b8;
+  stroke: #475569;
+  stroke-width: 0.5;
+}
+.chunk .hangar-door {
+  fill: #1e293b;
+}
+.chunk .siding {
+  stroke: #64748b;
+  stroke-width: 0.3;
+}
+.chunk .roof-trim {
+  fill: none;
+  stroke: #b91c1c;
+  stroke-width: 1.2;
+  stroke-linecap: round;
+}
+.chunk .parked {
+  fill: #facc15;
+}
+.chunk .parked-hub {
+  fill: #b45309;
+}
+.chunk .parked-wheels {
+  stroke: #0f172a;
+  stroke-width: 0.5;
+}
+.chunk .nozzle {
+  fill: #1c1917;
+}
+.chunk .parked-prop {
+  stroke: #cbd5e1;
+  stroke-width: 0.4;
+}
+.chunk .door-track {
+  stroke: #475569;
+  stroke-width: 0.5;
+}
+.chunk .door-panel {
+  fill: #64748b;
+  stroke: #334155;
+  stroke-width: 0.3;
+}
+.chunk .brace {
+  stroke: #475569;
+  stroke-width: 0.3;
+}
+.chunk .lamp {
+  fill: #334155;
+}
+.chunk .lamp-light {
+  fill: #fde047;
+}
+.chunk .airstrip text {
+  font: 800 4px sans-serif;
+  fill: #1e3a8a;
+  text-anchor: middle;
+}
+.chunk .sign {
+  fill: #f8fafc;
+  stroke: #1e3a8a;
+  stroke-width: 0.3;
+}
+.chunk .airstrip .sign-label {
+  font-size: 2.6px;
+  dominant-baseline: auto;
+}
+.chunk .tank {
+  fill: #dc2626;
+  stroke: #7f1d1d;
+  stroke-width: 0.3;
+}
+.chunk .tank-shine {
+  stroke: #fca5a5;
+  stroke-width: 0.6;
+  stroke-linecap: round;
+}
+.chunk .tank-band {
+  stroke: #991b1b;
+  stroke-width: 0.4;
+}
+.chunk .tank-leg {
+  stroke: #475569;
+  stroke-width: 0.7;
+}
+.chunk .hatch,
+.chunk .pump {
+  fill: #475569;
+}
+.chunk .pump-face {
+  fill: #fde047;
+}
+.chunk .hose {
+  fill: none;
+  stroke: #1c1917;
+  stroke-width: 0.45;
+  stroke-linecap: round;
+}
+.chunk .airstrip .tank-label {
+  font-size: 2.6px;
+  fill: #fff;
+}
+.chunk .sheep .wool,
+.chunk .sheep .tuft {
+  fill: #fafaf9;
+}
+.chunk .sheep .face {
+  fill: #292524;
+}
+.chunk .sheep .ear {
+  fill: #44403c;
+}
+.chunk .sheep .leg {
+  stroke: #292524;
+  stroke-width: 0.7;
+}
+
+/*
+ * The sheep come from the server and are never rendered again, so CSS animates
+ * them. Every sheep runs the same 9 second cycle at its own --delay: it grazes,
+ * looks up, wanders a few steps forth and back, and breathes all the while.
+ */
+.chunk .sheep * {
+  transform-box: fill-box;
+}
+.chunk .sheep .wander {
+  animation: sheep-wander 9s var(--delay) infinite ease-in-out;
+}
+.chunk .sheep .head {
+  transform-origin: 0% 50%;
+  animation: sheep-graze 9s var(--delay) infinite ease-in-out;
+}
+.chunk .sheep .body {
+  transform-origin: 50% 100%;
+  animation: sheep-breathe 1.8s var(--delay) infinite ease-in-out;
+}
+.chunk .sheep .ear {
+  transform-origin: 100% 50%;
+  animation: sheep-twitch 3s var(--delay) infinite;
+}
+.chunk .sheep .leg {
+  transform-origin: 50% 0%;
+}
+.chunk .sheep .leg.front {
+  animation: sheep-step 9s var(--delay) infinite linear;
+}
+.chunk .sheep .leg.back {
+  animation: sheep-step 9s calc(var(--delay) - 0.2s) infinite linear;
+}
+
+/* Graze with the head down, then look around before wandering off. */
+@keyframes sheep-graze {
+  0%,
+  5% {
+    transform: rotate(0deg);
+  }
+  12%,
+  45% {
+    transform: rotate(40deg);
+  }
+  48%,
+  52% {
+    transform: rotate(30deg);
+  }
+  58%,
+  100% {
+    transform: rotate(0deg);
+  }
+}
+/* A few steps forward and, later, back again. */
+@keyframes sheep-wander {
+  0%,
+  60% {
+    transform: translateX(0);
+  }
+  72%,
+  88% {
+    transform: translateX(4px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+/* The legs only swing while the sheep walks. */
+@keyframes sheep-step {
+  0%,
+  60%,
+  72%,
+  88%,
+  100% {
+    transform: rotate(0deg);
+  }
+  63%,
+  69%,
+  91%,
+  97% {
+    transform: rotate(25deg);
+  }
+  66%,
+  94% {
+    transform: rotate(-25deg);
+  }
+}
+@keyframes sheep-breathe {
+  50% {
+    transform: scaleY(1.06);
+  }
+}
+@keyframes sheep-twitch {
+  0%,
+  90%,
+  100% {
+    transform: rotate(0deg);
+  }
+  94% {
+    transform: rotate(-30deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .chunk .sheep * {
+    animation: none !important;
+  }
+}
+
+/* The plane, its mail and effects, rendered by the browser. */
+.plane path,
+.plane circle {
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+.plane .fuselage {
+  fill: url(#am-fuselage);
+  stroke: #713f12;
+  stroke-width: 0.35;
+}
+.plane .cheat {
+  fill: none;
+  stroke: #dc2626;
+  stroke-width: 1.1;
+}
+.plane .cheat-line {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 0.3;
+}
+.plane .cockpit {
+  fill: none;
+  stroke: #422006;
+  stroke-width: 0.7;
+}
+.plane .windscreen {
+  fill: #e0f2fe;
+  fill-opacity: 0.55;
+  stroke: #64748b;
+  stroke-width: 0.25;
+}
+.plane .jacket {
+  fill: #78350f;
+}
+.plane .face {
+  fill: #f5c08a;
+}
+.plane .leather-cap {
+  fill: #5b3416;
+}
+.plane .strap {
+  stroke: #292524;
+  stroke-width: 0.35;
+}
+.plane .goggles {
+  fill: #7dd3fc;
+  stroke: #292524;
+  stroke-width: 0.3;
+}
+.plane .scarf {
+  fill: #f8fafc;
+  stroke: #cbd5e1;
+  stroke-width: 0.2;
+}
+.plane .cowling {
+  fill: url(#am-cowling);
+  stroke: #1e293b;
+  stroke-width: 0.3;
+}
+.plane .slits {
+  stroke: #1e293b;
+  stroke-width: 0.3;
+}
+.plane .exhaust {
+  fill: #57534e;
+}
+.plane .wing,
+.plane .fin,
+.plane .stabilizer {
+  fill: url(#am-paint);
+  stroke: #7f1d1d;
+  stroke-width: 0.35;
+}
+.plane .wing-edge {
+  stroke: #fca5a5;
+  stroke-width: 0.3;
+}
+.plane .rudder {
+  stroke: #fff;
+  stroke-width: 0.9;
+}
+.plane .gear {
+  fill: none;
+  stroke: #44403c;
+  stroke-width: 0.45;
+}
+.plane .tire {
+  fill: #1c1917;
+}
+.plane .hubcap {
+  fill: #d6d3d1;
+}
+.plane .prop-disc {
+  fill: #e7e5e4;
+  opacity: 0.35;
+}
+.plane .blade {
+  stroke: #292524;
+  stroke-width: 0.8;
+}
+.plane .spinner {
+  fill: #dc2626;
+  stroke: #7f1d1d;
+  stroke-width: 0.3;
+}
+.puff {
+  fill: #e5e7eb;
+}
+.parcel .box {
+  fill: #b45309;
+  stroke: #78350f;
+  stroke-width: 0.4;
+}
+.parcel .string {
+  stroke: #fef3c7;
+  stroke-width: 0.4;
+}
+.parcel .chute {
+  fill: #f8fafc;
+}
+.parcel .gores {
+  fill: #dc2626;
+}
+/* The side away from the sun lies in shadow. */
+.parcel .shade {
+  fill: #0f172a;
+  opacity: 0.18;
+}
+.parcel .hem {
+  fill: none;
+  stroke: #7f1d1d;
+  stroke-width: 0.35;
+  stroke-linejoin: round;
+}
+.parcel .vent {
+  fill: #7f1d1d;
+}
+.parcel .lines {
+  stroke: #e5e7eb;
+  stroke-width: 0.25;
+}
+.crash .smoke {
+  fill: #57534e;
+  opacity: 0.55;
+}
+.crash .fire {
+  fill: #f97316;
+  stroke: #fde047;
+  stroke-width: 1.5;
+}
+.crash .piece {
+  fill: #facc15;
+}
+.crash .piece.red {
+  fill: #dc2626;
+}
+.popup {
+  font: 800 7px sans-serif;
+  text-anchor: middle;
+  stroke: rgb(0 0 0 / 0.5);
+  stroke-width: 0.6;
+  paint-order: stroke;
+}
+.popup.good {
+  fill: #fde047;
+}
+.popup.bad {
+  fill: #fca5a5;
+}
+
+.hud-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.hud {
+  position: absolute;
+  inset: 0 0 auto;
+  display: flex;
+  justify-content: space-between;
+  gap: 0.25rem;
+  padding: 0.4rem 0.6rem;
+  background: linear-gradient(rgb(15 23 42 / 0.55), transparent);
+}
+.hud .stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+}
+.hud span {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #bae6fd;
+}
+.hud strong {
+  font-size: clamp(0.75rem, 2.2vw, 1.1rem);
+  text-shadow: 0 1px 2px #000;
+  white-space: nowrap;
+}
+.hud .mail em {
+  font-style: normal;
+  opacity: 0.3;
+}
+.hud .planes {
+  color: #facc15;
+}
+.hud .fuel i {
+  width: 4.5rem;
+  height: 0.5rem;
+  margin-top: 0.35rem;
+  border-radius: 1rem;
+  background:
+    linear-gradient(90deg, #ef4444, #facc15, #22c55e) 0 0 / 4.5rem 100% no-repeat,
+    #3f3f46;
+  clip-path: inset(0 calc((1 - var(--fuel)) * 100%) 0 0 round 1rem);
+}
+.hud .fuel.low span {
+  color: #f87171;
+  animation: blink 0.5s steps(2) infinite;
+}
+@keyframes blink {
+  50% {
+    opacity: 0.3;
+  }
+}
+.day,
+.fps {
+  position: absolute;
+  bottom: 0.6rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.5rem;
+  background: rgb(15 23 42 / 0.55);
+  font-size: 0.7rem;
+  color: #bae6fd;
+}
+.day {
+  left: 0.6rem;
+}
+.fps {
+  right: 0.6rem;
+}
+.fps strong {
+  color: #f8fafc;
+}
+.fps.low strong {
+  color: #f87171;
+}
+.hint {
+  position: absolute;
+  top: 22%;
+  left: 50%;
+  padding: 0.3rem 0.7rem;
+  border-radius: 0.5rem;
+  background: rgb(15 23 42 / 0.7);
+  font-size: 0.85rem;
+  color: #fde047;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.overlay {
+  position: absolute;
+  inset: 35% 12% auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid #facc15;
+  border-radius: 0.75rem;
+  background: rgb(11 18 32 / 0.88);
+  text-align: center;
+}
+.overlay strong {
+  font-size: 1.5rem;
+  color: #facc15;
+}
+.overlay.over strong {
+  color: #f87171;
+}
+.overlay span {
+  font-size: 0.9rem;
+}
+
+/* Buttons for touch screens and mouse users. */
+.pad {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-areas:
+    "start start start"
+    ". up ."
+    "left drop right"
+    ". down ."
+    "help help help";
+  gap: 0.4rem;
+}
+.pad .key {
+  margin: 0;
+  padding: 0.8rem 0.4rem;
+  border: 1px solid #334155;
+  border-radius: 0.6rem;
+  background: #0f172a;
+  color: #f8fafc;
+  font-size: 1.1rem;
+  cursor: pointer;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.pad .key:hover,
+.pad .key.held {
+  border-color: #facc15;
+}
+.pad .key.held {
+  background: #334155;
+}
+.pad .start {
+  grid-area: start;
+  font-size: 0.9rem;
+  background: #facc15;
+  color: #0f172a;
+}
+.pad .up {
+  grid-area: up;
+}
+.pad .down {
+  grid-area: down;
+}
+.pad .left {
+  grid-area: left;
+}
+.pad .right {
+  grid-area: right;
+}
+.pad .drop {
+  grid-area: drop;
+  font-size: 0.85rem;
+  background: #b45309;
+}
+/* The explanation in a quiet frame. */
+.pad .help {
+  grid-area: help;
+  margin: 0.5rem 0 0;
+  padding: 0.6rem 0.7rem;
+  border: 1px solid #1e3a5f;
+  border-radius: 0.6rem;
+  background: #0b1220;
+  font-size: 0.75rem;
+  line-height: 1.45;
+}
+/* Below the game: telemetry of the streamed course, like a little console. */
+.stream {
+  margin-top: 0.6rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #1e3a5f;
+  border-radius: 0.6rem;
+  background: #020617;
+  font:
+    0.72rem/1.4 ui-monospace,
+    "SF Mono",
+    Menlo,
+    monospace;
+  color: #94a3b8;
+}
+.stream-head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+.stream-head code {
+  overflow: hidden;
+  color: #67e8f9;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.stream .state {
+  color: #e2e8f0;
+  letter-spacing: 0.08em;
+}
+.stream .led {
+  flex: none;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: #64748b;
+}
+.stream .led.connecting {
+  background: #facc15;
+  box-shadow: 0 0 6px #facc15;
+}
+.stream .led.streaming {
+  background: #22c55e;
+  box-shadow: 0 0 6px #22c55e;
+}
+.stream .led.idle {
+  background: #15803d;
+}
+.stream .led.error {
+  background: #ef4444;
+  box-shadow: 0 0 6px #ef4444;
+}
+.stream-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: 0.25rem 1rem;
+  margin: 0.4rem 0 0;
+}
+.stream-stats div {
+  min-width: 0;
+}
+.stream-stats dt {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #475569;
+}
+.stream-stats dd {
+  margin: 0;
+  color: #e2e8f0;
+  white-space: nowrap;
+}

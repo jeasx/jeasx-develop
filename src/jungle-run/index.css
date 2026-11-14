@@ -1,0 +1,596 @@
+/* Game on the left, controls on the right; stacked on narrow screens. */
+.track {
+  display: grid;
+  grid-template-columns: minmax(0, 720px) 200px;
+  justify-content: center;
+  align-items: start;
+  gap: 1.5rem;
+}
+@media (max-width: 960px) {
+  .track {
+    grid-template-columns: minmax(0, 720px);
+  }
+}
+
+.defs {
+  position: absolute;
+}
+
+.frame {
+  padding: 0.75rem;
+  border: 1px solid #854d0e;
+  border-radius: 1rem;
+  background: linear-gradient(160deg, #422006, #1c0f02);
+  box-shadow: 0 20px 50px -20px rgb(0 0 0 / 0.8);
+  color: #fefce8;
+  user-select: none;
+  outline: none;
+  cursor: pointer;
+}
+.frame:focus-visible {
+  box-shadow: 0 0 0 3px #facc15;
+}
+
+#screen {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 0.5rem;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+/* The scene. Colors live here, so every frame of markup stays small. */
+.scene {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.scene .sky {
+  fill: url(#jr-sky);
+}
+.scene .far-trunk {
+  fill: #1a2e05;
+  opacity: 0.55;
+}
+.scene .bush {
+  fill: #365314;
+}
+.scene .rays {
+  fill: url(#jr-light);
+}
+.scene .trunk {
+  fill: url(#jr-trunk);
+}
+.scene .bark {
+  fill: none;
+  stroke: #2a140a;
+  stroke-width: 0.8;
+}
+.scene .root {
+  fill: #4a2511;
+}
+.scene .leaf.dark {
+  fill: #14532d;
+}
+.scene .leaf.mid {
+  fill: #166534;
+}
+.scene .leaf.light {
+  fill: #15803d;
+  stroke: #22c55e;
+  stroke-width: 0.6;
+}
+
+.scene .falling-leaf {
+  stroke-width: 0.3;
+}
+.scene .falling-leaf.green {
+  fill: #22c55e;
+  stroke: #14532d;
+}
+.scene .falling-leaf.lime {
+  fill: #a3e635;
+  stroke: #3f6212;
+}
+.scene .falling-leaf.yellow {
+  fill: #facc15;
+  stroke: #854d0e;
+}
+.scene .falling-leaf.orange {
+  fill: #fb923c;
+  stroke: #9a3412;
+}
+.scene .falling-leaf.red {
+  fill: #dc2626;
+  stroke: #7f1d1d;
+}
+
+.scene .earth {
+  fill: url(#jr-earth);
+}
+.scene .pebble {
+  fill: #854d0e;
+}
+.scene .grass {
+  fill: #4d7c0f;
+}
+.scene .tufts {
+  fill: none;
+  stroke: #84cc16;
+  stroke-width: 0.8;
+}
+.scene .tunnel {
+  fill: #292524;
+}
+.scene .bricks {
+  stroke: #1c1917;
+  stroke-width: 0.8;
+}
+.scene .floor {
+  fill: #57534e;
+}
+.scene .floor-lines {
+  stroke: #44403c;
+  stroke-width: 0.8;
+}
+.scene .wall rect {
+  fill: #b91c1c;
+}
+.scene .wall path {
+  stroke: #7f1d1d;
+  stroke-width: 0.8;
+}
+.scene .hole .shaft {
+  fill: #0c0a09;
+}
+.scene .hole .rails,
+.scene .hole .rungs {
+  stroke: #d6a35c;
+  stroke-width: 1.4;
+}
+
+.scene .water .liquid {
+  fill: url(#jr-water);
+}
+.scene .water .shine {
+  fill: #bae6fd;
+  opacity: 0.6;
+}
+.scene .water .ripples {
+  stroke: #e0f2fe;
+  stroke-width: 0.8;
+  opacity: 0.7;
+}
+.scene .tar .liquid {
+  fill: url(#jr-tar);
+}
+.scene .tar .shine {
+  fill: #a1a1aa;
+  opacity: 0.35;
+}
+.scene .bubble {
+  fill: none;
+  stroke: #71717a;
+  stroke-width: 0.7;
+}
+
+.scene .croc .ripple {
+  fill: none;
+  stroke: #e0f2fe;
+  stroke-width: 0.6;
+  opacity: 0.5;
+}
+.scene .croc .body {
+  fill: #1f3a12;
+}
+.scene .croc .spikes {
+  fill: #2d4a17;
+  stroke: #0f1f07;
+  stroke-width: 0.5;
+  stroke-linejoin: round;
+}
+.scene .croc .jaw {
+  fill: #3f5f1f;
+  stroke: #0f1f07;
+  stroke-width: 0.6;
+  stroke-linejoin: round;
+}
+.scene .croc .jaw.low {
+  fill: #8a9a5b;
+}
+.scene .croc .mouth {
+  fill: #7f1d1d;
+}
+.scene .croc .tongue {
+  fill: #e11d48;
+}
+.scene .croc .teeth,
+.scene .croc .fang {
+  fill: #fefce8;
+  stroke: #a8a29e;
+  stroke-width: 0.25;
+  stroke-linejoin: miter;
+}
+.scene .croc .scales {
+  stroke: #1f3a12;
+  stroke-width: 1;
+  stroke-linecap: round;
+}
+.scene .croc .nostril {
+  fill: #0f1f07;
+}
+.scene .croc .brow {
+  fill: #2d4a17;
+  stroke: #0f1f07;
+  stroke-width: 0.5;
+}
+.scene .croc .eye {
+  fill: #facc15;
+  stroke: #0f1f07;
+  stroke-width: 0.4;
+}
+.scene .croc.open .eye {
+  fill: #f97316;
+  stroke: #dc2626;
+  stroke-width: 0.8;
+}
+.scene .croc .pupil {
+  fill: #000;
+}
+
+.scene .vine path {
+  fill: none;
+  stroke: #4d7c0f;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+}
+.scene .vine-leaf {
+  fill: #65a30d;
+}
+
+.scene .log .bark {
+  fill: #5b3416;
+}
+.scene .log .wood {
+  fill: #d6a35c;
+}
+.scene .log .ring {
+  fill: none;
+  stroke: #92582a;
+  stroke-width: 0.8;
+}
+.scene .log .crack {
+  stroke: #5b3416;
+  stroke-width: 0.8;
+}
+
+.scene .treasure.money .bag {
+  fill: url(#jr-gold);
+}
+.scene .ingot path,
+.scene .ingot rect {
+  stroke-width: 0.4;
+  stroke-linejoin: round;
+}
+.scene .gold .ingot .face {
+  fill: url(#jr-gold-bar);
+  stroke: #713f12;
+}
+.scene .gold .ingot .lid {
+  fill: #fef08a;
+  stroke: #a16207;
+}
+.scene .gold .ingot .stamp {
+  fill: none;
+  stroke: #713f12;
+}
+.scene .silver .ingot .face {
+  fill: url(#jr-silver);
+  stroke: #1e293b;
+}
+.scene .silver .ingot .lid {
+  fill: #f1f5f9;
+  stroke: #475569;
+}
+.scene .silver .ingot .stamp {
+  fill: none;
+  stroke: #334155;
+}
+.scene .ingot .glint {
+  stroke: #fff;
+  stroke-width: 0.9;
+  stroke-linecap: round;
+  opacity: 0.9;
+}
+.scene .treasure .band {
+  fill: none;
+  stroke: url(#jr-gold);
+  stroke-width: 1.8;
+}
+.scene .treasure .gem {
+  fill: #a5f3fc;
+  stroke: #0891b2;
+  stroke-width: 0.5;
+}
+.scene .treasure .tie {
+  fill: none;
+  stroke: #713f12;
+  stroke-width: 1;
+}
+.scene .treasure text {
+  font: 800 6px sans-serif;
+  fill: #713f12;
+  text-anchor: middle;
+}
+.scene .treasure .glow {
+  fill: url(#jr-glow);
+}
+.scene .treasure .glow.cool {
+  fill: url(#jr-glow-cool);
+}
+
+.scene .scorpion .body,
+.scene .scorpion .claw {
+  fill: #e7e5e4;
+}
+.scene .scorpion .legs,
+.scene .scorpion .tail,
+.scene .scorpion .sting {
+  fill: none;
+  stroke: #e7e5e4;
+  stroke-width: 1.2;
+  stroke-linecap: round;
+}
+.scene .scorpion .tail {
+  stroke-width: 1.8;
+}
+.scene .scorpion .eye {
+  fill: #dc2626;
+}
+
+.scene .explorer path {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+/* A rugged adventurer: fedora, leather jacket, khaki shirt and trousers, boots. */
+.scene .explorer .leg {
+  stroke: #c8b48a;
+  stroke-width: 2.4;
+}
+.scene .explorer .boot {
+  fill: #3b2414;
+}
+.scene .explorer .arm {
+  stroke: #6b3f1f;
+  stroke-width: 1.9;
+}
+.scene .explorer .hand,
+.scene .explorer .head {
+  fill: #e8b48a;
+}
+.scene .explorer .back {
+  filter: brightness(0.7);
+}
+.scene .explorer .shirt {
+  fill: #d6c49a;
+}
+.scene .explorer .jacket {
+  fill: #6b3f1f;
+  stroke: #4a2a12;
+  stroke-width: 0.3;
+}
+.scene .explorer .collar {
+  stroke: #4a2a12;
+  stroke-width: 0.6;
+}
+.scene .explorer .strap {
+  stroke: #8a6a3a;
+  stroke-width: 0.8;
+}
+.scene .explorer .satchel {
+  fill: #a38552;
+  stroke: #6b5530;
+  stroke-width: 0.4;
+}
+.scene .explorer .belt {
+  stroke: #2a1a0c;
+  stroke-width: 1;
+}
+.scene .explorer .whip {
+  fill: none;
+  stroke: #3b2414;
+  stroke-width: 0.8;
+}
+.scene .explorer .stubble {
+  stroke: #8a6a50;
+  stroke-width: 0.7;
+  opacity: 0.45;
+}
+.scene .explorer .brim,
+.scene .explorer .crown {
+  fill: #7a5230;
+  stroke: #4a2a12;
+  stroke-width: 0.3;
+}
+.scene .explorer .band {
+  stroke: #2a1a0c;
+  stroke-width: 0.8;
+}
+.scene .explorer .eye {
+  fill: #1c1917;
+}
+.scene .ghost .beam {
+  fill: url(#jr-beam);
+}
+.scene .ghost .sheet {
+  fill: #f8fafc;
+  fill-opacity: 0.85;
+  stroke: #cbd5e1;
+  stroke-width: 0.4;
+}
+.scene .ghost .eye,
+.scene .ghost .mouth {
+  fill: #334155;
+}
+.scene .ghost .arms {
+  fill: none;
+  stroke: #f8fafc;
+  stroke-opacity: 0.85;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+.scene .ghost .halo {
+  fill: none;
+  stroke: #fde047;
+  stroke-width: 0.9;
+  filter: drop-shadow(0 0 1.5px #fef08a);
+}
+
+.hud {
+  position: absolute;
+  inset: 0 0 auto;
+  display: flex;
+  justify-content: space-between;
+  gap: 0.25rem;
+  padding: 0.4rem 0.6rem;
+  background: linear-gradient(rgb(0 0 0 / 0.6), transparent);
+  pointer-events: none;
+}
+.hud .stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+}
+.hud span {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #fde68a;
+}
+.hud strong {
+  font-size: clamp(0.8rem, 2.4vw, 1.15rem);
+  text-shadow: 0 1px 2px #000;
+}
+.hud .low strong {
+  color: #f87171;
+  animation: blink 0.5s steps(2) infinite;
+}
+.hud .lives {
+  color: #f87171;
+}
+@keyframes blink {
+  50% {
+    opacity: 0.3;
+  }
+}
+
+.fps {
+  position: absolute;
+  right: 0.6rem;
+  bottom: 0.6rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.5rem;
+  background: rgb(0 0 0 / 0.55);
+  font-size: 0.7rem;
+  color: #fde68a;
+  pointer-events: none;
+}
+.fps strong {
+  color: #fefce8;
+}
+.fps.low strong {
+  color: #f87171;
+}
+
+.overlay {
+  position: absolute;
+  inset: 35% 15% auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid #facc15;
+  border-radius: 0.75rem;
+  background: rgb(28 15 2 / 0.88);
+  text-align: center;
+}
+.overlay strong {
+  font-size: 1.5rem;
+  color: #facc15;
+}
+.overlay.over strong {
+  color: #f87171;
+}
+.overlay span {
+  font-size: 0.9rem;
+}
+
+/* Buttons for touch screens and mouse users. */
+.pad {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-areas:
+    "start start start"
+    ". up ."
+    "left jump right"
+    ". down ."
+    "help help help";
+  gap: 0.4rem;
+}
+.pad .key {
+  margin: 0;
+  padding: 0.8rem 0.4rem;
+  border: 1px solid #57534e;
+  border-radius: 0.6rem;
+  background: #1c1917;
+  color: #fefce8;
+  font-size: 1.1rem;
+  cursor: pointer;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.pad .key:hover,
+.pad .key.held {
+  border-color: #facc15;
+}
+.pad .key.held {
+  background: #44403c;
+}
+.pad .start {
+  grid-area: start;
+  font-size: 0.9rem;
+  background: #facc15;
+  color: #1c1917;
+}
+.pad .up {
+  grid-area: up;
+}
+.pad .down {
+  grid-area: down;
+}
+.pad .left {
+  grid-area: left;
+}
+.pad .right {
+  grid-area: right;
+}
+.pad .jump {
+  grid-area: jump;
+  font-size: 0.85rem;
+  background: #4d7c0f;
+}
+/* The explanation in a quiet frame, in the colors of the buttons above it. */
+.pad .help {
+  grid-area: help;
+  margin: 0.5rem 0 0;
+  padding: 0.6rem 0.7rem;
+  border: 1px solid #57534e;
+  border-radius: 0.6rem;
+  background: #1c1917;
+  font-size: 0.78rem;
+  line-height: 1.45;
+}

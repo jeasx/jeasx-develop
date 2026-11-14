@@ -68,7 +68,11 @@ export default function Memory({ seed }) {
         <span>
           Pairs <b>{matched.length / 2}</b> / {EMOJIS.length}
         </span>
-        <button type="button" className="re-btn ghost" onClick={() => dispatch({ type: "restart" })}>
+        <button
+          type="button"
+          className="re-btn ghost"
+          onClick={() => dispatch({ type: "restart" })}
+        >
           ↻ New game
         </button>
       </div>

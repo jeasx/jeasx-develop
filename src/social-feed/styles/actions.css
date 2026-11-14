@@ -1,0 +1,68 @@
+/* Like and comment counts, action buttons, comments and the reply form. */
+.social .counts {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.83rem;
+}
+.social .counts:has(span:empty + span:empty) {
+  display: none;
+}
+.social .actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--line);
+}
+.social .actions button {
+  color: var(--soft);
+  font-weight: 500;
+}
+.social .actions button:hover:not(:disabled) {
+  color: var(--text);
+}
+.social .actions .liked {
+  background: rgb(236 72 153 / 0.12);
+  color: #f472b6;
+  font-weight: 600;
+}
+.social .actions .liked:hover:not(:disabled) {
+  background: rgb(236 72 153 / 0.18);
+  color: #f472b6;
+}
+.social .comments {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.social .comments:empty {
+  display: none;
+}
+.social .comments li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  margin: 0;
+}
+.social .comments p {
+  margin: 0;
+  padding: 0.5rem 0.85rem;
+  border-radius: 0.25rem 1rem 1rem 1rem;
+  background: var(--surface-strong);
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+.social .comments strong {
+  margin-right: 0.2rem;
+  font-weight: 600;
+}
+.social .reply {
+  display: flex;
+  margin: 0;
+}
+.social .reply input[type="text"] {
+  padding-block: 0.55rem;
+  font-size: 0.88rem;
+}

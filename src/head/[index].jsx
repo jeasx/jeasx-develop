@@ -75,7 +75,9 @@ export default function ({ request }) {
             <small>Title, meta tags and styles of the merged head, read in your browser.</small>
           </p>
           <pre>
-            <code id="head-result" class="language-markup">Loading…</code>
+            <code id="head-result" class="language-markup">
+              Loading…
+            </code>
           </pre>
         </aside>
       </div>

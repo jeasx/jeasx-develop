@@ -69,7 +69,13 @@ export default function ({ request }) {
               <span class="tf-spinner" aria-hidden="true"></span>
             </div>
             <nav class="tf-pager" aria-label="Products">
-              <button name="id" type="submit" value={id - 1} disabled={id === 1} aria-label="Previous">
+              <button
+                name="id"
+                type="submit"
+                value={id - 1}
+                disabled={id === 1}
+                aria-label="Previous"
+              >
                 ‹
               </button>
               {Array.from({ length: 10 }, (_, index) => index + 1).map((page) => (

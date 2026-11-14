@@ -1,0 +1,226 @@
+/* Board on the left, rule cards on the right; stacked on narrow screens. */
+.playground {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 220px;
+  align-items: start;
+  gap: 1.5rem;
+}
+@media (max-width: 900px) {
+  .playground {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* The lab: a dark, glowing panel holding controls, board and stats. */
+.lab {
+  padding: 1rem;
+  border: 1px solid #1e3a2f;
+  border-radius: 1rem;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgb(34 197 94 / 0.18), transparent 60%),
+    linear-gradient(160deg, #0b1220, #020617);
+  box-shadow:
+    0 20px 50px -20px rgb(2 6 23 / 0.8),
+    inset 0 1px 0 rgb(255 255 255 / 0.05);
+  color: #cbd5e1;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.lab .control {
+  margin: 0;
+  padding: 0.45rem 0.9rem;
+  border: 1px solid #334155;
+  border-radius: 999px;
+  background: rgb(15 23 42 / 0.8);
+  box-shadow: none;
+  color: #e2e8f0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.2;
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    border-color 0.15s,
+    transform 0.1s;
+}
+.lab .control:hover {
+  border-color: #4ade80;
+  background: #1e293b;
+}
+.lab .control:active {
+  transform: scale(0.96);
+}
+.lab .control.primary {
+  min-width: 6.5rem;
+  border-color: #22c55e;
+  background: #16a34a;
+  color: #f0fdf4;
+}
+.lab .control.primary:hover {
+  background: #22c55e;
+}
+.speed {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 0 auto;
+  color: #94a3b8;
+  font-size: 0.85rem;
+}
+.speed input {
+  margin: 0;
+  accent-color: #22c55e;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(var(--cols), 1fr);
+  gap: 2px;
+  padding: 2px;
+  border-radius: 0.5rem;
+  background: #0f1a2b;
+  /* Let touch strokes paint instead of scrolling the page. */
+  touch-action: none;
+  user-select: none;
+}
+/* The cells are buttons, so undo the framework's button styles. */
+.board .cell {
+  aspect-ratio: 1;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 3px;
+  background: #111c2e;
+  box-shadow: none;
+  cursor: crosshair;
+}
+.board .cell:hover {
+  background: #263449;
+}
+.board .cell.alive {
+  background: #22c55e;
+  box-shadow: 0 0 6px rgb(34 197 94 / 0.7);
+}
+/* Newborn cells flash brighter, cells that just died leave a fading trail. */
+.board .cell.born {
+  background: #bef264;
+  box-shadow: 0 0 10px rgb(190 242 100 / 0.9);
+}
+.board .cell.dying {
+  animation: fade 0.6s ease-out both;
+}
+@keyframes fade {
+  from {
+    background: rgb(244 114 182 / 0.6);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .board .cell.dying {
+    animation: none;
+  }
+}
+.board .cell:focus-visible {
+  outline: 2px solid #facc15;
+  outline-offset: -1px;
+}
+
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.5rem;
+  margin-top: 1rem;
+}
+.stat {
+  display: flex;
+  flex-direction: column;
+}
+.stat span {
+  color: #64748b;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.stat strong {
+  min-width: 4ch;
+  color: #f1f5f9;
+  font-family: monospace;
+  font-size: 1.4rem;
+  font-variant-numeric: tabular-nums;
+}
+.sparkline {
+  flex: 1;
+  min-width: 120px;
+  height: 40px;
+}
+.sparkline .line {
+  fill: none;
+  stroke: #4ade80;
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+}
+.sparkline .area {
+  fill: rgb(74 222 128 / 0.12);
+}
+.hint {
+  flex-basis: 100%;
+  margin: 0;
+  color: #f472b6;
+  font-size: 0.85rem;
+}
+
+.rules {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+/* The base styles give "ul li" square bullets, so remove them on the items. */
+/* Each rule wears the color its cells have on the board: newborn, alive or dying. */
+.rules li {
+  --rule: 34 197 94;
+  list-style: none;
+  margin: 0;
+  padding: 0.75rem 1rem;
+  border-left: 3px solid rgb(var(--rule));
+  border-radius: 0.5rem;
+  background: rgb(var(--rule) / 0.08);
+  font-size: 0.9rem;
+}
+.rules li.birth {
+  --rule: 190 242 100;
+}
+.rules li.survival {
+  --rule: 34 197 94;
+}
+.rules li.death {
+  --rule: 244 114 182;
+}
+.rules strong {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: rgb(var(--rule));
+}
+/* A little glowing cell, like the ones on the board. */
+.rules strong::before {
+  content: "";
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 3px;
+  background: rgb(var(--rule));
+  box-shadow: 0 0 6px rgb(var(--rule) / 0.8);
+}
+.rules li.death strong::before {
+  background: rgb(var(--rule) / 0.6);
+  box-shadow: none;
+}

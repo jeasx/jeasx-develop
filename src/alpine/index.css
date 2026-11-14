@@ -93,7 +93,10 @@
   border: 2px solid var(--al-line);
   border-radius: 0.75rem;
   text-align: center;
-  transition: border-color 0.2s, transform 0.2s, background 0.2s;
+  transition:
+    border-color 0.2s,
+    transform 0.2s,
+    background 0.2s;
 
   &:hover {
     transform: translateY(-2px);
@@ -125,7 +128,9 @@
   padding: 0.45rem;
   border-radius: 999px;
   text-align: center;
-  transition: background 0.2s, color 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s;
 
   &:has(input:checked) {
     background: var(--al-accent);
@@ -145,7 +150,9 @@
   border: 1px solid var(--al-line);
   border-radius: 999px;
   font-size: 0.9rem;
-  transition: border-color 0.2s, background 0.2s;
+  transition:
+    border-color 0.2s,
+    background 0.2s;
 
   & small {
     color: var(--al-muted);

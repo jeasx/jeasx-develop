@@ -15,8 +15,7 @@ const IMAGES = [
     title: "Child on the beach",
     hint: "The child in red stands at the right edge: centre loses them.",
     author: "Danielle MacInnes",
-    credit:
-      "https://commons.wikimedia.org/wiki/File:Child_on_the_beach_(Unsplash).jpg",
+    credit: "https://commons.wikimedia.org/wiki/File:Child_on_the_beach_(Unsplash).jpg",
   },
   {
     src: "/images/barn.jpg",
@@ -34,8 +33,7 @@ const IMAGES = [
     title: "Sailboat from above",
     hint: "The waves are full of detail, so entropy misses the boat. Attention finds it.",
     author: "Lance Asper",
-    credit:
-      "https://commons.wikimedia.org/wiki/File:Lost_at_Sea_(Unsplash).jpg",
+    credit: "https://commons.wikimedia.org/wiki/File:Lost_at_Sea_(Unsplash).jpg",
   },
 ];
 
@@ -50,12 +48,8 @@ const STRATEGIES = {
  * @param {import("../types").RouteProps} props
  */
 export default async function ({ request }) {
-  const query = /** @type {Record<string, string | undefined>} */ (
-    request.query
-  );
-  const position = Object.hasOwn(STRATEGIES, query["crop"] ?? "")
-    ? query["crop"]
-    : "entropy";
+  const query = /** @type {Record<string, string | undefined>} */ (request.query);
+  const position = Object.hasOwn(STRATEGIES, query["crop"] ?? "") ? query["crop"] : "entropy";
   const showPlaceholders = query["placeholders"] === "only";
 
   // Placeholders and crop areas are cached, so all of them are created in parallel.
@@ -79,17 +73,15 @@ export default async function ({ request }) {
     >
       <h1>Scale images with sharp</h1>
       <p>
-        With the <a href="https://sharp.pixelplumbing.com">sharp</a> library,
-        you can build an image component and converter in userland. The images
-        below are cropped, resized and converted to AVIF or WebP on the fly,
-        depending on what your browser accepts. The image converter is also used
-        in the <a href="/products">products</a> example.
+        With the <a href="https://sharp.pixelplumbing.com">sharp</a> library, you can build an image
+        component and converter in userland. The images below are cropped, resized and converted to
+        AVIF or WebP on the fly, depending on what your browser accepts. The image converter is also
+        used in the <a href="/products">products</a> example.
       </p>
       <p>
-        Each image starts as a blurred placeholder: a 24 pixel version, inlined
-        into the HTML as <code>data:</code> URI of a few hundred bytes. It shows
-        up instantly and keeps the layout stable, until the full image has
-        loaded and covers it. No JavaScript is involved.
+        Each image starts as a blurred placeholder: a 24 pixel version, inlined into the HTML as{" "}
+        <code>data:</code> URI of a few hundred bytes. It shows up instantly and keeps the layout
+        stable, until the full image has loaded and covers it. No JavaScript is involved.
       </p>
 
       <article class="controls">
@@ -120,27 +112,14 @@ export default async function ({ request }) {
 
       <p class="center">
         <small>
-          The originals are landscape photos, cut to portraits. The frame on
-          each original shows which part sharp keeps.
+          The originals are landscape photos, cut to portraits. The frame on each original shows
+          which part sharp keeps.
         </small>
       </p>
 
       <section class="gallery">
         {images.map(
-          (
-            {
-              src,
-              width,
-              height,
-              title,
-              hint,
-              author,
-              credit,
-              placeholder,
-              crop,
-            },
-            index,
-          ) => (
+          ({ src, width, height, title, hint, author, credit, placeholder, crop }, index) => (
             <figure>
               {showPlaceholders ? (
                 <div
@@ -165,9 +144,7 @@ export default async function ({ request }) {
                 <Image
                   src={src}
                   width={300}
-                  height={Math.round(
-                    (300 * crop.originalHeight) / crop.originalWidth,
-                  )}
+                  height={Math.round((300 * crop.originalHeight) / crop.originalWidth)}
                   alt=""
                   loading="lazy"
                 />
@@ -179,9 +156,8 @@ export default async function ({ request }) {
               <figcaption>
                 <p>{hint}</p>
                 <small>
-                  {title} by <a href={credit}>{author}</a> (CC0) · {width} ×{" "}
-                  {height} px · placeholder{" "}
-                  {Math.round((placeholder.length * 3) / 4)} bytes
+                  {title} by <a href={credit}>{author}</a> (CC0) · {width} × {height} px ·
+                  placeholder {Math.round((placeholder.length * 3) / 4)} bytes
                 </small>
               </figcaption>
             </figure>

@@ -84,14 +84,17 @@ export default function Beats({ pattern, tempo: initialTempo }) {
       return;
     }
     let current = 0;
-    const id = setInterval(() => {
-      const ctx = audio.current;
-      gridRef.current.forEach((row, track) => {
-        if (row[current]) TRACKS[track].play(ctx, ctx.currentTime, current);
-      });
-      setStep(current);
-      current = (current + 1) % STEPS;
-    }, 60000 / tempo / 4);
+    const id = setInterval(
+      () => {
+        const ctx = audio.current;
+        gridRef.current.forEach((row, track) => {
+          if (row[current]) TRACKS[track].play(ctx, ctx.currentTime, current);
+        });
+        setStep(current);
+        current = (current + 1) % STEPS;
+      },
+      60000 / tempo / 4,
+    );
     return () => clearInterval(id);
   }, [playing, tempo]);
 

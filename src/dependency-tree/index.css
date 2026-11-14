@@ -1,0 +1,429 @@
+.lead {
+  max-width: 50rem;
+}
+
+/* Explorer on the left, live stats and steps on the right; stacked on narrow screens. */
+.workbench {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 260px;
+  align-items: start;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+@media (max-width: 900px) {
+  .workbench {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* The explorer: a dark, glowing panel. */
+.explorer {
+  padding: 1.25rem;
+  border: 1px solid #2a2440;
+  border-radius: 1rem;
+  background:
+    radial-gradient(ellipse at 15% 0%, rgb(237 42 172 / 0.16), transparent 55%),
+    radial-gradient(ellipse at 100% 100%, rgb(5 148 148 / 0.12), transparent 50%),
+    linear-gradient(160deg, #141826, #0b0e16);
+  box-shadow:
+    0 24px 60px -24px rgb(0 0 0 / 0.8),
+    inset 0 1px 0 rgb(255 255 255 / 0.05);
+}
+
+/* Terminal-like search: a prompt, the input and the submit button in one bar. */
+.search {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  border: 1px solid #343b4f;
+  border-radius: 0.75rem;
+  background: #0b0e16;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
+}
+.search:focus-within {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-focus);
+}
+.search .prompt {
+  padding: 0 0.25rem 0 1rem;
+  color: var(--primary);
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+.search .prompt::before {
+  content: "$ ";
+  color: var(--muted);
+}
+.search input {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  color: var(--heading);
+  font-family: var(--mono);
+}
+.search input:focus {
+  box-shadow: none;
+}
+.search button {
+  align-self: stretch;
+  width: auto;
+  margin: 0;
+  border: none;
+  border-radius: 0;
+  background: linear-gradient(135deg, var(--primary), #a21caf);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.examples {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0.75rem 0 1.25rem;
+}
+.examples .chip {
+  width: auto;
+  margin: 0;
+  padding: 0.2rem 0.7rem;
+  border: 1px solid #343b4f;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.03);
+  box-shadow: none;
+  color: var(--secondary-hover);
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition:
+    border-color 0.15s,
+    color 0.15s;
+}
+.examples .chip:hover {
+  border-color: var(--primary);
+  color: var(--heading);
+}
+
+/* The tree with guide lines; each level gets its own color. */
+.tree,
+.tree ul {
+  --line: #3b4257;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.tree ul {
+  margin-left: 0.55rem;
+  padding-left: 1.1rem;
+  border-left: 1px solid var(--line);
+}
+.tree > li > details > ul {
+  --line: rgb(237 42 172 / 0.55);
+}
+.tree > li > details > ul ul {
+  --line: rgb(5 148 148 / 0.6);
+}
+.tree > li > details > ul ul ul {
+  --line: rgb(167 124 0 / 0.6);
+}
+.tree > li > details > ul ul ul ul {
+  --line: rgb(115 133 169 / 0.6);
+}
+
+.package {
+  position: relative;
+  margin: 0.15rem 0;
+  list-style: none;
+}
+/* The elbow from the guide line to the row. */
+.tree ul > .package::before {
+  position: absolute;
+  top: 1rem;
+  left: -1.1rem;
+  width: 0.8rem;
+  border-top: 1px solid var(--line);
+  content: "";
+}
+.package details {
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+.package summary,
+.package .summary {
+  display: grid;
+  grid-template-columns: 1rem auto auto auto 1fr;
+  align-items: center;
+  column-gap: 0.5rem;
+  margin: 0;
+  padding: 0.3rem 0.5rem;
+  border: 1px solid transparent;
+  border-radius: 0.5rem;
+  color: var(--color);
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    border-color 0.15s;
+}
+.package summary:hover,
+.package .summary:hover {
+  border-color: #2c3346;
+  background: rgb(255 255 255 / 0.04);
+  color: var(--color);
+}
+/* The global chevron sits on the right; put it in front of the name instead. */
+.package summary::after {
+  grid-column: 1;
+  grid-row: 1;
+}
+.package details[open] > summary {
+  margin-bottom: 0.15rem;
+  color: var(--color);
+}
+.package .summary {
+  cursor: default;
+}
+/* Rows without a chevron start with a small dot in its place. */
+.package .summary::before {
+  justify-self: center;
+  width: 0.35rem;
+  height: 0.35rem;
+  border-radius: 50%;
+  background: #4b5367;
+  content: "";
+}
+.package summary small,
+.package .summary small {
+  grid-column: 2 / -1;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 0.8rem;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.package .name {
+  color: var(--heading);
+  font-family: var(--mono);
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+.tree > .package > details > summary .name {
+  background: linear-gradient(90deg, var(--primary), var(--secondary-hover));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-size: 1.1rem;
+}
+.package .version,
+.package .count,
+.package .badge {
+  padding: 0.05rem 0.5rem;
+  border-radius: 999px;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+.package .version {
+  background: var(--secondary-bg);
+  color: var(--secondary-hover);
+}
+.package .count {
+  background: var(--primary-bg);
+  color: var(--primary-hover);
+}
+.package .count::before {
+  content: "⑂ ";
+}
+.package .npm {
+  justify-self: start;
+  color: var(--muted);
+  font-size: 0.85rem;
+  text-decoration: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.package summary:hover .npm,
+.package .summary:hover .npm,
+.package .npm:focus-visible {
+  opacity: 1;
+}
+.package .npm:hover {
+  color: var(--primary);
+}
+.package.cycle .badge {
+  background: var(--warning-bg);
+  color: var(--warning-hover);
+}
+.package.failed .badge {
+  background: var(--error-bg);
+  color: var(--error-hover);
+}
+
+/* Placeholder rows while the dependencies of an opened package load. */
+.package.ghost .summary::before {
+  background: #2c3346;
+}
+.package.ghost .summary:hover {
+  border-color: transparent;
+  background: none;
+}
+.package.ghost small.skeleton {
+  width: 70%;
+  height: 0.6rem;
+  margin: 0.35rem 0 0.25rem;
+}
+.skeleton {
+  display: block;
+  width: 12rem;
+  max-width: 70%;
+  height: 0.85rem;
+  margin: 0.25rem 0;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #1c2130 25%, #2c3346 50%, #1c2130 75%) 0 0 / 200% 100%;
+  animation: shimmer 1.2s linear infinite;
+}
+.package.ghost:nth-child(3n + 2) span.skeleton {
+  width: 8rem;
+}
+.package.ghost:nth-child(3n) span.skeleton {
+  width: 10rem;
+}
+@keyframes shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+.stats {
+  margin: 1.25rem 0 0;
+  padding-top: 0.75rem;
+  border-top: 1px dashed #2c3346;
+  color: var(--success);
+  font-family: var(--mono);
+  font-size: 0.8rem;
+}
+
+/* Sidebar panels. */
+.sidebar {
+  display: grid;
+  gap: 1rem;
+  position: sticky;
+  top: 6rem;
+}
+.panel {
+  margin: 0;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  background: #171b25;
+}
+.panel-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--muted);
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.live .dot {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: var(--success);
+  box-shadow: 0 0 8px var(--success);
+}
+.live[data-state="loading"] .dot {
+  background: var(--primary);
+  box-shadow: 0 0 8px var(--primary);
+  animation: pulse 0.9s ease-in-out infinite;
+}
+@keyframes pulse {
+  50% {
+    opacity: 0.3;
+  }
+}
+.meters {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  margin: 0.75rem 0;
+}
+.meter strong {
+  display: block;
+  color: var(--heading);
+  font-family: var(--mono);
+  font-size: 1.8rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+.meter span {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+.bar {
+  overflow: hidden;
+  height: 0.3rem;
+  border-radius: 999px;
+  background: var(--secondary-bg);
+}
+.bar span {
+  display: block;
+  width: 0;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--primary), var(--info));
+  transition: width 0.2s;
+}
+
+.steps {
+  counter-reset: step;
+  padding-left: 1rem;
+  list-style: none;
+}
+.steps li {
+  position: relative;
+  margin: 0 0 0.9rem;
+  padding-left: 2rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+  counter-increment: step;
+  list-style: none;
+}
+.steps li:last-child {
+  margin-bottom: 0;
+}
+.steps li::before {
+  display: grid;
+  position: absolute;
+  top: 0;
+  left: 0;
+  place-items: center;
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: 50%;
+  background: var(--primary-bg);
+  color: var(--primary-hover);
+  font-size: 0.75rem;
+  font-weight: 700;
+  content: counter(step);
+}
+.steps strong {
+  display: block;
+  color: var(--heading);
+}
+
+/* The global code style nearly matches the dark panels, so give inline code the accent color. */
+.lead code,
+.steps code {
+  display: inline;
+  padding: 0.05rem 0.35rem;
+  border: 1px solid rgb(237 42 172 / 0.25);
+  background: rgb(237 42 172 / 0.1);
+  color: var(--primary-hover);
+}

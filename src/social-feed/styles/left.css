@@ -1,0 +1,138 @@
+/* Left column: welcome card, live switch and feed filter. */
+.social .me {
+  display: grid;
+  justify-items: center;
+  gap: 0.6rem;
+  padding-block: 1.4rem;
+  background: linear-gradient(180deg, rgb(139 92 246 / 0.14), transparent 60%), var(--surface);
+  text-align: center;
+}
+.social .me strong {
+  font-size: 1.05rem;
+}
+
+/* The checkbox becomes a switch. */
+.social .live {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin: 0;
+  color: var(--soft);
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.social .live input {
+  position: relative;
+  flex: none;
+  width: 2.2rem;
+  height: 1.25rem;
+  margin: 0;
+  border: none;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.15);
+  appearance: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.social .live input::after {
+  content: "";
+  position: absolute;
+  top: 0.15rem;
+  left: 0.15rem;
+  width: 0.95rem;
+  height: 0.95rem;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.4);
+  transition: transform 0.2s;
+}
+.social .live input:checked {
+  background: var(--gradient);
+}
+.social .live input:checked::after {
+  transform: translateX(0.95rem);
+}
+
+.social .feeds {
+  display: grid;
+  justify-content: stretch;
+  gap: 0.2rem;
+  padding: 0.5rem;
+}
+.social .feeds button {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.7rem;
+  color: var(--soft);
+  font-weight: 500;
+  text-align: left;
+}
+.social .feeds button > span:first-child {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.65rem;
+  background: var(--surface-strong);
+  font-size: 1rem;
+  transition: background 0.15s;
+}
+.social .feeds button:hover:not(:disabled) {
+  color: var(--text);
+}
+.social .feeds button.active {
+  background: var(--surface-strong);
+  color: var(--text);
+  font-weight: 600;
+}
+.social .feeds button.active > span:first-child {
+  background: var(--gradient);
+  box-shadow: 0 6px 16px -6px rgb(236 72 153 / 0.7);
+}
+.social .badge {
+  margin-left: auto;
+  min-width: 1.4rem;
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  background: var(--accent-2);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+/*
+ * On narrow screens the filter sits above the feed, so it becomes a single row
+ * of pills that scrolls sideways instead of pushing the posts down.
+ */
+@media (max-width: 700px) {
+  .social .feeds {
+    display: flex;
+    gap: 0.4rem;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+  }
+  .social .feeds::-webkit-scrollbar {
+    display: none;
+  }
+  .social .feeds button {
+    flex: none;
+    gap: 0.45rem;
+    padding: 0.35rem 0.75rem 0.35rem 0.35rem;
+    border-radius: 999px;
+    white-space: nowrap;
+    scroll-snap-align: start;
+  }
+  .social .feeds button > span:first-child {
+    width: 1.6rem;
+    height: 1.6rem;
+    border-radius: 50%;
+    font-size: 0.85rem;
+  }
+  .social .badge {
+    margin-left: 0.15rem;
+  }
+}

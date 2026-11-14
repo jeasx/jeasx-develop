@@ -1,0 +1,314 @@
+.cinema {
+  --front: #38bdf8;
+  --standard: #a78bfa;
+  --premium: #fbbf24;
+  --selected: #f472b6;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 18rem;
+  align-items: start;
+  gap: 1.25rem;
+  margin-top: 2rem;
+  color: #e2e8f0;
+}
+@media (max-width: 64rem) {
+  .cinema {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* The auditorium. */
+.seat-map {
+  padding: 1.25rem;
+  border-radius: 1.5rem;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(148, 163, 184, 0.22), transparent 55%),
+    linear-gradient(180deg, #111827, #020617);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 30px 60px -30px rgba(0, 0, 0, 0.8);
+}
+
+.screening-picker {
+  display: flex;
+  align-items: end;
+  gap: 0.75rem;
+  margin: 0 0 1.5rem;
+  & .poster {
+    font-size: 2.2rem;
+    line-height: 1;
+  }
+  & label {
+    flex: 1;
+    display: grid;
+    gap: 0.25rem;
+    margin: 0;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(226, 232, 240, 0.6);
+  }
+  & select {
+    margin: 0;
+    font-size: 1rem;
+    letter-spacing: normal;
+    text-transform: none;
+  }
+  & .show {
+    width: auto;
+    margin: 0;
+  }
+}
+/* With JavaScript, changing the screening is enough. */
+.cinema-js .screening-picker .show {
+  display: none;
+}
+
+.screen {
+  margin: 0 8% 2rem;
+  padding-top: 0.6rem;
+  border-top: 4px solid #e2e8f0;
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  box-shadow: 0 -10px 30px -6px rgba(226, 232, 240, 0.55);
+  text-align: center;
+  font-size: 0.7rem;
+  letter-spacing: 0.6em;
+  text-transform: uppercase;
+  color: rgba(226, 232, 240, 0.5);
+}
+
+.rows {
+  display: grid;
+  gap: 0.4rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+}
+.seat-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.3rem;
+  min-width: max-content;
+  margin: 0;
+}
+.row-label {
+  width: 1.2rem;
+  text-align: center;
+  font-size: 0.75rem;
+  color: rgba(226, 232, 240, 0.45);
+}
+
+.seat {
+  --tier: var(--standard);
+  display: inline-grid;
+  place-items: center;
+  width: 2rem;
+  height: 1.9rem;
+  margin: 0;
+  padding: 0;
+  border: 1px solid color-mix(in srgb, var(--tier) 55%, transparent);
+  border-radius: 0.55rem 0.55rem 0.3rem 0.3rem;
+  background: color-mix(in srgb, var(--tier) 16%, transparent);
+  box-shadow: inset 0 -3px 0 color-mix(in srgb, var(--tier) 35%, transparent);
+  color: color-mix(in srgb, var(--tier) 80%, white);
+  font-size: 0.7rem;
+  font-weight: 600;
+  line-height: 1;
+  transition:
+    transform 0.15s,
+    background 0.15s,
+    box-shadow 0.15s;
+  &.front {
+    --tier: var(--front);
+  }
+  &.premium {
+    --tier: var(--premium);
+  }
+  &.aisle {
+    margin-left: 1rem;
+  }
+  &.free:hover,
+  &.free:focus-visible {
+    transform: translateY(-2px);
+    background: color-mix(in srgb, var(--tier) 35%, transparent);
+    box-shadow: 0 0 14px -2px var(--tier);
+  }
+  &.selected {
+    --tier: var(--selected);
+    background: var(--selected);
+    color: #1e1b2e;
+    box-shadow: 0 0 16px -2px var(--selected);
+    animation: pop 0.25s ease-out;
+  }
+  &.taken {
+    border-color: transparent;
+    background: rgba(148, 163, 184, 0.12);
+    box-shadow: none;
+    color: transparent;
+    opacity: 1;
+  }
+  &.yours {
+    border-color: #34d399;
+    background: repeating-linear-gradient(
+      45deg,
+      rgba(52, 211, 153, 0.35) 0 4px,
+      rgba(52, 211, 153, 0.15) 4px 8px
+    );
+    box-shadow: none;
+    color: #d1fae5;
+    opacity: 1;
+  }
+  &:focus-visible {
+    outline: 2px solid #e2e8f0;
+    outline-offset: 2px;
+  }
+}
+@keyframes pop {
+  50% {
+    transform: scale(1.18);
+  }
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem 1.25rem;
+  margin: 1.25rem 0 0;
+  padding: 0;
+  font-size: 0.8rem;
+  color: rgba(226, 232, 240, 0.7);
+  & li {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin: 0;
+    list-style: none;
+  }
+  & .seat {
+    width: 1rem;
+    height: 0.9rem;
+  }
+}
+
+/* The booking summary looks like a ticket. */
+.summary {
+  position: sticky;
+  top: 1rem;
+  display: grid;
+  gap: 0.75rem;
+  padding: 1.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1.25rem;
+  background:
+    radial-gradient(circle at 0 62%, #020617 0.7rem, transparent 0.75rem),
+    radial-gradient(circle at 100% 62%, #020617 0.7rem, transparent 0.75rem),
+    linear-gradient(160deg, #1e1b4b, #0f172a);
+  box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.8);
+  & h2 {
+    margin: 0;
+    font-size: 1.2rem;
+  }
+  & .time {
+    margin: -0.5rem 0 0;
+    color: rgba(226, 232, 240, 0.6);
+  }
+  & .message {
+    margin: 0;
+    padding: 0.6rem 0.8rem;
+    border-left: 3px solid var(--selected);
+    border-radius: 0.5rem;
+    background: rgba(244, 114, 182, 0.12);
+    animation: pop-in 0.3s ease-out;
+  }
+  & .empty {
+    margin: 0;
+    color: rgba(226, 232, 240, 0.5);
+    font-style: italic;
+  }
+  & .booked {
+    margin: 0;
+    color: #6ee7b7;
+    font-size: 0.85rem;
+  }
+  & .rendered {
+    color: rgba(226, 232, 240, 0.45);
+    font-size: 0.75rem;
+    font-variant-numeric: tabular-nums;
+  }
+  &.browser .rendered {
+    color: var(--selected);
+  }
+}
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+.tickets {
+  display: grid;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+  & li {
+    display: grid;
+    grid-template-columns: 2.5rem 1fr auto;
+    align-items: center;
+    margin: 0;
+    padding: 0.45rem 0.7rem;
+    border-left: 3px solid var(--standard);
+    border-radius: 0.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    list-style: none;
+    animation: pop-in 0.25s ease-out;
+  }
+  & .front {
+    border-left-color: var(--front);
+  }
+  & .premium {
+    border-left-color: var(--premium);
+  }
+  & span:last-child {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin: 0;
+  padding-top: 0.75rem;
+  border-top: 2px dashed rgba(255, 255, 255, 0.15);
+  & strong {
+    font-size: 1.5rem;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  margin: 0;
+  & button {
+    flex: 1;
+    margin: 0;
+  }
+  & button[name="book"] {
+    border: none;
+    background: linear-gradient(135deg, var(--selected), #a855f7);
+    color: #1e1b2e;
+    font-weight: 700;
+    box-shadow: 0 8px 20px -10px var(--selected);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .seat,
+  .summary *,
+  .tickets li {
+    animation: none;
+    transition: none;
+  }
+}
