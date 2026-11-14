@@ -6,22 +6,34 @@ import { browserStore } from "./store/browser";
 
 const context = { store: browserStore };
 
+// The board lives in a cookie, and every change answers with a new cookie. Two changes
+// sent at the same time would both start from the old cookie, and the one answered last
+// would undo the other: its card jumps back. So changes are sent one after another.
+let queue = Promise.resolve();
+
 /**
  * Sends a form to the API like the browser would without JavaScript,
  * then renders the columns which changed.
  * @param {FormData | URLSearchParams} data
  */
-async function send(data) {
-  const response = await fetch("/kanban/api", {
-    method: "POST",
-    headers: { accept: "application/json" },
-    body: new URLSearchParams(/** @type {any} */ (data)),
+function send(data) {
+  // Read the form now: it may be replaced by a re-render while waiting in the queue.
+  const body = new URLSearchParams(/** @type {any} */ (data));
+  const task = queue.then(async () => {
+    const response = await fetch("/kanban/api", {
+      method: "POST",
+      headers: { accept: "application/json" },
+      body,
+    });
+    if (!response.ok) {
+      throw new Error(`Saving failed: ${response.status}`);
+    }
+    const { changed } = await response.json();
+    await Promise.all(changed.map(render));
   });
-  if (!response.ok) {
-    throw new Error(`Saving failed: ${response.status}`);
-  }
-  const { changed } = await response.json();
-  await Promise.all(changed.map(render));
+  // A failed change must not block the ones after it.
+  queue = task.catch(() => {});
+  return task;
 }
 
 /** @param {string} status */

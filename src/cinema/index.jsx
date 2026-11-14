@@ -44,23 +44,46 @@ async function render(parts) {
   }
 }
 
+// Your selection lives in a cookie, and every change (and reading the summary, which may
+// drop seats others just booked) answers with a new cookie. Requests running at the same
+// time would all start from the old cookie, and the one answered last would undo the
+// others. So clicks and refreshes run one after another.
+/** @type {Promise<unknown>} */
+let queue = Promise.resolve();
+
+/**
+ * @template T
+ * @param {() => Promise<T>} task
+ * @returns {Promise<T>}
+ */
+function enqueue(task) {
+  const result = queue.then(task);
+  // A failed task must not block the ones after it.
+  queue = result.catch(() => {});
+  return result;
+}
+
 /**
  * Sends a form to the API like the browser would without JavaScript,
  * then renders the parts which changed.
  * @param {HTMLFormElement} form
  * @param {HTMLElement | null} submitter
  */
-async function send(form, submitter) {
-  const response = await fetch("/cinema/api", {
-    method: "POST",
-    headers: { accept: "application/json" },
-    body: new URLSearchParams(/** @type {any} */ (new FormData(form, submitter))),
+function send(form, submitter) {
+  // Read the form now: it may be replaced by a re-render while waiting in the queue.
+  const body = new URLSearchParams(/** @type {any} */ (new FormData(form, submitter)));
+  return enqueue(async () => {
+    const response = await fetch("/cinema/api", {
+      method: "POST",
+      headers: { accept: "application/json" },
+      body,
+    });
+    if (!response.ok) {
+      throw new Error(`Saving failed: ${response.status}`);
+    }
+    const { changed } = await response.json();
+    await render(changed);
   });
-  if (!response.ok) {
-    throw new Error(`Saving failed: ${response.status}`);
-  }
-  const { changed } = await response.json();
-  await render(changed);
 }
 
 document.addEventListener("submit", (event) => {
@@ -111,6 +134,6 @@ document.addEventListener("keydown", (event) => {
 // Other guests keep booking: refresh the seats and the summary every 20 seconds.
 setInterval(() => {
   if (document.visibilityState === "visible") {
-    render([...ROWS.map((row) => `row:${row}`), "summary"]).catch(console.error);
+    enqueue(() => render([...ROWS.map((row) => `row:${row}`), "summary"])).catch(console.error);
   }
 }, 20_000);
