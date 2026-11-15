@@ -11,7 +11,6 @@
   max-width: 40rem;
   & .lead {
     color: var(--joke-muted);
-    text-align: center;
   }
 }
 
@@ -111,6 +110,15 @@
   transition:
     border-color 0.2s,
     transform 0.2s;
+
+  /* The loading spinner sits in the corner, so the button keeps its size. */
+  position: relative;
+  &[aria-busy="true"]::before {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    margin: 0;
+  }
 
   & .category-icon {
     font-size: 2.25rem;

@@ -18,7 +18,9 @@ export default function jokes(category, amount) {
  * @returns {{ setup: string, punchline: string }[]}
  */
 export function pick(category, amount) {
-  return shuffle(data.filter(({ type }) => category === type)).slice(0, amount);
+  return shuffle(data.filter(({ type }) => category === type))
+    .slice(0, amount)
+    .map(({ setup, punchline }) => ({ setup, punchline }));
 }
 
 /**

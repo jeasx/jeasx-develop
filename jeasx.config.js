@@ -55,6 +55,7 @@ export default {
         __VUE_PROD_DEVTOOLS__: "false",
         __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: "false",
       },
+      loader: { ".svg": "file" },
       plugins: [
         sveltePlugin({ compilerOptions: { generate: "client", css: "external" } }),
         vuePlugin({ sourceMap: false }),

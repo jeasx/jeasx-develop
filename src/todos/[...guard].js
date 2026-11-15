@@ -1,15 +1,8 @@
 import { readListCookie, writeListCookie } from "../@helpers/cookies";
 import isCrossSite, { crossSiteResponse } from "../@helpers/crossSite";
+import { DEFAULT_TODOS, reduce, toStatus, toTodo } from "./state";
 
 const PATH = "/todos";
-const MAX_LABEL_LENGTH = 200;
-const STATUSES = ["active", "completed"];
-
-const DEFAULT_TODOS = [
-  { label: "Buy some apples", status: "active" },
-  { label: "Learn to code", status: "completed" },
-  { label: "Talk to a friend", status: "active" },
-];
 
 /**
  * @param {import("../types").RouteProps} props
@@ -20,65 +13,28 @@ export default function ({ request, reply }) {
     return crossSiteResponse();
   }
 
-  // A JSON body can also be a number or string, which the "in" check below can't handle.
-  const body = /** @type {Record<string, unknown>} */ (
-    request.body && typeof request.body === "object" ? request.body : {}
-  );
-
-  let todos = readListCookie(request, "todos")?.map(toTodo) ?? structuredClone(DEFAULT_TODOS);
-
-  // Ignore todos without any text, e.g. only spaces.
-  const newTodo = String(body["newTodo"] ?? "")
-    .trim()
-    .slice(0, MAX_LABEL_LENGTH);
-  if (newTodo) {
-    todos.unshift({ label: newTodo, status: "active" });
-  }
-
-  if (body["toggleTodo"]) {
-    const todo = todos[Number(body["toggleTodo"])];
-    if (todo) {
-      todo.status = todo.status === "active" ? "completed" : "active";
-    }
-  }
-
-  if (body["removeTodo"]) {
-    const index = Number(body["removeTodo"]);
-    if (Number.isInteger(index) && index >= 0) {
-      todos.splice(index, 1);
-    }
-  }
-
-  if (body["clearCompleted"]) {
-    todos = todos.filter((todo) => todo.status !== "completed");
-  }
-
-  // Unknown filters show all todos instead of an empty list.
-  const status = STATUSES.includes(request.query["status"]) ? request.query["status"] : undefined;
+  const status = toStatus(request.query["status"]);
+  const state = {
+    todos: readListCookie(request, "todos")?.map(toTodo) ?? structuredClone(DEFAULT_TODOS),
+    status,
+  };
 
   // Only form submissions change todos. The guard also runs for static files
   // like index.css, which shouldn't carry a cookie.
   if (request.method === "POST") {
+    // A JSON body can also be a number or string, which the reducer can't handle.
+    const body = request.body && typeof request.body === "object" ? request.body : {};
+    const { todos } = reduce(state, /** @type {Record<string, unknown>} */ (body));
     // Drop the oldest todos until the cookie fits.
     writeListCookie(reply, "todos", todos, PATH);
+    // The browser already rendered the change itself, it only needs the cookie.
+    if (request.headers.accept?.includes("application/json")) {
+      return reply.status(204).send();
+    }
     // 303 makes the browser load the list with GET, so a reload doesn't send the form again:
     // todos are removed by position, so a repeated removal would delete another todo.
     return reply.redirect(status ? `${PATH}?status=${status}` : PATH, 303);
   }
 
-  // The page gets the limit too, so its input field allows the same length.
-  return { todos, status, maxLength: MAX_LABEL_LENGTH };
-}
-
-/**
- * The cookie is signed, but could hold a signed value of another cookie (see "../@helpers/cookies.js"),
- * so turn the label into a string of limited length and only allow known states.
- *
- * @param {Record<string, unknown>} item
- */
-function toTodo({ label, status }) {
-  return {
-    label: String(label ?? "").slice(0, MAX_LABEL_LENGTH),
-    status: status === "completed" ? "completed" : "active",
-  };
+  return state;
 }

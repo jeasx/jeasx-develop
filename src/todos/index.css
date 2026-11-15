@@ -11,7 +11,6 @@
   max-width: 40rem;
   & .lead {
     color: var(--todo-muted);
-    text-align: center;
   }
 }
 
@@ -59,7 +58,7 @@
 
 @keyframes todo-grow {
   from {
-    width: 0;
+    width: var(--from, 0);
   }
 }
 

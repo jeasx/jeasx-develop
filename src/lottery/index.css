@@ -73,7 +73,7 @@
   }
 }
 
-.badge {
+.lottery-badge {
   border-radius: 999px;
   background: linear-gradient(120deg, var(--lottery-gold), #fc4a1a);
   padding: 0.25rem 0.8rem;
@@ -84,13 +84,12 @@
   text-transform: uppercase;
 }
 
-.lead {
+.lottery-lead {
   margin-bottom: 1rem;
   opacity: 0.8;
-  text-align: center;
 }
 
-.status {
+.lottery-status {
   display: flex;
   justify-content: space-between;
   font-size: 0.9rem;
@@ -99,7 +98,7 @@
   opacity: 0.85;
 }
 
-.actions {
+.lottery-actions {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -107,7 +106,7 @@
   gap: 10px;
 }
 
-.grid {
+.lottery-grid {
   display: grid;
   /* Ball size follows the viewport height so the whole grid fits on screen. */
   grid-template-columns: repeat(7, minmax(0, clamp(1.75rem, 5vh, 2.4rem)));
@@ -117,7 +116,7 @@
 }
 
 /* Each number is a glossy lottery ball. */
-.box {
+.lottery-box {
   display: grid;
   place-items: center;
   aspect-ratio: 1;
@@ -148,11 +147,11 @@
   }
 }
 
-.full .box:disabled {
+.lottery-full .lottery-box:disabled {
   animation: fadeOut 0.5s ease-in-out;
 }
 
-.checked {
+.lottery-checked {
   background: radial-gradient(
     circle at 30% 28%,
     #fff 0 8%,
@@ -165,11 +164,11 @@
     0 4px 10px -4px rgba(0, 0, 0, 0.35);
 }
 
-.checked.last {
+.lottery-checked.lottery-last {
   animation: pop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.progressbar {
+.lottery-progressbar {
   margin: 0.4rem 0 0.75rem;
   border-radius: 999px;
   background-color: var(--lottery-track);
@@ -192,13 +191,13 @@
   }
 }
 
-.draw {
+.lottery-draw {
   animation: blendIn 0.5s ease-in-out;
   margin-top: 1.5rem;
   text-align: center;
 }
 
-.balls {
+.lottery-balls {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -208,7 +207,7 @@
   list-style: none;
 }
 
-.ball {
+.lottery-ball {
   display: grid;
   place-items: center;
   animation: roll 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) var(--delay) both;
@@ -225,7 +224,7 @@
     0 6px 14px -6px rgba(0, 0, 0, 0.4);
 }
 
-.match {
+.lottery-match {
   background: radial-gradient(circle at 30% 28%, #fff 0 10%, var(--lottery-gold) 40%, #e07a00 100%);
   color: #fff;
   box-shadow:
@@ -233,7 +232,7 @@
     0 6px 14px -6px rgba(0, 0, 0, 0.4);
 }
 
-.result {
+.lottery-result {
   margin-top: 1.25rem;
   font-size: 1.1rem;
   font-weight: 600;
