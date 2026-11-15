@@ -7,7 +7,7 @@
       { "path": "/context", "title": "'this' as context" },
       { "path": "/render-props", "title": "Render props" },
       { "path": "/interceptor", "title": "Intercept JSX" },
-      { "path": "/shadow-dom", "title": "Declarative Shadow DOM" },
+      { "path": "/shadow-dom", "title": "Shadow DOM" },
       { "path": "/testing", "title": "Unit tests" }
     ]
   },
@@ -17,7 +17,7 @@
     "links": [
       { "path": "/out-of-order", "title": "Out-of-order streaming" },
       { "path": "/parallel", "title": "Parallel loading" },
-      { "path": "/aggregator", "title": "Parallel API aggregator" },
+      { "path": "/aggregator", "title": "API aggregator" },
       { "path": "/streaming", "title": "Streaming HTML" },
       { "path": "/async-iterable", "title": "Async iterables" },
       { "path": "/readable-stream", "title": "ReadableStreams" },
@@ -43,7 +43,6 @@
       { "path": "/maze-chase", "title": "Maze chase" },
       { "path": "/racer", "title": "Racer" },
       { "path": "/sky-fortress", "title": "Sky fortress" },
-      { "path": "/jungle-run", "title": "Jungle run" },
       { "path": "/air-mail", "title": "Air mail" }
     ]
   },
@@ -53,7 +52,6 @@
     "links": [
       { "path": "/blog", "title": "Blog" },
       { "path": "/products", "title": "Products" },
-      { "path": "/view-transitions", "title": "Planet gallery" },
       { "path": "/mdx", "title": "MDX support" },
       { "path": "/todos", "title": "Todos" },
       { "path": "/wizard", "title": "Wizard" },
@@ -70,17 +68,14 @@
     "links": [
       { "path": "/og", "title": "Open Graph images" },
       { "path": "/email", "title": "JSX for emails" },
-      { "path": "/svg", "title": "SVG charts" },
+      { "path": "/pdf", "title": "JSX for PDF" },
+      { "path": "/svg", "title": "JSX for SVG" },
       { "path": "/sharp", "title": "Image scaling" },
       { "path": "/upload", "title": "Image upload" },
-      { "path": "/json/request.json?foo=bar", "title": "JSON response" },
       { "path": "/sse", "title": "Server-Sent Events" },
-      { "path": "/chat", "title": "Chat with SSE" },
-      { "path": "/websocket", "title": "WebSocket cursors" },
-      { "path": "/pdf", "title": "PDF with JSX" },
+      { "path": "/websocket", "title": "WebSocket" },
       { "path": "/negotiation", "title": "Content negotiation" },
-      { "path": "/response", "title": "Response objects" },
-      { "path": "/sitemap.xml", "title": "XML sitemap" }
+      { "path": "/response", "title": "Response objects" }
     ]
   },
   {
@@ -101,14 +96,13 @@
   },
   {
     "title": "Hypermedia with HTMX",
-    "description": "Every Jeasx route can return an HTML fragment, so hypermedia libraries like HTMX and Fixi can update parts of a page with markup rendered on the server.",
+    "description": "Every Jeasx route can return an HTML fragment, so hypermedia libraries like HTMX can update parts of a page with markup rendered on the server.",
     "links": [
       { "path": "/htmx", "title": "Click to edit" },
       { "path": "/active-search", "title": "Active search" },
       { "path": "/fragments", "title": "Template fragments" },
       { "path": "/infinite-scroll", "title": "Infinite scroll" },
-      { "path": "/hx-live", "title": "Reactive scripting" },
-      { "path": "/fixi", "title": "Fixi.js" }
+      { "path": "/hx-live", "title": "Reactive scripting" }
     ]
   },
   {
@@ -121,8 +115,7 @@
       { "path": "/svelte", "title": "Svelte" },
       { "path": "/lit", "title": "Lit" },
       { "path": "/alpine", "title": "Alpine.js" },
-      { "path": "/arrowjs", "title": "ArrowJS" },
-      { "path": "/islands", "title": "Islands" }
+      { "path": "/islands", "title": "Mixed islands" }
     ]
   }
 ]

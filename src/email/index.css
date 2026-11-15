@@ -78,6 +78,14 @@
     color: var(--em-muted);
     line-height: 1.5;
   }
+
+  & code {
+    border: 1px solid rgb(139 92 246 / 0.45);
+    background: rgb(139 92 246 / 0.15);
+    padding: 0 0.3rem;
+    color: var(--color);
+    font-weight: 600;
+  }
 }
 
 /* Template picker */

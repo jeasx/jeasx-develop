@@ -1,4 +1,4 @@
-// Helpers for avatars, used on the server and in the browser (see the "chat" example),
+// Helpers for avatars, used on the server and in the browser,
 // so a name looks the same wherever it is rendered.
 
 /**

@@ -80,7 +80,9 @@
   display: grid;
   gap: 0.4rem;
   overflow-x: auto;
-  padding-bottom: 0.5rem;
+  /* Room for the hover lift and glow, which the scroll container would clip. */
+  margin-top: -1rem;
+  padding: 1rem 0 0.5rem;
 }
 .seat-row {
   display: flex;

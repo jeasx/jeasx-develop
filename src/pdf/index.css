@@ -322,6 +322,14 @@
     color: var(--muted);
     font-size: 0.9rem;
   }
+
+  & code {
+    border: 1px solid rgb(34 211 238 / 0.35);
+    background: rgb(34 211 238 / 0.12);
+    padding: 0 0.3rem;
+    color: var(--color);
+    font-weight: 600;
+  }
 }
 
 .pdf-reference {

@@ -1,7 +1,14 @@
-export default function () {
+/**
+ * @param {import("../types").RouteProps} props
+ */
+export default function ({ request }) {
+  const { url, path, route, query, method } = request;
   return Response.json({
-    framework: "Jeasx",
-    generated: new Date().toISOString(),
-    features: ["JSX", "Streaming", "Response", "Guards"],
+    url,
+    path,
+    route,
+    query,
+    method,
+    runtime: process.versions.bun ? `Bun@${process.versions.bun}` : `Node@${process.versions.node}`,
   });
 }
