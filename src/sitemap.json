@@ -1,121 +1,146 @@
 [
   {
-    "title": "Server-side JSX with jsx-async-runtime",
-    "description": "Everything jsx-async-runtime renders on the server: promises, iterables and other values as children, render props, request context via 'this', overriding how JSX turns into HTML, Declarative Shadow DOM and unit tests for components.",
-    "links": [
-      { "path": "/values", "title": "What JSX renders" },
-      { "path": "/context", "title": "'this' as context" },
-      { "path": "/render-props", "title": "Render props" },
-      { "path": "/interceptor", "title": "Intercept JSX" },
-      { "path": "/shadow-dom", "title": "Web components" },
-      { "path": "/testing", "title": "Unit tests" }
+    "id": "runtime",
+    "title": "The heart of Jeasx:",
+    "link": {
+      "href": "https://github.com/jeasx/jsx-async-runtime",
+      "text": "<jsx-async-runtime />"
+    },
+    "intro": "Jeasx renders JSX with jsx-async-runtime: async components, streaming, and the same components on the server and in the browser.",
+    "topics": [
+      {
+        "title": "Server-side JSX",
+        "description": "Everything jsx-async-runtime renders on the server: promises, iterables and other values as children, render props, request context via 'this', overriding how JSX turns into HTML, Declarative Shadow DOM and unit tests for components.",
+        "links": [
+          { "path": "/values", "title": "What JSX renders" },
+          { "path": "/context", "title": "'this' as context" },
+          { "path": "/render-props", "title": "Render props" },
+          { "path": "/interceptor", "title": "Intercept JSX" },
+          { "path": "/shadow-dom", "title": "Web components" },
+          { "path": "/testing", "title": "Unit tests" }
+        ]
+      },
+      {
+        "title": "Streaming",
+        "description": "Async components don't block the page: jsx-async-runtime streams HTML as soon as it is ready, in order, in parallel or out of order, from async iterables or a ReadableStream.",
+        "links": [
+          { "path": "/parallel", "title": "Parallel loading" },
+          { "path": "/aggregator", "title": "API aggregator" },
+          { "path": "/streaming", "title": "Streaming HTML" },
+          { "path": "/out-of-order", "title": "Slotted streaming" },
+          { "path": "/readable-stream", "title": "ReadableStreams" },
+          { "path": "/async-iterable", "title": "Async iterables" },
+          { "path": "/mandelbrot", "title": "Mandelbrot explorer" }
+        ]
+      },
+      {
+        "title": "Isomorphic apps",
+        "description": "The server renders the first page, then the browser re-renders the same JSX components after every click, without React, a virtual DOM or hydration. Without JavaScript, every app keeps working with plain HTML forms.",
+        "links": [
+          { "path": "/todos", "title": "Todos" },
+          { "path": "/lottery", "title": "Lottery" },
+          { "path": "/jokes", "title": "Jokes" },
+          { "path": "/kanban", "title": "Kanban board" },
+          { "path": "/cinema", "title": "Cinema seats" }
+        ]
+      },
+      {
+        "title": "Client-side apps and games",
+        "description": "Render JSX right in the browser with jsx-async-runtime: async components which fetch their own data, live feeds, streamed async trees, and games which render every frame.",
+        "links": [
+          { "path": "/client-jsx", "title": "Solar system" },
+          { "path": "/social-feed", "title": "Social feed" },
+          { "path": "/dependency-tree", "title": "Dependency tree" },
+          { "path": "/game-of-life", "title": "Game of Life" },
+          { "path": "/maze-chase", "title": "Maze chase" },
+          { "path": "/racer", "title": "Racer" },
+          { "path": "/sky-fortress", "title": "Sky fortress" },
+          { "path": "/air-mail", "title": "Air mail" }
+        ]
+      }
     ]
   },
   {
-    "title": "Streaming with jsx-async-runtime",
-    "description": "Async components don't block the page: jsx-async-runtime streams HTML as soon as it is ready, in order, in parallel or out of order, from async iterables or a ReadableStream.",
-    "links": [
-      { "path": "/parallel", "title": "Parallel loading" },
-      { "path": "/aggregator", "title": "API aggregator" },
-      { "path": "/streaming", "title": "Streaming HTML" },
-      { "path": "/out-of-order", "title": "Slotted streaming" },
-      { "path": "/readable-stream", "title": "ReadableStreams" },
-      { "path": "/async-iterable", "title": "Async iterables" },
-      { "path": "/mandelbrot", "title": "Mandelbrot explorer" }
+    "id": "framework",
+    "title": "From pages to production",
+    "intro": "Websites, apps, images, PDFs and emails, secured and ready to ship.",
+    "topics": [
+      {
+        "title": "Server-rendered websites and apps",
+        "description": "Render pages on the server with content from a remote API, JSON data or Markdown with MDX, and build multi-step forms with plain HTML. No client-side JavaScript needed: view transitions make page changes feel smooth.",
+        "links": [
+          { "path": "/blog", "title": "Blog" },
+          { "path": "/products", "title": "Products" },
+          { "path": "/wizard", "title": "Wizard" },
+          { "path": "/mdx", "title": "Cookbook" },
+          { "path": "/repositories", "title": "GitHub repos" },
+          { "path": "/ab-testing", "title": "A/B testing" },
+          { "path": "/i18n", "title": "Internationalization" }
+        ]
+      },
+      {
+        "title": "Beyond HTML: images, PDFs, emails and live streams",
+        "description": "Routes aren't limited to HTML: they can return images, SVG, JSON, XML, PDF, a live stream of Server-Sent Events, a WebSocket or any other content type.",
+        "links": [
+          { "path": "/svg", "title": "JSX for SVG" },
+          { "path": "/email", "title": "JSX for emails" },
+          { "path": "/pdf", "title": "JSX for PDF" },
+          { "path": "/og", "title": "Open Graph images" },
+          { "path": "/sharp", "title": "Image scaling" },
+          { "path": "/upload", "title": "Image upload" },
+          { "path": "/sse", "title": "Server-Sent Events" },
+          { "path": "/websocket", "title": "WebSocket" },
+          { "path": "/negotiation", "title": "Content negotiation" },
+          { "path": "/response", "title": "Response objects" }
+        ]
+      },
+      {
+        "title": "Security, errors and post-processing",
+        "description": "Protect routes with basic auth or sessions, sign cookies, block injected scripts stop bots with a proof-of-work captcha and rate-limit APIs. Catch errors, manage the head and transform the final HTML before it is sent to the browser.",
+        "links": [
+          { "path": "/login", "title": "Login and sessions" },
+          { "path": "/basic-auth", "title": "Basic auth" },
+          { "path": "/signed-cookies", "title": "Signed cookies" },
+          { "path": "/csp", "title": "Content Security Policy" },
+          { "path": "/cap", "title": "Bot protection" },
+          { "path": "/rate-limit", "title": "Rate limiting" },
+          { "path": "/error-handler", "title": "Catch errors" },
+          { "path": "/prettier", "title": "Prettify HTML" },
+          { "path": "/cheerio", "title": "Extract styles" },
+          { "path": "/head", "title": "Merge head tags" }
+        ]
+      }
     ]
   },
   {
-    "title": "Isomorphic apps with jsx-async-runtime",
-    "description": "The server renders the first page, then the browser re-renders the same JSX components after every click, without React, a virtual DOM or hydration. Without JavaScript, every app keeps working with plain HTML forms.",
-    "links": [
-      { "path": "/todos", "title": "Todos" },
-      { "path": "/lottery", "title": "Lottery" },
-      { "path": "/jokes", "title": "Jokes" },
-      { "path": "/kanban", "title": "Kanban board" },
-      { "path": "/cinema", "title": "Cinema seats" }
-    ]
-  },
-  {
-    "title": "Client-side apps and games with jsx-async-runtime",
-    "description": "Render JSX right in the browser with jsx-async-runtime: async components which fetch their own data, live feeds, streamed async trees, and games which render every frame.",
-    "links": [
-      { "path": "/client-jsx", "title": "Solar system" },
-      { "path": "/social-feed", "title": "Social feed" },
-      { "path": "/dependency-tree", "title": "Dependency tree" },
-      { "path": "/game-of-life", "title": "Game of Life" },
-      { "path": "/maze-chase", "title": "Maze chase" },
-      { "path": "/racer", "title": "Racer" },
-      { "path": "/sky-fortress", "title": "Sky fortress" },
-      { "path": "/air-mail", "title": "Air mail" }
-    ]
-  },
-  {
-    "title": "Server-rendered websites and apps",
-    "description": "Render pages on the server with content from a remote API, JSON data or Markdown with MDX, and build multi-step forms with plain HTML. No client-side JavaScript needed: view transitions make page changes feel smooth.",
-    "links": [
-      { "path": "/blog", "title": "Blog" },
-      { "path": "/products", "title": "Products" },
-      { "path": "/wizard", "title": "Wizard" },
-      { "path": "/mdx", "title": "Cookbook" },
-      { "path": "/repositories", "title": "GitHub repos" },
-      { "path": "/ab-testing", "title": "A/B testing" },
-      { "path": "/i18n", "title": "Internationalization" }
-    ]
-  },
-  {
-    "title": "Beyond HTML: images, PDFs, emails and live streams",
-    "description": "Routes aren't limited to HTML: they can return images, SVG, JSON, XML, PDF, a live stream of Server-Sent Events, a WebSocket or any other content type.",
-    "links": [
-      { "path": "/svg", "title": "JSX for SVG" },
-      { "path": "/email", "title": "JSX for emails" },
-      { "path": "/pdf", "title": "JSX for PDF" },
-      { "path": "/og", "title": "Open Graph images" },
-      { "path": "/sharp", "title": "Image scaling" },
-      { "path": "/upload", "title": "Image upload" },
-      { "path": "/sse", "title": "Server-Sent Events" },
-      { "path": "/websocket", "title": "WebSocket" },
-      { "path": "/negotiation", "title": "Content negotiation" },
-      { "path": "/response", "title": "Response objects" }
-    ]
-  },
-  {
-    "title": "Security, errors and post-processing",
-    "description": "Protect routes with basic auth or sessions, sign cookies, block injected scripts stop bots with a proof-of-work captcha and rate-limit APIs. Catch errors, manage the head and transform the final HTML before it is sent to the browser.",
-    "links": [
-      { "path": "/login", "title": "Login and sessions" },
-      { "path": "/basic-auth", "title": "Basic auth" },
-      { "path": "/signed-cookies", "title": "Signed cookies" },
-      { "path": "/csp", "title": "Content Security Policy" },
-      { "path": "/cap", "title": "Bot protection" },
-      { "path": "/rate-limit", "title": "Rate limiting" },
-      { "path": "/error-handler", "title": "Catch errors" },
-      { "path": "/prettier", "title": "Prettify HTML" },
-      { "path": "/cheerio", "title": "Extract styles" },
-      { "path": "/head", "title": "Merge head tags" }
-    ]
-  },
-  {
-    "title": "Hypermedia with HTMX",
-    "description": "Every Jeasx route can return an HTML fragment, so hypermedia libraries like HTMX can update parts of a page with markup rendered on the server.",
-    "links": [
-      { "path": "/htmx", "title": "Click to edit" },
-      { "path": "/active-search", "title": "Active search" },
-      { "path": "/fragments", "title": "Template fragments" },
-      { "path": "/infinite-scroll", "title": "Infinite scroll" },
-      { "path": "/hx-live", "title": "Reactive scripting" }
-    ]
-  },
-  {
-    "title": "JavaScript libraries and frameworks",
-    "description": "Add islands of interactivity to server-rendered pages with the JavaScript library or framework you already know.",
-    "links": [
-      { "path": "/react", "title": "React" },
-      { "path": "/preact", "title": "Preact" },
-      { "path": "/vue", "title": "Vue" },
-      { "path": "/svelte", "title": "Svelte" },
-      { "path": "/lit", "title": "Lit" },
-      { "path": "/alpine", "title": "Alpine.js" },
-      { "path": "/islands", "title": "Mixed islands" }
+    "id": "integrations",
+    "title": "Integrations in userland",
+    "intro": "No plugins, no adapters: HTMX, React, Vue, Svelte and friends, wired up in plain code you own.",
+    "topics": [
+      {
+        "title": "Hypermedia with HTMX",
+        "description": "Every Jeasx route can return an HTML fragment, so hypermedia libraries like HTMX can update parts of a page with markup rendered on the server.",
+        "links": [
+          { "path": "/htmx", "title": "Click to edit" },
+          { "path": "/active-search", "title": "Active search" },
+          { "path": "/fragments", "title": "Template fragments" },
+          { "path": "/infinite-scroll", "title": "Infinite scroll" },
+          { "path": "/hx-live", "title": "Reactive scripting" }
+        ]
+      },
+      {
+        "title": "JavaScript libraries and frameworks",
+        "description": "Add islands of interactivity to server-rendered pages with the JavaScript library or framework you already know.",
+        "links": [
+          { "path": "/react", "title": "React" },
+          { "path": "/preact", "title": "Preact" },
+          { "path": "/vue", "title": "Vue" },
+          { "path": "/svelte", "title": "Svelte" },
+          { "path": "/lit", "title": "Lit" },
+          { "path": "/alpine", "title": "Alpine.js" },
+          { "path": "/islands", "title": "Mixed islands" }
+        ]
+      }
     ]
   }
 ]

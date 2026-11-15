@@ -51,6 +51,16 @@
 .road .sun {
   fill: #fef3c7;
 }
+.road .sun-glow {
+  fill: url(#sun-glow);
+}
+.road .sun-rays {
+  fill: #fef3c7;
+  opacity: 0.35;
+}
+.road .flare circle {
+  opacity: 0.25;
+}
 .road .mountains.far {
   fill: #6d83a8;
 }
@@ -81,6 +91,10 @@
 .road .lane {
   fill: #f1f5f9;
 }
+.road .shadow {
+  fill: #000;
+  opacity: 0.25;
+}
 .road .smoke ellipse {
   fill: url(#smoke);
 }
@@ -97,6 +111,9 @@
 .road .moo text {
   font: 900 13px sans-serif;
   fill: #1e293b;
+}
+.road .treads {
+  fill: #2e2e2e;
 }
 .road .flash {
   fill: #fff;

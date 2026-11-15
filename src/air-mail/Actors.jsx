@@ -1,7 +1,5 @@
 import { CRASH_TIME, pitch } from "./game";
-import { HEIGHT, PLANE_X, SUN, WIDTH } from "./shared";
-
-const round = (n) => Math.round(n * 10) / 10;
+import { HEIGHT, PLANE_X, round, SUN, WIDTH } from "./shared";
 
 /**
  * The mail plane: an open-cockpit plane in yellow and red with a low wing.

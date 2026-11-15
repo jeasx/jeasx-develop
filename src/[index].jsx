@@ -1,7 +1,8 @@
 import Layout from "./Layout";
 import sitemap from "./sitemap.json";
 
-const EXAMPLE_COUNT = sitemap.reduce((sum, { links }) => sum + links.length, 0);
+const TOPICS = sitemap.flatMap(({ topics }) => topics);
+const EXAMPLE_COUNT = TOPICS.reduce((sum, { links }) => sum + links.length, 0);
 
 export default function () {
   return (
@@ -38,7 +39,7 @@ export default function () {
         </ul>
       </section>
       <nav id="examples" class="home-topics" aria-label="Topics">
-        {sitemap.map(({ title }) => (
+        {TOPICS.map(({ title }) => (
           <a href={`#${slug(title)}`}>{title}</a>
         ))}
       </nav>
@@ -59,49 +60,46 @@ export default function () {
           </p>
         </article>
       </section>
-      {sitemap.map(({ title, description, links }, index) => (
-        <section id={slug(title)} class="home-topic">
-          <header>
-            <span class="home-number">{String(index + 1).padStart(2, "0")}</span>
-            <div>
-              <h2>{linkRuntime(title)}</h2>
-              <p>{description}</p>
-            </div>
+      {sitemap.map((group) => (
+        <>
+          <header id={group.id} class="home-group">
+            <h2>
+              {group.title}
+              {group.link && (
+                <>
+                  {" "}
+                  <a href={group.link.href} class="home-runtime">
+                    {group.link.text}
+                  </a>
+                </>
+              )}
+            </h2>
+            <p class="home-group-intro">{group.intro}</p>
           </header>
-          <div class="home-grid">
-            {links.map(({ title, path }) => (
-              <a href={path} class="home-tile">
-                <strong>{title}</strong>
-                <code>{path}</code>
-              </a>
-            ))}
-          </div>
-        </section>
+          {group.topics.map(({ title, description, links }) => (
+            <section id={slug(title)} class="home-topic">
+              <header>
+                <span class="home-number">
+                  {String(TOPICS.findIndex((topic) => topic.title === title) + 1).padStart(2, "0")}
+                </span>
+                <div>
+                  <h3>{title}</h3>
+                  <p>{description}</p>
+                </div>
+              </header>
+              <div class="home-grid">
+                {links.map(({ title, path }) => (
+                  <a href={path} class="home-tile">
+                    <strong>{title}</strong>
+                    <code>{path}</code>
+                  </a>
+                ))}
+              </div>
+            </section>
+          ))}
+        </>
       ))}
     </Layout>
-  );
-}
-
-const RUNTIME = "jsx-async-runtime";
-
-/**
- * Highlights and links jsx-async-runtime in a title, e.g. "Server-side JSX with jsx-async-runtime".
- * @param {string} title
- */
-function linkRuntime(title) {
-  const [before, ...after] = title.split(RUNTIME);
-  if (!after.length) {
-    return title;
-  }
-  return (
-    <>
-      {before}
-      {/* Shown as a JSX element; JSX escapes the angle brackets. */}
-      <a href={`https://github.com/jeasx/${RUNTIME}`} class="home-runtime">
-        {`<${RUNTIME} />`}
-      </a>
-      {after.join(RUNTIME)}
-    </>
   );
 }
 

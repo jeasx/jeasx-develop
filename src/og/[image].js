@@ -17,7 +17,9 @@ export default async function ({ request, reply }) {
   const query = /** @type {Record<string, string | undefined>} */ (request.query);
   const title = String(query["title"] || "Hello Jeasx").slice(0, MAX_TITLE);
   const subtitle = String(query["subtitle"] ?? "").slice(0, MAX_SUBTITLE);
-  const theme = Object.hasOwn(THEMES, query["theme"] ?? "") ? query["theme"] : "sunset";
+  const theme = /** @type {keyof typeof THEMES} */ (
+    Object.hasOwn(THEMES, query["theme"] ?? "") ? query["theme"] : "sunset"
+  );
   const key = JSON.stringify([title, subtitle, theme]);
 
   let png = cache.get(key);

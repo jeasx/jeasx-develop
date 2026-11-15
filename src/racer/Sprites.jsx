@@ -39,6 +39,146 @@ function Crowd({ id, cheer }) {
   );
 }
 
+const HIDE = "#f4efe6";
+const PATCH = "#26211d";
+const OUTLINE = "#3b342e";
+
+/**
+ * One leg from the hip or shoulder down to the hoof, outlined by drawing it
+ * twice. `dx` swings the hoof forwards or backwards for the walk.
+ */
+function Leg({ x, dx, far = false }) {
+  const d = `M${x} 30 Q${x + dx * 0.3} 46 ${x + dx} 55`;
+  return (
+    <>
+      <path d={d} stroke={OUTLINE} stroke-width="5.6" stroke-linecap="round" />
+      <path d={d} stroke={far ? "#d8d0c3" : HIDE} stroke-width="4.2" stroke-linecap="round" />
+      <path d={`M${x + dx} 54.5 L${x + dx} 58.5`} stroke="#1c1815" stroke-width="5" />
+    </>
+  );
+}
+
+/**
+ * A Holstein cow seen from the side, walking to the right. `step` puts the
+ * legs into one of two walking poses: diagonal pairs of legs swing together.
+ * The top of the head sits at 82 × 6, where the moo bubble points to.
+ */
+function Cow({ id, step }) {
+  const s = step * 4;
+  // Hip bones and shoulders stand out a little; the back dips in between.
+  const body =
+    "M12 18 Q12 11 19 10 Q25 8 31 10 Q43 12 54 9 Q64 7 69 14 L70 30 Q68 39 58 40 L24 40 Q13 41 11 32 Z";
+  return (
+    <symbol id={id} viewBox="0 0 96 60">
+      <clipPath id={`${id}-body`}>
+        <path d={body} />
+      </clipPath>
+      <g fill="none">
+        {/* The tail hangs from the rump and swings a little with the walk. */}
+        <path
+          d={`M12 15 Q${8 - step} 26 ${9 - step * 2} 36`}
+          stroke={OUTLINE}
+          stroke-width="1.4"
+          stroke-linecap="round"
+        />
+        {/* Legs first, so the body covers their tops; far legs are a shade darker. */}
+        <Leg x={22} dx={s} far />
+        <Leg x={61} dx={-s} far />
+        <Leg x={27} dx={-s} />
+        <Leg x={65} dx={s} />
+      </g>
+      {/* Short horns and an ear behind the head. */}
+      <path
+        d="M79 7 Q78.5 3 81 2 M84.5 7 Q86.5 3.5 89 4"
+        fill="none"
+        stroke="#d9cba8"
+        stroke-width="1.6"
+        stroke-linecap="round"
+      />
+      <path
+        d="M79 10 Q72 6 68.5 8.5 Q71.5 12.5 79 12.5 Z"
+        fill={PATCH}
+        stroke={OUTLINE}
+        stroke-width="0.5"
+      />
+      {/* Neck and a long head in one outline; the body covers the base of the neck. */}
+      <path
+        d="M58 10 Q69 6 77 7.5 Q83 5 87 8 Q90 11 91 16 L94 24 Q95 30 89 30 L84 30 Q80 28 78 23 Q72 29 63 30 Z"
+        fill={HIDE}
+        stroke={OUTLINE}
+        stroke-width="0.8"
+        stroke-linejoin="round"
+      />
+      <path d="M77.5 7.5 Q83 5 87 8 Q86.5 13 82.5 17 Q78.5 14 77.5 7.5 Z" fill={PATCH} />
+      <ellipse cx="89.5" cy="26.5" rx="4.4" ry="3.6" fill="#c9a196" />
+      <ellipse cx="91.5" cy="25.5" rx="0.9" ry="0.7" fill="#5b3f37" />
+      <ellipse cx="83" cy="14" rx="1.2" ry="1" fill="#f4efe6" />
+      <circle cx="83.2" cy="14" r="0.8" fill="#120f0d" />
+      <ellipse cx={9 - step * 2} cy="38" rx="1.8" ry="3.2" fill={PATCH} />
+      <path d={body} fill={HIDE} stroke={OUTLINE} stroke-width="0.8" />
+      {/* Irregular patches, cut to the outline of the body, and a shaded belly. */}
+      <g clip-path={`url(#${id}-body)`}>
+        <path
+          d="M17 6 L27 7 Q33 11 31 16 L34 21 Q30 27 24 25 L19 27 Q14 23 15 18 L10 14 Z M41 6 L52 7 Q58 9 57 14 L60 19 Q57 25 51 24 Q47 28 43 24 L44 18 Q38 14 41 6 Z M31 33 Q36 29 41 32 L47 31 Q50 38 46 42 L32 42 Q28 38 31 33 Z"
+          fill={PATCH}
+        />
+        <rect x="0" y="33" width="80" height="10" fill="#000" opacity="0.1" />
+      </g>
+      {/* Udder between the hind legs. */}
+      <path
+        d="M30 39 Q31 44.5 35 44.5 Q39 44.5 40 39 Z"
+        fill="#e3b2a6"
+        stroke={OUTLINE}
+        stroke-width="0.6"
+      />
+      <path
+        d="M33 44 L33 46.5 M37 44 L37 46.5"
+        stroke="#c98f84"
+        stroke-width="1.2"
+        stroke-linecap="round"
+      />
+    </symbol>
+  );
+}
+
+/** Messages along the track, all about Jeasx. Each billboard shows one of them. */
+export const BILLBOARDS = [
+  { title: "JEASX", paint: "#facc15", ink: "#0f172a" },
+  { title: "ASYNC JSX", paint: "#38bdf8", ink: "#0f172a" },
+  { title: "FASTIFY", paint: "#0f172a", ink: "#f8fafc" },
+  { title: "ESBUILD", paint: "#fbbf24", ink: "#7c2d12" },
+  { title: "STREAMING", paint: "#22c55e", ink: "#052e16" },
+  { title: "ISOMORPHIC", paint: "#f8fafc", ink: "#dc2626" },
+];
+
+/**
+ * A billboard on two posts. The title is squeezed or stretched to fill the
+ * panel, so short and long ones look equally bold.
+ */
+function Billboard({ id, title, paint, ink }) {
+  return (
+    <symbol id={id} viewBox="0 0 150 110">
+      <rect x="20" y="50" width="8" height="60" fill="#475569" />
+      <rect x="122" y="50" width="8" height="60" fill="#475569" />
+      <rect x="0" y="0" width="150" height="66" rx="4" fill="#0f172a" />
+      <rect x="5" y="5" width="140" height="56" rx="2" fill={paint} stroke="#475569" />
+      <text
+        x="75"
+        y="44"
+        text-anchor="middle"
+        font-family="sans-serif"
+        font-weight="900"
+        font-size="30"
+        textLength="126"
+        lengthAdjust="spacingAndGlyphs"
+        fill={ink}
+      >
+        {title}
+      </text>
+    </symbol>
+  );
+}
+
 /**
  * Artwork for everything on the road, as SVG symbols. The page renders them
  * once; every frame of the road only references them with `<use>`, which keeps
@@ -53,6 +193,12 @@ export default function Sprites() {
           <stop offset="0.55" stop-color="#93c5fd" />
           <stop offset="1" stop-color="#fde68a" />
         </linearGradient>
+        {/* Warm light around the sun, fading into the sky. */}
+        <radialGradient id="sun-glow">
+          <stop offset="0.3" stop-color="#fef3c7" stop-opacity="0.9" />
+          <stop offset="0.55" stop-color="#fde68a" stop-opacity="0.35" />
+          <stop offset="1" stop-color="#fde68a" stop-opacity="0" />
+        </radialGradient>
         {/* Soft puffs of tire smoke: dense in the middle, fading out at the edge. */}
         <radialGradient id="smoke">
           <stop offset="0" stop-color="#fafafa" stop-opacity="1" />
@@ -118,114 +264,14 @@ export default function Sprites() {
         />
         <path d="M9 33 Q14 33.5 18 31 L14 29.5 Z" fill="#0f172a" />
       </symbol>
-      {/* A happy cow walking to the right, with its legs in two steps. */}
-      <symbol id="cow-a" viewBox="0 0 96 60">
-        <g stroke="#1e293b" stroke-width="5" stroke-linecap="round">
-          <path d="M18 36 l-4 20 M30 36 l4 20 M50 36 l-4 20 M60 36 l4 20" />
-        </g>
-        <path
-          d="M10 18 Q4 22 3 30"
-          fill="none"
-          stroke="#f8fafc"
-          stroke-width="2.5"
-          stroke-linecap="round"
-        />
-        <circle cx="3" cy="31" r="2.5" fill="#1e293b" />
-        <rect
-          x="8"
-          y="10"
-          width="58"
-          height="30"
-          rx="14"
-          fill="#f8fafc"
-          stroke="#1e293b"
-          stroke-width="1.5"
-        />
-        <path
-          d="M20 11 Q30 16 26 26 Q18 28 14 20 Z M44 12 Q54 10 56 22 Q48 30 40 22 Z M30 32 Q36 28 42 34 L40 40 L30 40 Z"
-          fill="#1e293b"
-        />
-        <ellipse cx="38" cy="40" rx="6" ry="3.5" fill="#f9a8d4" />
-        <path
-          d="M66 12 L70 3 L74 10 M80 10 L86 3 L86 12"
-          fill="#fde68a"
-          stroke="#1e293b"
-          stroke-width="1"
-        />
-        <ellipse
-          cx="76"
-          cy="18"
-          rx="12"
-          ry="11"
-          fill="#f8fafc"
-          stroke="#1e293b"
-          stroke-width="1.5"
-        />
-        <path d="M68 10 L62 8 L67 14 Z" fill="#1e293b" />
-        <ellipse cx="82" cy="26" rx="9" ry="6" fill="#f9a8d4" stroke="#1e293b" stroke-width="1" />
-        <circle cx="79" cy="26" r="1.2" fill="#1e293b" />
-        <circle cx="85" cy="26" r="1.2" fill="#1e293b" />
-        <circle cx="78" cy="15" r="3.5" fill="#fff" stroke="#1e293b" stroke-width="1" />
-        <circle cx="79" cy="15.5" r="1.8" fill="#1e293b" />
-      </symbol>
-      <symbol id="cow-b" viewBox="0 0 96 60">
-        <g stroke="#1e293b" stroke-width="5" stroke-linecap="round">
-          <path d="M18 36 l4 20 M30 36 l-4 20 M50 36 l4 20 M60 36 l-4 20" />
-        </g>
-        <path
-          d="M10 18 Q4 22 3 30"
-          fill="none"
-          stroke="#f8fafc"
-          stroke-width="2.5"
-          stroke-linecap="round"
-        />
-        <circle cx="3" cy="31" r="2.5" fill="#1e293b" />
-        <rect
-          x="8"
-          y="10"
-          width="58"
-          height="30"
-          rx="14"
-          fill="#f8fafc"
-          stroke="#1e293b"
-          stroke-width="1.5"
-        />
-        <path
-          d="M20 11 Q30 16 26 26 Q18 28 14 20 Z M44 12 Q54 10 56 22 Q48 30 40 22 Z M30 32 Q36 28 42 34 L40 40 L30 40 Z"
-          fill="#1e293b"
-        />
-        <ellipse cx="38" cy="40" rx="6" ry="3.5" fill="#f9a8d4" />
-        <path
-          d="M66 12 L70 3 L74 10 M80 10 L86 3 L86 12"
-          fill="#fde68a"
-          stroke="#1e293b"
-          stroke-width="1"
-        />
-        <ellipse
-          cx="76"
-          cy="18"
-          rx="12"
-          ry="11"
-          fill="#f8fafc"
-          stroke="#1e293b"
-          stroke-width="1.5"
-        />
-        <path d="M68 10 L62 8 L67 14 Z" fill="#1e293b" />
-        <ellipse cx="82" cy="26" rx="9" ry="6" fill="#f9a8d4" stroke="#1e293b" stroke-width="1" />
-        <circle cx="79" cy="26" r="1.2" fill="#1e293b" />
-        <circle cx="85" cy="26" r="1.2" fill="#1e293b" />
-        <circle cx="78" cy="15" r="3.5" fill="#fff" stroke="#1e293b" stroke-width="1" />
-        <circle cx="79" cy="15.5" r="1.8" fill="#1e293b" />
-      </symbol>
+      <Cow id="cow-a" step={1} />
+      <Cow id="cow-b" step={-1} />
       <Crowd id="crowd" cheer={false} />
       <Crowd id="crowd-cheer" cheer={true} />
       {/* A formula car seen from behind. */}
       <symbol id="car" viewBox="0 0 100 60">
-        <ellipse cx="50" cy="57" rx="48" ry="4" fill="#000" opacity="0.35" />
         <rect x="2" y="30" width="22" height="28" rx="4" fill="#111" />
         <rect x="76" y="30" width="22" height="28" rx="4" fill="#111" />
-        <rect x="5" y="34" width="16" height="2" fill="#444" />
-        <rect x="79" y="34" width="16" height="2" fill="#444" />
         <path d="M22 50 L28 22 L72 22 L78 50 Z" fill="currentColor" />
         <path d="M38 22 L42 10 L58 10 L62 22 Z" fill="currentColor" />
         <circle cx="50" cy="13" r="5" fill="#fbbf24" stroke="#111" stroke-width="1.5" />
@@ -257,23 +303,9 @@ export default function Sprites() {
         <ellipse cx="20" cy="20" rx="14" ry="12" fill="#65a30d" />
         <ellipse cx="40" cy="18" rx="16" ry="13" fill="#65a30d" />
       </symbol>
-      <symbol id="billboard" viewBox="0 0 150 110">
-        <rect x="20" y="50" width="8" height="60" fill="#475569" />
-        <rect x="122" y="50" width="8" height="60" fill="#475569" />
-        <rect x="0" y="0" width="150" height="66" rx="4" fill="#0f172a" />
-        <rect x="5" y="5" width="140" height="56" rx="2" fill="#facc15" />
-        <text
-          x="75"
-          y="44"
-          text-anchor="middle"
-          font-family="sans-serif"
-          font-weight="900"
-          font-size="30"
-          fill="#0f172a"
-        >
-          JEASX
-        </text>
-      </symbol>
+      {BILLBOARDS.map((board, i) => (
+        <Billboard id={`billboard-${i}`} {...board} />
+      ))}
       <symbol id="gantry" viewBox="0 0 520 170">
         <rect x="0" y="20" width="14" height="150" fill="#e2e8f0" />
         <rect x="506" y="20" width="14" height="150" fill="#e2e8f0" />

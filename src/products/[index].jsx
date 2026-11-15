@@ -54,7 +54,10 @@ export default async function ({ request, reply }) {
         API and cached for a few minutes. Their images are cropped and converted on the fly by the
         image component of the <a href="/sharp">sharp example</a>. Click a product to see its
         details: its image and title morph into the detail page with a{" "}
-        <a href="https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API">view transition</a>.
+        <a href="https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API">
+          view transition
+        </a>
+        .
       </p>
       <nav class="product-filter" aria-label="Filter by category">
         <a href="?" aria-current={selected ? undefined : "page"}>

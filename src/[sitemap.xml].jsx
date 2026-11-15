@@ -14,15 +14,17 @@ export default function ({ reply }) {
         <url>
           <loc>https://expo.jeasx.dev/</loc>
         </url>
-        {sitemap.map(({ links }) =>
-          links
-            .filter(({ path }) => path !== "/sitemap.xml")
-            .map(({ path }) => (
-              <url>
-                <loc>https://expo.jeasx.dev{path}</loc>
-              </url>
-            )),
-        )}
+        {sitemap
+          .flatMap(({ topics }) => topics)
+          .map(({ links }) =>
+            links
+              .filter(({ path }) => path !== "/sitemap.xml")
+              .map(({ path }) => (
+                <url>
+                  <loc>https://expo.jeasx.dev{path}</loc>
+                </url>
+              )),
+          )}
       </urlset>
     </>
   );

@@ -1,4 +1,3 @@
-import { initial } from "../@helpers/avatar";
 import Layout from "../Layout";
 import Field from "./Field";
 import { PATH, endSession, startSession } from "./session";
@@ -58,7 +57,7 @@ export default async function ({ request, reply, csrfToken, session }) {
         <article class="card-success account">
           <header class="account-header">
             <span class="avatar" aria-hidden="true">
-              {initial(session.username)}
+              {([...session.username][0] ?? "").toUpperCase()}
             </span>
             <div>
               <strong>Welcome, {session.username}</strong>

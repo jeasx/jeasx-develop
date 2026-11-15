@@ -4,7 +4,7 @@ import TrashIcon from "./trash.svg";
 const FILTERS = [
   { value: undefined, label: "All" },
   { value: "active", label: "Active" },
-  { value: "completed", label: "Completed" },
+  { value: "completed", label: "Done" },
 ];
 
 /**

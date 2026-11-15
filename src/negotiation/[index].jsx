@@ -53,7 +53,7 @@ export default function () {
             type="button"
             class="btn-outline"
             data-accept={accept}
-            aria-pressed={String(accept === "application/json")}
+            aria-pressed={accept === "application/json" ? "true" : "false"}
           >
             {accept}
           </button>

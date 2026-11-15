@@ -37,12 +37,12 @@ export default function () {
             </button>
             <label class="speed">
               Speed
-              <input type="range" name="speed" min="1" max="30" value="10" />
+              <input type="range" name="speed" min="1" max="120" value="10" />
             </label>
           </div>
           <div id="life">
             <Board cells={cells} />
-            <Stats generation={0} history={[cells.filter(Boolean).length]} />
+            <Stats generation={0} fps={0} history={[cells.filter(Boolean).length]} />
           </div>
         </section>
         <ul class="rules">

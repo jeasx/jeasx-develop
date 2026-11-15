@@ -6,10 +6,10 @@ addEventListener("load", () => {
   if (!navigation) {
     return;
   }
-  for (const [id, time] of [
+  for (const [id, time] of /** @type {[string, number][]} */ ([
     ["ttfb", navigation.responseStart],
     ["complete", navigation.responseEnd],
-  ]) {
+  ])) {
     const element = document.getElementById(id);
     if (element) {
       element.textContent = `${Math.round(time - navigation.requestStart)} ms`;

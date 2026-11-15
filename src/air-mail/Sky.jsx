@@ -1,6 +1,4 @@
-import { HEIGHT, SUN, WIDTH } from "./shared";
-
-const round = (n) => Math.round(n * 10) / 10;
+import { HEIGHT, round, SUN, WIDTH } from "./shared";
 
 /** A row of hills far away, drawn by the browser; it scrolls slower than the landscape. */
 function hills(camera, factor, base, amp, seed) {

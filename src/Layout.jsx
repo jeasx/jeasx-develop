@@ -4,7 +4,9 @@ import sitemap from "./sitemap.json";
 
 // Top-level folders of all examples, e.g. "blog" for "/blog".
 const EXAMPLES = new Set(
-  sitemap.flatMap(({ links }) => links.map(({ path }) => path.split(/[/?]/)[1])),
+  sitemap
+    .flatMap(({ topics }) => topics)
+    .flatMap(({ links }) => links.map(({ path }) => path.split(/[/?]/)[1])),
 );
 
 /**

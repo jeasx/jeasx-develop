@@ -6,7 +6,9 @@ import { createReduce } from "./state";
 
 /** @type {import("./state").Pick} */
 async function pick(category, amount) {
-  const response = await fetch(`/jokes/pick?${new URLSearchParams({ category, amount: String(amount) })}`);
+  const response = await fetch(
+    `/jokes/pick?${new URLSearchParams({ category, amount: String(amount) })}`,
+  );
   if (!response.ok) {
     throw new Error(`Loading jokes failed: ${response.status}`);
   }

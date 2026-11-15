@@ -10,6 +10,8 @@ let generation = 0;
 let history = [cells.filter(Boolean).length];
 const HISTORY_LENGTH = 100;
 let timer = null;
+// Timestamps of the generations rendered during the last second, for the fps count.
+let frames = [];
 
 const container = document.getElementById("life");
 const controls = document.getElementById("controls");
@@ -25,7 +27,7 @@ async function render(previous = cells) {
   container.innerHTML = await jsxToString(
     <>
       <Board cells={cells} previous={previous} />
-      <Stats generation={generation} history={history} />
+      <Stats generation={generation} fps={timer ? frames.length : 0} history={history} />
     </>,
   );
 }
@@ -40,9 +42,12 @@ async function tick() {
 function play() {
   // Wait for each render before scheduling the next one, so slow devices don't pile up ticks.
   const loop = async () => {
+    const now = performance.now();
+    frames = [...frames.filter((time) => now - time < 1000), now];
     await tick();
     if (timer) timer = setTimeout(loop, 1000 / Number(speed.value));
   };
+  frames = [];
   timer = setTimeout(loop, 0);
   playButton.textContent = "⏸ Pause";
 }

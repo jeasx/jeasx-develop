@@ -27,7 +27,11 @@ export default function JokePicker({ counter, category, jokes }) {
         </div>
         <div class="categories">
           {CATEGORIES.map(({ value, icon, one, many }) => (
-            <button class={`category${category === value ? " selected" : ""}`} name="category" value={value}>
+            <button
+              class={`category${category === value ? " selected" : ""}`}
+              name="category"
+              value={value}
+            >
               <span class="category-icon">{icon}</span>
               <span>{counter === 1 ? `Tell me ${one}` : `Tell me ${counter} ${many}`}</span>
             </button>

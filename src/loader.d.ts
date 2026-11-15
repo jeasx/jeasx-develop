@@ -12,3 +12,8 @@ declare module "*.css" {
   const content: string;
   export default content;
 }
+
+declare module "*.mdx" {
+  const component: (props: Record<string, unknown>) => JSX.Element;
+  export default component;
+}

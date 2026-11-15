@@ -42,7 +42,9 @@ Click the pads and press play: the sounds are synthesized with the Web Audio API
   <React
     component="Beats"
     tempo={110}
-    pattern={["x...x...x...x...", "....x.......x...", "..x...x...x...xx", "x.....x...x....."].map((row) => [...row].map((char) => char === "x"))}
+    pattern={["x...x...x...x...", "....x.......x...", "..x...x...x...xx", "x.....x...x....."].map(
+      (row) => [...row].map((char) => char === "x"),
+    )}
   />
 </div>
 

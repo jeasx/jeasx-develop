@@ -1,7 +1,6 @@
-import { randomBytes } from "node:crypto";
+import { randomBytes, timingSafeEqual } from "node:crypto";
 import Layout from "../Layout";
 import { readSignedCookie } from "./cookies";
-import isSameToken from "./isSameToken";
 
 /**
  * Protects forms against cross-site request forgery (CSRF) with a "signed double-submit
@@ -45,4 +44,16 @@ export default function csrf({ request, reply }, path) {
   }
 
   return { token };
+}
+
+/**
+ * Compares two tokens in constant time, so response times don't reveal how much of a guess was right.
+ *
+ * @param {string} actual
+ * @param {string} expected
+ */
+function isSameToken(actual, expected) {
+  const a = Buffer.from(actual);
+  const b = Buffer.from(expected);
+  return a.length === b.length && timingSafeEqual(a, b);
 }

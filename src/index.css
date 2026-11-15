@@ -1138,9 +1138,12 @@ dialog::backdrop {
   margin: 3rem 0;
 }
 
+/* Same border and radius as the group banners. */
 .home-intro article {
   margin: 0;
   padding: 1rem 1.25rem;
+  border: 1px solid color-mix(in srgb, var(--primary) 25%, transparent);
+  border-radius: 1rem;
 }
 
 .home-intro h3 {
@@ -1187,12 +1190,51 @@ dialog::backdrop {
   margin-bottom: 1.25rem;
 }
 
-.home-topic h2 {
+/* Group heading: a tinted banner with a gradient accent bar on the left. */
+.home-group {
+  position: relative;
+  margin: 5rem 0 2.5rem;
+  padding: 1.75rem 2rem 1.75rem 2.25rem;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--primary) 25%, transparent);
+  border-radius: 1rem;
+  background: linear-gradient(
+    120deg,
+    color-mix(in srgb, var(--primary) 14%, transparent),
+    color-mix(in srgb, var(--secondary) 6%, transparent) 70%
+  );
+  scroll-margin-top: 1rem;
+}
+
+.home-group::before {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0.35rem;
+  background: linear-gradient(180deg, var(--primary), var(--secondary));
+  content: "";
+}
+
+.home-group h2 {
+  margin: 0 0 0.5rem;
+  font-size: clamp(1.6rem, 4vw, 2.25rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  text-align: left;
+}
+
+.home-group-intro {
+  max-width: 40rem;
+  margin: 0;
+  opacity: 0.85;
+  font-size: 1.05rem;
+}
+
+.home-topic h3 {
   margin: 0 0 0.25rem;
   text-align: left;
 }
 
-/* jsx-async-runtime in a topic heading: highlighted and linked to its repository. */
+/* jsx-async-runtime in a group heading: highlighted and linked to its repository. */
 .home-runtime {
   background: linear-gradient(90deg, var(--primary), var(--primary-hover));
   -webkit-background-clip: text;
@@ -1326,6 +1368,11 @@ dialog::backdrop {
 
   .home-hero {
     padding: 2.5rem 0.5rem 2rem;
+  }
+
+  .home-group {
+    margin: 3.5rem 0 2rem;
+    padding: 1.25rem 1.25rem 1.25rem 1.5rem;
   }
 
   .home-intro {

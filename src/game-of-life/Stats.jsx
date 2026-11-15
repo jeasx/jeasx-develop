@@ -2,7 +2,7 @@ const WIDTH = 240;
 const HEIGHT = 40;
 
 /** Generation, population and a sparkline of the population over the last generations. */
-export default function Stats({ generation, history }) {
+export default function Stats({ generation, fps, history }) {
   const population = history.at(-1);
   const max = Math.max(1, ...history);
   const points = history
@@ -20,6 +20,10 @@ export default function Stats({ generation, history }) {
       <div class="stat">
         <span>Population</span>
         <strong>{population}</strong>
+      </div>
+      <div class="stat">
+        <span>FPS</span>
+        <strong>{fps}</strong>
       </div>
       <svg
         class="sparkline"

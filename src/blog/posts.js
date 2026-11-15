@@ -1,8 +1,5 @@
-import { initial } from "../@helpers/avatar";
 import { fitsCookie, readListCookie, writeListCookie } from "../@helpers/cookies";
 import data from "./data.json";
-
-export { hue } from "../@helpers/avatar";
 
 /** Fields of a post and their maximum length. */
 export const FIELDS = {
@@ -186,5 +183,25 @@ export function paragraphs(body) {
  * @param {string} name
  */
 export function initials(name) {
-  return name.split(/\s+/).filter(Boolean).slice(0, 2).map(initial).join("") || "?";
+  return (
+    name
+      .split(/\s+/)
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((word) => ([...word][0] ?? "").toUpperCase())
+      .join("") || "?"
+  );
+}
+
+/**
+ * Derives a stable hue (0-359) from a text, e.g. a color per author.
+ *
+ * @param {string} text
+ */
+export function hue(text) {
+  let hash = 0;
+  for (const char of text) {
+    hash = (hash * 31 + /** @type {number} */ (char.codePointAt(0))) % 360;
+  }
+  return hash;
 }

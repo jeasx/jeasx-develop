@@ -1,7 +1,5 @@
 import { buildChunk, WATER_Y } from "./course";
-import { CHUNK, HEIGHT, SAMPLE } from "./shared";
-
-const round = (n) => Math.round(n * 10) / 10;
+import { CHUNK, HEIGHT, round, SAMPLE } from "./shared";
 
 /** Gradients for the landscape, rendered once into the page. */
 export function TerrainDefs() {

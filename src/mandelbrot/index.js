@@ -112,6 +112,7 @@ async function renderInWorkers(canvas) {
     y: Number(canvas.dataset.y),
     zoom: Number(canvas.dataset.zoom),
   };
+  /** @type {{ slot: HTMLElement, size: object, props?: object }[]} */
   const tasks = [
     {
       slot: canvas.querySelector('[data-slot="preview"]'),

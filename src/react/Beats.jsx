@@ -139,7 +139,11 @@ export default function Beats({ pattern, tempo: initialTempo }) {
       </div>
       <div className="beats-grid">
         {TRACKS.map(({ name, color }, track) => (
-          <div className="beats-row" key={name} style={{ "--c": color }}>
+          <div
+            className="beats-row"
+            key={name}
+            style={/** @type {React.CSSProperties} */ ({ "--c": color })}
+          >
             <span className="beats-name">{name}</span>
             {grid[track].map((on, index) => (
               <button

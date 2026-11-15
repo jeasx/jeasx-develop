@@ -49,7 +49,12 @@ View the [source code of this page](https://github.com/jeasx/jeasx-expo/tree/mai
 Move the pointer over the card. Two `Spring`s from `svelte/motion` follow it, so the tilt and the foil glare glide instead of jumping, and `style:` directives feed them into CSS.
 
 <div class="sv-card">
-  <Svelte component="Card" emoji="🦄" title="Jeasx" subtitle="Server-rendered, hydrated by Svelte" />
+  <Svelte
+    component="Card"
+    emoji="🦄"
+    title="Jeasx"
+    subtitle="Server-rendered, hydrated by Svelte"
+  />
 </div>
 
 ## Budget
@@ -77,9 +82,21 @@ Drag the sliders to set the monthly budget and the spending per category: `$deri
   <Svelte
     component="Quiz"
     questions={[
-      { text: "Who created Svelte?", options: ["Rich Harris", "Evan You", "Dan Abramov", "Jason Miller"], answer: "Rich Harris" },
-      { text: "What does Svelte compile components into?", options: ["Plain JavaScript", "WebAssembly", "A virtual DOM", "JSON"], answer: "Plain JavaScript" },
-      { text: "Which rune declares reactive state?", options: ["$state", "$signal", "$ref", "$reactive"], answer: "$state" },
+      {
+        text: "Who created Svelte?",
+        options: ["Rich Harris", "Evan You", "Dan Abramov", "Jason Miller"],
+        answer: "Rich Harris",
+      },
+      {
+        text: "What does Svelte compile components into?",
+        options: ["Plain JavaScript", "WebAssembly", "A virtual DOM", "JSON"],
+        answer: "Plain JavaScript",
+      },
+      {
+        text: "Which rune declares reactive state?",
+        options: ["$state", "$signal", "$ref", "$reactive"],
+        answer: "$state",
+      },
     ]}
   />
 </div>

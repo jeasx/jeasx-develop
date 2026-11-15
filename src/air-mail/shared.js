@@ -17,3 +17,6 @@ export const PLANE_X = 90;
 export const FIRST_CHUNKS = 3;
 /** The sun stands still in the sky; the sky and the lens flare both use it. */
 export const SUN = { x: 262, y: 34 };
+
+/** Rounds to one decimal, which keeps the SVG markup short. */
+export const round = (n) => Math.round(n * 10) / 10;
