@@ -7,7 +7,7 @@
       { "path": "/context", "title": "'this' as context" },
       { "path": "/render-props", "title": "Render props" },
       { "path": "/interceptor", "title": "Intercept JSX" },
-      { "path": "/shadow-dom", "title": "Shadow DOM" },
+      { "path": "/shadow-dom", "title": "Web components" },
       { "path": "/testing", "title": "Unit tests" }
     ]
   },
@@ -15,35 +15,13 @@
     "title": "Streaming with jsx-async-runtime",
     "description": "Async components don't block the page: jsx-async-runtime streams HTML as soon as it is ready, in order, in parallel or out of order, from async iterables or a ReadableStream.",
     "links": [
-      { "path": "/out-of-order", "title": "Out-of-order streaming" },
       { "path": "/parallel", "title": "Parallel loading" },
       { "path": "/aggregator", "title": "API aggregator" },
       { "path": "/streaming", "title": "Streaming HTML" },
-      { "path": "/async-iterable", "title": "Async iterables" },
+      { "path": "/out-of-order", "title": "Slotted streaming" },
       { "path": "/readable-stream", "title": "ReadableStreams" },
+      { "path": "/async-iterable", "title": "Async iterables" },
       { "path": "/mandelbrot", "title": "Mandelbrot explorer" }
-    ]
-  },
-  {
-    "title": "Client-side apps with jsx-async-runtime",
-    "description": "Render the same JSX components on the server and in the browser with jsx-async-runtime, without React, a virtual DOM or hydration: from simple widgets to apps that work with and without JavaScript, and streamed async trees.",
-    "links": [
-      { "path": "/client-jsx", "title": "Client-side JSX" },
-      { "path": "/kanban", "title": "Kanban board" },
-      { "path": "/cinema", "title": "Cinema seats" },
-      { "path": "/social-feed", "title": "Social feed" },
-      { "path": "/dependency-tree", "title": "Dependency tree" }
-    ]
-  },
-  {
-    "title": "Client-side games with jsx-async-runtime",
-    "description": "Games where jsx-async-runtime renders every frame in the browser: animation, input and game logic with plain JSX components.",
-    "links": [
-      { "path": "/game-of-life", "title": "Game of Life" },
-      { "path": "/maze-chase", "title": "Maze chase" },
-      { "path": "/racer", "title": "Racer" },
-      { "path": "/sky-fortress", "title": "Sky fortress" },
-      { "path": "/air-mail", "title": "Air mail" }
     ]
   },
   {
@@ -63,13 +41,35 @@
     ]
   },
   {
-    "title": "Images, JSON and other content types",
+    "title": "Client-side apps with jsx-async-runtime",
+    "description": "Render the same JSX components on the server and in the browser with jsx-async-runtime, without React, a virtual DOM or hydration: from simple widgets to apps that work with and without JavaScript, and streamed async trees.",
+    "links": [
+      { "path": "/client-jsx", "title": "Solar system" },
+      { "path": "/kanban", "title": "Kanban board" },
+      { "path": "/cinema", "title": "Cinema seats" },
+      { "path": "/social-feed", "title": "Social feed" },
+      { "path": "/dependency-tree", "title": "Dependency tree" }
+    ]
+  },
+  {
+    "title": "Client-side games with jsx-async-runtime",
+    "description": "Games where jsx-async-runtime renders every frame in the browser: animation, input and game logic with plain JSX components.",
+    "links": [
+      { "path": "/game-of-life", "title": "Game of Life" },
+      { "path": "/maze-chase", "title": "Maze chase" },
+      { "path": "/racer", "title": "Racer" },
+      { "path": "/sky-fortress", "title": "Sky fortress" },
+      { "path": "/air-mail", "title": "Air mail" }
+    ]
+  },
+  {
+    "title": "Beyond HTML: images, PDFs, emails and live streams",
     "description": "Routes aren't limited to HTML: they can return images, SVG, JSON, XML, PDF, a live stream of Server-Sent Events, a WebSocket or any other content type.",
     "links": [
-      { "path": "/og", "title": "Open Graph images" },
+      { "path": "/svg", "title": "JSX for SVG" },
       { "path": "/email", "title": "JSX for emails" },
       { "path": "/pdf", "title": "JSX for PDF" },
-      { "path": "/svg", "title": "JSX for SVG" },
+      { "path": "/og", "title": "Open Graph images" },
       { "path": "/sharp", "title": "Image scaling" },
       { "path": "/upload", "title": "Image upload" },
       { "path": "/sse", "title": "Server-Sent Events" },
@@ -86,12 +86,12 @@
       { "path": "/basic-auth", "title": "Basic auth" },
       { "path": "/signed-cookies", "title": "Signed cookies" },
       { "path": "/csp", "title": "Content Security Policy" },
-      { "path": "/cap", "title": "Cap.js" },
+      { "path": "/cap", "title": "Bot protection" },
       { "path": "/rate-limit", "title": "Rate limiting" },
       { "path": "/error-handler", "title": "Catch errors" },
       { "path": "/prettier", "title": "Prettify HTML" },
       { "path": "/cheerio", "title": "Extract styles" },
-      { "path": "/head", "title": "Manage the head" }
+      { "path": "/head", "title": "Merge head tags" }
     ]
   },
   {

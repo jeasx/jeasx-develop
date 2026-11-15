@@ -17,6 +17,7 @@ export default function Layout({
   script = "",
   robots = "",
   lang = "en",
+  showHeader = true,
   children,
 }) {
   const path = this.request.path;
@@ -55,7 +56,7 @@ export default function Layout({
           <title>{title ? `${title} » Jeasx - JSX with Ease` : "Jeasx - JSX with Ease"}</title>
         </head>
         <body>
-          {path !== "/" && (
+          {showHeader && (
             <header class="shell-header">
               <nav class="container">
                 <ul>

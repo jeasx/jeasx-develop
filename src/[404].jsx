@@ -1,12 +1,24 @@
 import Layout from "./Layout";
 
-export default function () {
+/**
+ * @param {import("./types").RouteProps} props
+ */
+export default function ({ request }) {
   return (
-    <Layout title="Error 404">
-      <section class="center">
-        <h1>Error 404</h1>
-        <p>The page you are looking for doesn't exist. Please check the address or start over.</p>
-        <a href="/">Go to homepage</a>
+    <Layout title="Error 404" robots="noindex" showHeader={false}>
+      <section class="home-hero">
+        <p class="home-eyebrow">Error 404</p>
+        <h1>
+          <span class="shell-gradient">Page not found</span>
+        </h1>
+        <p class="home-tagline">
+          There is nothing at <code>{request.path}</code>. Please check the address.
+        </p>
+        <p class="home-actions">
+          <a href="/" role="button">
+            Browse examples
+          </a>
+        </p>
       </section>
     </Layout>
   );

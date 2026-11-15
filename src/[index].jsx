@@ -8,6 +8,7 @@ export default function () {
     <Layout
       title="The power of Jeasx in examples"
       description="Welcome to Jeasx - JSX with Ease. Explore the framework in examples."
+      showHeader={false}
     >
       <section class="home-hero">
         <p class="home-eyebrow">JSX with Ease</p>
