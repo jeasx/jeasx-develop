@@ -1,5 +1,5 @@
 import Layout from "../Layout";
-import cap from "./cap";
+import { validateToken } from "./cap";
 
 /**
  * @param {import("../types").RouteProps} props
@@ -14,7 +14,7 @@ export default async function ({ request, reply }) {
       error = "Please solve the captcha before submitting the form.";
       reply.status(400);
     } else {
-      const { success } = await cap.validateToken(token);
+      const { success } = validateToken(token);
       if (success) {
         // An empty name would read "Thank you, !".
         const name = String(request.body?.["name"] ?? "").trim() || "stranger";
@@ -79,7 +79,7 @@ export default async function ({ request, reply }) {
     >
       <h1>Use Cap.js with Jeasx</h1>
       <p class="lead">
-        <a href="https://capjs.js.org">Cap.js</a> is a lightweight, modern open-source captcha
+        <a href="https://trycap.dev">Cap.js</a> is a lightweight, modern open-source captcha
         alternative using proof-of-work: instead of solving puzzles, your browser does a short
         calculation in the background. Enter your name, click the captcha and submit the form.
       </p>

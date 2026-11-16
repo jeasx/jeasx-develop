@@ -1,70 +1,81 @@
-import Cap from "@cap.js/server";
+import { generateChallenge, validateChallenge } from "capjs-core";
+import { createHash, randomBytes } from "node:crypto";
 
-// Challenges are free to request and expired ones are only removed every few minutes,
-// so cap the memory: once full, the oldest entries are dropped first.
-// Downside: a flood of challenge requests pushes out pending challenges of other visitors,
-// whose widget then fails and has to start over. That's acceptable for a demo; a real app
-// limits challenges per IP address and keeps them in a shared store (e.g. Redis).
+// capjs-core is stateless: challenges are signed with this secret, so it must be
+// the same for all processes. Without CAP_SECRET, a random one is generated at startup,
+// which invalidates pending challenges and tokens on every restart (fine for a demo).
+const SECRET = process.env.CAP_SECRET || (globalThis.capSecret ??= randomBytes(32).toString("hex"));
+
+// What's left to store: the signatures of redeemed challenges (replay protection)
+// and the issued tokens. Both are free to produce, so cap the memory: once full,
+// the oldest entries are dropped first. A real app uses a shared store with TTL (e.g. Redis).
 const MAX_ENTRIES = 10_000;
 
+/** @type {{ nonces: Map<string, number>, tokens: Map<string, number> }} */
+const cache = (globalThis.capCache ??= { nonces: new Map(), tokens: new Map() });
+
 /**
- * @param {Map<string, unknown>} map
+ * @param {Map<string, number>} map
  * @param {string} key
- * @param {unknown} value
+ * @param {number} expires
  */
-function add(map, key, value) {
-  map.set(key, value);
+function add(map, key, expires) {
+  const now = Date.now();
+  map.entries().forEach(([k, e]) => {
+    if (e < now) map.delete(k);
+  });
+  map.set(key, expires);
   if (map.size > MAX_ENTRIES) {
     map.delete(map.keys().next().value);
   }
 }
 
-if (!globalThis.cap) {
-  const cache = { tokens: new Map(), challenges: new Map() };
-  globalThis.cap = new Cap({
-    storage: {
-      challenges: {
-        store: async (token, challengeData) => {
-          add(cache.challenges, token, challengeData);
-        },
-        read: async (token) => {
-          const data = cache.challenges.get(token);
-          return data?.expires > Date.now() ? data : null;
-        },
-        delete: async (token) => {
-          cache.challenges.delete(token);
-        },
-        deleteExpired: async () => {
-          const now = Date.now();
-          cache.challenges.entries().forEach(([key, data]) => {
-            if (data.expires < now) {
-              cache.challenges.delete(key);
-            }
-          });
-        },
-      },
-      tokens: {
-        store: async (key, expires) => {
-          add(cache.tokens, key, expires);
-        },
-        get: async (key) => {
-          const expires = cache.tokens.get(key);
-          return expires > Date.now() ? expires : null;
-        },
-        delete: async (key) => {
-          cache.tokens.delete(key);
-        },
-        deleteExpired: async () => {
-          const now = Date.now();
-          cache.tokens.entries().forEach(([key, expires]) => {
-            if (expires < now) {
-              cache.tokens.delete(key);
-            }
-          });
-        },
-      },
-    },
-  });
+/**
+ * Called by capjs-core once per solved challenge. Returns false if it was already redeemed.
+ * @param {string} signature
+ * @param {number} ttlMs
+ */
+async function consumeNonce(signature, ttlMs) {
+  if ((cache.nonces.get(signature) ?? 0) > Date.now()) {
+    return false;
+  }
+  add(cache.nonces, signature, Date.now() + ttlMs);
+  return true;
 }
 
-export default globalThis.cap;
+export async function createChallenge() {
+  return generateChallenge(SECRET);
+}
+
+/**
+ * @param {unknown} body
+ */
+export async function redeemChallenge(body) {
+  // Unchecked request body: capjs-core validates its shape and fails with success: false.
+  const result = await validateChallenge(
+    SECRET,
+    /** @type {import("capjs-core").ValidateChallengeBody} */ (body),
+    { consumeNonce },
+  );
+  if (!result.success) {
+    return { success: false };
+  }
+  add(cache.tokens, result.tokenKey, result.expires);
+  return { success: true, token: result.token, expires: result.expires };
+}
+
+/**
+ * Checks a token from a submitted form and deletes it, so it works only once.
+ * capjs-core hands out "id:secret" and stores "id:sha256(secret)" as tokenKey.
+ * @param {string} token
+ */
+export function validateToken(token) {
+  const [id, secret] = token.split(":");
+  if (!id || !secret) {
+    return { success: false };
+  }
+  const key = `${id}:${createHash("sha256").update(secret).digest("hex")}`;
+  const expires = cache.tokens.get(key);
+  cache.tokens.delete(key);
+  return { success: expires > Date.now() };
+}

@@ -10,8 +10,6 @@
     "compile": "esbuild --platform=node --format=esm --sourcemap=linked --outdir=. serverless.ts"
   },
   "dependencies": {
-    "@cap.js/server": "4.0.5",
-    "@cap.js/widget": "0.1.63",
     "@fastify/cookie": "11.1.5",
     "@fastify/multipart": "10.1.9",
     "@fastify/send": "4.2.1",
@@ -19,6 +17,8 @@
     "@mdx-js/esbuild": "3.1.1",
     "@preact/signals": "2.11.4",
     "alpinejs": "3.17.5",
+    "cap-widget": "0.1.63",
+    "capjs-core": "0.1.18",
     "cheerio": "1.2.0",
     "esbuild": "0.28.2",
     "esbuild-svelte": "0.9.5",

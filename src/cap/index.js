@@ -1,1 +1,1 @@
-import "@cap.js/widget";
+import "cap-widget";
