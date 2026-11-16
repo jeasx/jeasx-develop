@@ -195,7 +195,7 @@
     display: flex;
     justify-content: center;
     gap: 0.2rem;
-    font-family: ui-monospace, monospace;
+    font-family: var(--mono);
     font-variant-numeric: tabular-nums;
   }
 

@@ -132,7 +132,6 @@ nav .wizard-steps {
 
   & progress {
     margin: 0;
-    width: 100%;
     height: 0.4rem;
   }
 
@@ -243,7 +242,6 @@ nav .wizard-steps {
   padding-top: 1.25rem;
 
   & button {
-    margin: 0;
     width: auto;
   }
 }

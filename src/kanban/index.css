@@ -204,7 +204,6 @@
     place-items: center;
     width: 1.8rem;
     height: 1.8rem;
-    margin: 0;
     padding: 0;
     border: none;
     border-radius: 50%;
@@ -255,7 +254,6 @@
   }
   & button {
     width: auto;
-    margin: 0;
     border: none;
     border-radius: 0.7rem;
     background: linear-gradient(135deg, var(--accent), var(--accent-2));

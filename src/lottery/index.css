@@ -41,8 +41,6 @@
   }
 
   button {
-    cursor: pointer;
-    margin: 0;
     border: none;
     font: inherit;
     transition:

@@ -73,6 +73,8 @@
   display: grid;
   grid-template-columns: repeat(var(--cols), 1fr);
   aspect-ratio: var(--cols) / var(--rows);
+  /* Clips the tunnel tiles that fade out at both edges. */
+  overflow-x: clip;
 }
 .tile {
   position: relative;
@@ -224,7 +226,6 @@
   width: var(--tile);
   height: calc(100% / var(--rows));
   padding: 1px;
-  box-sizing: border-box;
   /* Slide in from the previous tile; translate percentages are one tile each. */
   /* Slower drones stretch the slide over the ticks until their next step. */
   /* A drone between steps resumes its slide where the last render left off. */
@@ -238,9 +239,6 @@
 }
 
 /* The tunnel: the path fades into darkness at both edges of the maze. */
-.maze {
-  overflow-x: clip;
-}
 .tunnel.west {
   background: linear-gradient(to right, #0b0614 10%, transparent);
 }

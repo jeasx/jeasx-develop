@@ -295,7 +295,6 @@
   margin: 0;
   & button {
     flex: 1;
-    margin: 0;
   }
   & button[name="book"] {
     border: none;

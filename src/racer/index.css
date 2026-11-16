@@ -36,7 +36,7 @@
   aspect-ratio: 16 / 9;
   overflow: hidden;
   border-radius: 0.5rem;
-  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-family: var(--mono);
 }
 
 /* The road. Colors live here, so every frame of markup stays small. */

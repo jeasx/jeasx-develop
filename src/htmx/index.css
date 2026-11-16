@@ -79,10 +79,6 @@
   display: flex;
   justify-content: flex-end;
   margin-top: 1rem;
-
-  & button {
-    margin: 0;
-  }
 }
 
 /* Server time, updated by HTMX every second */
@@ -98,6 +94,6 @@
     color: var(--cte-accent);
     font-weight: 600;
     font-variant-numeric: tabular-nums;
-    font-family: ui-monospace, monospace;
+    font-family: var(--mono);
   }
 }

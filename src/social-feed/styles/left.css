@@ -62,7 +62,6 @@
 .social .feeds button {
   display: flex;
   justify-content: flex-start;
-  align-items: center;
   gap: 0.7rem;
   color: var(--soft);
   font-weight: 500;

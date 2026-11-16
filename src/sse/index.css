@@ -55,7 +55,6 @@
   margin-top: 1rem;
 
   & button {
-    margin: 0;
     border: 1px solid var(--sx-line);
     border-radius: 999px;
     background: transparent;

@@ -69,7 +69,6 @@
 .search button {
   align-self: stretch;
   width: auto;
-  margin: 0;
   border: none;
   border-radius: 0;
   background: linear-gradient(135deg, var(--primary), #a21caf);

@@ -123,10 +123,6 @@
       opacity: 0.6;
     }
   }
-
-  & textarea {
-    resize: vertical;
-  }
 }
 
 .pdf-pair {
@@ -203,7 +199,6 @@
     border-bottom: 1px solid var(--border);
     background: color-mix(in srgb, var(--secondary) 10%, var(--code-bg));
     padding: 0.5rem 0.75rem 0.5rem 1rem;
-    color: var(--muted);
     font-size: 0.8rem;
   }
 
@@ -273,7 +268,6 @@
 /* How it works */
 .pdf-how > h2 {
   margin-bottom: 1.25rem;
-  text-align: center;
 }
 
 .pdf-steps {

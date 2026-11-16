@@ -190,9 +190,11 @@
   display: flex;
   gap: 0.4rem;
   margin: 0;
-  padding: 0;
+  /* Room for the faded right edge, which shows that the timeline scrolls sideways. */
+  padding: 0 2rem 0 0;
   overflow-x: auto;
   scrollbar-width: none;
+  mask-image: linear-gradient(90deg, black calc(100% - 2rem), transparent);
 }
 .panel-timeline:empty {
   display: none;
@@ -219,11 +221,6 @@
     opacity: 0;
     transform: translateY(-4px) scale(0.9);
   }
-}
-/* The timeline scrolls sideways, so fade its right edge to show there is more. */
-.panel-timeline {
-  mask-image: linear-gradient(90deg, black calc(100% - 2rem), transparent);
-  padding-right: 2rem;
 }
 /* On phones the panel stays sticky, so keep it to a slim bar: one row of chips, no total. */
 @media (max-width: 36rem) {
@@ -458,7 +455,6 @@
 .stepper button {
   width: 2rem;
   height: 2rem;
-  margin: 0;
   padding: 0;
 }
 .stepper output {
@@ -490,14 +486,12 @@
 .rating-stars button {
   flex: none;
   width: auto;
-  margin: 0;
   padding: 0 0.15rem;
   border: none;
   background: none;
   font-size: 1.75rem;
   line-height: 1;
   color: color-mix(in srgb, var(--muted) 45%, transparent);
-  cursor: pointer;
   transition:
     color 0.15s,
     transform 0.15s;
@@ -518,7 +512,6 @@
 .questions ol {
   display: grid;
   gap: 0.5rem;
-  margin: 0 0 1rem;
   padding: 0;
 }
 .questions li {
@@ -529,7 +522,6 @@
 }
 .questions li button {
   min-width: 3.5rem;
-  margin: 0;
   padding: 0.2rem 0.5rem;
   font-variant-numeric: tabular-nums;
 }
@@ -554,7 +546,4 @@
   text-align: right;
   color: var(--muted);
   font-variant-numeric: tabular-nums;
-}
-.questions form button {
-  margin: 0;
 }

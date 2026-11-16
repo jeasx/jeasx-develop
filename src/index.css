@@ -206,6 +206,9 @@ h1 {
   font-size: 2rem;
   line-height: 1.125;
   text-align: center;
+}
+h1,
+.shell-gradient {
   background: linear-gradient(90deg, var(--primary), var(--secondary));
   -webkit-background-clip: text;
   background-clip: text;
@@ -703,8 +706,10 @@ textarea {
 }
 label,
 legend {
-  display: block;
   margin-bottom: 0.375rem;
+}
+legend {
+  display: block;
 }
 /* A label wrapping its input keeps the input's margin inside, so both margins add up. */
 label {
@@ -736,7 +741,6 @@ textarea {
   padding: 0.75rem var(--input-px);
   width: 100%;
   color: #e0e3e7;
-  font: inherit;
   line-height: 1.5;
 }
 label > :is(input, select, textarea) {
@@ -817,7 +821,6 @@ select:not([multiple], [size]) {
   margin-bottom: 1rem;
   padding: 0.375rem 0;
   color: var(--muted);
-  font: inherit;
 }
 [type="file"]::file-selector-button {
   margin-inline-end: 0.5rem;
@@ -1125,13 +1128,6 @@ dialog::backdrop {
   line-height: 1.1;
 }
 
-.shell-gradient {
-  background: linear-gradient(90deg, var(--primary), var(--secondary));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
 .home-tagline {
   opacity: 0.85;
   margin: 0 auto 2rem;
@@ -1266,7 +1262,6 @@ dialog::backdrop {
 
 .home-topic h3 {
   margin: 0 0 0.25rem;
-  text-align: left;
 }
 
 /* jsx-async-runtime in a group heading: highlighted and linked to its repository. */
