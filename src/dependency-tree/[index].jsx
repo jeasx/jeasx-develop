@@ -13,8 +13,8 @@ export default function () {
     >
       <h1>Dependency tree with async JSX</h1>
       <p class="lead">
-        Every package is an <code>async</code> component that awaits its manifest from the npm
-        registry.
+        Explore npm dependency trees: every package is an <code>async</code> component that awaits
+        its manifest from the npm registry.
       </p>
       <p>
         With <a href="https://github.com/jeasx/jsx-async-runtime">jsx-async-runtime</a>, the same

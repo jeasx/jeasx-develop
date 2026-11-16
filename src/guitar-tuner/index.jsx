@@ -6,6 +6,7 @@ import Strings from "./Strings";
 const display = document.getElementById("display");
 const listen = /** @type {HTMLButtonElement} */ (document.getElementById("listen"));
 const hint = document.getElementById("hint");
+const wave = /** @type {HTMLCanvasElement} */ (document.getElementById("wave"));
 
 /** @type {AudioContext | null} */
 let audio = null;
@@ -56,6 +57,43 @@ async function render() {
   );
 }
 
+/**
+ * Draws the microphone signal as an oscilloscope line, so it's visible that the tuner
+ * listens even before a pitch is found. Quiet input is amplified to stay noticeable.
+ *
+ * @param {Float32Array} samples
+ * @param {boolean} pitched Whether a pitch was detected; colors the line.
+ */
+function drawWave(samples, pitched) {
+  const ratio = window.devicePixelRatio || 1;
+  const width = Math.round(wave.clientWidth * ratio);
+  const height = Math.round(wave.clientHeight * ratio);
+  if (!width || !height) return;
+  if (wave.width !== width || wave.height !== height) {
+    wave.width = width;
+    wave.height = height;
+  }
+  const ctx = wave.getContext("2d");
+  ctx.clearRect(0, 0, width, height);
+  // Show only the most recent part of the buffer, enough for a few periods of low E.
+  const count = Math.min(samples.length, 1024);
+  const offset = samples.length - count;
+  let peak = 0;
+  for (let i = offset; i < samples.length; i++) peak = Math.max(peak, Math.abs(samples[i]));
+  const gain = Math.min(40, 0.9 / Math.max(peak, 1e-5));
+  ctx.lineWidth = 1.5 * ratio;
+  ctx.lineJoin = "round";
+  ctx.strokeStyle = pitched ? "#fbbf24" : "#a8a29e";
+  ctx.beginPath();
+  for (let x = 0; x < width; x++) {
+    const sample = samples[offset + Math.floor((x / width) * count)] * gain;
+    const y = height / 2 - sample * (height / 2 - ratio);
+    if (x) ctx.lineTo(x, y);
+    else ctx.moveTo(x, y);
+  }
+  ctx.stroke();
+}
+
 async function start() {
   // Safari only starts audio within the tap itself, so create and resume the context
   // before waiting for the microphone permission; awaiting first would leave it suspended.
@@ -90,12 +128,16 @@ async function start() {
   ctx.createMediaStreamSource(stream).connect(analyser).connect(mute).connect(ctx.destination);
   const samples = new Float32Array(analyser.fftSize);
   listen.classList.add("on");
+  wave.classList.add("on");
   hint.textContent = "Listening… pluck one string at a time.";
 
   let last = 0;
   const loop = async (/** @type {number} */ now) => {
     if (!stream) return;
     // About 20 measurements per second are plenty for a tuner and keep phones cool.
+    // The waveform is cheap and drawn every frame to look fluid.
+    analyser.getFloatTimeDomainData(samples);
+    drawWave(samples, frequency !== null);
     if (now - last < 50) {
       frame = requestAnimationFrame(loop);
       return;
@@ -103,7 +145,6 @@ async function start() {
     last = now;
     // iOS suspends ("interrupts") audio e.g. after a phone call or when the app was hidden.
     if (ctx.state !== "running") ctx.resume();
-    analyser.getFloatTimeDomainData(samples);
     const detected = detectPitch(samples, ctx.sampleRate);
     if (detected) {
       silence = 0;
@@ -128,6 +169,7 @@ async function stop() {
   frequency = null;
   session("playback");
   listen.classList.remove("on");
+  wave.classList.remove("on");
   hint.textContent = "Standard tuning E A D G B E, A4 = 440 Hz.";
   await render();
 }

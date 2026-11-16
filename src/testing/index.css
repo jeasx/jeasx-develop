@@ -21,3 +21,62 @@
   margin: 0 0 0.25rem;
   text-align: left;
 }
+
+/* The key points as passing tests: tiles with a green check like the test runner prints. */
+.test-points {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin: 0 0 2.5rem;
+  padding: 0;
+  list-style: none;
+  counter-reset: test;
+}
+.test-points li {
+  position: relative;
+  margin: 0;
+  border: 1px solid color-mix(in srgb, var(--success) 35%, var(--border));
+  border-radius: var(--radius);
+  background:
+    radial-gradient(
+      circle at 1.6rem 1.6rem,
+      color-mix(in srgb, var(--success) 18%, transparent),
+      transparent 5rem
+    ),
+    var(--success-bg);
+  padding: 1rem 2.75rem 1rem 3.5rem;
+  line-height: 1.5;
+  counter-increment: test;
+  list-style: none;
+}
+.test-points li::before {
+  display: grid;
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  place-items: center;
+  box-shadow: 0 0 0.75rem color-mix(in srgb, var(--success) 60%, transparent);
+  border-radius: 50%;
+  background: var(--success);
+  width: 1.6rem;
+  height: 1.6rem;
+  content: "✓";
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+.test-points li::after {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.75rem;
+  content: "ok " counter(test);
+  color: var(--success);
+  font-size: 0.75rem;
+  font-family: var(--mono);
+  opacity: 0.8;
+}
+@media (min-width: 768px) {
+  .test-points {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

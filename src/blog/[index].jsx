@@ -30,9 +30,12 @@ export default function ({ request, reply }) {
           The <span class="shell-gradient">Jeasx</span> Blog
         </h1>
         <p class="lead">
-          An overview page, a page per post and a protected form to write new posts. To keep the
-          example free of a database, new posts are stored in a cookie in your browser, so only you
-          can see them.
+          A small blog with an overview page, a page per post and a protected form to write new
+          posts.
+        </p>
+        <p>
+          To keep the example free of a database, new posts are stored in a cookie in your browser,
+          so only you can see them.
         </p>
         <div class="blog-actions">
           <a href="/blog/post" rel="nofollow" class="btn btn-primary">

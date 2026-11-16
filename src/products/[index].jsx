@@ -21,7 +21,7 @@ export default async function ({ request, reply }) {
     }
     return (
       <Layout title="Products" robots="noindex">
-        <h1>Products</h1>
+        <h1>Product catalog with view transitions</h1>
         <p class="lead">The products couldn't be loaded right now. Please try again later.</p>
       </Layout>
     );
@@ -48,16 +48,18 @@ export default async function ({ request, reply }) {
       robots="index,nofollow"
       css="/products/index.css"
     >
-      <h1>Products</h1>
+      <h1>Product catalog with view transitions</h1>
       <p class="lead">
-        The products are loaded on the server from the <a href="https://dummyjson.com">DummyJSON</a>{" "}
-        API and cached for a few minutes. Their images are cropped and converted on the fly by the
-        image component of the <a href="/sharp">sharp example</a>. Click a product to see its
-        details: its image and title morph into the detail page with a{" "}
+        Click a product: its image and title morph into the detail page with a{" "}
         <a href="https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API">
           view transition
         </a>
         .
+      </p>
+      <p>
+        The products are loaded on the server from the <a href="https://dummyjson.com">DummyJSON</a>{" "}
+        API and cached for a few minutes. Their images are cropped and converted on the fly by the
+        image component of the <a href="/sharp">sharp example</a>.
       </p>
       <nav class="product-filter" aria-label="Filter by category">
         <a href="?" aria-current={selected ? undefined : "page"}>

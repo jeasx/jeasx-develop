@@ -60,8 +60,10 @@ export function detectPitch(samples, sampleRate) {
   const size = samples.length;
   let rms = 0;
   for (let i = 0; i < size; i++) rms += samples[i] * samples[i];
-  // Phone microphones without automatic gain are quiet, so the threshold is low.
-  if (Math.sqrt(rms / size) < 0.003) return null;
+  // Phone microphones without automatic gain are very quiet (iOS about -50 dBFS for a
+  // plucked string), so only true silence is skipped; the correlation check below
+  // rejects noise regardless of the level.
+  if (Math.sqrt(rms / size) < 0.0005) return null;
 
   const minLag = Math.floor(sampleRate / 1000);
   const maxLag = Math.min(Math.floor(sampleRate / 60), size >> 1);

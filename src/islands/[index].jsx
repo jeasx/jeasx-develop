@@ -86,10 +86,12 @@ export default function () {
         Islands <span>with four frameworks</span>
       </h1>
       <p class="lead">
-        This page is plain HTML rendered by Jeasx. It holds islands built with Preact, React, Vue
-        and Svelte, and each framework renders its components on the server. A small loader script
-        then decides, for each island, when to download the framework's bundle and hydrate it. Each
-        island picks a strategy with its <code>hydrate</code> prop:
+        Islands built with Preact, React, Vue and Svelte on one plain Jeasx page: each framework
+        renders on the server, and a small loader hydrates every island only when it is needed.
+      </p>
+      <p>
+        For each island, the loader decides when to download the framework's bundle and hydrate it.
+        Each island picks a strategy with its <code>hydrate</code> prop:
       </p>
       <ul class="strategies">
         {STRATEGIES.map(({ value, icon, when, island, framework }) => (

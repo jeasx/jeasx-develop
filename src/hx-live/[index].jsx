@@ -32,16 +32,15 @@ export default function () {
     >
       <h1>Reactive scripting</h1>
       <p class="lead">
-        <a href="https://four.htmx.org/extensions/hx-live">hx-live</a> is an HTMX extension to ease
-        reactive scripting for the web. It is inspired by Alpine, jQuery and hyperscript. State
-        lives in <code>data-*</code> attributes, <code>hx-on:*</code> changes it and{" "}
-        <code>hx-live:*</code> keeps the markup in sync.
+        <a href="https://four.htmx.org/extensions/hx-live">hx-live</a> is an HTMX extension for
+        reactive scripting: state lives in <code>data-*</code> attributes, <code>hx-on:*</code>{" "}
+        changes it and <code>hx-live:*</code> keeps the markup in sync.
       </p>
       <p>
-        The gradient playground below is plain server-rendered HTML: every slider writes one{" "}
-        <code>data-*</code> attribute, and the preview, the labels and the CSS code are bindings
-        that recompute whenever the state changes. Open your dev tools and watch the attributes
-        change.
+        It is inspired by Alpine, jQuery and hyperscript. The gradient playground below is plain
+        server-rendered HTML: every slider writes one <code>data-*</code> attribute, and the
+        preview, the labels and the CSS code are bindings that recompute whenever the state changes.
+        Open your dev tools and watch the attributes change.
       </p>
       <section
         class="hl-playground"

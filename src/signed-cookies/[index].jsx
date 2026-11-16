@@ -52,11 +52,13 @@ export default function ({ request, reply, csrfToken }) {
     >
       <h1>Signed cookies and CSRF tokens</h1>
       <p class="lead">
-        Cookies are stored in the browser, so visitors can edit them. With a secret configured for{" "}
-        <code>@fastify/cookie</code> in <code>jeasx.config.js</code>, a route can set a cookie with{" "}
-        <code>{"{ signed: true }"}</code>: its value gets a signature, and{" "}
-        <code>request.unsignCookie()</code> tells whether the value is still the one the server
-        wrote.
+        Cookies are stored in the browser, so visitors can edit them. A signed cookie tells the
+        server whether its value is still the one it wrote.
+      </p>
+      <p>
+        With a secret configured for <code>@fastify/cookie</code> in <code>jeasx.config.js</code>, a
+        route can set a cookie with <code>{"{ signed: true }"}</code>: its value gets a signature,
+        which <code>request.unsignCookie()</code> checks.
       </p>
       <p>
         A guard protects all forms of this example against cross-site request forgery: it stores a

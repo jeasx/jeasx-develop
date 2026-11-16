@@ -18,15 +18,14 @@ export default function () {
     >
       <h1>Render async iterables</h1>
       <p class="lead">
-        Besides promises, JSX children can be async iterables, e.g. an async generator. Their items
-        are rendered in order as they arrive. The markup rendered so far is sent to the browser
-        while waiting for the next item.
+        JSX children can be async iterables: a component written as <code>async function*</code>{" "}
+        yields markup, and every item is streamed to the browser as soon as it is ready.
       </p>
       <p>
-        A component can be an <code>async function*</code> which yields JSX. This is a natural fit
-        for paginated APIs or database cursors: the next page is only loaded when the renderer needs
-        it, and each page is streamed as soon as it is ready. If the browser stops loading the page,
-        the generator is stopped like a <code>for await</code> loop on <code>break</code>, so its{" "}
+        Items are rendered in order, and the markup rendered so far is sent while waiting for the
+        next one. This is a natural fit for paginated APIs or database cursors: the next page is
+        only loaded when the renderer needs it. If the browser stops loading the page, the generator
+        is stopped like a <code>for await</code> loop on <code>break</code>, so its{" "}
         <code>finally</code> block runs and can release resources.
       </p>
 

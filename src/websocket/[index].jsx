@@ -10,16 +10,16 @@ export default function () {
     >
       <h1>Live cursors with WebSockets</h1>
       <p class="lead">
-        Server-Sent Events (see <a href="/sse">/sse</a>) only push from the server to the browser.{" "}
         <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API">WebSockets</a>{" "}
         talk both ways over one connection, which suits frequent small messages like cursor
-        positions.
+        positions. Jeasx handles them without any plugin.
       </p>
       <p>
-        No plugin is needed: since Node 24.9, an upgrade request reaches the normal request handler,
-        so the route <code>/websocket/socket</code> takes over the connection with{" "}
-        <code>reply.hijack()</code> and speaks the WebSocket protocol in about 150 lines. Open this
-        page in a second window and move your mouse in the room below.
+        Unlike Server-Sent Events (see <a href="/sse">/sse</a>), which only push from the server to
+        the browser, both sides can send at any time. Since Node 24.9, an upgrade request reaches
+        the normal request handler, so the route <code>/websocket/socket</code> takes over the
+        connection with <code>reply.hijack()</code> and speaks the WebSocket protocol in about 150
+        lines. Open this page in a second window and move your mouse in the room below.
       </p>
       <section class="sx-card">
         <header>

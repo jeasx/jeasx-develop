@@ -22,14 +22,15 @@ export default async function ({ request }) {
     >
       <h1>Load data in parallel with async components</h1>
       <p class="lead">
-        Components in Jeasx can be <code>async</code> and simply <code>await</code> their data. The
-        renderer resolves them one after another, so three components that each wait one second take
-        three seconds in total.
+        Start all requests up front and hand the pending promises to your markup: everything loads
+        at the same time, while the output order stays the same.
       </p>
       <p>
-        As JSX also accepts promises as children, you can kick off all requests up front and hand
-        the pending promises to your markup. Now everything loads at the same time while the output
-        order stays the same. The bars below show when each request started and finished.
+        Components in Jeasx can be <code>async</code> and simply <code>await</code> their data. But
+        the renderer resolves them one after another, so three components that each wait one second
+        take three seconds in total. As JSX also accepts promises as children, starting the requests
+        early avoids this. Switch between both modes: the bars below show when each request started
+        and finished.
       </p>
       <nav class="sx-toggle" aria-label="Loading mode">
         <a href="?mode=sequential" aria-current={mode === "sequential" ? "page" : undefined}>

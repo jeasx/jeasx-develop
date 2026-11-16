@@ -8,8 +8,7 @@
 
 /* Hero: short, so the example is visible right away. */
 .pdf-hero {
-  margin: 1rem auto 2rem;
-  max-width: 44rem;
+  margin: 1rem 0 2rem;
   text-align: center;
 
   & h1 {

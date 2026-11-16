@@ -17,18 +17,20 @@ export default function ({ request }) {
     >
       <h1>Content Security Policy with nonces</h1>
       <p class="lead">
-        JSX escapes all values, but a single <code>html()</code> with untrusted content, a library
-        bug or a compromised script can still bring foreign code into a page. A{" "}
+        A{" "}
         <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CSP">
           Content Security Policy
         </a>{" "}
-        is the second line of defense: the browser only runs the scripts the server allowed.
+        is the second line of defense: even if foreign code gets into a page, the browser only runs
+        the scripts the server allowed.
       </p>
       <p>
-        A guard creates a random nonce for every request, puts it into <code>this</code> and sends a
-        policy which only allows scripts carrying this nonce. The layout adds{" "}
-        <code>nonce={"{this.nonce}"}</code> to its script tags. Injected markup can't know the
-        nonce, as it changes with every reload, so the browser refuses to run it.
+        JSX escapes all values, but a single <code>html()</code> with untrusted content, a library
+        bug or a compromised script can still inject code. A guard creates a random nonce for every
+        request, puts it into <code>this</code> and sends a policy which only allows scripts
+        carrying this nonce. The layout adds <code>nonce={"{this.nonce}"}</code> to its script tags.
+        Injected markup can't know the nonce, as it changes with every reload, so the browser
+        refuses to run it.
       </p>
       <p class="toggle">
         <a href="?csp=on" role="button" aria-disabled={enabled ? "true" : "false"}>

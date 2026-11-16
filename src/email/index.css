@@ -28,8 +28,11 @@
     background: var(--em-gradient);
     background-clip: text;
     color: transparent;
-    font-size: clamp(2.2rem, 6vw, 3.4rem);
-    letter-spacing: -0.02em;
+  }
+
+  /* Text below the lead lines up with it, not with the centered title. */
+  & > p {
+    text-align: left;
   }
 }
 

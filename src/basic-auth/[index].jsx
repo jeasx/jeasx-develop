@@ -8,11 +8,12 @@ export default function () {
       css="/basic-auth/index.css"
     >
       <h1>Basic access authentication</h1>
-      <p class="lead">
-        This example protects a part of the site with HTTP basic authentication. A guard checks the{" "}
-        <code>Authorization</code> header of every request below <code>/basic-auth/protected</code>{" "}
-        and answers with <code>401</code> and a <code>WWW-Authenticate</code> header if it is
-        missing or wrong. Stylesheets are let through, so even the error page is styled.
+      <p class="lead">A guard protects a part of this site with HTTP basic authentication.</p>
+      <p>
+        It checks the <code>Authorization</code> header of every request below{" "}
+        <code>/basic-auth/protected</code> and answers with <code>401</code> and a{" "}
+        <code>WWW-Authenticate</code> header if it is missing or wrong. Stylesheets are let through,
+        so even the error page is styled.
       </p>
 
       <article class="card-primary auth-card">

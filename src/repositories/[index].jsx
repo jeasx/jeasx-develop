@@ -24,10 +24,12 @@ export default async function ({ request }) {
       <div class="repos">
         <h1>Search GitHub repositories</h1>
         <p class="lead">
-          The page is rendered as a stream: the page shell and a loading indicator are sent to the
-          browser right away, while the repositories are still fetched from the GitHub API. As soon
-          as the results arrive, they are streamed in after the indicator, which is then hidden by a
-          single CSS rule. No client-side JavaScript is involved.
+          Search GitHub repositories: the page shell arrives right away, and the results are
+          streamed in as soon as the API answers.
+        </p>
+        <p>
+          A loading indicator is sent first and hidden by a single CSS rule once the results follow
+          it. No client-side JavaScript is involved.
         </p>
         <form method="get" class="search" role="search">
           <input

@@ -15,7 +15,7 @@ export default function () {
       <h1>Maze chase with client-side JSX</h1>
       <p class="lead">
         An arcade maze chase, built from plain JSX components with{" "}
-        <a href="https://github.com/jeasx/jsx-async-runtime">jsx-async-runtime</a>.{" "}
+        <a href="https://github.com/jeasx/jsx-async-runtime">jsx-async-runtime</a>.
       </p>
       <p>
         The server renders the first frame, then the very same components render every tick of the

@@ -16,14 +16,11 @@ export default function ({ numbers, number, delta, submit }) {
         <h1>
           Lottery <span class="lottery-badge">6 out of 49</span>
         </h1>
-        <p class="lead">
-          Pick six numbers, then reveal the draw. The server renders the first page. After that, the
-          browser handles every click with the same reducer and JSX component, so no request is
-          needed.
-        </p>
+        <p class="lead">Pick six numbers, then reveal the draw.</p>
         <p>
-          Without JavaScript, every click submits a plain HTML form and the server renders the
-          updated page.
+          The server renders the first page. After that, the browser handles every click with the
+          same reducer and JSX component, so no request is needed. Without JavaScript, every click
+          submits a plain HTML form and the server renders the updated page.
         </p>
         <Lottery numbers={numbers} number={number} delta={delta} submit={submit} />
       </div>

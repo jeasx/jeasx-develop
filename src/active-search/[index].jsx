@@ -11,11 +11,12 @@ export default function () {
       <div class="as">
         <h1>Active search with HTMX and Jeasx</h1>
         <p class="lead">
-          Implementing <a href="https://four.htmx.org/patterns/active-search">active search</a> with
-          HTMX and Jeasx is straightforward. This example uses{" "}
-          <a href="https://photon.komoot.io">Photon</a>, a geocoder for OpenStreetMap data built for
-          search-as-you-type, to find addresses: the results update while you type, without
-          reloading the page.
+          <a href="https://four.htmx.org/patterns/active-search">Active search</a> with HTMX and
+          Jeasx: the results update while you type, without reloading the page.
+        </p>
+        <p>
+          The addresses come from <a href="https://photon.komoot.io">Photon</a>, a geocoder for
+          OpenStreetMap data built for search-as-you-type.
         </p>
         <p>
           <small>

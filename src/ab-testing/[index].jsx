@@ -23,10 +23,12 @@ export default function ({ request, visitor, variant, flags }) {
       <div class="ab">
         <h1>Feature flags and A/B testing</h1>
         <p class="lead">
+          A/B testing on the server: the page doesn't flicker like with client-side testing tools,
+          and visitors without JavaScript take part as well.
+        </p>
+        <p>
           A guard gives each visitor a random id in a signed cookie. A hash of this id decides which
-          variant of the experiment the visitor sees and which features are turned on. As everything
-          happens on the server, the page doesn't flicker like with client-side testing tools, and
-          visitors without JavaScript take part as well.
+          variant of the experiment the visitor sees and which features are turned on.
         </p>
 
         {flags.banner && (

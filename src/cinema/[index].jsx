@@ -12,16 +12,19 @@ export default function () {
     >
       <h1>Cinema seat booking</h1>
       <p class="lead">
-        Every row of seats and the booking summary are <strong>async</strong> components built with{" "}
-        <a href="https://github.com/jeasx/jsx-async-runtime">jsx-async-runtime</a>, which load their
-        data from <code>this.store</code>. The server renders the page with a store that reads a
-        cookie.
+        Book your seats: the server renders the page, and after every click the browser re-renders
+        only the changed parts with the same async JSX components.
       </p>
       <p>
-        After a click, the browser re-renders only the parts which changed with the same components
-        and a store that fetches the API. Other guests keep booking seats, so the browser refreshes
-        the seats every 20 seconds. Without JavaScript, every seat is a button in a plain form, and
-        the server renders the whole page.
+        Every row of seats and the booking summary are <strong>async</strong> components built with{" "}
+        <a href="https://github.com/jeasx/jsx-async-runtime">jsx-async-runtime</a>, which load their
+        data from <code>this.store</code>. On the server, the store reads a cookie; in the browser,
+        it fetches the API.
+      </p>
+      <p>
+        Other guests keep booking seats, so the browser refreshes the seats every 20 seconds.
+        Without JavaScript, every seat is a button in a plain form, and the server renders the whole
+        page.
       </p>
       <div class="cinema">
         <SeatMap />

@@ -37,17 +37,16 @@ export default function ({ request }) {
       <Fragment>
         <h1>Template fragments</h1>
         <p class="lead">
-          Creating routes that emit HTML fragments is straightforward in Jeasx, which makes it a
-          perfect match for <a href="https://four.htmx.org">HTMX</a>. Sometimes, however, creating
-          many routes by hand can be tedious.
+          <a href="https://htmx.org/essays/template-fragments">Template fragments</a> let a single
+          route render just a named part of its template, which makes them a perfect match for{" "}
+          <a href="https://four.htmx.org">HTMX</a>.
         </p>
         <p>
-          <a href="https://htmx.org/essays/template-fragments">Template fragments</a> allow you to
-          render a fragment or partial bit of the content within a template, rather than the entire
-          template. In Jeasx you can implement this feature in userland with just a few lines of
-          code bundled in two simple components. Both cards below come from this very route: the
-          pager asks for <code>~product</code>, the clock for <code>~time</code>. Watch the log to
-          see how small the answers are.
+          Creating routes that emit HTML fragments is straightforward in Jeasx, but creating many of
+          them by hand can be tedious. Template fragments can be implemented in userland with just a
+          few lines of code bundled in two simple components. Both cards below come from this very
+          route: the pager asks for <code>~product</code>, the clock for <code>~time</code>. Watch
+          the log to see how small the answers are.
         </p>
       </Fragment>
       <Wrapper class="tf-layout">

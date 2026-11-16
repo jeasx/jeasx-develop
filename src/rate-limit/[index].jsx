@@ -11,16 +11,19 @@ export default function () {
     >
       <h1>Rate limiting with a token bucket</h1>
       <p class="lead">
-        A guard in <code>/rate-limit/api</code> runs before every route below it and gives each IP
-        address a bucket of <strong>{CAPACITY} tokens</strong>. Every request takes one, and{" "}
-        <strong>{REFILL_PER_SECOND} token per second</strong> flows back in.
+        A guard gives each IP address a bucket of tokens and answers with{" "}
+        <code>429 Too Many Requests</code> once it runs dry, before the route even runs.
       </p>
       <p>
-        Short bursts pass, but a client sending faster than that runs dry and gets{" "}
-        <code>429 Too Many Requests</code> with a <code>Retry-After</code> header, before the route
-        even runs. Each response carries <code>RateLimit-Limit</code>,{" "}
-        <code>RateLimit-Remaining</code> and <code>RateLimit-Reset</code> headers, which drive the
-        bucket below. Fire a burst to empty it, then watch it refill.
+        The bucket holds <strong>{CAPACITY} tokens</strong>. Every request below{" "}
+        <code>/rate-limit/api</code> takes one, and{" "}
+        <strong>{REFILL_PER_SECOND} token per second</strong> flows back in, so short bursts pass,
+        but a client sending faster than that gets a <code>Retry-After</code> header.
+      </p>
+      <p>
+        Each response carries <code>RateLimit-Limit</code>, <code>RateLimit-Remaining</code> and{" "}
+        <code>RateLimit-Reset</code> headers, which drive the bucket below. Fire a burst to empty
+        it, then watch it refill.
       </p>
       <section class="sx-card">
         <header>

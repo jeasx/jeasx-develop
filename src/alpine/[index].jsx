@@ -30,9 +30,8 @@ export default function () {
       <div class="al">
         <h1>Use Alpine.js with Jeasx</h1>
         <p class="lead">
-          <a href="https://alpinejs.dev">Alpine.js</a> is a minimal tool for composing behavior
-          directly in your markup. To use it with Jeasx, import it in a browser bundle (see{" "}
-          <code>index.js</code> of this example) and add <code>x-</code> attributes to your JSX.
+          <a href="https://alpinejs.dev">Alpine.js</a> adds behavior right in your markup: import it
+          in a browser bundle and put <code>x-</code> attributes into your JSX.
         </p>
         <p>
           The coffee bar below is a component registered with <code>Alpine.data()</code> in{" "}

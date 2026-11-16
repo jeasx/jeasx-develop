@@ -12,20 +12,23 @@ export default function () {
     >
       <h1>Guitar tuner with client-side JSX</h1>
       <p class="lead">
-        A chromatic tuner built from plain JSX components with{" "}
-        <a href="https://github.com/jeasx/jsx-async-runtime">jsx-async-runtime</a>.
+        A chromatic tuner that listens to your microphone, built from plain JSX components which
+        render on the server and in your browser.
       </p>
       <p>
-        The server renders the resting dial, then the browser listens to your microphone with the
-        Web Audio API, detects the pitch by autocorrelation and renders the very same components
-        many times per second. No audio leaves your device. Press a string to hear its reference
-        tone repeatedly, press it again to stop.
+        The server renders the resting dial, then the browser detects the pitch with the Web Audio
+        API by autocorrelation and renders the very same components with{" "}
+        <a href="https://github.com/jeasx/jsx-async-runtime">jsx-async-runtime</a> many times per
+        second. No audio leaves your device. Press a string to hear its reference tone repeatedly,
+        press it again to stop.
       </p>
       <section class="tuner">
         <div id="display">
           <Gauge />
           <Strings />
         </div>
+        {/* Live input level, drawn while listening; outside #display so renders don't reset it. */}
+        <canvas class="wave" id="wave" aria-hidden="true"></canvas>
         {/* Both states are in the markup; the "on" class shows one of them. */}
         <button class="listen" type="button" id="listen">
           <span class="start">

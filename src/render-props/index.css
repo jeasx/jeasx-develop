@@ -22,3 +22,15 @@
 .joke-grid header strong {
   color: var(--primary);
 }
+
+/* Both renders side by side on wide screens, stacked on narrow ones. */
+.joke-columns {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem 2rem;
+}
+@media (min-width: 768px) {
+  .joke-columns {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

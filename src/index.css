@@ -60,9 +60,9 @@ html {
   text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: transparent;
+  scroll-behavior: smooth;
   overflow-wrap: break-word;
   tab-size: 4;
-  scroll-behavior: smooth;
 }
 
 body {
@@ -353,8 +353,8 @@ code[class*="language-"] {
 pre > code {
   display: block;
   background: none;
-  color: inherit;
   padding: 1rem;
+  color: inherit;
   font-size: inherit;
   line-height: 1.5;
 }
@@ -817,23 +817,23 @@ select:not([multiple], [size]) {
 /* File inputs: no field, just a secondary button and the file name in muted text. */
 [type="file"] {
   display: block;
-  width: 100%;
   margin-bottom: 1rem;
   padding: 0.375rem 0;
+  width: 100%;
   color: var(--muted);
 }
 [type="file"]::file-selector-button {
-  margin-inline-end: 0.5rem;
-  padding: 0.375rem var(--input-px);
-  border: var(--border-width) solid var(--secondary-bg);
-  border-radius: var(--radius);
-  background: var(--secondary-bg);
-  color: #fff;
-  font: inherit;
-  cursor: pointer;
   transition:
     background-color 0.15s,
     border-color 0.15s;
+  cursor: pointer;
+  margin-inline-end: 0.5rem;
+  border: var(--border-width) solid var(--secondary-bg);
+  border-radius: var(--radius);
+  background: var(--secondary-bg);
+  padding: 0.375rem var(--input-px);
+  color: #fff;
+  font: inherit;
 }
 [type="file"]:is(:hover, :focus)::file-selector-button {
   border-color: var(--secondary);
@@ -1065,28 +1065,21 @@ dialog::backdrop {
   text-align: center;
 }
 
-/* The intro below the h1 of each example: centered like the h1, in a readable width,
-   brighter and larger than body text, in a subtle box with a faint glow of the h1 colors.
+/* The intro below the h1 of each example: the opening of the text column, not a separate box.
+   Same left edge and width as the paragraphs that follow, a bit larger and brighter, with an
+   accent bar in the h1 colors. Fluid size keeps it readable on phones without shouting on desktop.
    MDX pages wrap their Markdown paragraph in a <div class="lead">. */
 .lead {
-  margin: 0 auto 2.5rem;
-  border: 1px solid color-mix(in srgb, var(--primary) 20%, var(--border));
-  border-radius: 1rem;
-  background:
-    radial-gradient(
-      ellipse at top,
-      color-mix(in srgb, var(--primary) 10%, transparent),
-      transparent 70%
-    ),
-    color-mix(in srgb, var(--secondary) 6%, var(--bg));
-  box-shadow: 0 1rem 2.5rem -1.5rem rgb(0 0 0 / 0.6);
-  padding: 1.25rem 1.75rem;
-  max-width: 44rem;
+  margin: 0 0 1.25rem;
+  border-left: 3px solid;
+  border-image: linear-gradient(var(--primary), var(--secondary)) 1;
+  padding: 0.125rem 0 0.125rem clamp(0.75rem, 2vw, 1.25rem);
   color: var(--heading);
-  font-size: 1.25rem;
-  font-weight: 300;
-  line-height: 1.6;
-  text-align: center;
+  font-weight: 400;
+  font-size: clamp(1.0625rem, 0.95rem + 0.5vw, 1.25rem);
+  line-height: 1.55;
+  /* Left-aligned even inside a centered hero, so it lines up with the text below. */
+  text-align: left;
   text-wrap: pretty;
 }
 .lead a {
@@ -1172,9 +1165,9 @@ dialog::backdrop {
 /* Same border and radius as the group banners. */
 .home-intro article {
   margin: 0;
-  padding: 1rem 1.25rem;
   border: 1px solid color-mix(in srgb, var(--primary) 25%, transparent);
   border-radius: 1rem;
+  padding: 1rem 1.25rem;
 }
 
 .home-intro h3 {
@@ -1225,8 +1218,6 @@ dialog::backdrop {
 .home-group {
   position: relative;
   margin: 5rem 0 2.5rem;
-  padding: 1.75rem 2rem 1.75rem 2.25rem;
-  overflow: hidden;
   border: 1px solid color-mix(in srgb, var(--primary) 25%, transparent);
   border-radius: 1rem;
   background: linear-gradient(
@@ -1234,14 +1225,16 @@ dialog::backdrop {
     color-mix(in srgb, var(--primary) 14%, transparent),
     color-mix(in srgb, var(--secondary) 6%, transparent) 70%
   );
+  padding: 1.75rem 2rem 1.75rem 2.25rem;
+  overflow: hidden;
   scroll-margin-top: 1rem;
 }
 
 .home-group::before {
   position: absolute;
   inset: 0 auto 0 0;
-  width: 0.35rem;
   background: linear-gradient(180deg, var(--primary), var(--secondary));
+  width: 0.35rem;
   content: "";
 }
 
@@ -1254,9 +1247,9 @@ dialog::backdrop {
 }
 
 .home-group-intro {
-  max-width: 40rem;
-  margin: 0;
   opacity: 0.85;
+  margin: 0;
+  max-width: 40rem;
   font-size: 1.05rem;
 }
 
@@ -1400,6 +1393,12 @@ dialog::backdrop {
     padding: 2.5rem 0.5rem 2rem;
   }
 
+  .lead {
+    padding: 1rem 1.25rem;
+    font-size: 1.075rem;
+    line-height: 1.4;
+  }
+
   .home-group {
     margin: 3.5rem 0 2rem;
     padding: 1.25rem 1.25rem 1.25rem 1.5rem;
@@ -1434,10 +1433,9 @@ dialog::backdrop {
 pre:has(> code.code-highlight) {
   position: relative;
   margin: 1rem 0;
-  padding-top: 2.25rem;
+  box-shadow: 0 0.75rem 2rem rgb(0 0 0 / 0.35);
   border: 1px solid var(--border);
   border-radius: 0.75rem;
-  box-shadow: 0 0.75rem 2rem rgb(0 0 0 / 0.35);
   background:
     radial-gradient(circle at 1rem 1.125rem, #ff5f57 0.3rem, transparent 0.33rem),
     radial-gradient(circle at 1.75rem 1.125rem, #febc2e 0.3rem, transparent 0.33rem),
@@ -1446,6 +1444,7 @@ pre:has(> code.code-highlight) {
       color-mix(in srgb, var(--secondary) 10%, var(--code-bg)) 0 2.25rem,
       var(--code-bg) 0
     );
+  padding-top: 2.25rem;
 }
 pre:has(> code.code-highlight)::before {
   position: absolute;
@@ -1483,24 +1482,24 @@ pre:has(> code.code-highlight) > code {
 }
 pre:has(> code.code-highlight) .code-line {
   display: block;
-  padding: 0 1rem;
   border-left: 3px solid transparent;
+  padding: 0 1rem;
 }
 pre:has(> code.code-highlight) .line-number::before {
-  content: attr(line);
   display: inline-block;
-  width: 1.5rem;
-  margin-right: 1rem;
-  color: var(--muted);
   opacity: 0.6;
-  text-align: right;
+  margin-right: 1rem;
+  width: 1.5rem;
+  content: attr(line);
+  color: var(--muted);
   user-select: none;
+  text-align: right;
 }
 pre:has(> code.code-highlight) .highlight-line {
   border-left-color: var(--primary);
   background: color-mix(in srgb, var(--primary) 10%, transparent);
 }
 pre:has(> code.code-highlight) .highlight-line.line-number::before {
-  color: var(--primary-hover);
   opacity: 1;
+  color: var(--primary-hover);
 }

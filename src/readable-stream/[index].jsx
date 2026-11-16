@@ -21,13 +21,12 @@ export default function () {
     >
       <h1>ReadableStream as children</h1>
       <p class="lead">
-        Besides promises, JSX children can be a <code>ReadableStream</code>. Items are rendered in
-        order as they arrive.
+        JSX children can be a <code>ReadableStream</code>, e.g. a streamed answer from an AI service
+        or the decoded body of a <code>fetch</code> response.
       </p>
       <p>
-        The markup rendered so far is sent to the browser while waiting for the next item. A{" "}
-        <code>ReadableStream</code> of strings or JSX can be used as children directly, e.g. a
-        streamed answer from an AI service or the decoded body of a <code>fetch</code> response.
+        Items are rendered in order as they arrive, and the markup rendered so far is sent to the
+        browser while waiting for the next item.
       </p>
       <section class="sx-card rs-chat" aria-live="polite">
         <p class="rs-bubble rs-question">How does Jeasx render a ReadableStream?</p>

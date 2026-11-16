@@ -20,12 +20,13 @@ export default function ({ request }) {
         <h1>Infinite scroll with HTMX and async generators</h1>
         <p class="lead">
           Scroll down: as soon as the last row comes into view, HTMX fetches the next page from the
-          server and puts it in its place. The rows come from an <code>async function*</code>, which
-          loads one page after another from a slow API and streams every row as soon as it is ready.
+          server and puts it in its place.
         </p>
         <p>
-          Without JavaScript, the "Load more releases" link reloads the page with one more page. As
-          the address is updated while scrolling, a reload keeps all releases loaded so far.
+          The rows come from an <code>async function*</code>, which loads one page after another
+          from a slow API and streams every row as soon as it is ready. Without JavaScript, the
+          "Load more releases" link reloads the page with one more page. As the address is updated
+          while scrolling, a reload keeps all releases loaded so far.
         </p>
         <table class="is-table">
           <thead>

@@ -25,13 +25,14 @@ export default function ({ request }) {
       <p class="lead">
         In Jeasx, every component can read and write <code>this</code>, a context object shared by
         all components of one request. It lets you pass data to deeply nested components without
-        handing it down as props through every level. Each request gets its own context, so values
-        never leak to other visitors.
+        handing it down as props through every level.
       </p>
       <p>
-        Use it with care, as it hides dependencies between components, but it is handy for global
-        settings like a theme. The route stores the theme in <code>this.theme</code>, and two levels
-        below, <code>&lt;Card&gt;</code> reads it, although no component in between passes it on.
+        Each request gets its own context, so values never leak to other visitors. Use{" "}
+        <code>this</code> with care, as it hides dependencies between components, but it is handy
+        for global settings like a theme. The route stores the theme in <code>this.theme</code>, and
+        two levels below, <code>&lt;Card&gt;</code> reads it, although no component in between
+        passes it on.
       </p>
       <pre class="tree">
         {'route        → this.theme = "' + this.theme + '"\n'}

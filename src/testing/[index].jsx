@@ -23,12 +23,15 @@ export default function () {
     >
       <h1>Unit tests for JSX components</h1>
       <p class="lead">
-        Components are plain functions which return JSX, and <code>jsxToString</code> of{" "}
-        <a href="https://github.com/jeasx/jsx-async-runtime">jsx-async-runtime</a> turns them into
-        an HTML string. So you can test them with the built-in test runner of Node.js and simple
-        string checks: no browser, no DOM and no extra test framework needed.
+        Components are plain functions, so you can test them with the built-in test runner of
+        Node.js and simple string checks: no browser, no DOM and no extra test framework needed.
       </p>
-      <ul>
+      <p>
+        <code>jsxToString</code> of{" "}
+        <a href="https://github.com/jeasx/jsx-async-runtime">jsx-async-runtime</a> turns a component
+        into an HTML string, which is all a test needs.
+      </p>
+      <ul class="test-points">
         <li>
           Async components are awaited by <code>jsxToString</code>, so tests just <code>await</code>{" "}
           the result.

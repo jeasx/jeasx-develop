@@ -10,42 +10,46 @@ export default function () {
     >
       <h1>Render props with async components</h1>
       <p class="lead">
-        A component receives its <code>children</code> as written, like in React: one child is
-        passed as it is, several children as an array, and without children there is no{" "}
-        <code>children</code> prop at all.
+        A single function child works as a <em>render prop</em>: the component loads the data, and
+        the caller decides how it looks.
       </p>
       <p>
-        So a single function child works as a <em>render prop</em>: the component loads the data,
-        and the caller decides how it looks. The same <code>&lt;Jokes&gt;</code> loader is used
-        twice below with different markup. <a href="">Reload</a> for new jokes.
+        A component receives its <code>children</code> as written, so the same{" "}
+        <code>&lt;Jokes&gt;</code> loader is used twice below with different markup.{" "}
+        <a href="">Reload</a> for new jokes.
       </p>
 
-      <h2>As a list</h2>
-      <Jokes category="programming" amount={3}>
-        {(items) => (
-          <ul class="joke-list">
-            {items.map((joke) => (
-              <li>{joke}</li>
-            ))}
-          </ul>
-        )}
-      </Jokes>
-
-      <h2>As cards</h2>
-      <Jokes category="general" amount={2}>
-        {(items) => (
-          <div class="joke-grid">
-            {items.map((joke, index) => (
-              <article>
-                <header>
-                  <strong>Joke #{index + 1}</strong>
-                </header>
-                {joke}
-              </article>
-            ))}
-          </div>
-        )}
-      </Jokes>
+      <div class="joke-columns">
+        <section>
+          <h2>As a list</h2>
+          <Jokes category="programming" amount={3}>
+            {(items) => (
+              <ul class="joke-list">
+                {items.map((joke) => (
+                  <li>{joke}</li>
+                ))}
+              </ul>
+            )}
+          </Jokes>
+        </section>
+        <section>
+          <h2>As cards</h2>
+          <Jokes category="general" amount={2}>
+            {(items) => (
+              <div class="joke-grid">
+                {items.map((joke, index) => (
+                  <article>
+                    <header>
+                      <strong>Joke #{index + 1}</strong>
+                    </header>
+                    {joke}
+                  </article>
+                ))}
+              </div>
+            )}
+          </Jokes>
+        </section>
+      </div>
     </Layout>
   );
 }
