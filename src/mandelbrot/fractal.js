@@ -5,6 +5,9 @@ export const STRIP = 32;
 /** Default view: the whole set. */
 export const HOME = { x: -0.6, y: 0, zoom: 1 };
 
+/** Deepest zoom before 64-bit floats run out of precision for neighbouring pixels. */
+export const MAX_ZOOM = 1e13;
+
 /** Milliseconds of computing before render() lets the event loop handle other work. */
 const BREAK_AFTER = 8;
 
@@ -20,7 +23,7 @@ export function parseView(query) {
   return {
     x: Math.min(Math.max(num(query.x, HOME.x), -2.5), 1.5),
     y: Math.min(Math.max(num(query.y, HOME.y), -1.5), 1.5),
-    zoom: Math.min(Math.max(num(query.zoom, HOME.zoom), 1), 1e13),
+    zoom: Math.min(Math.max(num(query.zoom, HOME.zoom), 1), MAX_ZOOM),
   };
 }
 

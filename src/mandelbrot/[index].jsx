@@ -4,6 +4,7 @@ import Picture from "./Picture";
 import {
   HEIGHT,
   HOME,
+  MAX_ZOOM,
   STRIP,
   WIDTH,
   maxIterations,
@@ -133,6 +134,7 @@ export default function ({ request }) {
           data-x={view.x}
           data-y={view.y}
           data-zoom={view.zoom}
+          data-max={view.zoom >= MAX_ZOOM ? "" : undefined}
           data-span={planeWidth(view)}
           data-renderer={workers ? "browser" : "server"}
         >
@@ -146,9 +148,15 @@ export default function ({ request }) {
             </div>
           )}
           <div class="mb-scan" aria-hidden="true"></div>
-          <p class="mb-hint" aria-hidden="true">
-            Click to zoom · drag to select
-          </p>
+          {view.zoom >= MAX_ZOOM ? (
+            <p class="mb-hint mb-notice" role="status">
+              Maximum zoom reached: 64-bit floats can't resolve more detail
+            </p>
+          ) : (
+            <p class="mb-hint" aria-hidden="true">
+              Click to zoom · drag to select
+            </p>
+          )}
         </div>
 
         <dl class="mb-hud">

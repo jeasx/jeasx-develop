@@ -37,7 +37,8 @@ if (canvas) {
   };
 
   canvas.addEventListener("pointerdown", (event) => {
-    if (event.button !== 0) {
+    // At the deepest zoom there is nothing more to resolve, see MAX_ZOOM.
+    if (event.button !== 0 || "max" in canvas.dataset) {
       return;
     }
     canvas.setPointerCapture(event.pointerId);

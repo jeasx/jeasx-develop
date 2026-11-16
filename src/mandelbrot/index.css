@@ -163,6 +163,11 @@ html {
   touch-action: none;
   user-select: none;
 
+  /* Zooming is disabled at the deepest zoom level, see MAX_ZOOM. */
+  &[data-max] {
+    cursor: default;
+  }
+
   /* A soft vignette on top of the fractal. */
   &::after {
     position: absolute;
@@ -252,8 +257,22 @@ html {
   backdrop-filter: blur(8px);
 }
 
-.mb-canvas:hover .mb-hint {
+.mb-canvas:hover .mb-hint:not(.mb-notice) {
   opacity: 0;
+}
+
+/* Stays visible at the deepest zoom, see MAX_ZOOM. */
+.mb-notice {
+  top: 0.75rem;
+  bottom: auto;
+  border-color: #f5b94a;
+  color: #f5b94a;
+  font-weight: 600;
+  /* Wraps on narrow screens instead of overflowing the canvas. */
+  width: max-content;
+  max-width: calc(100% - 1.5rem);
+  white-space: normal;
+  text-align: center;
 }
 
 /* Once the last strip and the render time arrived, the streaming indicators fade out. */
