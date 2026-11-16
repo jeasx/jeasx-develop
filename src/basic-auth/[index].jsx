@@ -8,7 +8,7 @@ export default function () {
       css="/basic-auth/index.css"
     >
       <h1>Basic access authentication</h1>
-      <p>
+      <p class="lead">
         This example protects a part of the site with HTTP basic authentication. A guard checks the{" "}
         <code>Authorization</code> header of every request below <code>/basic-auth/protected</code>{" "}
         and answers with <code>401</code> and a <code>WWW-Authenticate</code> header if it is

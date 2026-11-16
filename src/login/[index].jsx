@@ -46,7 +46,7 @@ export default async function ({ request, reply, csrfToken, session }) {
       css="/login/index.css"
     >
       <h1>Login and sessions</h1>
-      <p>
+      <p class="lead">
         This example stores a random session id in a cookie and keeps the session data on the
         server. Passwords are hashed with scrypt from <code>node:crypto</code>. A guard checks the
         CSRF token of every form, limits the attempts per IP address and looks up the session for

@@ -25,7 +25,7 @@ export default async function ({ request }) {
       <header class="em-hero">
         <span class="em-kicker">Server-side JSX</span>
         <h1>JSX for emails</h1>
-        <p>
+        <p class="lead">
           HTML emails are stuck in the past: mail clients ignore most CSS, so layouts are built from
           tables with inline styles. JSX components hide this mess behind tidy building blocks like{" "}
           <code>&lt;Heading&gt;</code>, <code>&lt;Button&gt;</code> or <code>&lt;Table&gt;</code>,

@@ -16,7 +16,7 @@ export default function () {
       script="/shadow-dom/index.js"
     >
       <h1>Declarative Shadow DOM</h1>
-      <p>
+      <p class="lead">
         A <code>&lt;template shadowrootmode="open"&gt;</code> tells the HTML parser to attach a
         shadow root to its parent element. With JSX on the server, you get web components with
         encapsulated styles and slots in the very first response: no framework, no hydration, and it

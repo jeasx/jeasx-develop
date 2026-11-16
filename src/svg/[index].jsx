@@ -23,10 +23,13 @@ export default function ({ request }) {
       css="/svg/index.css"
     >
       <h1>SVG charts rendered on the server</h1>
-      <p>
+      <p class="lead">
         SVG is just markup, so JSX components can draw charts on the server: a few lines of math
-        turn data into coordinates. The charts are part of the HTML, so they show up instantly, need
-        no chart library in the browser, and work with JavaScript turned off. Tooltips use the SVG{" "}
+        turn data into coordinates.
+      </p>
+      <p>
+        The charts are part of the HTML, so they show up instantly, need no chart library in the
+        browser, and work with JavaScript turned off. Tooltips use the SVG{" "}
         <code>&lt;title&gt;</code> element, and the hover effects are plain CSS.
       </p>
 

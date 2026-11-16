@@ -14,7 +14,7 @@ export default function ({ request }) {
       css="/interceptor/index.css"
     >
       <h1>Intercept and modify JSX at runtime</h1>
-      <p>
+      <p class="lead">
         The underlying <a href="https://github.com/jeasx/jsx-async-runtime">jsx-async-runtime</a>{" "}
         lets you intercept the rendering of JSX elements, so you can modify or replace existing
         markup.

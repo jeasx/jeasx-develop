@@ -21,11 +21,6 @@
 .cheerio-hero h1 {
   margin-bottom: 0.75rem;
 }
-.cheerio-hero p {
-  max-width: 40rem;
-  margin: 0 auto;
-}
-
 /* Three steps of the pipeline, connected by arrows on wide screens. */
 .cheerio-steps {
   display: grid;

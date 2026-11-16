@@ -68,7 +68,7 @@ export default async function ({ request, reply, csrfToken, session }) {
       css="/login/index.css"
     >
       <h1>Create an account</h1>
-      <p>
+      <p class="lead">
         The browser checks the fields via HTML attributes before sending. Use the second button to
         skip these checks and see the validation on the server, which works the same without
         JavaScript.

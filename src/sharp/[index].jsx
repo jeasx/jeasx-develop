@@ -72,11 +72,10 @@ export default async function ({ request }) {
       css="/sharp/index.css"
     >
       <h1>Scale images with sharp</h1>
-      <p>
+      <p class="lead">
         With the <a href="https://sharp.pixelplumbing.com">sharp</a> library, you can build an image
         component and converter in userland. The images below are cropped, resized and converted to
-        AVIF or WebP on the fly, depending on what your browser accepts. The image converter is also
-        used in the <a href="/products">products</a> example.
+        AVIF or WebP on the fly, depending on what your browser accepts.
       </p>
       <p>
         Each image starts as a blurred placeholder: a 24 pixel version, inlined into the HTML as{" "}

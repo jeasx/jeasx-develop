@@ -59,13 +59,15 @@ export default async function ({ request, reply }) {
       description="Upload an image and convert, resize and rotate it with sharp."
     >
       <h1>Upload and transform images with sharp</h1>
-      <p>
+      <p class="lead">
         Choose an image (e.g. JPEG, PNG, WebP, AVIF, GIF or TIFF) and the server converts, crops,
-        resizes and rotates it. The form is sent as <code>multipart/form-data</code>, so the route
-        gets the file as a <code>Buffer</code> in <code>request.body</code>. Jeasx doesn't ship an
-        image processor, so the conversion is done in userland with{" "}
-        <a href="https://sharp.pixelplumbing.com">sharp</a>. The result is embedded as a{" "}
-        <code>data:</code> URI, so your image is never stored.
+        resizes and rotates it.
+      </p>
+      <p>
+        The form is sent as <code>multipart/form-data</code>, so the route gets the file as a{" "}
+        <code>Buffer</code> in <code>request.body</code>. Jeasx doesn't ship an image processor, so
+        the conversion is done in userland with <a href="https://sharp.pixelplumbing.com">sharp</a>.
+        The result is embedded as a <code>data:</code> URI, so your image is never stored.
       </p>
       <form method="post" enctype="multipart/form-data">
         <div class="row">

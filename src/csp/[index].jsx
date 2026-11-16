@@ -16,7 +16,7 @@ export default function ({ request }) {
       css="/csp/index.css"
     >
       <h1>Content Security Policy with nonces</h1>
-      <p>
+      <p class="lead">
         JSX escapes all values, but a single <code>html()</code> with untrusted content, a library
         bug or a compromised script can still bring foreign code into a page. A{" "}
         <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CSP">

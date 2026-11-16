@@ -24,15 +24,15 @@ export default function ({ request }) {
       script="/head/index.js"
     >
       <h1>Manage the head</h1>
-      <p>
+      <p class="lead">
         Like React Helmet, but built in userland: put a <code>&lt;head&gt;</code> tag into any
         component, and its title, meta tags, styles and scripts are moved into the head of the
-        document. Duplicate titles, descriptions and keywords are replaced by the last one. A small
-        guard takes care of this; have a look at the source to see how it works.
+        document.
       </p>
       <p>
-        Switch the components on and off and watch the browser tab and the resulting{" "}
-        <code>&lt;head&gt;</code> change.
+        Duplicate titles, descriptions and keywords are replaced by the last one. A small guard
+        takes care of this; have a look at the source to see how it works. Switch the components on
+        and off and watch the browser tab and the resulting <code>&lt;head&gt;</code> change.
       </p>
 
       <div class="head-playground" id="playground">

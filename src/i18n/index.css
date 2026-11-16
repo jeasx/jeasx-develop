@@ -26,12 +26,6 @@
   pointer-events: none;
 }
 
-.lead {
-  max-width: 42rem;
-  margin: 0 auto 0.5rem;
-  font-size: 1.1rem;
-  text-align: center;
-}
 .hint {
   max-width: 42rem;
   margin: 0 auto 2rem;

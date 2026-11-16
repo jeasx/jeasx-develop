@@ -41,7 +41,7 @@ export default function ({ request, reply }) {
       css="/prettier/index.css"
     >
       <h1>Post-process HTML with Prettier</h1>
-      <p>
+      <p class="lead">
         Jeasx lets you post-process the finished HTML with a{" "}
         <a href="https://www.jeasx.dev/faq#response-handler">response handler</a>. This example uses{" "}
         <a href="https://prettier.io">Prettier</a> to format the markup of this very page.

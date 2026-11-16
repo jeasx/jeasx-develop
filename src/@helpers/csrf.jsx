@@ -34,7 +34,9 @@ export default function csrf({ request, reply }, path) {
           <Layout title="Error 403" robots="noindex">
             <section class="center">
               <h1>Error 403</h1>
-              <p>The form was rejected, as its CSRF token is missing or doesn't match.</p>
+              <p class="lead">
+                The form was rejected, as its CSRF token is missing or doesn't match.
+              </p>
               <a href={path}>Back to the example</a>
             </section>
           </Layout>

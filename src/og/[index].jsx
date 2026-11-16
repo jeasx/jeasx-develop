@@ -20,7 +20,7 @@ export default function ({ request }) {
       description="Generate social preview images from JSX: render SVG on the server and convert it to PNG with sharp."
     >
       <h1>Open Graph images</h1>
-      <p>
+      <p class="lead">
         Links shared on social networks show a preview image from the <code>og:image</code> meta
         tag. This example draws the card as SVG with plain JSX and converts it to PNG with{" "}
         <a href="/sharp">sharp</a>, so every page can get its own image without a design tool.

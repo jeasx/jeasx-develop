@@ -34,46 +34,44 @@ export default function () {
       description="Stream slow parts of a page in the order they finish, while they still appear in their place."
       css="/out-of-order/index.css"
     >
-      <div class="sx">
-        <h1>Out-of-order streaming</h1>
-        <p>
-          Jeasx streams markup in order, so a slow component holds back everything after it (see{" "}
-          <a href="/streaming">Streaming HTML</a>). Here, the results show up in the order they
-          finish and still appear in their place on the page.
-        </p>
-        <p>
-          This works without client-side JavaScript, thanks to{" "}
-          <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/template#shadowrootmode">
-            Declarative Shadow DOM
-          </a>
-          : the container is sent first, with a <code>&lt;slot&gt;</code> for each source and a
-          loading indicator inside it. An async generator then streams each result as soon as it's
-          ready, marked with <code>slot="…"</code>, and the browser moves it into the matching slot.
-        </p>
-        <p class="center">
-          <a class="sx-button" href="">
-            Reload with new delays
-          </a>
-        </p>
-        <div>
-          <template shadowrootmode="open">
-            {/* Page styles don't reach into a shadow root, so it links them itself. */}
-            <link rel="stylesheet" href={addCacheBuster("/index.css")} />
-            <link rel="stylesheet" href={addCacheBuster("/out-of-order/index.css")} />
-            <div class="oo-grid">
-              {SOURCES.map(({ id, name }) => (
-                <slot name={id}>
-                  <p class="sx-pending" aria-busy="true">
-                    Loading {name.toLowerCase()}...
-                  </p>
-                </slot>
-              ))}
-            </div>
-          </template>
-          <InOrderOfCompletion results={results} />
-        </div>
-        <Done start={start} />
+      <h1>Out-of-order streaming</h1>
+      <p class="lead">
+        Jeasx streams markup in order, so a slow component holds back everything after it (see{" "}
+        <a href="/streaming">Streaming HTML</a>). Here, the results show up in the order they finish
+        and still appear in their place on the page.
+      </p>
+      <p>
+        This works without client-side JavaScript, thanks to{" "}
+        <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/template#shadowrootmode">
+          Declarative Shadow DOM
+        </a>
+        : the container is sent first, with a <code>&lt;slot&gt;</code> for each source and a
+        loading indicator inside it. An async generator then streams each result as soon as it's
+        ready, marked with <code>slot="…"</code>, and the browser moves it into the matching slot.
+      </p>
+      <p class="center">
+        <a class="sx-button" href="">
+          Reload with new delays
+        </a>
+      </p>
+      <div>
+        <template shadowrootmode="open">
+          {/* Page styles don't reach into a shadow root, so it links them itself. */}
+          <link rel="stylesheet" href={addCacheBuster("/index.css")} />
+          <link rel="stylesheet" href={addCacheBuster("/out-of-order/index.css")} />
+          <div class="oo-grid">
+            {SOURCES.map(({ id, name }) => (
+              <slot name={id}>
+                <p class="sx-pending" aria-busy="true">
+                  Loading {name.toLowerCase()}...
+                </p>
+              </slot>
+            ))}
+          </div>
+        </template>
+        <InOrderOfCompletion results={results} />
       </div>
+      <Done start={start} />
     </Layout>
   );
 }

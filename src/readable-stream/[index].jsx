@@ -19,31 +19,29 @@ export default function () {
       description="Render ReadableStreams directly in JSX and stream each item as it arrives."
       css="/readable-stream/index.css"
     >
-      <div class="sx">
-        <h1>ReadableStream as children</h1>
-        <p>
-          Besides promises, JSX children can be a <code>ReadableStream</code>. Items are rendered in
-          order as they arrive. The markup rendered so far is sent to the browser while waiting for
-          the next item.
+      <h1>ReadableStream as children</h1>
+      <p class="lead">
+        Besides promises, JSX children can be a <code>ReadableStream</code>. Items are rendered in
+        order as they arrive.
+      </p>
+      <p>
+        The markup rendered so far is sent to the browser while waiting for the next item. A{" "}
+        <code>ReadableStream</code> of strings or JSX can be used as children directly, e.g. a
+        streamed answer from an AI service or the decoded body of a <code>fetch</code> response.
+      </p>
+      <section class="sx-card rs-chat" aria-live="polite">
+        <p class="rs-bubble rs-question">How does Jeasx render a ReadableStream?</p>
+        <p class="rs-bubble rs-answer">
+          {answerStream()}
+          <span class="rs-end"></span>
         </p>
-        <p>
-          A <code>ReadableStream</code> of strings or JSX can be used as children directly, e.g. a
-          streamed answer from an AI service or the decoded body of a <code>fetch</code> response.
-        </p>
-        <section class="sx-card rs-chat" aria-live="polite">
-          <p class="rs-bubble rs-question">How does Jeasx render a ReadableStream?</p>
-          <p class="rs-bubble rs-answer">
-            {answerStream()}
-            <span class="rs-end"></span>
-          </p>
-        </section>
-        <Done start={start} />
-        <p class="center">
-          <a class="sx-button" href="">
-            Ask again
-          </a>
-        </p>
-      </div>
+      </section>
+      <Done start={start} />
+      <p class="center">
+        <a class="sx-button" href="">
+          Ask again
+        </a>
+      </p>
     </Layout>
   );
 }

@@ -9,9 +9,6 @@
 .todos {
   margin: 0 auto;
   max-width: 40rem;
-  & .lead {
-    color: var(--todo-muted);
-  }
 }
 
 .card {

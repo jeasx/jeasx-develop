@@ -25,7 +25,7 @@ export default async function ({ request, reply }) {
                 &#10003;
               </div>
               <h1>Thank you, {name}!</h1>
-              <p>Your form was accepted. This is what happened:</p>
+              <p class="lead">Your form was accepted. This is what happened:</p>
               <ol class="result-steps">
                 <li>Your browser fetched a challenge and solved it in the background.</li>
                 <li>The server redeemed the solution for a one-time token.</li>
@@ -57,7 +57,7 @@ export default async function ({ request, reply }) {
                 &times;
               </div>
               <h1>Captcha check failed</h1>
-              <p>The captcha token is invalid, expired or was already used.</p>
+              <p class="lead">The captcha token is invalid, expired or was already used.</p>
               <footer>
                 <a href={request.path} class="btn btn-primary">
                   Start again
@@ -78,7 +78,7 @@ export default async function ({ request, reply }) {
       css="/cap/index.css"
     >
       <h1>Use Cap.js with Jeasx</h1>
-      <p>
+      <p class="lead">
         <a href="https://capjs.js.org">Cap.js</a> is a lightweight, modern open-source captcha
         alternative using proof-of-work: instead of solving puzzles, your browser does a short
         calculation in the background. Enter your name, click the captcha and submit the form.

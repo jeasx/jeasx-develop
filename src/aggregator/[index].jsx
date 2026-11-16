@@ -179,33 +179,34 @@ export default function ({ request }) {
       description="A backend-for-frontend page that queries six public APIs in parallel, with a time budget and isolated failures."
       css="/aggregator/index.css"
     >
-      <div class="sx">
-        <h1>Parallel API aggregator</h1>
-        <p>
-          This page acts as a <em>backend for frontend</em>: it queries six public APIs on the
-          server and merges their answers into one page. All requests start at once, and each card
-          is an async component that only awaits its own promise. The page streams card by card and
-          the whole page takes about as long as the slowest service, not the sum of all of them.
-        </p>
-        <p>
-          A shared <code>AbortSignal</code> gives every request a time budget and also cancels
-          everything when the browser goes away. Errors and timeouts stay inside their card, so one
-          broken service never takes the page down.
-        </p>
-        <nav class="sx-toggle" aria-label="Time budget">
-          {BUDGETS.map((value) => (
-            <a href={`?budget=${value}`} aria-current={value === budget ? "page" : undefined}>
-              {value < 1000 ? `${value} ms` : `${value / 1000} s`}
-            </a>
-          ))}
-        </nav>
-        <div class="ag-grid">
-          {SERVICES.map((service, index) => (
-            <Card service={service} result={results[index]} budget={budget} />
-          ))}
-        </div>
-        <Summary results={results} start={start} />
+      <h1>Parallel API aggregator</h1>
+      <p class="lead">
+        This page acts as a <em>backend for frontend</em>: it queries six public APIs on the server
+        and merges their answers into one page.
+      </p>
+      <p>
+        All requests start at once, and each card is an async component that only awaits its own
+        promise. The page streams card by card and the whole page takes about as long as the slowest
+        service, not the sum of all of them.
+      </p>
+      <p>
+        A shared <code>AbortSignal</code> gives every request a time budget and also cancels
+        everything when the browser goes away. Errors and timeouts stay inside their card, so one
+        broken service never takes the page down.
+      </p>
+      <nav class="sx-toggle" aria-label="Time budget">
+        {BUDGETS.map((value) => (
+          <a href={`?budget=${value}`} aria-current={value === budget ? "page" : undefined}>
+            {value < 1000 ? `${value} ms` : `${value / 1000} s`}
+          </a>
+        ))}
+      </nav>
+      <div class="ag-grid">
+        {SERVICES.map((service, index) => (
+          <Card service={service} result={results[index]} budget={budget} />
+        ))}
       </div>
+      <Summary results={results} start={start} />
     </Layout>
   );
 }

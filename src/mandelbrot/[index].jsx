@@ -8,8 +8,8 @@ import {
   WIDTH,
   maxIterations,
   parseView,
-  render,
   planeWidth,
+  render,
 } from "./fractal";
 
 /** Key in sessionStorage for the scroll position, see RestoreScroll and index.js. */
@@ -47,11 +47,13 @@ export default function ({ request }) {
       script="/mandelbrot/index.js"
     >
       <h1>Mandelbrot explorer</h1>
-      <p>
+      <p class="lead">
         Every pixel of this fractal is computed on the server and sent as inline SVG: neighbouring
         pixels of the same color are merged into horizontal lines, and all lines of one color share
-        a single path. To show something as early as possible, the page first streams a blurry
-        preview at 1/
+        a single path.
+      </p>
+      <p>
+        To show something as early as possible, the page first streams a blurry preview at 1/
         {PREVIEW} of the resolution. Then an <code>async function*</code> component computes the
         image in strips of {STRIP} rows and yields each strip as soon as it is ready, so the sharp
         picture builds up from top to bottom while the rest is still being computed.

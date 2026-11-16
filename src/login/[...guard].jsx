@@ -35,7 +35,7 @@ export default function ({ request, reply }) {
         <Layout title="Error 429" robots="noindex">
           <section class="center">
             <h1>Error 429</h1>
-            <p>Too many attempts. Please wait {wait} seconds and try again.</p>
+            <p class="lead">Too many attempts. Please wait {wait} seconds and try again.</p>
             <a href={PATH}>Back to the example</a>
           </section>
         </Layout>

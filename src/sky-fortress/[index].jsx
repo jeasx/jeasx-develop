@@ -13,13 +13,15 @@ export default function () {
       script="/sky-fortress/index.js"
     >
       <h1>Sky fortress with client-side JSX</h1>
-      <p>
+      <p class="lead">
         An isometric arcade shooter in the style of the eighties, built from plain JSX components
-        with <a href="https://github.com/jeasx/jsx-async-runtime">jsx-async-runtime</a>. The server
-        renders the approach to the fortress, then the very same components project walls, turrets,
-        fighters and flak into an SVG for every animation frame in your browser, without React, a
-        virtual DOM or a canvas. Watch your shadow and the altimeter to judge your height, and shoot
-        fuel tanks before your tank runs dry.
+        with <a href="https://github.com/jeasx/jsx-async-runtime">jsx-async-runtime</a>.
+      </p>
+      <p>
+        The server renders the approach to the fortress, then the very same components project
+        walls, turrets, fighters and flak into an SVG for every animation frame in your browser,
+        without React, a virtual DOM or a canvas. Watch your shadow and the altimeter to judge your
+        height, and shoot fuel tanks before your tank runs dry.
       </p>
       <Defs />
       <div class="track">

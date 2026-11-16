@@ -43,6 +43,11 @@ export default function ({ request, reply }) {
     send: () => {},
   };
 
+  // Introduce everyone to the new client, then join the room before accepting,
+  // so onClose always finds the client to remove.
+  const peers = [...room.clients.values()].map(info);
+  room.clients.set(id, client);
+
   const socket = accept(
     { request, reply },
     {
@@ -86,9 +91,6 @@ export default function ({ request, reply }) {
   );
   client.send = socket.send;
 
-  // Introduce the new client to everyone, and everyone to the new client.
-  const peers = [...room.clients.values()].map(info);
-  room.clients.set(id, client);
   socket.send(JSON.stringify({ type: "welcome", you: info(client), peers }));
   broadcast({ type: "join", peer: info(client), count: room.clients.size }, client);
 }

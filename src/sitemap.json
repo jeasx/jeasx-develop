@@ -51,6 +51,7 @@
           { "path": "/client-jsx", "title": "Solar system" },
           { "path": "/social-feed", "title": "Social feed" },
           { "path": "/dependency-tree", "title": "Dependency tree" },
+          { "path": "/guitar-tuner", "title": "Guitar tuner" },
           { "path": "/game-of-life", "title": "Game of Life" },
           { "path": "/maze-chase", "title": "Maze chase" },
           { "path": "/racer", "title": "Racer" },
@@ -96,7 +97,7 @@
       },
       {
         "title": "Security, errors and post-processing",
-        "description": "Protect routes with basic auth or sessions, sign cookies, block injected scripts stop bots with a proof-of-work captcha and rate-limit APIs. Catch errors, manage the head and transform the final HTML before it is sent to the browser.",
+        "description": "Protect routes with basic auth or sessions, sign cookies, block injected scripts, stop bots with a proof-of-work captcha and rate-limit APIs. Catch errors, manage the head and transform the final HTML before it is sent to the browser.",
         "links": [
           { "path": "/login", "title": "Login and sessions" },
           { "path": "/basic-auth", "title": "Basic auth" },

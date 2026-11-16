@@ -17,8 +17,11 @@ export default function ({ todos, status }) {
         <p class="lead">
           The server renders the first page. After that, the browser handles adding, completing and
           deleting todos with the same reducer and JSX component, and sends the form in the
-          background so the server can store your todos in a cookie. Without JavaScript, every click
-          submits a plain HTML form and the server renders the updated list.
+          background so the server can store your todos in a cookie.
+        </p>
+        <p>
+          Without JavaScript, every click submits a plain HTML form and the server renders the
+          updated list.
         </p>
         <Todos todos={todos} status={status} />
       </div>

@@ -47,7 +47,7 @@ export default function () {
       <header class="pdf-hero">
         <span class="pdf-kicker">Server-side JSX · no dependencies</span>
         <h1>PDF invoices with JSX</h1>
-        <p>
+        <p class="lead">
           JSX isn't tied to HTML. Compose a PDF from components, just like a page, and let a tiny
           writer turn it into bytes. Edit the invoice below and watch the PDF update.
         </p>

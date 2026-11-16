@@ -51,7 +51,7 @@ export default function ({ request, reply, csrfToken }) {
       css="/signed-cookies/index.css"
     >
       <h1>Signed cookies and CSRF tokens</h1>
-      <p>
+      <p class="lead">
         Cookies are stored in the browser, so visitors can edit them. With a secret configured for{" "}
         <code>@fastify/cookie</code> in <code>jeasx.config.js</code>, a route can set a cookie with{" "}
         <code>{"{ signed: true }"}</code>: its value gets a signature, and{" "}

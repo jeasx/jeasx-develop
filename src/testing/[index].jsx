@@ -22,7 +22,7 @@ export default function () {
       css="/testing/index.css"
     >
       <h1>Unit tests for JSX components</h1>
-      <p>
+      <p class="lead">
         Components are plain functions which return JSX, and <code>jsxToString</code> of{" "}
         <a href="https://github.com/jeasx/jsx-async-runtime">jsx-async-runtime</a> turns them into
         an HTML string. So you can test them with the built-in test runner of Node.js and simple

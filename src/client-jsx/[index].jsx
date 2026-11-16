@@ -10,12 +10,14 @@ export default function () {
       script="/client-jsx/index.js"
     >
       <h1>Asynchronous JSX components in the browser</h1>
-      <p>
+      <p class="lead">
         You can also use JSX components built with{" "}
         <a href="https://github.com/jeasx/jsx-async-runtime">jsx-async-runtime</a> in the browser
-        for lightweight rendering of client-side markup. Pick some planets: each one is an async
-        component that fetches its own data from a slow API, and all of them load in parallel before
-        the markup is rendered right in your browser.
+        for lightweight rendering of client-side markup.
+      </p>
+      <p>
+        Pick some planets: each one is an async component that fetches its own data from a slow API,
+        and all of them load in parallel before the markup is rendered right in your browser.
       </p>
       <form id="planet-form">
         <fieldset class="planet-picker">

@@ -22,7 +22,7 @@ export default async function ({ request, reply }) {
     return (
       <Layout title="Products" robots="noindex">
         <h1>Products</h1>
-        <p>The products couldn't be loaded right now. Please try again later.</p>
+        <p class="lead">The products couldn't be loaded right now. Please try again later.</p>
       </Layout>
     );
   }
@@ -49,7 +49,7 @@ export default async function ({ request, reply }) {
       css="/products/index.css"
     >
       <h1>Products</h1>
-      <p>
+      <p class="lead">
         The products are loaded on the server from the <a href="https://dummyjson.com">DummyJSON</a>{" "}
         API and cached for a few minutes. Their images are cropped and converted on the fly by the
         image component of the <a href="/sharp">sharp example</a>. Click a product to see its

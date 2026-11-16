@@ -29,7 +29,7 @@ export default function ({ request, reply }) {
         <h1>
           The <span class="shell-gradient">Jeasx</span> Blog
         </h1>
-        <p class="blog-lead">
+        <p class="lead">
           An overview page, a page per post and a protected form to write new posts. To keep the
           example free of a database, new posts are stored in a cookie in your browser, so only you
           can see them.

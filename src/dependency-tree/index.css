@@ -1,7 +1,3 @@
-.lead {
-  max-width: 50rem;
-}
-
 /* Explorer on the left, live stats and steps on the right; stacked on narrow screens. */
 .workbench {
   display: grid;
@@ -416,14 +412,4 @@
 .steps strong {
   display: block;
   color: var(--heading);
-}
-
-/* The global code style nearly matches the dark panels, so give inline code the accent color. */
-.lead code,
-.steps code {
-  display: inline;
-  padding: 0.05rem 0.35rem;
-  border: 1px solid rgb(237 42 172 / 0.25);
-  background: rgb(237 42 172 / 0.1);
-  color: var(--primary-hover);
 }

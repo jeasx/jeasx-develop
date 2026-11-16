@@ -254,12 +254,6 @@
     border-left-color: var(--tf-accent);
   }
 
-  & code {
-    padding: 0;
-    background: none;
-    font-size: 0.8rem;
-  }
-
   & span {
     color: var(--tf-muted);
     white-space: nowrap;

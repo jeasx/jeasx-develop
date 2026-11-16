@@ -91,12 +91,6 @@
   font-size: 0.7rem;
   color: var(--muted);
 }
-/* Inline code in this page's text: brighter than the site default, which is hard to read here. */
-main p code,
-main li code {
-  color: var(--heading);
-  background: var(--secondary-bg);
-}
 /* The static island keeps the neutral tone of its frame below. */
 .strategies li:last-child {
   --fw: var(--muted);

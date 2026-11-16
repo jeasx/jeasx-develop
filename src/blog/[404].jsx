@@ -5,7 +5,9 @@ export default function () {
     <Layout title="Error 404">
       <section class="center">
         <h1>Error 404</h1>
-        <p>This post doesn't exist. It may have been removed, or the address is mistyped.</p>
+        <p class="lead">
+          This post doesn't exist. It may have been removed, or the address is mistyped.
+        </p>
         <a href="/blog">Back to the blog</a>
       </section>
     </Layout>

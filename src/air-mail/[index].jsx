@@ -25,9 +25,11 @@ export default function () {
       script="/air-mail/index.js"
     >
       <h1>Air mail with streamed JSX</h1>
-      <p>
+      <p class="lead">
         A bush plane delivers mail across a landscape that the server and the browser render
         together with <a href="https://github.com/jeasx/jsx-async-runtime">jsx-async-runtime</a>.
+      </p>
+      <p>
         The server renders mountains, forests, lakes, villages and airstrips as JSX and streams them
         chunk by chunk over a single response while you fly. Thanks to backpressure, it only renders
         the next chunk when your browser reads on. Meanwhile the browser renders the sky, the plane,

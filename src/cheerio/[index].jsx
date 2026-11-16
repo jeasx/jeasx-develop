@@ -39,7 +39,7 @@ export default function ({ request, reply }) {
       {/* The inline styles on this page are deliberate: they are what the handler rewrites. */}
       <section class="cheerio-hero" style="--heading:orange; text-align:center">
         <h1>Extract inline styles with Cheerio</h1>
-        <p style="color:var(--muted)">
+        <p class="lead">
           Jeasx lets you post-process the finished HTML with a{" "}
           <a href="https://www.jeasx.dev/faq#response-handler">response handler</a>. This example
           uses <a href="https://cheerio.js.org">Cheerio</a> to turn all inline styles into CSS

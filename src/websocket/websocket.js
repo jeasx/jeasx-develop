@@ -157,6 +157,11 @@ export function accept({ request, reply }, { onMessage, onClose, maxPayload = 40
   };
   socket.on("close", cleanUp);
   socket.on("error", cleanUp);
+  // The client may have left before the route ran: then "close" won't fire anymore.
+  // Report it asynchronously, so the caller can finish setting up first.
+  if (socket.destroyed) {
+    queueMicrotask(cleanUp);
+  }
 
   return {
     send(text) {

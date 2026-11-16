@@ -85,7 +85,7 @@ export default function () {
       <h1 class="hero-title">
         Islands <span>with four frameworks</span>
       </h1>
-      <p>
+      <p class="lead">
         This page is plain HTML rendered by Jeasx. It holds islands built with Preact, React, Vue
         and Svelte, and each framework renders its components on the server. A small loader script
         then decides, for each island, when to download the framework's bundle and hydrate it. Each

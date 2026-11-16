@@ -13,7 +13,7 @@ export default function () {
       css="/values/index.css"
     >
       <h1>What JSX can render</h1>
-      <p>
+      <p class="lead">
         Besides strings, numbers and elements, Jeasx renders many JavaScript values directly, so you
         rarely have to convert data before putting it into markup. Each sample shows the rendered
         result and the generated HTML.

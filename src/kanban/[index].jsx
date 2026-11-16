@@ -10,7 +10,7 @@ export default function () {
       script="/kanban/index.js"
     >
       <h1>Kanban board</h1>
-      <p>
+      <p class="lead">
         Every column is an <strong>async</strong> component built with{" "}
         <a href="https://github.com/jeasx/jsx-async-runtime">jsx-async-runtime</a> which loads its
         own tasks from <code>this.store</code>. The server renders the first page with a store that

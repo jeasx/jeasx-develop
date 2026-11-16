@@ -14,12 +14,14 @@ export default function () {
       script="/racer/index.js"
     >
       <h1>Racer with client-side JSX</h1>
-      <p>
+      <p class="lead">
         A pseudo-3D arcade racer in the style of the eighties, built from plain JSX components with{" "}
-        <a href="https://github.com/jeasx/jsx-async-runtime">jsx-async-runtime</a>. The server
-        renders the starting grid, then the very same components project the road, hills, trees and
-        traffic into an SVG for every animation frame in your browser, without React, a virtual DOM
-        or a canvas. Race against the clock: every completed lap buys you more time.
+        <a href="https://github.com/jeasx/jsx-async-runtime">jsx-async-runtime</a>.{" "}
+      </p>
+      <p>
+        The server renders the starting grid, then the very same components project the road, hills,
+        trees and traffic into an SVG for every animation frame in your browser, without React, a
+        virtual DOM or a canvas. Race against the clock: every completed lap buys you more time.
       </p>
       <Sprites />
       <div class="track">

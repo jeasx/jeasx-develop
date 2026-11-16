@@ -17,13 +17,16 @@ export default function () {
       script="/negotiation/index.js"
     >
       <h1>Content negotiation: one URL, many formats</h1>
-      <p>
+      <p class="lead">
         With{" "}
         <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Content_negotiation">
           content negotiation
         </a>
         , a client tells the server in the <code>Accept</code> header which formats it understands
-        and how much it prefers each one (the <code>q</code> weight from 0 to 1). The route{" "}
+        and how much it prefers each one.
+      </p>
+      <p>
+        The route{" "}
         <a href="/negotiation/planets">
           <code>/negotiation/planets</code>
         </a>{" "}

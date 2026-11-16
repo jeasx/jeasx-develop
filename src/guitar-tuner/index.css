@@ -1,0 +1,290 @@
+/* A compact instrument panel: dial, strings and controls fit on one screen. */
+.tuner {
+  max-width: 30rem;
+  margin: 1.25rem auto;
+  padding: 1.25rem 1.25rem 1rem;
+  border: 1px solid #3f3122;
+  border-radius: 1.5rem;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgb(245 158 11 / 0.14), transparent 70%),
+    repeating-linear-gradient(100deg, rgb(255 255 255 / 0.012) 0 2px, transparent 2px 7px),
+    linear-gradient(170deg, #21170d, #0c0905);
+  box-shadow:
+    0 24px 60px -24px rgb(0 0 0 / 0.9),
+    inset 0 1px 0 rgb(255 255 255 / 0.06);
+  color: #e7e0d4;
+  text-align: center;
+}
+
+/* Dial: a colored arc with a needle and the note set inside it. */
+.gauge {
+  position: relative;
+  max-width: 19rem;
+  margin: 0 auto;
+}
+.gauge svg {
+  display: block;
+  width: 100%;
+  overflow: visible;
+}
+.gauge .band {
+  fill: none;
+  stroke-width: 12;
+  transition: opacity 0.2s;
+}
+.gauge .band.far {
+  stroke: #b91c1c;
+  opacity: 0.35;
+}
+.gauge .band.near {
+  stroke: #d97706;
+  opacity: 0.4;
+}
+.gauge .band.zone {
+  stroke: #16a34a;
+  opacity: 0.55;
+}
+.gauge.idle .band {
+  opacity: 0.18;
+}
+.gauge.tuned .band.zone {
+  opacity: 1;
+  filter: drop-shadow(0 0 6px rgb(34 197 94 / 0.9));
+}
+.gauge .tick {
+  stroke: #57534e;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+.gauge .tick.major {
+  stroke: #a8a29e;
+  stroke-width: 2.5;
+}
+.gauge .label {
+  fill: #78716c;
+  font-size: 16px;
+  text-anchor: middle;
+}
+.gauge .marker {
+  transition: transform 0.12s ease-out;
+}
+.gauge .marker .needle {
+  fill: #fbbf24;
+  stroke: #1c1208;
+  stroke-width: 1;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 2px 2px rgb(0 0 0 / 0.6));
+  transition: fill 0.2s;
+}
+/* A light edge down the middle makes the needle look machined rather than flat. */
+.gauge .marker .shine {
+  stroke: rgb(255 255 255 / 0.55);
+  stroke-width: 0.6;
+  stroke-linecap: round;
+}
+.gauge.idle .marker .needle {
+  fill: #a8a29e;
+}
+.gauge.idle .marker .shine {
+  stroke: rgb(255 255 255 / 0.3);
+}
+.gauge.tuned .marker .needle {
+  fill: #4ade80;
+  filter: drop-shadow(0 2px 2px rgb(0 0 0 / 0.6)) drop-shadow(0 0 5px rgb(74 222 128 / 0.6));
+}
+
+/* The note sits inside the arc, below the marker. */
+.readout {
+  position: absolute;
+  left: 50%;
+  bottom: 2.4rem;
+  display: grid;
+  justify-items: center;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+.readout .note {
+  font-size: 3.25rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  transition: color 0.2s;
+}
+.readout .note sub {
+  margin-left: 0.05em;
+  color: #78716c;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+.gauge.idle .note {
+  color: #57534e;
+}
+.gauge.tuned .note {
+  color: #4ade80;
+  text-shadow: 0 0 20px rgb(74 222 128 / 0.5);
+}
+.readout .cents {
+  color: #a8a29e;
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+}
+.status {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  min-height: 1.3em;
+  margin: 0.2rem 0 0;
+  font-size: 0.8rem;
+}
+.status .hint-text {
+  color: #fbbf24;
+  font-weight: 600;
+}
+.gauge.tuned .status .hint-text {
+  color: #4ade80;
+}
+.status .hz {
+  color: #78716c;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Strings: six vertical wires with their note below, like looking at the fretboard. */
+.strings {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.4rem;
+  margin: 0.75rem 0 0.9rem;
+  padding: 0.6rem 0.5rem 0.4rem;
+  border-radius: 0.9rem;
+  background: linear-gradient(180deg, #2a1d10, #170f07);
+  box-shadow: inset 0 2px 8px rgb(0 0 0 / 0.6);
+  list-style: none;
+}
+.strings li {
+  margin: 0;
+}
+.tuner .string {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  width: 100%;
+  margin: 0;
+  padding: 0 0 0.35rem;
+  border: 1px solid transparent;
+  border-radius: 0.6rem;
+  background: none;
+  box-shadow: none;
+  color: #d6d3d1;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    border-color 0.15s;
+}
+.tuner .string .wire {
+  width: var(--gauge);
+  height: 2rem;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #78716c, #e7e5e4, #78716c);
+  transition:
+    background 0.15s,
+    box-shadow 0.15s;
+}
+.tuner .string sub {
+  color: #78716c;
+  font-size: 0.65rem;
+  font-weight: 500;
+}
+.tuner .string:hover {
+  background: rgb(255 255 255 / 0.04);
+}
+.tuner .string:focus-visible {
+  outline: 2px solid #f59e0b;
+  outline-offset: 2px;
+}
+.tuner .string.active {
+  color: #fbbf24;
+}
+.tuner .string.active .wire {
+  background: #fbbf24;
+  box-shadow: 0 0 10px rgb(251 191 36 / 0.8);
+}
+.tuner .string.playing {
+  border-color: rgb(56 189 248 / 0.5);
+  background: rgb(56 189 248 / 0.08);
+  color: #7dd3fc;
+}
+.tuner .string.playing .wire {
+  background: #38bdf8;
+  box-shadow: 0 0 10px rgb(56 189 248 / 0.8);
+  animation: vibrate 0.08s linear infinite alternate;
+}
+@keyframes vibrate {
+  to {
+    transform: translateX(1px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tuner .string.playing .wire {
+    animation: none;
+  }
+}
+
+/* Controls */
+.tuner .listen {
+  margin: 0;
+  padding: 0.55rem 1.5rem;
+  border: 1px solid #f59e0b;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #d97706, #b45309);
+  box-shadow: 0 6px 18px -6px rgb(217 119 6 / 0.6);
+  color: #fffbeb;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: filter 0.15s;
+}
+.tuner .listen > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.tuner .listen svg {
+  width: 1.15em;
+  height: 1.15em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.tuner .listen .stop svg {
+  fill: currentColor;
+  stroke: none;
+}
+.tuner .listen .stop,
+.tuner .listen.on .start {
+  display: none;
+}
+.tuner .listen.on .stop {
+  display: inline-flex;
+}
+.tuner .listen:active {
+  filter: brightness(0.92);
+  transform: translateY(1px);
+}
+.tuner .listen:disabled {
+  opacity: 0.7;
+  cursor: progress;
+}
+.tuner .listen:hover {
+  filter: brightness(1.12);
+}
+.tuner .hint {
+  margin: 0.6rem 0 0;
+  color: #78716c;
+  font-size: 0.8rem;
+}

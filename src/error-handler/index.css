@@ -28,3 +28,49 @@
 .output {
   margin-top: 2rem;
 }
+
+.eb-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 1rem;
+}
+.eb-widget {
+  margin: 0;
+  border-top: 4px solid var(--eb-color);
+}
+.eb-widget header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+.eb-ok {
+  --eb-color: var(--success);
+  --eb-bg: var(--success-bg);
+}
+.eb-retried {
+  --eb-color: var(--info);
+  --eb-bg: var(--info-bg);
+}
+.eb-fallback {
+  --eb-color: var(--warning);
+  --eb-bg: var(--warning-bg);
+}
+.eb-badge {
+  padding: 0.1rem 0.5rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  color: var(--eb-color);
+  background: var(--eb-bg);
+}
+.eb-value {
+  margin: 0.75rem 0 0.25rem;
+  font-size: 1.15rem;
+  color: var(--heading);
+}
+.eb-muted {
+  color: var(--muted);
+}
+.eb-elapsed {
+  margin-top: 1rem;
+}

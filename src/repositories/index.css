@@ -9,10 +9,6 @@
 .repos {
   margin: 0 auto;
   max-width: 44rem;
-  & .lead {
-    color: var(--repo-muted);
-    text-align: center;
-  }
 }
 
 .search {

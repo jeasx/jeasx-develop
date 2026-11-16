@@ -6,9 +6,6 @@
 .showcase article {
   margin: 0;
 }
-.showcase header code {
-  font-size: 0.8rem;
-}
 .greeting {
   margin: 0;
   overflow-wrap: anywhere;

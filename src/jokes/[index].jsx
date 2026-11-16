@@ -30,9 +30,11 @@ export default async function ({ request }) {
         <h1>Forms with and without JavaScript</h1>
         <p class="lead">
           The server renders the first page. After that, the browser handles every button with the
-          same reducer and JSX component and only fetches new jokes from the server. Without
-          JavaScript, every button submits a plain HTML form, and the number of jokes is passed
-          along in a hidden form field. The punchlines are revealed with a native{" "}
+          same reducer and JSX component and only fetches new jokes from the server.
+        </p>
+        <p>
+          Without JavaScript, every button submits a plain HTML form, and the number of jokes is
+          passed along in a hidden form field. The punchlines are revealed with a native{" "}
           <code>&lt;details&gt;</code> element.
         </p>
         <JokePicker counter={counter} category={category} jokes={jokes} />

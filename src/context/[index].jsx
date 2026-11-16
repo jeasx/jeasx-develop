@@ -22,7 +22,7 @@ export default function ({ request }) {
       css="/context/index.css"
     >
       <h1>Avoid prop drilling via 'this'</h1>
-      <p>
+      <p class="lead">
         In Jeasx, every component can read and write <code>this</code>, a context object shared by
         all components of one request. It lets you pass data to deeply nested components without
         handing it down as props through every level. Each request gets its own context, so values

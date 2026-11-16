@@ -20,41 +20,39 @@ export default async function ({ request }) {
       description="Async JSX components render in order; start promises early to load data in parallel."
       css="/parallel/index.css"
     >
-      <div class="sx">
-        <h1>Load data in parallel with async components</h1>
-        <p>
-          Components in Jeasx can be <code>async</code> and simply <code>await</code> their data.
-          The renderer resolves them one after another, so three components that each wait one
-          second take three seconds in total.
-        </p>
-        <p>
-          As JSX also accepts promises as children, you can kick off all requests up front and hand
-          the pending promises to your markup. Now everything loads at the same time while the
-          output order stays the same. The bars below show when each request started and finished.
-        </p>
-        <nav class="sx-toggle" aria-label="Loading mode">
-          <a href="?mode=sequential" aria-current={mode === "sequential" ? "page" : undefined}>
-            Sequential
-          </a>
-          <a href="?mode=parallel" aria-current={mode === "parallel" ? "page" : undefined}>
-            Parallel
-          </a>
-        </nav>
-        <section class="sx-card">
-          <header>
-            <h2>Requests</h2>
-            <small>{mode}</small>
-          </header>
-          <div class="px-axis" aria-hidden="true">
-            <span>0 s</span>
-            <span>1 s</span>
-            <span>2 s</span>
-            <span>3 s</span>
-          </div>
-          {mode === "sequential" ? <Sequential start={start} /> : <Parallel start={start} />}
-        </section>
-        <Elapsed start={start} />
-      </div>
+      <h1>Load data in parallel with async components</h1>
+      <p class="lead">
+        Components in Jeasx can be <code>async</code> and simply <code>await</code> their data. The
+        renderer resolves them one after another, so three components that each wait one second take
+        three seconds in total.
+      </p>
+      <p>
+        As JSX also accepts promises as children, you can kick off all requests up front and hand
+        the pending promises to your markup. Now everything loads at the same time while the output
+        order stays the same. The bars below show when each request started and finished.
+      </p>
+      <nav class="sx-toggle" aria-label="Loading mode">
+        <a href="?mode=sequential" aria-current={mode === "sequential" ? "page" : undefined}>
+          Sequential
+        </a>
+        <a href="?mode=parallel" aria-current={mode === "parallel" ? "page" : undefined}>
+          Parallel
+        </a>
+      </nav>
+      <section class="sx-card">
+        <header>
+          <h2>Requests</h2>
+          <small>{mode}</small>
+        </header>
+        <div class="px-axis" aria-hidden="true">
+          <span>0 s</span>
+          <span>1 s</span>
+          <span>2 s</span>
+          <span>3 s</span>
+        </div>
+        {mode === "sequential" ? <Sequential start={start} /> : <Parallel start={start} />}
+      </section>
+      <Elapsed start={start} />
     </Layout>
   );
 }
