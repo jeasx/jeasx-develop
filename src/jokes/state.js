@@ -13,22 +13,22 @@ export const CATEGORIES = [
 export const INITIAL = { counter: 3, jokes: [] };
 
 /**
- * Returns the reducer for a way to pick jokes: the server reads them directly,
+ * Applies a form submission to the state. The server picks jokes directly,
  * the browser fetches them (see "./[pick].js"), so it doesn't load all jokes up front.
  *
+ * @param {State} state
+ * @param {Record<string, unknown>} input
  * @param {Pick} pick
- * @returns {(state: State, input: Record<string, unknown>) => Promise<State>}
+ * @returns {Promise<State>}
  */
-export function createReduce(pick) {
-  return async (state, input) => {
-    // The -/+ buttons send "change"; the counter comes from the state.
-    const change = input["change"] === "-1" ? -1 : input["change"] === "1" ? 1 : 0;
-    const counter = clamp(state.counter + change);
-    const category = CATEGORIES.find(({ value }) => value === input["category"])?.value;
-    // Only a category button picks jokes; the -/+ buttons clear them, like the plain form does.
-    const jokes = category ? await pick(category, counter) : [];
-    return { counter, category, jokes };
-  };
+export async function reduce(state, input, pick) {
+  // The -/+ buttons send "change"; the counter comes from the state.
+  const change = input["change"] === "-1" ? -1 : input["change"] === "1" ? 1 : 0;
+  const counter = clamp(state.counter + change);
+  const category = CATEGORIES.find(({ value }) => value === input["category"])?.value;
+  // Only a category button picks jokes; the -/+ buttons clear them, like the plain form does.
+  const jokes = category ? await pick(category, counter) : [];
+  return { counter, category, jokes };
 }
 
 /** Keeps the number of jokes between 1 and 5, even for tampered form fields. */

@@ -2,7 +2,7 @@
 // with the same reducer and component. Only new jokes are fetched from the server.
 import { mount } from "../@helpers/isomorphic";
 import JokePicker from "./JokePicker";
-import { createReduce } from "./state";
+import { reduce } from "./state";
 
 /** @type {import("./state").Pick} */
 async function pick(category, amount) {
@@ -15,4 +15,8 @@ async function pick(category, amount) {
   return await response.json();
 }
 
-mount({ root: "[data-jokes]", View: JokePicker, reduce: createReduce(pick) });
+mount({
+  root: "[data-jokes]",
+  View: JokePicker,
+  reduce: (state, input) => reduce(state, input, pick),
+});

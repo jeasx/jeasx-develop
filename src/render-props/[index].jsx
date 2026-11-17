@@ -1,4 +1,4 @@
-import jokes from "../jokes/jokes";
+import { pick } from "../jokes/jokes";
 import Layout from "../Layout";
 
 export default function () {
@@ -26,7 +26,9 @@ export default function () {
             {(items) => (
               <ul class="joke-list">
                 {items.map((joke) => (
-                  <li>{joke}</li>
+                  <li>
+                    {joke.setup} <em>{joke.punchline}</em>
+                  </li>
                 ))}
               </ul>
             )}
@@ -42,7 +44,10 @@ export default function () {
                     <header>
                       <strong>Joke #{index + 1}</strong>
                     </header>
-                    {joke}
+                    <p>{joke.setup}</p>
+                    <p>
+                      <em>{joke.punchline}</em>
+                    </p>
                   </article>
                 ))}
               </div>
@@ -54,10 +59,12 @@ export default function () {
   );
 }
 
+/** @typedef {import("../jokes/state").Joke} Joke */
+
 /**
  * Loads the data and calls the render prop with it.
  *
- * @param {{ category: string, amount: number, children: (jokes: string[]) => JSX.Element }} props
+ * @param {{ category: string, amount: number, children: (jokes: Joke[]) => JSX.Element }} props
  */
 async function Jokes({ category, amount, children }) {
   const data = await loadJokes(category, amount);
@@ -69,9 +76,9 @@ async function Jokes({ category, amount, children }) {
  *
  * @param {string} category
  * @param {number} amount
- * @returns {Promise<string[]>}
+ * @returns {Promise<Joke[]>}
  */
 async function loadJokes(category, amount) {
   await new Promise((resolve) => setTimeout(resolve, 500));
-  return jokes(category, amount);
+  return pick(category, amount);
 }

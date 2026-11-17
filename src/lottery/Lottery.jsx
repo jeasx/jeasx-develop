@@ -3,10 +3,14 @@
  *
  * @param {import("./state").State} state
  */
-export default function Lottery(state) {
-  const { number, delta, numbers, submit } = state;
+export default function Lottery({ number, numbers, revealed }) {
+  // The last clicked number was added if it is picked now, otherwise removed.
+  const previousValue = !number
+    ? numbers.length
+    : numbers.length + (numbers.includes(number) ? -1 : 1);
+
   return (
-    <form method="post" data-lottery data-state={JSON.stringify(state)}>
+    <form method="post" data-lottery data-state={JSON.stringify({ number, numbers, revealed })}>
       <input type="hidden" name="numbers" value={JSON.stringify(numbers)} />
       <div class="lottery-status">
         <span>Your picks</span>
@@ -14,11 +18,9 @@ export default function Lottery(state) {
       </div>
       <div
         class="lottery-progressbar"
-        style={`--currentValue: ${numbers.length}; --previousValue: ${
-          numbers.length - delta
-        }; --maxValue: 6`}
+        style={`--currentValue: ${numbers.length}; --previousValue: ${previousValue}; --maxValue: 6`}
       />
-      {submit && numbers.length === 6 ? (
+      {revealed ? (
         <Draw numbers={numbers} />
       ) : (
         <div class={`lottery-grid${numbers.length === 6 ? " lottery-full" : ""}`}>
@@ -38,13 +40,13 @@ export default function Lottery(state) {
       )}
       <div>
         <div class="lottery-actions">
-          {numbers.length === 6 && !submit && (
-            <button type="submit" name="submit" value="submit">
+          {numbers.length === 6 && !revealed && (
+            <button type="submit" name="intent" value="reveal">
               Reveal results
             </button>
           )}
-          {submit && numbers.length === 6 && (
-            <button type="submit" name="restart" value="restart">
+          {revealed && (
+            <button type="submit" name="intent" value="restart">
               Start over
             </button>
           )}
