@@ -23,7 +23,7 @@
     "esbuild": "0.28.2",
     "esbuild-svelte": "0.9.5",
     "fastify": "5.12.8",
-    "htmx.org": "4.0.1",
+    "htmx.org": "4.0.2",
     "jsx-async-runtime": "3.0.1",
     "lit": "3.3.3",
     "preact": "11.2.0",
@@ -34,7 +34,7 @@
     "react-dom": "19.3.1",
     "rehype-prism-plus": "2.0.2",
     "sharp": "0.35.5",
-    "svelte": "5.57.3",
+    "svelte": "5.58.0",
     "unplugin-vue": "8.0.1",
     "vue": "3.5.45"
   },
