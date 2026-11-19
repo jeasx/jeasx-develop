@@ -39,6 +39,7 @@ export function initialState(status = "ready") {
     y: STRIP_Y - WHEELS,
     vy: 0,
     speed: 0,
+    distance: 0,
     fuel: 100,
     parcels: PARCELS,
     score: 0,
@@ -102,7 +103,12 @@ function updateDrops(s, world, dt) {
     const zone = world.dropAt(d.x);
     if (zone && !s.delivered.includes(zone.id)) {
       const half = (zone.x1 - zone.x0) / 2;
-      const points = 100 + Math.round(200 * (1 - Math.abs(d.x - (zone.x0 + half)) / half));
+      const accuracy = 1 - Math.abs(d.x - (zone.x0 + half)) / half;
+      // A well-aimed drop pays from 100 to 300, and faster passes pay more:
+      // the bonus grows with the speed at which the parcel was released.
+      // Dropping low pays too: up to half again, fading away above 80 units.
+      const low = Math.max(0, 1 - (ground - d.yl) / 80) * 0.5;
+      const points = Math.round((100 + 200 * accuracy) * (1 + d.speed / (2 * SPEED_MAX) + low));
       s.score += points;
       s.delivered = [...s.delivered, zone.id];
       popup(s, d.x, ground - 8, `+${points}`, "good");
@@ -146,14 +152,25 @@ export function step(prev, input, dt, world) {
   const engine = s.fuel > 0;
 
   if (s.landed) {
-    // On the runway: open the throttle to roll, otherwise brake to a stop and refuel.
+    // On the runway: open the throttle to roll, brake to a stop and refuel,
+    // or taxi backwards along the strip.
     const strip = world.stripAt(s.x);
     if ((input.up || input.right) && engine) {
       s.speed = Math.min(80, s.speed + 40 * dt);
+    } else if (input.left && engine && s.speed <= 0) {
+      s.speed = Math.max(-14, s.speed - 30 * dt);
     } else {
-      s.speed = Math.max(0, s.speed - 45 * dt);
+      s.speed = s.speed > 0 ? Math.max(0, s.speed - 45 * dt) : Math.min(0, s.speed + 45 * dt);
     }
     s.x += s.speed * dt;
+    if (s.landed) {
+      // The wheels roll without slipping on the runway.
+      s.distance += s.speed * dt;
+    }
+    if (strip && s.x < strip.x0 + 4) {
+      s.x = strip.x0 + 4;
+      s.speed = Math.max(0, s.speed);
+    }
     if (s.speed === 0) {
       s.fuel = Math.min(100, s.fuel + 45 * dt);
       if (s.parcels < PARCELS) {
@@ -187,7 +204,7 @@ export function step(prev, input, dt, world) {
     }
     if (pressed && s.parcels > 0) {
       s.parcels -= 1;
-      s.drops.push({ x: s.x - 2, y: s.y + 4, vx: s.speed * 0.9, vy: s.vy, t: 0 });
+      s.drops.push({ x: s.x - 2, y: s.y + 4, vx: s.speed * 0.9, vy: s.vy, t: 0, speed: s.speed, yl: s.y + 4 });
     }
 
     const below = Math.min(world.solidAt(s.x - 6) ?? 999, world.solidAt(s.x + 6) ?? 999);
@@ -215,9 +232,9 @@ export function step(prev, input, dt, world) {
     }
   }
 
-  // Puffs of exhaust trail behind the engine.
+  // Puffs of exhaust trail behind the engine, also while taxiing backwards.
   s.trailClock += dt;
-  if (s.trailClock > 0.06 && engine && s.speed > 0) {
+  if (s.trailClock > 0.06 && engine && s.speed !== 0) {
     s.trailClock = 0;
     s.trail = [{ x: s.x - 13, y: s.y + 1, t: s.clock }, ...s.trail.slice(0, 7)];
   }

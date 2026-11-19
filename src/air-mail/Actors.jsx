@@ -6,7 +6,7 @@ import { HEIGHT, PLANE_X, round, SUN, WIDTH } from "./shared";
  * The pilot wears a leather cap and goggles, and a scarf flutters in the wind.
  */
 function Plane({ state }) {
-  const spin = state.fuel > 0 && (state.speed > 0 || !state.landed);
+  const spin = state.fuel > 0 && (state.speed !== 0 || !state.landed);
   // A blade sweeps around inside the blur; a stopped propeller stands still.
   const blade = spin ? round(Math.cos(state.clock * 55) * 5.8) : 5.4;
   const blink = state.safe > 0 && Math.floor(state.safe * 8) % 2 === 1;
@@ -15,6 +15,9 @@ function Plane({ state }) {
   // ...and streams out further: from 4.6 units at rest to 9 at top speed.
   const tail = round(0.8 - 4.6 - Math.min(state.speed, 110) * 0.04);
   const mid = round((0.8 + tail) / 2);
+  // The main wheel (r 1.6) rolls without slipping: one turn per 2π·1.6 units,
+  // so taxiing backwards turns the spoke the other way.
+  const roll = round(((state.distance / 1.6) * 180) / Math.PI);
   return (
     <g
       class="plane"
@@ -24,6 +27,10 @@ function Plane({ state }) {
       {/* Landing gear behind the fuselage. */}
       <path class="gear" d="M2.4,3.2L3.6,5M0.6,3.4L3.2,5M-11.6,1L-12.4,1.9" />
       <circle class="tire" cx="3.6" cy="5" r="1.6" />
+      {/* The spoke shows the wheel turning, and its direction. */}
+      <g class="spokes" transform={`rotate(${roll} 3.6 5)`}>
+        <path d="M3.6,3.6v2.8M2,5h3.2" />
+      </g>
       <circle class="hubcap" cx="3.6" cy="5" r="0.55" />
       <circle class="tire" cx="-12.5" cy="2.1" r="0.6" />
       {/* Tail: fin with a striped rudder and the horizontal stabilizer. */}

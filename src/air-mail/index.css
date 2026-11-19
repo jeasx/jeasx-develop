@@ -913,6 +913,11 @@
 .plane .hubcap {
   fill: #d6d3d1;
 }
+.plane .spokes path {
+  fill: none;
+  stroke: #a8a29e;
+  stroke-width: 0.3;
+}
 .plane .prop-disc {
   fill: #e7e5e4;
   opacity: 0.35;

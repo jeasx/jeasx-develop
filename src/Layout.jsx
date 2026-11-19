@@ -44,6 +44,7 @@ export default function Layout({
           {/* Paints a dark canvas before the stylesheet is loaded, avoiding a white flash. */}
           <meta name="color-scheme" content="dark" />
           {robots && <meta name="robots" content={robots} />}
+          <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
           <link rel="stylesheet" href={addCacheBuster("/index.css")} />
           {css && <link rel="stylesheet" href={addCacheBuster(css)} />}
           <link
