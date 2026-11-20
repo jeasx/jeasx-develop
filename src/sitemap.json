@@ -51,6 +51,7 @@
           { "path": "/client-jsx", "title": "Solar system" },
           { "path": "/social-feed", "title": "Social feed" },
           { "path": "/dependency-tree", "title": "Dependency tree" },
+          { "path": "/password-generator", "title": "Password generator" },
           { "path": "/guitar-tuner", "title": "Guitar tuner" },
           { "path": "/game-of-life", "title": "Game of Life" },
           { "path": "/maze-chase", "title": "Maze chase" },

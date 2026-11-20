@@ -204,7 +204,15 @@ export function step(prev, input, dt, world) {
     }
     if (pressed && s.parcels > 0) {
       s.parcels -= 1;
-      s.drops.push({ x: s.x - 2, y: s.y + 4, vx: s.speed * 0.9, vy: s.vy, t: 0, speed: s.speed, yl: s.y + 4 });
+      s.drops.push({
+        x: s.x - 2,
+        y: s.y + 4,
+        vx: s.speed * 0.9,
+        vy: s.vy,
+        t: 0,
+        speed: s.speed,
+        yl: s.y + 4,
+      });
     }
 
     const below = Math.min(world.solidAt(s.x - 6) ?? 999, world.solidAt(s.x + 6) ?? 999);

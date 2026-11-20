@@ -1,0 +1,309 @@
+/* The vault panel sits below the headline, lead and explanation. */
+.vault {
+  margin: 1rem auto 1.5rem;
+  box-shadow:
+    0 24px 60px -24px rgb(0 0 0 / 0.8),
+    inset 0 1px 0 rgb(255 255 255 / 0.05);
+  border: 1px solid #2a2440;
+  border-radius: 1rem;
+  background:
+    radial-gradient(ellipse at 12% 0%, rgb(237 42 172 / 0.14), transparent 55%),
+    radial-gradient(ellipse at 100% 100%, rgb(5 148 148 / 0.1), transparent 50%),
+    linear-gradient(160deg, #141826, #0b0e16);
+  padding: 1.5rem 1.25rem 1rem;
+  max-width: 44rem;
+}
+
+.vault-icon {
+  flex-shrink: 0;
+  box-shadow: 0 0 18px -4px rgb(237 42 172 / 0.5);
+  border: 1px solid #343b4f;
+  border-radius: 0.75rem;
+  background: #0b0e16;
+  padding: 0.5rem;
+  color: var(--primary);
+}
+
+/* The controls: the length slider on top, chips and the roll button in one row below. */
+.vault-controls {
+  display: grid;
+  gap: 0.75rem 1rem;
+  margin: 1.5rem 0;
+  border: 1px solid #2a3140;
+  border-radius: 0.75rem;
+  background: #0b0e16;
+  padding: 1rem 1.25rem;
+}
+
+.length {
+  min-width: 0;
+}
+.length-label {
+  display: flex;
+  justify-content: flex-start;
+  align-items: baseline;
+  gap: 0.6rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.length-label output {
+  color: var(--primary);
+  font-weight: 600;
+  font-size: 1rem;
+  font-family: var(--mono);
+  letter-spacing: 0;
+}
+/* Custom slider: a filled track up to the thumb (the fill level is set from JS). */
+/* Custom slider: the gradient fill sits on the runnable track itself, so the
+   rounded ends stay intact (the fill level is set from JS). */
+.length input[type="range"] {
+  border: none;
+  background: none;
+  height: 1.25rem;
+}
+.length input[type="range"]::-webkit-slider-runnable-track {
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--primary) var(--fill, 21%), #2a3140 var(--fill, 21%));
+}
+/* Center the thumb on the 6px track: (track - thumb) / 2. */
+.length input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  cursor: grab;
+  margin-top: -0.375rem;
+  box-shadow: 0 0 10px rgb(237 42 172 / 0.6);
+  border: 3px solid var(--heading);
+  border-radius: 50%;
+  background: var(--primary);
+  width: 1.15rem;
+  height: 1.15rem;
+}
+.length input[type="range"]::-moz-range-track {
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--primary) var(--fill, 21%), #2a3140 var(--fill, 21%));
+}
+.length input[type="range"]::-moz-range-thumb {
+  cursor: grab;
+  box-shadow: 0 0 10px rgb(237 42 172 / 0.6);
+  border: 3px solid var(--heading);
+  border-radius: 50%;
+  background: var(--primary);
+  width: 0.85rem;
+  height: 0.85rem;
+}
+.ticks {
+  display: flex;
+  justify-content: space-between;
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+
+/* Character sets are hidden checkboxes turned into glowing chips. */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 0.5rem;
+  margin: 0;
+  border: none;
+  padding: 0;
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  transition:
+    border-color 0.15s,
+    color 0.15s,
+    box-shadow 0.15s,
+    background 0.15s;
+  cursor: pointer;
+  border: 1px solid var(--input-border);
+  border-radius: 999px;
+  background: var(--input-bg);
+  padding: 0 0.85rem;
+  height: 2rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-family: var(--mono);
+  user-select: none;
+}
+.chip:has(input:checked) {
+  box-shadow: 0 0 12px -4px rgb(237 42 172 / 0.6);
+  border-color: var(--primary);
+  background: var(--primary-bg);
+  color: var(--primary-hover);
+}
+.chip:not(:has(input:checked)):hover {
+  border-color: var(--secondary-hover);
+  color: var(--heading);
+}
+/* A hovered checked chip glows a little stronger. */
+.chip:has(input:checked):hover {
+  box-shadow: 0 0 14px -3px rgb(237 42 172 / 0.75);
+}
+.chip input {
+  position: absolute;
+  opacity: 0;
+  margin: -1px;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+}
+.chip:has(input:focus-visible) {
+  outline: 2px solid var(--primary-focus);
+  outline-offset: 1px;
+}
+
+/* The roll button is a small pill in line with the chips, at the row's end. */
+button.reroll {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.35rem;
+  transition: filter 0.15s;
+  cursor: pointer;
+  margin-left: auto;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--primary), #a21caf);
+  padding: 0 0.95rem;
+  /* Undo the base stylesheet's button[type="submit"] { width: 100% }. */
+  width: auto;
+  /* Same height as the chips, whatever the base stylesheet inherits. */
+  height: 2rem;
+  color: var(--primary-inverse);
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+button.reroll:hover {
+  filter: brightness(1.15);
+}
+.reroll svg {
+  transition: transform 0.4s;
+}
+button.reroll:active svg {
+  transform: rotate(72deg) scale(1.15);
+}
+
+/* The generated passwords: terminal-like rows. */
+.passwords {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.password-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border: 1px solid #262c3b;
+  border-radius: 0.6rem;
+  background: #0d1119;
+  padding: 0.6rem 0.85rem;
+}
+
+.pin {
+  flex: 1;
+  font-size: 0.95rem;
+  font-family: var(--mono);
+  letter-spacing: 0.05em;
+  overflow-wrap: anywhere;
+}
+.pin .alpha {
+  color: var(--heading);
+}
+.pin .digit {
+  color: var(--primary-hover);
+}
+.pin .symbol {
+  color: #05b8b8;
+}
+/* While a character is still shuffling, it shows a random matrix glyph. */
+.pin .matrix {
+  opacity: 0.85;
+  color: #4af626;
+}
+
+.strength {
+  flex-shrink: 0;
+  border-radius: 999px;
+  padding: 0.1rem 0.5rem;
+  font-weight: 700;
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.strength.weak {
+  background: var(--error-bg);
+  color: var(--error);
+}
+.strength.good {
+  background: var(--warning-bg);
+  color: var(--warning-hover);
+}
+.strength.strong {
+  background: var(--success-bg);
+  color: var(--success);
+}
+.strength.overkill {
+  background: var(--info-bg);
+  color: var(--info);
+}
+
+.copy {
+  flex-shrink: 0;
+  transition:
+    border-color 0.15s,
+    color 0.15s;
+  cursor: pointer;
+  border: 1px solid #343b4f;
+  border-radius: 0.45rem;
+  background: transparent;
+  padding: 0.3rem 0.7rem;
+  color: var(--secondary-hover);
+  font-size: 0.8rem;
+}
+.copy:hover {
+  border-color: var(--primary);
+  color: var(--primary-hover);
+}
+
+.entropy-note {
+  display: block;
+  margin-bottom: 0;
+  border: none;
+  padding: 0.35rem 0.85rem;
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-family: var(--mono);
+}
+
+/* Shown before the first roll, so no password exists outside the browser. */
+.empty-hint {
+  margin: 0;
+  border: 1px dashed #2a3140;
+  border-radius: 0.6rem;
+  padding: 0.6rem 0.85rem;
+  color: var(--muted);
+}
+
+.sr-only {
+  position: absolute;
+  clip-path: inset(50%);
+  margin: -1px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+@media (max-width: 480px) {
+  .password-row {
+    flex-wrap: wrap;
+  }
+  .strength {
+    order: 3;
+  }
+}
