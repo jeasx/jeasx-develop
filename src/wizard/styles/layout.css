@@ -1,0 +1,113 @@
+/* Form and boarding pass side by side */
+.wizard-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 20rem;
+  align-items: start;
+  gap: 1.5rem;
+
+  @media (max-width: 880px) {
+    grid-template-columns: minmax(0, 1fr);
+
+    & .pass {
+      position: static;
+      order: -1;
+    }
+  }
+}
+
+.wizard-form {
+  position: relative;
+  margin: 0;
+  border: 1px solid var(--border);
+  border-radius: 1.25rem;
+  background:
+    radial-gradient(60rem 20rem at 0% 0%, var(--primary-focus), transparent 40%) no-repeat,
+    var(--card);
+  padding: clamp(1rem, 3vw, 2rem);
+  animation: rise 0.4s ease-out;
+
+  &.shake {
+    animation: shake 0.4s;
+  }
+
+  & h2 {
+    margin: 0 0 1rem;
+    font-size: 1.1rem;
+  }
+}
+
+@keyframes rise {
+  from {
+    transform: translateY(8px);
+    opacity: 0;
+  }
+}
+
+@keyframes shake {
+  25% {
+    transform: translateX(-6px);
+  }
+  75% {
+    transform: translateX(6px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wizard *,
+  .wizard-form {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 1rem;
+
+  &.row-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (max-width: 560px) {
+    &,
+    &.row-3 {
+      grid-template-columns: 1fr;
+    }
+  }
+}
+
+/* Actions */
+.actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 2rem;
+  border-top: 1px solid var(--border);
+  padding-top: 1.5rem;
+
+  & button {
+    margin: 0;
+    width: auto;
+  }
+}
+
+.actions-enter {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.actions-next {
+  border: 0;
+  background: linear-gradient(135deg, var(--primary), #8b5cf6);
+  box-shadow: 0 10px 24px -12px var(--primary);
+  padding-inline: 1.5rem;
+  font-weight: 600;
+
+  &:hover {
+    filter: brightness(1.1);
+  }
+}

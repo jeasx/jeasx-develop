@@ -1,0 +1,105 @@
+/* Conditional parts, shown and hidden by CSS alone, so they work without JavaScript. */
+.wizard-form:has([name="type"][value="oneway"]:checked) .only-return {
+  visibility: hidden;
+}
+
+.card-fields {
+  display: none;
+
+  .wizard-form:has([name="payment"][value="card"]:checked) & {
+    display: block;
+    animation: rise 0.3s ease-out;
+  }
+}
+
+.card-preview {
+  display: grid;
+  position: relative;
+  grid-template-areas:
+    "chip brand"
+    "number number"
+    "name expiry";
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 1.2rem 1rem;
+  margin: 0.5rem 0 1.5rem;
+  border-radius: 1rem;
+  background:
+    radial-gradient(20rem 12rem at 110% -10%, rgb(255 255 255 / 0.25), transparent 60%),
+    linear-gradient(135deg, #2b1055, var(--primary-bg) 50%, #7a1d5b);
+  box-shadow: 0 24px 48px -24px #000;
+  padding: 1.4rem 1.5rem;
+  max-width: 22rem;
+  aspect-ratio: 1.586;
+  color: #fff;
+  font-family: var(--mono);
+}
+
+.card-chip {
+  grid-area: chip;
+  border-radius: 0.35rem;
+  background: linear-gradient(135deg, #f5d27a, #b88a2c);
+  width: 2.6rem;
+  height: 1.9rem;
+}
+
+.card-brand {
+  grid-area: brand;
+  font-weight: 700;
+  font-family: var(--font);
+  font-style: italic;
+}
+
+.card-number {
+  grid-area: number;
+  font-size: clamp(1rem, 4vw, 1.3rem);
+  letter-spacing: 0.08em;
+}
+
+.card-name {
+  grid-area: name;
+  overflow: hidden;
+  font-size: 0.8rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.card-expiry {
+  grid-area: expiry;
+  font-size: 0.8rem;
+}
+
+/* Switches */
+.toggle {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+  margin: 0 0 1.25rem;
+  border: 1px solid var(--input-border);
+  border-radius: 1rem;
+  background: var(--input-bg);
+  padding: 1rem;
+  cursor: pointer;
+
+  &:has(input:checked) {
+    border-color: var(--primary);
+  }
+
+  & input {
+    flex: none;
+    margin: 0.15rem 0 0;
+  }
+
+  & strong {
+    display: block;
+    color: var(--heading);
+  }
+
+  & small {
+    color: var(--muted);
+  }
+}
+
+.terms .toggle {
+  margin-bottom: 0;
+}

@@ -75,7 +75,7 @@
         "links": [
           { "path": "/blog", "title": "Blog" },
           { "path": "/products", "title": "Products" },
-          { "path": "/wizard", "title": "Wizard" },
+          { "path": "/wizard", "title": "Flight booking" },
           { "path": "/mdx", "title": "Cookbook" },
           { "path": "/repositories", "title": "GitHub repos" },
           { "path": "/ab-testing", "title": "A/B testing" },

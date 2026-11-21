@@ -38,7 +38,8 @@ async function askServer(state, input) {
 mount({
   root: "#app",
   View,
-  reduce: (state, input) => (isServerAction(input) ? askServer(state, input) : reduce(state, input)),
+  reduce: (state, input) =>
+    isServerAction(input) ? askServer(state, input) : reduce(state, input),
   // The server already saved codes and orders while answering them.
   persist: (input, form) => (isServerAction(input) ? Promise.resolve() : postForm(input, form)),
 });

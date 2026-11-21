@@ -1,0 +1,86 @@
+/* Fields */
+.field {
+  position: relative;
+  margin: 0 0 1.25rem;
+
+  & > label,
+  & > legend {
+    margin-bottom: 0.4rem;
+    color: var(--heading);
+    font-weight: 500;
+    font-size: 0.9rem;
+  }
+
+  & input:not([type="radio"], [type="checkbox"]) {
+    margin: 0;
+    border-radius: 0.65rem;
+  }
+
+  & input:focus {
+    box-shadow: 0 0 0 4px var(--primary-focus);
+  }
+
+  /* A green check once a touched field is valid (set by the browser script). */
+  &.field-ok > input {
+    border-color: color-mix(in srgb, var(--ok) 60%, var(--input-border));
+    background: var(--input-bg)
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233ccf91' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E")
+      no-repeat right 0.85rem center / 1rem;
+  }
+
+  & input[type="date"] {
+    color-scheme: dark;
+  }
+}
+
+.field-hint {
+  display: block;
+  margin-top: 0.35rem;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.field-error {
+  margin: 0;
+  color: var(--error-hover);
+  font-size: 0.85rem;
+
+  &:not(:empty) {
+    margin-top: 0.4rem;
+    animation: rise 0.2s ease-out;
+
+    &::before {
+      content: "⚠ ";
+    }
+  }
+}
+
+#error-summary {
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--error);
+  border-radius: 0.9rem;
+  background: color-mix(in srgb, var(--error-bg) 70%, transparent);
+  padding: 1rem 1.25rem;
+  outline: none;
+
+  & strong {
+    color: var(--heading);
+  }
+
+  & ul {
+    margin: 0.5rem 0 0;
+    padding-left: 1.1rem;
+  }
+
+  & li {
+    margin: 0.2rem 0;
+    color: var(--error-hover);
+  }
+
+  & label {
+    display: inline;
+    margin: 0;
+    cursor: pointer;
+    text-decoration: underline dotted;
+  }
+}

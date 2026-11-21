@@ -33,7 +33,10 @@ test("computes totals in cents with discount, shipping and VAT", () => {
 test("only the server applies discount codes", () => {
   assert.equal(isServerAction({ applyCode: "1" }), true);
   assert.equal(isServerAction({ add: "tea" }), false);
-  assert.equal(checkout({ items: [] }, { applyCode: "1", code: " save10 " }).discount?.code, "SAVE10");
+  assert.equal(
+    checkout({ items: [] }, { applyCode: "1", code: " save10 " }).discount?.code,
+    "SAVE10",
+  );
   const wrong = checkout({ items: [] }, { applyCode: "1", code: "nope" });
   assert.equal(wrong.discount, undefined);
   assert.match(wrong.error ?? "", /not a valid code/);
@@ -51,7 +54,12 @@ test("placing an order empties the cart and drops the code", () => {
 });
 
 test("drops invalid cookie items", () => {
-  assert.deepEqual(toItems([{ id: "tea", qty: 2 }, { id: "x", qty: 1 }, { id: "tea", qty: 99 }]), [
-    { id: "tea", qty: 2 },
-  ]);
+  assert.deepEqual(
+    toItems([
+      { id: "tea", qty: 2 },
+      { id: "x", qty: 1 },
+      { id: "tea", qty: 99 },
+    ]),
+    [{ id: "tea", qty: 2 }],
+  );
 });

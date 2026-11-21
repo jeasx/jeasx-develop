@@ -1,0 +1,188 @@
+/* Choices: pills, segments and tiles share the hidden radio and the checked state. */
+.choices {
+  margin-inline: 0;
+  border: 0;
+  padding: 0;
+}
+
+.choices-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.choice {
+  position: relative;
+  margin: 0;
+  cursor: pointer;
+
+  & input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  &:has(input:focus-visible) {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+}
+
+.choices[aria-invalid="true"] .choice {
+  border-color: #954a50;
+}
+
+.choices-pills .choice {
+  display: grid;
+  place-items: center;
+  transition: all 0.15s;
+  border: 1px solid var(--input-border);
+  border-radius: 999px;
+  background: var(--input-bg);
+  width: 2.5rem;
+  height: 2.5rem;
+  font-weight: 600;
+
+  &:hover {
+    border-color: var(--primary);
+  }
+
+  &:has(input:checked) {
+    border-color: transparent;
+    background: linear-gradient(135deg, var(--primary), #8b5cf6);
+    box-shadow: 0 6px 18px -8px var(--primary);
+    color: #fff;
+  }
+}
+
+.choices-segments .choices-list {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  border: 1px solid var(--input-border);
+  border-radius: 0.8rem;
+  background: var(--input-bg);
+  padding: 0.25rem;
+}
+
+.choices-segments .choice {
+  transition: all 0.15s;
+  border-radius: 0.6rem;
+  padding: 0.55rem 1rem;
+  color: var(--muted);
+  font-weight: 500;
+
+  &:hover {
+    color: var(--heading);
+  }
+
+  &:has(input:checked) {
+    background: var(--secondary-bg);
+    box-shadow: inset 0 0 0 1px var(--primary);
+    color: var(--heading);
+  }
+}
+
+.choices-tiles .choices-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+  gap: 0.75rem;
+}
+
+.choices-tiles .choice {
+  --hue: 280;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  transition:
+    transform 0.2s,
+    border-color 0.2s,
+    box-shadow 0.2s;
+  border: 1px solid var(--input-border);
+  border-radius: 1rem;
+  background:
+    radial-gradient(14rem 8rem at 100% 0%, oklch(0.6 0.18 var(--hue) / 0.28), transparent 70%),
+    var(--input-bg);
+  padding: 1rem;
+  overflow: hidden;
+
+  &:hover {
+    transform: translateY(-3px);
+    border-color: oklch(0.7 0.17 var(--hue));
+  }
+
+  &:has(input:checked) {
+    border-color: oklch(0.72 0.17 var(--hue));
+    box-shadow:
+      0 0 0 1px oklch(0.72 0.17 var(--hue)),
+      0 14px 32px -16px oklch(0.7 0.2 var(--hue));
+    background:
+      radial-gradient(16rem 10rem at 100% 0%, oklch(0.6 0.18 var(--hue) / 0.5), transparent 70%),
+      var(--input-bg);
+
+    &::after {
+      display: grid;
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      place-items: center;
+      border-radius: 50%;
+      background: oklch(0.72 0.17 var(--hue));
+      width: 1.4rem;
+      height: 1.4rem;
+      color: #111;
+      font-weight: 800;
+      font-size: 0.8rem;
+      content: "✓";
+    }
+  }
+}
+
+.choice-label {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4rem;
+  color: var(--heading);
+  font-weight: 600;
+}
+
+.choice-detail {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+/* Keeps the label clear of the check badge in the top right corner of a selected tile. */
+.choices-tiles .choice-label {
+  padding-right: 1.75rem;
+}
+
+.tile-flag {
+  flex-basis: 100%;
+  font-size: 1.8rem;
+  line-height: 1;
+}
+
+.tile-city {
+  font-size: 1.1rem;
+}
+
+.tile-code {
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.8rem;
+}
+
+.tile-price {
+  flex: none;
+  color: oklch(0.8 0.12 var(--hue));
+  font-weight: 600;
+}
+
+.cabins .choices-list,
+.bags .choices-list {
+  grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+}

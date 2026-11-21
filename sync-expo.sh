@@ -42,4 +42,25 @@ while IFS= read -r -d '' file; do
   fi
 done < <(git -C "$SOURCE" ls-files -z --cached --others --exclude-standard)
 
-echo "$updated file(s) updated."
+# Remove files that vanished from examples existing in both repos (src/<example>/...).
+# Examples only present in this repo are left alone.
+removed=0
+while IFS= read -r -d '' file; do
+  is_kept "$file" && continue
+  [[ "$file" == src/*/* ]] || continue
+  example="${file#src/}"; example="src/${example%%/*}"
+  [[ -d "$SOURCE/$example" ]] || continue
+  if [[ ! -e "$SOURCE/$file" && -f "$TARGET/$file" ]]; then
+    rm "$TARGET/$file"
+    echo "removed: $file"
+    removed=$((removed + 1))
+  fi
+done < <(git -C "$TARGET" ls-files -z)
+
+# Remove empty folders left behind in examples existing in both repos.
+for dir in "$TARGET"/src/*/; do
+  [[ -d "$SOURCE/src/$(basename "$dir")" ]] || continue
+  find "$dir" -mindepth 1 -type d -empty -print -delete | sed "s|^$TARGET/|removed: |"
+done
+
+echo "$updated file(s) updated, $removed file(s) removed."
