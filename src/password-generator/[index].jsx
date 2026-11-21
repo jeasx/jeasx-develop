@@ -89,7 +89,8 @@ export default function () {
             </button>
           </fieldset>
         </form>
-        <div id="passwords" aria-live="polite">
+        <p id="status" class="sr-only" role="status" aria-live="polite"></p>
+        <div id="passwords">
           <p class="empty-hint">
             Press <strong>Roll</strong> to get five new passwords.
           </p>

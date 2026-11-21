@@ -1,31 +1,51 @@
 import { jsxToString } from "jsx-async-runtime";
 import PasswordList from "./PasswordList";
-import { generatePassword } from "./generate";
+import { SETS, generatePassword } from "./generate";
 
-const SET_ALPHABET_SIZES = { lower: 26, upper: 26, digits: 10, symbols: 24 };
+/** Timers of the running matrix reveal, cleared before every re-render. */
+let revealTimers = [];
 
 /** Reads the controls, generates fresh passwords and renders them in the browser. */
-async function render(form) {
-  const length = Number(new FormData(form).get("length"));
-  const sets = /** @type {string[]} */ (new FormData(form).getAll("sets"));
+async function render(form, { reveal = true } = {}) {
+  const data = new FormData(form);
+  const length = Number(data.get("length"));
+  const sets = /** @type {string[]} */ (data.getAll("sets"));
   const container = document.getElementById("passwords");
   // Keep the length readout and the slider fill level in sync while dragging.
   /** @type {HTMLOutputElement} */
   const output = document.querySelector("output[for='length']");
   output.value = String(length);
+  /** @type {HTMLInputElement} */
   const range = form.querySelector("input[name='length']");
-  range.style.setProperty("--fill", `${((length - 8) / 56) * 100}%`);
+  const min = Number(range.min);
+  const max = Number(range.max);
+  range.style.setProperty("--fill", `${((length - min) / (max - min)) * 100}%`);
+  stopReveal();
+  const status = document.getElementById("status");
   if (sets.length === 0) {
     container.innerHTML = "<p>Pick at least one character set.</p>";
+    status.textContent = "Pick at least one character set.";
     return;
   }
   const passwords = Array.from({ length: 5 }, () => generatePassword({ length, sets }));
-  const alphabetSize = sets.reduce((sum, set) => sum + SET_ALPHABET_SIZES[set], 0);
+  const alphabetSize = sets.reduce((sum, set) => sum + SETS[set].length, 0);
   // Render the JSX component to HTML right in the browser.
   container.innerHTML = await jsxToString(
     <PasswordList passwords={passwords} length={length} alphabetSize={alphabetSize} />,
   );
-  matrixReveal(container);
+  status.textContent = `Five new passwords with ${length} characters.`;
+  if (reveal) {
+    matrixReveal(container);
+  }
+}
+
+/** Stops a running reveal, so no timers keep ticking on discarded rows. */
+function stopReveal() {
+  revealTimers.forEach((timer) => {
+    clearInterval(timer);
+    clearTimeout(timer);
+  });
+  revealTimers = [];
 }
 
 /**
@@ -48,11 +68,12 @@ function matrixReveal(container) {
       const timer = setInterval(() => {
         span.textContent = randomGlyph();
       }, 60);
-      setTimeout(() => {
+      const done = setTimeout(() => {
         clearInterval(timer);
         span.textContent = final;
         span.classList.remove("matrix");
       }, settle);
+      revealTimers.push(timer, done);
     });
   });
 }
@@ -64,18 +85,19 @@ function randomGlyph() {
   return MATRIX_GLYPHS[Math.floor(Math.random() * MATRIX_GLYPHS.length)];
 }
 
-// Any control change (slider, checkboxes) refreshes the passwords immediately.
+// Any control change (slider, checkboxes) refreshes the passwords immediately,
+// without the reveal animation, so dragging the slider stays smooth.
 document.addEventListener("input", (event) => {
   const target = event.target;
   if (target instanceof HTMLElement) {
     const form = target.closest("#password-form");
     if (form instanceof HTMLFormElement) {
-      render(form);
+      render(form, { reveal: false });
     }
   }
 });
 
-// Submitting (Enter or Enter on the Roll button) also rolls with fresh randomness.
+// Submitting rolls with fresh randomness.
 document.addEventListener("submit", (event) => {
   if (event.target instanceof HTMLFormElement && event.target.id === "password-form") {
     event.preventDefault();
@@ -85,15 +107,24 @@ document.addEventListener("submit", (event) => {
 
 // Clicking a password row copies it, even after the list has been re-rendered.
 document.addEventListener("click", async (event) => {
-  if (!(event.target instanceof HTMLElement)) {
+  // Element, not HTMLElement: clicks on the copy icon target SVG elements.
+  if (!(event.target instanceof Element)) {
     return;
   }
   const row = event.target.closest("button[data-copy]");
   if (!(row instanceof HTMLButtonElement)) {
     return;
   }
-  await navigator.clipboard.writeText(row.dataset.copy);
+  const status = document.getElementById("status");
+  try {
+    await navigator.clipboard.writeText(row.dataset.copy);
+  } catch {
+    row.title = "Copying failed - select the password and copy it manually";
+    status.textContent = "Copying failed.";
+    return;
+  }
   // The copy icon flips to a checkmark for a moment.
+  status.textContent = "Password copied.";
   row.classList.add("copied");
   setTimeout(() => row.classList.remove("copied"), 1500);
 });

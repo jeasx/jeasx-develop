@@ -3,14 +3,14 @@ export default function PasswordList({ passwords, length, alphabetSize }) {
   const entropy = Math.log2(alphabetSize) * length;
   const level = lightLevel(entropy);
   return (
-    <ul class="passwords" aria-live="polite">
+    <ul class="passwords">
       {passwords.map((password) => (
         <li>
           <button
             class="password-row"
             type="button"
             data-copy={password}
-            aria-label="Click to copy the password"
+            title="Click to copy the password"
           >
             <span class={`lights lights-${level}`} aria-hidden="true">
               <span class="bulb red" />
