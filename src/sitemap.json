@@ -42,7 +42,8 @@
           { "path": "/lottery", "title": "Lottery" },
           { "path": "/jokes", "title": "Jokes" },
           { "path": "/kanban", "title": "Kanban board" },
-          { "path": "/cinema", "title": "Cinema seats" }
+          { "path": "/cinema", "title": "Cinema seats" },
+          { "path": "/cart", "title": "Shopping cart" }
         ]
       },
       {
