@@ -1096,8 +1096,12 @@ dialog::backdrop {
 }
 
 /* Overview page */
+main:has(> .home-hero:first-child) {
+  padding-top: 0;
+}
+
 .home-hero {
-  border-radius: 1rem;
+  border-radius: 0 0 1rem 1rem;
   background: radial-gradient(
     ellipse at top,
     color-mix(in srgb, var(--primary) 25%, transparent),
