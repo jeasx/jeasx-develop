@@ -58,7 +58,7 @@ function matrixReveal(container) {
 }
 
 /** Glyphs the matrix reveal shuffles through before a character settles. */
-const MATRIX_GLYPHS = "0123456789$#%?!/\\|*+-<>=?ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿ";
+const MATRIX_GLYPHS = "0123456789$#%?!/\\|*+-<>=?";
 
 function randomGlyph() {
   return MATRIX_GLYPHS[Math.floor(Math.random() * MATRIX_GLYPHS.length)];
@@ -83,16 +83,17 @@ document.addEventListener("submit", (event) => {
   }
 });
 
-// Copy a password on button click, even after the list has been re-rendered.
+// Clicking a password row copies it, even after the list has been re-rendered.
 document.addEventListener("click", async (event) => {
   if (!(event.target instanceof HTMLElement)) {
     return;
   }
-  const button = event.target.closest("button[data-copy]");
-  if (!(button instanceof HTMLButtonElement)) {
+  const row = event.target.closest("button[data-copy]");
+  if (!(row instanceof HTMLButtonElement)) {
     return;
   }
-  await navigator.clipboard.writeText(button.dataset.copy);
-  button.textContent = "Copied!";
-  setTimeout(() => (button.textContent = "Copy"), 1500);
+  await navigator.clipboard.writeText(row.dataset.copy);
+  // The copy icon flips to a checkmark for a moment.
+  row.classList.add("copied");
+  setTimeout(() => row.classList.remove("copied"), 1500);
 });

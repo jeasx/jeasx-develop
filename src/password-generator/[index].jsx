@@ -5,22 +5,21 @@ const LENGTH = 20;
 export default function () {
   return (
     <Layout
-      title="Password generator in the browser"
-      description="Generate cryptographically secure passwords in the browser with JSX components rendered by jsx-async-runtime."
+      title="Secure password generator"
+      description="Generate strong, random passwords right in your browser. Rendered client-side with plain JSX via jsx-async-runtime."
       css="/password-generator/index.css"
       script="/password-generator/index.js"
     >
       <h1>Password generator</h1>
       <p class="lead">
-        Fresh, cryptographically secure passwords from <code>crypto.getRandomValues</code> —
-        generated entirely in your browser, nothing ever leaves this page.
+        Strong, random passwords powered by <code>crypto.getRandomValues</code>. Everything happens
+        in your browser - nothing is sent anywhere.
       </p>
       <p>
-        The results are rendered with{" "}
-        <a href="https://github.com/jeasx/jsx-async-runtime">jsx-async-runtime</a>: a plain JSX
-        component is serialized to HTML with <code>jsxToString</code> after every change, no
-        framework, no virtual DOM, no hydration. Every password keeps one character from each
-        enabled set, and moving a control rolls all five instantly.
+        Each password contains at least one character from every set you enable. The list is
+        rendered with <a href="https://github.com/jeasx/jsx-async-runtime">jsx-async-runtime</a>: on
+        every change, a plain JSX component is turned into HTML with <code>jsxToString</code> - no
+        framework, no virtual DOM, no hydration.
       </p>
       <div class="vault">
         <svg
@@ -92,7 +91,7 @@ export default function () {
         </form>
         <div id="passwords" aria-live="polite">
           <p class="empty-hint">
-            Press <strong>Roll</strong> to generate five fresh passwords.
+            Press <strong>Roll</strong> to get five new passwords.
           </p>
         </div>
       </div>
