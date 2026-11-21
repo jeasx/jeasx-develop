@@ -22,12 +22,13 @@
       },
       {
         "title": "Streaming",
-        "description": "Async components don't block the page: jsx-async-runtime streams HTML as soon as it is ready, in order, in parallel or out of order, from async iterables or a ReadableStream.",
+        "description": "Async components don't block the page: jsx-async-runtime streams HTML as soon as it is ready, in order, in parallel, out of order or lazily on scroll, from async iterables or a ReadableStream.",
         "links": [
           { "path": "/parallel", "title": "Parallel loading" },
           { "path": "/aggregator", "title": "API aggregator" },
           { "path": "/streaming", "title": "Streaming HTML" },
           { "path": "/out-of-order", "title": "Slotted streaming" },
+          { "path": "/lazy-load", "title": "Lazy loading" },
           { "path": "/readable-stream", "title": "ReadableStreams" },
           { "path": "/async-iterable", "title": "Async iterables" },
           { "path": "/mandelbrot", "title": "Mandelbrot explorer" }
