@@ -4,6 +4,7 @@
 #  2. copy all files from jeasx-expo (tracked + untracked, not ignored)
 #  3. restore KEEP files from git HEAD
 #  4. remove empty folders
+#  5. commit ("upstream: expo") and push, if anything changed
 set -euo pipefail
 
 TARGET="$(cd "$(dirname "$0")" && pwd)"
@@ -59,4 +60,13 @@ git checkout HEAD -- "${KEEP[@]}"
 # (-delete implies -depth, which disables -prune, so exclude paths explicitly)
 find . -mindepth 1 -type d -empty -not -path './.git*' -not -path './node_modules*' -print -delete
 
+# 5. commit and push
+if [[ -z "$(git status --porcelain)" ]]; then
+  echo "Already up to date with jeasx-expo."
+  exit 0
+fi
+
 git status --short
+git add -A
+git commit -q -m "upstream: expo"
+git push
