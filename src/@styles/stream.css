@@ -1,4 +1,5 @@
-/* Shared look of the "Streaming and Server-Sent Events" examples. */
+/* Opt-in: shared look of the "Streaming and Server-Sent Events" examples (sx-* classes).
+   Import it at the top of an example stylesheet: @import "../@styles/stream.css"; */
 :root {
   --sx-accent: #22d3ee;
   --sx-accent-2: #a855f7;

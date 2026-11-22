@@ -1,0 +1,263 @@
+/* Opt-in: themed form controls (fields, checkboxes, radios, ranges, file inputs) and joined
+   groups of buttons and inputs. Import it at the top of an example stylesheet:
+   @import "../@styles/forms.css"; */
+
+/* Joined buttons and inputs */
+[role="group"],
+[role="search"] {
+  display: inline-flex;
+  vertical-align: middle;
+  margin-bottom: 1rem;
+  width: 100%;
+}
+:is([role="group"], [role="search"]) > * {
+  flex: 1 1 auto;
+  margin-bottom: 0;
+  border-radius: 0;
+}
+/* Needs to beat the specificity of the input rule, or the margin stretches the group.
+   The fields start at their full width, so they take the room the buttons don't need. */
+:is([role="group"], [role="search"])
+  > :is(input:not([type="checkbox"], [type="radio"]), select, textarea) {
+  flex: 1 1 auto;
+  margin-bottom: 0;
+}
+:is([role="group"], [role="search"])
+  > :is(button, [type="submit"], [type="button"], [role="button"]) {
+  width: auto;
+}
+[role="group"] > :is(button, [type="submit"], [type="button"], [role="button"]) {
+  --input-px: 2rem;
+}
+[role="search"] {
+  --radius: 5rem;
+}
+:is([role="group"], [role="search"]) > :not(:first-child) {
+  margin-inline-start: 0;
+}
+:is([role="group"], [role="search"]) > :first-child {
+  border-start-start-radius: var(--radius);
+  border-end-start-radius: var(--radius);
+}
+:is([role="group"], [role="search"]) > :last-child {
+  border-start-end-radius: var(--radius);
+  border-end-end-radius: var(--radius);
+}
+[role="group"]
+  > :not(:first-child):is(button, [type="submit"], [type="button"], [role="button"]):not(.outline) {
+  border-inline-start-color: rgb(0 0 0 / 0.2);
+}
+
+/* Fields */
+label,
+legend {
+  margin-bottom: 0.375rem;
+}
+legend {
+  display: block;
+}
+/* A label wrapping its input keeps the input's margin inside, so both margins add up. */
+label {
+  display: flow-root;
+}
+fieldset {
+  border: 0;
+  padding: 0;
+}
+input:not(
+  [type="checkbox"],
+  [type="radio"],
+  [type="range"],
+  [type="file"],
+  [type="submit"],
+  [type="button"],
+  [type="reset"]
+),
+select,
+textarea {
+  display: block;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
+  margin-bottom: 1rem;
+  border: var(--border-width) solid var(--input-border);
+  border-radius: var(--radius);
+  background: var(--input-bg);
+  padding: 0.75rem var(--input-px);
+  width: 100%;
+  color: #e0e3e7;
+  line-height: 1.5;
+}
+label > :is(input, select, textarea) {
+  margin-top: 0.25rem;
+}
+::placeholder {
+  opacity: 1;
+  color: #8891a4;
+}
+/* Focus only recolors the border, so a page can pick its own focus color. */
+:is(input, select, textarea):focus {
+  outline: none;
+  border-color: var(--primary);
+}
+:is(input, select, textarea)[aria-invalid="true"] {
+  border-color: #954a50;
+}
+:is(input, select, textarea)[aria-invalid="true"]:focus {
+  border-color: var(--error);
+}
+:is(input, select, textarea):disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+:is(input, select, textarea, fieldset) + small {
+  display: block;
+  margin-top: -0.75rem;
+  margin-bottom: 1rem;
+  color: var(--muted);
+}
+:is(input, select, textarea)[aria-invalid="true"] + small {
+  color: var(--error);
+}
+select:not([multiple], [size]) {
+  appearance: none;
+  background: var(--input-bg) var(--icon-chevron) no-repeat right 0.75rem center / 1rem;
+  padding-inline-end: 2.5rem;
+}
+[type="search"] {
+  --radius: 5rem;
+}
+/* Same specificity as the input rule above, so it wins. */
+input:not(
+    [type="checkbox"],
+    [type="radio"],
+    [type="range"],
+    [type="submit"],
+    [type="button"],
+    [type="reset"]
+  )[type="search"] {
+  /* Only the icon, so pages can still change the background color. */
+  background-image: var(--icon-search);
+  background-position: left calc(var(--input-px) + 0.125rem) center;
+  background-size: 1rem;
+  background-repeat: no-repeat;
+  padding-inline-start: calc(var(--input-px) + 1.75rem);
+}
+textarea {
+  resize: vertical;
+}
+/* Fields keep one height, even when a page enlarges their text. */
+input:not(
+  [type="checkbox"],
+  [type="radio"],
+  [type="range"],
+  [type="file"],
+  [type="submit"],
+  [type="button"],
+  [type="reset"]
+),
+select:not([multiple], [size]) {
+  height: calc(1.5rem + 1.5rem + 2 * var(--border-width));
+}
+/* File inputs: no field, just a secondary button and the file name in muted text. */
+[type="file"] {
+  display: block;
+  margin-bottom: 1rem;
+  padding: 0.375rem 0;
+  width: 100%;
+  color: var(--muted);
+}
+[type="file"]::file-selector-button {
+  transition:
+    background-color 0.15s,
+    border-color 0.15s;
+  cursor: pointer;
+  margin-inline-end: 0.5rem;
+  border: var(--border-width) solid var(--secondary-bg);
+  border-radius: var(--radius);
+  background: var(--secondary-bg);
+  padding: 0.375rem var(--input-px);
+  color: #fff;
+  font: inherit;
+}
+[type="file"]:is(:hover, :focus)::file-selector-button {
+  border-color: var(--secondary);
+  background: var(--secondary);
+}
+[type="checkbox"],
+[type="radio"],
+[type="range"] {
+  accent-color: var(--primary);
+}
+[type="checkbox"],
+[type="radio"] {
+  flex-shrink: 0;
+  vertical-align: middle;
+  appearance: none;
+  cursor: pointer;
+  margin: -0.125em 0.5em 0 0;
+  border: 2px solid var(--input-border);
+  border-radius: var(--radius);
+  background: var(--input-bg) no-repeat center / 0.75em;
+  width: 1.25em;
+  height: 1.25em;
+}
+[type="radio"] {
+  border-radius: 50%;
+}
+:is([type="checkbox"], [type="radio"]):checked {
+  border-color: var(--primary-bg);
+  background-color: var(--primary-bg);
+}
+[type="checkbox"]:checked {
+  background-image: var(--icon-check);
+}
+[type="radio"]:checked {
+  border-width: 0.35em;
+  background-color: var(--primary-inverse);
+}
+label:has(> [type="checkbox"], > [type="radio"]) {
+  cursor: pointer;
+}
+[type="range"] {
+  appearance: none;
+  border: 0;
+  background: none;
+  padding: 0;
+  width: 100%;
+  height: 1.25rem;
+}
+[type="range"]::-webkit-slider-runnable-track {
+  border-radius: var(--radius);
+  background: var(--border);
+  height: 0.375rem;
+}
+[type="range"]::-moz-range-track {
+  border-radius: var(--radius);
+  background: var(--border);
+  height: 0.375rem;
+}
+[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  cursor: pointer;
+  margin-top: -0.4375rem;
+  border: 2px solid var(--bg);
+  border-radius: 50%;
+  background: #3a4357;
+  width: 1.25rem;
+  height: 1.25rem;
+}
+[type="range"]::-moz-range-thumb {
+  cursor: pointer;
+  border: 2px solid var(--bg);
+  border-radius: 50%;
+  background: #3a4357;
+  width: 1.25rem;
+  height: 1.25rem;
+}
+[type="range"]:is(:hover, :focus)::-webkit-slider-thumb {
+  background: var(--primary-bg);
+}
+[type="range"]:is(:hover, :focus)::-moz-range-thumb {
+  background: var(--primary-bg);
+}

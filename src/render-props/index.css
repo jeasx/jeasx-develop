@@ -1,3 +1,5 @@
+@import "../@styles/card.css";
+
 .joke-list {
   display: grid;
   gap: 0.5rem;

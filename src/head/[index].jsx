@@ -21,6 +21,7 @@ export default function ({ request }) {
     <Layout
       title="Manage the head"
       description="Default description of the route"
+      css="/head/index.css"
       script="/head/index.js"
     >
       <h1>Manage the head</h1>

@@ -1,4 +1,4 @@
-@import "../streaming/shared.css";
+@import "../@styles/stream.css";
 
 .rs-chat {
   display: grid;

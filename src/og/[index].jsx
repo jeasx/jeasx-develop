@@ -18,6 +18,7 @@ export default function ({ request }) {
     <Layout
       title="Open Graph images"
       description="Generate social preview images from JSX: render SVG on the server and convert it to PNG with sharp."
+      css="/og/index.css"
     >
       <h1>Open Graph images</h1>
       <p class="lead">

@@ -1,3 +1,5 @@
+@import "../@styles/table.css";
+
 :root {
   --is-accent: #8b5cf6;
   --is-accent-2: #ec4899;
@@ -103,6 +105,12 @@
   border-top-color: var(--is-accent);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .is-end td {

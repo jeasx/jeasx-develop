@@ -1,3 +1,7 @@
+@import "../@styles/card.css";
+@import "../@styles/buttons.css";
+@import "../@styles/table.css";
+
 :root {
   --ab-accent: #f59e0b;
   --ab-accent-2: #ef4444;

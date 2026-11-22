@@ -1,3 +1,7 @@
+@import "../@styles/buttons.css";
+@import "../@styles/forms.css";
+@import "../@styles/details.css";
+
 :root {
   --re-accent: #58c4dc;
   --re-accent-2: #087ea4;

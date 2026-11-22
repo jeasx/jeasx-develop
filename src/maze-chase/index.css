@@ -1,3 +1,5 @@
+@import "../@styles/buttons.css";
+
 /* Cabinet on the left, controls on the right; stacked on narrow screens. */
 .arcade {
   display: grid;

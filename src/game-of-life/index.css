@@ -1,3 +1,6 @@
+@import "../@styles/buttons.css";
+@import "../@styles/forms.css";
+
 /* Board on the left, rule cards on the right; stacked on narrow screens. */
 .playground {
   display: grid;

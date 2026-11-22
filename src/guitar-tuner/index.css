@@ -1,3 +1,5 @@
+@import "../@styles/buttons.css";
+
 /* A compact instrument panel: dial, strings and controls fit on one screen. */
 .tuner {
   margin: 1.25rem auto;

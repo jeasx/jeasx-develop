@@ -1,0 +1,53 @@
+/* Opt-in: <article> as a card with optional header and footer, tinted by .card-primary,
+   .card-success or .card-error. Import it at the top of an example stylesheet:
+   @import "../@styles/card.css"; */
+article {
+  margin-bottom: 1rem;
+  box-shadow:
+    0 0 0 1px rgb(7 8 12 / 0.4),
+    0 0.5rem 1.5rem rgb(7 8 12 / 0.15);
+  border-radius: var(--radius);
+  background: #181c25;
+  padding: 1rem;
+}
+article > header,
+article > footer {
+  margin-inline: -1rem;
+  background: #1a1f29;
+  padding: 0.66rem 1rem;
+}
+article > header {
+  margin-top: -1rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+article > footer {
+  margin-top: 1rem;
+  margin-bottom: -1rem;
+  border-top: 1px solid var(--border);
+  border-radius: 0 0 var(--radius) var(--radius);
+}
+article > :last-child:not(header, footer) {
+  margin-bottom: 0;
+}
+.card-primary {
+  --card: var(--primary);
+  --card-bg: var(--primary-bg);
+}
+.card-success {
+  --card: var(--success);
+  --card-bg: var(--success-bg);
+}
+.card-error {
+  --card: var(--error);
+  --card-bg: var(--error-bg);
+}
+article[class*="card-"] {
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--card) 30%, transparent);
+  background: var(--card-bg);
+}
+article[class*="card-"] > :is(header, footer) {
+  border-color: color-mix(in srgb, var(--card) 20%, transparent);
+  background: color-mix(in srgb, var(--card) 12%, var(--card-bg));
+}

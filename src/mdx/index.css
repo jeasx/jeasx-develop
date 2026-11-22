@@ -1,3 +1,7 @@
+@import "../@styles/card.css";
+@import "../@styles/forms.css";
+@import "../@styles/details.css";
+
 .recipe-cards {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));

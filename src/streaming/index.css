@@ -1,4 +1,6 @@
-@import "./shared.css";
+@import "../@styles/stream.css";
+@import "../@styles/card.css";
+@import "../@styles/busy.css";
 
 .sx-metrics {
   display: grid;

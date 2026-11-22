@@ -1,3 +1,6 @@
+@import "../@styles/buttons.css";
+@import "../@styles/forms.css";
+
 /* Every column has its own accent color, used for its header, badge and cards. */
 .kanban-column[data-status="todo"] {
   --accent: #f472b6;

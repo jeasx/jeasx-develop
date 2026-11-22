@@ -1,4 +1,6 @@
-@import "../streaming/shared.css";
+@import "../@styles/stream.css";
+@import "../@styles/card.css";
+@import "../@styles/busy.css";
 
 .px-axis {
   display: flex;

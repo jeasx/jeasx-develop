@@ -10,6 +10,7 @@ export default function () {
       title="The power of Jeasx in examples"
       description="Welcome to Jeasx - JSX with Ease. Explore the framework in examples."
       showHeader={false}
+      css="/@styles/home/index.css"
     >
       <section class="home-hero">
         <p class="home-eyebrow">JSX with Ease</p>

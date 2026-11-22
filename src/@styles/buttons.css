@@ -1,0 +1,118 @@
+/* Opt-in: themed buttons (bare buttons, [role="button"] and .btn), with color variants and
+   outline buttons. Import it at the top of an example stylesheet: @import "../@styles/buttons.css"; */
+button,
+[type="submit"],
+[type="button"],
+[type="reset"],
+[role="button"],
+.btn {
+  --btn: var(--primary-bg);
+  --btn-hover: var(--primary);
+  --btn-text: var(--primary-inverse);
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5em;
+  transition:
+    background-color 0.15s,
+    border-color 0.15s,
+    color 0.15s;
+  cursor: pointer;
+  margin: 0;
+  border: var(--border-width) solid var(--btn);
+  border-radius: var(--radius);
+  background: var(--btn);
+  padding: 0.75rem var(--input-px);
+  color: var(--btn-text);
+  font: inherit;
+  font-size: 1rem;
+  line-height: 1.5;
+  user-select: none;
+  text-align: center;
+  text-decoration: none;
+}
+.btn {
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+button[type="submit"] {
+  width: 100%;
+}
+/* :where() keeps this at the specificity of a plain hover, so pages can still override it. */
+:is(button, [type="submit"], [type="button"], [type="reset"], [role="button"], .btn):where(
+  :hover,
+  [aria-current]:not([aria-current="false"])
+) {
+  border-color: var(--btn-hover);
+  background: var(--btn-hover);
+  color: var(--btn-text);
+}
+:is(button, [type="submit"], [type="button"], [type="reset"], [role="button"], .btn):focus-visible {
+  outline: 2px solid var(--primary-focus);
+  outline-offset: 2px;
+}
+:is(button, [type="submit"], [type="button"], [type="reset"], [role="button"], .btn):is(
+  [disabled],
+  [aria-disabled="true"]
+) {
+  opacity: 0.5;
+  pointer-events: none;
+}
+.btn-primary {
+  --btn: var(--primary);
+  --btn-hover: var(--primary-hover);
+}
+.secondary,
+[type="reset"] {
+  --btn: var(--secondary-bg);
+  --btn-hover: var(--secondary);
+  --btn-text: #fff;
+}
+.btn-secondary,
+.btn-warning,
+.btn-error {
+  --btn-text: #fff;
+}
+.btn-secondary {
+  --btn: var(--secondary);
+  --btn-hover: var(--secondary-hover);
+}
+.btn-warning {
+  --btn: var(--warning);
+  --btn-hover: var(--warning-hover);
+}
+.btn-error {
+  --btn: var(--error);
+  --btn-hover: var(--error-hover);
+}
+/* Outline buttons: transparent, only text and border are colored. */
+.outline {
+  --btn: var(--primary);
+  --btn-hover: var(--primary-hover);
+  --btn-text: var(--btn);
+}
+.outline.secondary {
+  --btn: var(--secondary);
+  --btn-hover: var(--secondary-hover);
+}
+.outline:hover {
+  --btn-text: var(--btn-hover);
+}
+/* .btn-outline keeps the text color of its button and only colors the border. */
+.outline,
+.outline:hover,
+.btn-outline,
+.btn-outline:hover {
+  background: transparent;
+  color: var(--btn-text);
+}
+/* A pressed outline button, e.g. the selected preset in /negotiation. */
+.btn-outline[aria-pressed="true"] {
+  border-color: var(--primary);
+  background: var(--primary-bg);
+}
+.btn-sm {
+  padding: 0.375rem 0.625rem;
+  font-size: 0.8125rem;
+}

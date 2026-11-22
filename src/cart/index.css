@@ -1,3 +1,7 @@
+@import "../@styles/buttons.css";
+@import "../@styles/busy.css";
+@import "../@styles/forms.css";
+
 /* Builds on the site theme (--primary, --border, --input-bg, …) instead of its own palette. */
 .cart-page {
   margin: 0 auto;

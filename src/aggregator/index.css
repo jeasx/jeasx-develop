@@ -1,4 +1,5 @@
-@import "../streaming/shared.css";
+@import "../@styles/stream.css";
+@import "../@styles/card.css";
 
 .ag-grid {
   display: grid;

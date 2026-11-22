@@ -1,3 +1,6 @@
+@import "../@styles/buttons.css";
+@import "../@styles/details.css";
+
 :root {
   --pr-accent: #ad7bff;
   --pr-accent-2: #673ab8;

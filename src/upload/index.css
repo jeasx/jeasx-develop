@@ -1,0 +1,15 @@
+@import "../@styles/card.css";
+@import "../@styles/buttons.css";
+@import "../@styles/forms.css";
+@import "../@styles/table.css";
+
+/* Columns of the .row with the options: full width on phones, a quarter from tablets on. */
+.col-12 {
+  padding-inline: 0.75rem;
+  width: 100%;
+}
+@media (min-width: 768px) {
+  .col-md-3 {
+    width: 25%;
+  }
+}

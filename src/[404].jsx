@@ -5,7 +5,7 @@ import Layout from "./Layout";
  */
 export default function ({ request }) {
   return (
-    <Layout title="Error 404" robots="noindex" showHeader={false}>
+    <Layout title="Error 404" robots="noindex" showHeader={false} css="/@styles/home/index.css">
       <section class="home-hero">
         <p class="home-eyebrow">Error 404</p>
         <h1>

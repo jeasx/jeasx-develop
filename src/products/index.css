@@ -1,3 +1,5 @@
+@import "../@styles/card.css";
+
 /* Only the text is morphed, not a line as wide as the page. */
 .product-title {
   display: inline-block;

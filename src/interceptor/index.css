@@ -1,3 +1,5 @@
+@import "../@styles/buttons.css";
+
 .stage {
   display: grid;
   justify-items: center;

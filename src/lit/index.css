@@ -1,3 +1,5 @@
+@import "../@styles/buttons.css";
+
 :root {
   --li-accent: #00e8ff;
   --li-accent-2: #324fff;

@@ -1,3 +1,7 @@
+@import "../@styles/card.css";
+@import "../@styles/buttons.css";
+@import "../@styles/forms.css";
+
 /* Social feed styles, bundled from single files per area of the page. */
 @import "./styles/layout.css";
 @import "./styles/forms.css";

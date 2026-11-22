@@ -57,6 +57,7 @@ export default async function ({ request, reply }) {
     <Layout
       title="Upload and transform images with sharp"
       description="Upload an image and convert, resize and rotate it with sharp."
+      css="/upload/index.css"
     >
       <h1>Upload and transform images with sharp</h1>
       <p class="lead">

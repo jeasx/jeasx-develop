@@ -1,3 +1,7 @@
+@import "../@styles/buttons.css";
+@import "../@styles/busy.css";
+@import "../@styles/forms.css";
+
 :root {
   --lottery-accent: #7c2da4;
   --lottery-accent-2: #e0457b;

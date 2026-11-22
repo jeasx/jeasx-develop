@@ -1,0 +1,34 @@
+/* Opt-in: a spinner before elements marked aria-busy="true", e.g. while a request runs.
+   Import it at the top of an example stylesheet: @import "../@styles/busy.css"; */
+[aria-busy="true"]:not(input, select, textarea, html, form)::before {
+  display: inline-block;
+  vertical-align: -0.125em;
+  animation: spin 0.75s linear infinite;
+  border: 0.15em solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  width: 1em;
+  height: 1em;
+  content: "";
+}
+[aria-busy="true"]:not(input, select, textarea, html, form):not(:empty)::before {
+  margin-inline-end: 0.5rem;
+}
+[aria-busy="true"]:empty {
+  display: block;
+  text-align: center;
+}
+:is(button, [role="button"], a)[aria-busy="true"] {
+  pointer-events: none;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* A .loader shows its spinner until streamed content arrives after it.
+   Don't use :last-child here: browsers don't match it while the parent is still being parsed. */
+.loader > [aria-busy="true"]:has(~ *) {
+  display: none;
+}

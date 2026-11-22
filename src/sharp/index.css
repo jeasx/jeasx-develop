@@ -1,3 +1,7 @@
+@import "../@styles/card.css";
+@import "../@styles/buttons.css";
+@import "../@styles/forms.css";
+
 /* Controls: the strategy buttons on the left, the placeholder switch on the right. */
 .controls {
   display: flex;

@@ -1,3 +1,28 @@
+@import "../@styles/card.css";
+@import "../@styles/buttons.css";
+@import "../@styles/busy.css";
+@import "../@styles/forms.css";
+
+/* Skeleton placeholder with a shimmer while content loads. */
+.skeleton {
+  display: block;
+  animation: shimmer 1.5s ease-in-out infinite;
+  border-radius: var(--radius);
+  background: var(--secondary-bg)
+    linear-gradient(90deg, transparent, rgb(255 255 255 / 0.08), transparent) 0 0 / 200% 100%;
+  pointer-events: none;
+  color: transparent;
+  user-select: none;
+}
+@keyframes shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
 :root {
   --repo-accent: #6366f1;
   --repo-accent-2: #06b6d4;

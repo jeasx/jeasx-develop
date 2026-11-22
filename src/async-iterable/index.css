@@ -1,4 +1,5 @@
-@import "../streaming/shared.css";
+@import "../@styles/stream.css";
+@import "../@styles/table.css";
 
 .ai-table {
   margin: 0;

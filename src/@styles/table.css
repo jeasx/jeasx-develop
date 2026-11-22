@@ -1,0 +1,25 @@
+/* Opt-in: tables with ruled rows and a highlighted header. Import it at the top of an example
+   stylesheet: @import "../@styles/table.css"; */
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+th,
+td {
+  border-bottom: var(--border-width) solid var(--border);
+  background: var(--bg);
+  padding: 0.5rem 1rem;
+  font-weight: inherit;
+  text-align: start;
+}
+:is(thead, tfoot) :is(th, td) {
+  font-weight: 600;
+}
+thead :is(th, td) {
+  border-bottom-width: 3px;
+  background: color-mix(in srgb, var(--secondary) 8%, var(--bg));
+}
+tfoot :is(th, td) {
+  border-top: 3px solid var(--border);
+  border-bottom: 0;
+}

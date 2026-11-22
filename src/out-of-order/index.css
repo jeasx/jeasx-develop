@@ -1,5 +1,6 @@
-@import "../streaming/shared.css";
-
+@import "../@styles/stream.css";
+@import "../@styles/card.css";
+@import "../@styles/busy.css";
 .oo-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));

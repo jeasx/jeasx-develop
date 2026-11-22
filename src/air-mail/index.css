@@ -1,3 +1,5 @@
+@import "../@styles/buttons.css";
+
 /* Game on the left, controls on the right; stacked on narrow screens. */
 .track {
   display: grid;
