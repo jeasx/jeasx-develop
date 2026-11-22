@@ -32,7 +32,7 @@ export default function ({ step, data, form, errors }: StepProps) {
               {KINDS[kind]} {n}
               {index === 0 && <span class="person-lead">Lead traveler</span>}
             </h2>
-            <div class="row">
+            <div class="pair">
               <Field
                 name={`${key}_first`}
                 label="First name"
@@ -48,7 +48,7 @@ export default function ({ step, data, form, errors }: StepProps) {
                 error={errors[`${key}_last`]}
               />
             </div>
-            <div class="row">
+            <div class="pair">
               <Field
                 name={`${key}_birth`}
                 label="Date of birth"
@@ -70,7 +70,7 @@ export default function ({ step, data, form, errors }: StepProps) {
               )}
             </div>
             {destination?.passport && (
-              <div class="row">
+              <div class="pair">
                 <Field
                   name={`${key}_expiry`}
                   label="Passport valid until"
@@ -86,7 +86,7 @@ export default function ({ step, data, form, errors }: StepProps) {
       </ol>
       <section class="contact">
         <h2>Where should we send your tickets?</h2>
-        <div class="row">
+        <div class="pair">
           <Field
             name="email"
             label="Email"

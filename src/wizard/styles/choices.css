@@ -56,7 +56,9 @@
 }
 
 .choices-segments .choices-list {
-  display: inline-flex;
+  display: flex;
+  width: fit-content;
+  max-width: 100%;
   flex-wrap: wrap;
   gap: 0.25rem;
   border: 1px solid var(--input-border);
@@ -65,7 +67,10 @@
   padding: 0.25rem;
 }
 
+/* When the options don't fit in one line, each takes the full width. */
 .choices-segments .choice {
+  flex: 1 1 auto;
+  text-align: center;
   transition: all 0.15s;
   border-radius: 0.6rem;
   padding: 0.55rem 1rem;

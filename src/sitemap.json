@@ -71,7 +71,7 @@
     "topics": [
       {
         "title": "Server-rendered websites and apps",
-        "description": "Render pages on the server with content from a remote API, JSON data or Markdown with MDX, and build multi-step forms with plain HTML. No client-side JavaScript needed: view transitions make page changes feel smooth.",
+        "description": "Render pages on the server with content from a remote API, JSON data or Markdown with MDX, and build multi-step forms with plain HTML. No client-side JavaScript needed: view transitions make page changes feel smooth, and progressive enhancement adds instant feedback, e.g. with the same validation code in the browser.",
         "links": [
           { "path": "/blog", "title": "Blog" },
           { "path": "/products", "title": "Products" },

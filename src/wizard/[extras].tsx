@@ -127,7 +127,7 @@ export default function ({ step, data, form, errors }: StepProps) {
         />
         {form.card_last4 && <input type="hidden" name="card_last4" value={form.card_last4} />}
         {form.card_brand && <input type="hidden" name="card_brand" value={form.card_brand} />}
-        <div class="row">
+        <div class="pair">
           <Field
             name="card_expiry"
             label="Expiry"

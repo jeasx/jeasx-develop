@@ -8,9 +8,27 @@
   @media (max-width: 880px) {
     grid-template-columns: minmax(0, 1fr);
 
+    /* On top, but compact: just the route and the total, so the form starts right away. */
     & .pass {
       position: static;
       order: -1;
+
+      & .pass-facts,
+      & .pass-nights,
+      & .pass-lines {
+        display: none;
+      }
+
+      & .pass-top,
+      & .pass-bottom {
+        padding-block: 0.9rem;
+      }
+
+      & .pass-total {
+        margin: 0;
+        border: 0;
+        padding: 0;
+      }
     }
   }
 }
@@ -60,18 +78,19 @@
   }
 }
 
-.row {
+/* Fields side by side. Not ".row": the site styles give that one a negative margin. */
+.pair {
   display: grid;
   grid-template-columns: 1fr 1fr;
   column-gap: 1rem;
 
-  &.row-3 {
+  &.pair-3 {
     grid-template-columns: repeat(3, 1fr);
   }
 
   @media (max-width: 560px) {
     &,
-    &.row-3 {
+    &.pair-3 {
       grid-template-columns: 1fr;
     }
   }

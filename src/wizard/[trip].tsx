@@ -50,7 +50,7 @@ export default function ({ step, data, form, errors }: StepProps) {
           { value: "oneway", label: "→ One-way" },
         ]}
       />
-      <div class="row">
+      <div class="pair">
         <Field
           name="depart"
           label="Departure"
@@ -72,7 +72,7 @@ export default function ({ step, data, form, errors }: StepProps) {
         />
       </div>
 
-      <div class="row row-3">
+      <div class="pair pair-3">
         <Choices
           name="adults"
           legend="Adults (18+)"
