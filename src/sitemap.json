@@ -6,11 +6,11 @@
       "href": "https://github.com/jeasx/jsx-async-runtime",
       "text": "<jsx-async-runtime />"
     },
-    "intro": "Jeasx renders JSX with jsx-async-runtime: async components, streaming, and the same components on the server and in the browser.",
+    "intro": "At its core, Jeasx turns JSX into HTML using jsx-async-runtime. If you know JSX from React, it will feel familiar, but there's a twist: components can be async, so they can simply await data before rendering. The examples in this section show how that works on the server, how pages can stream to the browser piece by piece, and how the very same components can also run in the browser.",
     "topics": [
       {
         "title": "Server-side JSX",
-        "description": "Everything jsx-async-runtime renders on the server: promises, iterables and other values as children, render props, request context via 'this', overriding how JSX turns into HTML, Declarative Shadow DOM and unit tests for components.",
+        "description": "Learn how JSX works on the server, where every component simply returns HTML. These examples show what you can put into JSX (text, numbers, arrays, even promises that resolve later), how to pass request data down to every component without prop drilling, how to reuse layouts with render props, how to tweak the generated HTML globally, how to build web components with Shadow DOM, and how to test your components like plain functions.",
         "links": [
           { "path": "/values", "title": "What JSX renders" },
           { "path": "/context", "title": "'this' as context" },
@@ -22,7 +22,7 @@
       },
       {
         "title": "Streaming",
-        "description": "Async components don't block the page: jsx-async-runtime streams HTML as soon as it is ready, in order, in parallel, out of order or lazily on scroll, from async iterables or a ReadableStream.",
+        "description": "Slow data shouldn't make your visitors stare at a blank screen. With streaming, the browser receives and shows the parts of a page that are ready right away, while slower parts (like a sluggish API) follow as soon as they arrive. These examples show different strategies: loading several sources at once, filling placeholders in any order, loading content only when it scrolls into view, and streaming from async iterables or a ReadableStream.",
         "links": [
           { "path": "/parallel", "title": "Parallel loading" },
           { "path": "/aggregator", "title": "API aggregator" },
@@ -36,19 +36,20 @@
       },
       {
         "title": "Isomorphic apps",
-        "description": "The server renders the first page, then the browser re-renders the same JSX components after every click, without React, a virtual DOM or hydration. Without JavaScript, every app keeps working with plain HTML forms.",
+        "description": "\"Isomorphic\" means the same code runs on the server and in the browser. The server sends a fully rendered first page, so it loads fast and works without JavaScript. Once JavaScript is available, the browser takes over and re-renders the very same JSX components after every click, with no React, virtual DOM or hydration step involved. Try the interactive apps below, then turn off JavaScript: they still work with plain HTML forms.",
         "links": [
           { "path": "/todos", "title": "Todos" },
           { "path": "/lottery", "title": "Lottery" },
           { "path": "/jokes", "title": "Jokes" },
           { "path": "/kanban", "title": "Kanban board" },
           { "path": "/cinema", "title": "Cinema seats" },
-          { "path": "/cart", "title": "Shopping cart" }
+          { "path": "/cart", "title": "Shopping cart" },
+          { "path": "/spreadsheet", "title": "Spreadsheet" }
         ]
       },
       {
         "title": "Client-side apps and games",
-        "description": "Render JSX right in the browser with jsx-async-runtime: async components which fetch their own data, live feeds, streamed async trees, and games which render every frame.",
+        "description": "JSX isn't only for servers: jsx-async-runtime also renders directly in the browser. These examples are fully interactive pages built entirely on the client, from components that fetch their own data and live-updating feeds to small games that redraw the screen many times per second. A good place to see how far plain JSX can go without a big frontend framework.",
         "links": [
           { "path": "/client-jsx", "title": "Solar system" },
           { "path": "/social-feed", "title": "Social feed" },
@@ -67,11 +68,11 @@
   {
     "id": "framework",
     "title": "From pages to production",
-    "intro": "Websites, apps, images, PDFs and emails, secured and ready to ship.",
+    "intro": "Jeasx is more than a JSX renderer: it's a complete framework for building and running real websites. This section walks through typical tasks from a first page to a production-ready site, including server-rendered pages and forms, generating images, PDFs and emails, live updates, and the security and error handling every public site needs.",
     "topics": [
       {
         "title": "Server-rendered websites and apps",
-        "description": "Render pages on the server with content from a remote API, JSON data or Markdown with MDX, and build multi-step forms with plain HTML. No client-side JavaScript needed: view transitions make page changes feel smooth, and progressive enhancement adds instant feedback, e.g. with the same validation code in the browser.",
+        "description": "The classic way to build for the web: the server builds the complete HTML page and the browser just displays it. These examples cover typical real-world sites, such as a blog, a product catalog, a cookbook written in Markdown (MDX) and a multi-step booking form, using data from APIs or JSON files. They work without any client-side JavaScript; where JavaScript is available, extras like smooth page transitions and instant form validation make them feel even nicer (this is called progressive enhancement).",
         "links": [
           { "path": "/blog", "title": "Blog" },
           { "path": "/products", "title": "Products" },
@@ -84,7 +85,7 @@
       },
       {
         "title": "Beyond HTML: images, PDFs, emails and live streams",
-        "description": "Routes aren't limited to HTML: they can return images, SVG, JSON, XML, PDF, a live stream of Server-Sent Events, a WebSocket or any other content type.",
+        "description": "A route in Jeasx is just a function that answers a request, so it can send back much more than web pages. These examples use JSX to generate SVG graphics, HTML emails, PDF documents and social media preview images, scale and upload images, and push live updates to the browser with Server-Sent Events or WebSockets. You'll also see how one URL can serve different formats depending on what the client asks for.",
         "links": [
           { "path": "/svg", "title": "JSX for SVG" },
           { "path": "/email", "title": "JSX for emails" },
@@ -100,7 +101,7 @@
       },
       {
         "title": "Security, errors and post-processing",
-        "description": "Protect routes with basic auth or sessions, sign cookies, block injected scripts, stop bots with a proof-of-work captcha and rate-limit APIs. Catch errors, manage the head and transform the final HTML before it is sent to the browser.",
+        "description": "Everything a real site needs before going live. Learn how to restrict pages to logged-in users (with a simple password prompt or a full login with sessions), keep cookies tamper-proof, defend against injected scripts with a Content Security Policy, keep bots out with a captcha, and limit how often an API can be called. The remaining examples show how to show friendly error pages and how to clean up or adjust the final HTML just before it is sent to the browser.",
         "links": [
           { "path": "/login", "title": "Login and sessions" },
           { "path": "/basic-auth", "title": "Basic auth" },
@@ -119,11 +120,11 @@
   {
     "id": "integrations",
     "title": "Integrations in userland",
-    "intro": "No plugins, no adapters: HTMX, React, Vue, Svelte and friends, wired up in plain code you own.",
+    "intro": "Jeasx doesn't need special plugins or adapters to work with other tools. You connect libraries like HTMX, React, Vue or Svelte yourself, with a few lines of ordinary code that you can read, understand and change. This section shows how, so you can add interactivity with the tools you already know.",
     "topics": [
       {
         "title": "Hypermedia with HTMX",
-        "description": "Every Jeasx route can return an HTML fragment, so hypermedia libraries like HTMX can update parts of a page with markup rendered on the server.",
+        "description": "HTMX is a small library that lets you make pages interactive by adding HTML attributes instead of writing JavaScript. When a user clicks or types, HTMX asks the server for a piece of HTML and swaps it into the page. Since every Jeasx route can return such HTML snippets, the two fit together naturally. These examples show common patterns like inline editing, search-as-you-type and infinite scrolling.",
         "links": [
           { "path": "/htmx", "title": "Click to edit" },
           { "path": "/active-search", "title": "Active search" },
@@ -134,7 +135,7 @@
       },
       {
         "title": "JavaScript libraries and frameworks",
-        "description": "Add islands of interactivity to server-rendered pages with the JavaScript library or framework you already know.",
+        "description": "Already know React, Vue, Svelte or another frontend framework? You can keep using it. Most of the page is rendered as fast, static HTML on the server, and your favorite framework only powers the small interactive parts (so-called islands), like a counter or a widget. Each example shows the full setup in plain code, with no special plugins, and the last one mixes several frameworks on a single page.",
         "links": [
           { "path": "/react", "title": "React" },
           { "path": "/preact", "title": "Preact" },

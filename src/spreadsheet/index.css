@@ -1,0 +1,164 @@
+@import "../@styles/buttons.css";
+
+/* A dark sheet styled like a classic spreadsheet app, in the colors of the site. */
+.sheet {
+  --grid: #262d3b;
+  --header: #1a1f29;
+  --ink: var(--heading);
+  --select: var(--primary);
+  margin-top: 2rem;
+}
+.sheet table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  overflow: hidden;
+  border-radius: 0.5rem;
+  background: #10141b;
+  box-shadow:
+    0 0 0 1px var(--grid),
+    0 20px 40px -20px rgb(0 0 0 / 0.9);
+  color: var(--color);
+  font-family: var(--font);
+  font-size: 0.9rem;
+}
+
+/* Column letters and row numbers. */
+.sheet th {
+  padding: 0.3rem;
+  border: 1px solid var(--grid);
+  background: var(--header);
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-align: center;
+}
+.sheet th:first-child {
+  width: 2.5rem;
+}
+
+/* The row number and the column letter of the selected cell light up. */
+.sheet tr:has(td:focus-within) > th,
+.sheet table:has(td:nth-child(2):focus-within) tr:first-child th:nth-child(2),
+.sheet table:has(td:nth-child(3):focus-within) tr:first-child th:nth-child(3),
+.sheet table:has(td:nth-child(4):focus-within) tr:first-child th:nth-child(4),
+.sheet table:has(td:nth-child(5):focus-within) tr:first-child th:nth-child(5) {
+  background: var(--primary-bg);
+  color: var(--primary-hover);
+  font-weight: 700;
+  box-shadow: inset 0 -2px var(--select);
+}
+/* The column letter gets a line below, the row number a line on its right side. */
+.sheet tr:has(td:focus-within) > th {
+  box-shadow: inset -2px 0 var(--select);
+}
+
+.sheet td {
+  position: relative;
+  height: 2.25rem;
+  padding: 0;
+  border: 1px solid var(--grid);
+}
+/* The first row holds the column titles. */
+.sheet tr:nth-child(2) td {
+  background: var(--header);
+}
+.sheet tr:nth-child(2) output {
+  color: var(--ink);
+  font-weight: 600;
+}
+.sheet td:hover {
+  background: #161b24;
+}
+
+/* The input (with the formula) and the output (with its value) lie on top of each other.
+   The value shows until the cell gets focus, then the formula shows instead. */
+.sheet input,
+.sheet output {
+  position: absolute;
+  inset: 0;
+  padding: 0 0.6rem;
+  font: inherit;
+  line-height: 2.25rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sheet input {
+  width: 100%;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: transparent;
+  caret-color: var(--ink);
+  outline: none;
+}
+.sheet output {
+  pointer-events: none;
+}
+.sheet output.number {
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+  color: #7dd3fc;
+}
+.sheet output.error {
+  color: var(--error-hover);
+  font-weight: 600;
+}
+
+/* The selected cell gets a thick border with a small square in its corner. */
+.sheet td:focus-within {
+  z-index: 1;
+  background: var(--bg);
+  box-shadow: 0 0 20px rgb(237 42 172 / 0.35);
+  outline: 2px solid var(--select);
+  outline-offset: -1px;
+}
+.sheet td:focus-within::after {
+  content: "";
+  position: absolute;
+  right: -4px;
+  bottom: -4px;
+  width: 7px;
+  height: 7px;
+  border: 1px solid var(--bg);
+  background: var(--select);
+}
+.sheet td:focus-within input {
+  color: var(--ink);
+  font-family: var(--mono);
+}
+.sheet td:focus-within output {
+  visibility: hidden;
+}
+
+/* Cells the browser just recalculated light up for a moment. */
+.sheet output.changed {
+  animation: changed 1.5s ease-out;
+}
+@keyframes changed {
+  from {
+    background: rgb(237 42 172 / 0.45);
+    color: #fff;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sheet output.changed {
+    animation: none;
+  }
+}
+
+/* Only shown without JavaScript (see <noscript> in "./Sheet.jsx"). */
+.sheet button {
+  margin-top: 1rem;
+}
+
+@media (max-width: 36rem) {
+  .sheet table {
+    font-size: 0.75rem;
+  }
+  .sheet input,
+  .sheet output {
+    padding: 0 0.35rem;
+  }
+}
