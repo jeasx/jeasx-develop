@@ -1,6 +1,12 @@
 /* Conditional parts, shown and hidden by CSS alone, so they work without JavaScript. */
+/* Side by side, the space of the return date is kept, so the departure doesn't move. Stacked
+   on narrow screens, it would leave a gap, so the field is removed there. */
 .wizard-form:has([name="type"][value="oneway"]:checked) .only-return {
   visibility: hidden;
+
+  @media (max-width: 560px) {
+    display: none;
+  }
 }
 
 .card-fields {

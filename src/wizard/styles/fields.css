@@ -33,6 +33,23 @@
   }
 }
 
+/* Safari on iOS draws date inputs natively: taller than set, with centered text and a minimum
+   width which overflows narrow screens. Only iOS matches this query, so other browsers keep
+   their calendar icon. */
+@supports (-webkit-touch-callout: none) {
+  .field input[type="date"] {
+    -webkit-appearance: none;
+    appearance: none;
+    min-width: 0;
+    text-align: left;
+
+    &::-webkit-date-and-time-value {
+      margin: 0;
+      text-align: left;
+    }
+  }
+}
+
 .field-hint {
   display: block;
   margin-top: 0.35rem;
