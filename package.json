@@ -11,7 +11,6 @@
   },
   "dependencies": {
     "@fastify/cookie": "11.1.5",
-    "@fastify/multipart": "10.1.9",
     "@fastify/send": "4.2.1",
     "@lit-labs/motion": "1.1.0",
     "@mdx-js/esbuild": "3.1.1",
