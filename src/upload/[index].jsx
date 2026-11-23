@@ -25,14 +25,14 @@ const bytes = new Intl.NumberFormat("en-US", {
  * @param {import("../types").RouteProps} props
  */
 export default async function ({ request, reply }) {
-  const body = /** @type {Record<string, unknown>} */ (request.body || {});
   const posted = request.method === "POST";
-
+  let form = new FormData();
   let result;
   let error;
   if (posted) {
     try {
-      result = await convert(body);
+      form = await readForm(request);
+      result = await convert(form);
     } catch (e) {
       if (!(e instanceof ConvertError)) {
         throw e;
@@ -51,7 +51,7 @@ export default async function ({ request, reply }) {
 
   // Keep the chosen options after a POST, so trying another one is quick.
   // A missing field (e.g. a request without the form) falls back to the default.
-  const chosen = (name, fallback) => String((posted ? body[name] : undefined) ?? fallback);
+  const chosen = (name, fallback) => String(form.get(name) ?? fallback);
 
   return (
     <Layout
@@ -65,8 +65,8 @@ export default async function ({ request, reply }) {
         resizes and rotates it.
       </p>
       <p>
-        The form is sent as <code>multipart/form-data</code>, so the route gets the file as a{" "}
-        <code>Buffer</code> in <code>request.body</code>. Jeasx doesn't ship an image processor, so
+        The form is sent as <code>multipart/form-data</code>, so the route reads it with{" "}
+        <code>formData()</code> and gets the image as a <code>File</code>. Jeasx doesn't ship an image processor, so
         the conversion is done in userland with <a href="https://sharp.pixelplumbing.com">sharp</a>.
         The result is embedded as a <code>data:</code> URI, so your image is never stored.
       </p>
@@ -153,6 +153,28 @@ export default async function ({ request, reply }) {
       )}
     </Layout>
   );
+}
+
+/**
+ * Reads the posted form with the Web FormData API (jeasx.config.js leaves the body unread).
+ * Node reads no more than the Content-Length, so checking it first limits the memory used.
+ *
+ * @param {import("fastify").FastifyRequest} request
+ */
+async function readForm(request) {
+  if (!(Number(request.headers["content-length"]) <= MAX_UPLOAD_MB * 1024 * 1024 + 64 * 1024)) {
+    throw new ConvertError(
+      413,
+      `The image is larger than ${MAX_UPLOAD_MB} MB. Please choose a smaller one.`,
+    );
+  }
+  try {
+    const headers = { "content-type": String(request.headers["content-type"]) };
+    return await new Response(/** @type {any} */ (request.raw), { headers }).formData();
+  } catch {
+    // Not a multipart/form-data body, so convert reports the missing fields.
+    return new FormData();
+  }
 }
 
 /**

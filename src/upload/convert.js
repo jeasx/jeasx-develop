@@ -12,7 +12,6 @@ export const SIZES = [160, 320, 640];
 // How sharp picks the part to keep when cropping to a square.
 export const STRATEGIES = ["entropy", "attention", "centre", "north", "south", "east", "west"];
 export const ROTATIONS = [0, 30, 45, 60, 75, 90, 180];
-// Must match limits.fileSize in jeasx.config.js, which drops larger files.
 export const MAX_UPLOAD_MB = 8;
 // A small file can still decode to a huge image (a "decompression bomb"),
 // so limit the pixels (sharp's default is 268 megapixels) and the parallel work.
@@ -36,17 +35,16 @@ export class ConvertError extends Error {
  * Validates the form fields and converts the uploaded image.
  * Throws a ConvertError for invalid input or when the server is busy.
  *
- * @param {Record<string, unknown>} body
+ * @param {FormData} form
  */
-export async function convert(body) {
-  const upload = body["upload"];
-  const format = String(body["format"]);
-  const size = Number(body["size"]);
-  const rotate = Number(body["rotate"]);
-  const strategy = String(body["strategy"]);
+export async function convert(form) {
+  const upload = form.get("upload");
+  const format = String(form.get("format"));
+  const size = Number(form.get("size"));
+  const rotate = Number(form.get("rotate"));
+  const strategy = String(form.get("strategy"));
 
-  // jeasx.config.js replaces a file larger than its limit with null.
-  if (upload === null) {
+  if (upload instanceof File && upload.size > MAX_UPLOAD_MB * 1024 * 1024) {
     throw new ConvertError(
       413,
       `The image is larger than ${MAX_UPLOAD_MB} MB. Please choose a smaller one.`,
@@ -55,8 +53,8 @@ export async function convert(body) {
 
   // Only accept the values the form offers.
   if (
-    !Buffer.isBuffer(upload) ||
-    upload.length === 0 ||
+    !(upload instanceof File) ||
+    upload.size === 0 ||
     !FORMATS.includes(format) ||
     !SIZES.includes(size) ||
     !ROTATIONS.includes(rotate) ||
@@ -68,9 +66,10 @@ export async function convert(body) {
     );
   }
 
+  const buffer = Buffer.from(await upload.arrayBuffer());
   try {
     return await limit(async () => {
-      const input = sharp(upload, { limitInputPixels: MAX_INPUT_PIXELS });
+      const input = sharp(buffer, { limitInputPixels: MAX_INPUT_PIXELS });
       // Sharp detects the format from the file's content, not its name.
       const original = await input.metadata();
       if (!INPUT_FORMATS.includes(original.format)) {
@@ -86,7 +85,7 @@ export async function convert(body) {
         rotate,
         original: {
           format: original.format,
-          bytes: upload.length,
+          bytes: upload.size,
           width: original.width,
           height: original.height,
         },
