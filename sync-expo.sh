@@ -66,8 +66,3 @@ if [[ -z "$(git status --porcelain)" ]]; then
   echo "Already up to date with jeasx-expo."
   exit 0
 fi
-
-git status --short
-git add -A
-git commit -q -m "upstream: expo"
-git push
