@@ -3,7 +3,7 @@ import cache from "../@helpers/cache";
 
 /**
  * Rendered markup of all <Cached> components, kept for 30 seconds.
- * Each route bundles its own copy of this module, so other routes don't share the entries.
+ * Each route bundles its own copy of this module, so the cache lives on globalThis to be shared by all routes.
  */
 const TTL = 30;
 const componentCache = (globalThis.$componentCache ??= cache({ ttl: TTL * 1000 }));
