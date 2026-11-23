@@ -1,16 +1,15 @@
+import formBody from "../../@helpers/formBody";
 import Layout from "../../Layout";
-import { FIELDS, canStore, createPost, missingFields, readPosts, writePosts } from "../posts";
+import { FIELDS, PATH, canStore, createPost, missingFields, readPosts, writePosts } from "../posts";
 
 /**
  * @param {import("../../types").RouteProps} props
  */
 export default function ({ request, reply }) {
-  const body = /** @type {Record<string, unknown> | undefined} */ (
-    request.body && typeof request.body === "object" ? request.body : undefined
-  );
+  const body = formBody(request);
   let error = "";
 
-  if (request.method === "POST" && body) {
+  if (request.method === "POST") {
     const post = createPost(body);
     const posts = readPosts(request);
     // Keep the form filled on errors, so the post can be corrected instead of written again.
@@ -25,7 +24,7 @@ export default function ({ request, reply }) {
       posts.unshift(post);
       writePosts(reply, posts);
       // 303 makes the browser load the blog with GET, so a reload doesn't resubmit the form.
-      return reply.redirect("/blog", 303);
+      return reply.redirect(PATH, 303);
     }
     reply.status(400);
   }

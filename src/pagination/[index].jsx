@@ -49,6 +49,11 @@ export default function ({ request }) {
         when you switch pages; without JavaScript, the links still work.
       </p>
 
+      <ul class="pg-legend">
+        {FAMILIES.map((name, index) => (
+          <li style={`--c: ${COLORS[index]}`}>{name}</li>
+        ))}
+      </ul>
       <ol class="pg-grid">
         {items.map((element, index) => (
           <li
@@ -61,11 +66,6 @@ export default function ({ request }) {
           </li>
         ))}
       </ol>
-      <ul class="pg-legend">
-        {FAMILIES.map((name, index) => (
-          <li style={`--c: ${COLORS[index]}`}>{name}</li>
-        ))}
-      </ul>
 
       <div class="pg-status">
         <span>

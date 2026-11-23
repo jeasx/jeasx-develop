@@ -1,7 +1,7 @@
 import isCrossSite, { crossSiteResponse } from "../@helpers/crossSite";
 import Layout from "../Layout";
 import PostMeta from "./PostMeta";
-import { clearPosts, hasOwnPosts, hue, readPosts } from "./posts";
+import { PATH, clearPosts, hasOwnPosts, hue, readPosts } from "./posts";
 
 /**
  * @param {import("../types").RouteProps} props
@@ -14,9 +14,11 @@ export default function ({ request, reply }) {
     }
     clearPosts(reply);
     // 303 makes the browser load the blog with GET, so a reload doesn't resubmit the form.
-    return reply.redirect("/blog", 303);
+    return reply.redirect(PATH, 303);
   }
 
+  // The page depends on the cookie, so caches must not hand it to other visitors.
+  reply.header("cache-control", "private, no-store");
   const [featured, ...posts] = readPosts(request);
 
   return (

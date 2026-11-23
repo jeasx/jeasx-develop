@@ -69,6 +69,24 @@ export function readListCookie(request, name) {
 }
 
 /**
+ * Reads a JSON object from a signed cookie. Lists and other values aren't accepted.
+ * Returns undefined if the cookie is missing, edited or isn't an object.
+ *
+ * @param {import("fastify").FastifyRequest} request
+ * @param {string} name
+ * @returns {Record<string, any> | undefined}
+ */
+export function readObjectCookie(request, name) {
+  try {
+    const value = JSON.parse(readSignedCookie(request, name));
+    if (value && typeof value === "object" && !Array.isArray(value)) {
+      return value;
+    }
+  } catch {}
+  return undefined;
+}
+
+/**
  * Stores a list as JSON in a signed cookie, dropping items from the end until it fits.
  * The first item is always kept, so callers must make sure it fits on its own.
  * Returns the stored items.

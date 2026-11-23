@@ -1,3 +1,4 @@
+import formBody from "../@helpers/formBody";
 import Layout from "../Layout";
 import Lottery from "./Lottery";
 import { INITIAL, isValidNumber, reduce } from "./state";
@@ -6,9 +7,7 @@ import { INITIAL, isValidNumber, reduce } from "./state";
  * @param {import("../types").RouteProps} props
  */
 export default function ({ request }) {
-  const body = /** @type {Record<string, unknown>} */ (
-    request.body && typeof request.body === "object" ? request.body : {}
-  );
+  const body = formBody(request);
   const { numbers, number, revealed } = reduce(
     { ...INITIAL, numbers: parseNumbers(body["numbers"]) },
     body,

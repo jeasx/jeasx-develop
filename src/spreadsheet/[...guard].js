@@ -1,6 +1,9 @@
-import { readListCookie, writeListCookie } from "../@helpers/cookies";
+import { readObjectCookie } from "../@helpers/cookies";
+import formBody from "../@helpers/formBody";
 import isCrossSite, { crossSiteResponse } from "../@helpers/crossSite";
 import { DEFAULT_CELLS, toCells } from "./grid";
+
+const PATH = "/spreadsheet";
 
 /**
  * Runs before the page. A POST (the form without JavaScript, or the background save of
@@ -10,25 +13,29 @@ import { DEFAULT_CELLS, toCells } from "./grid";
  * @param {import("../types").RouteProps} props
  */
 export default function ({ request, reply }) {
+  // Static files like index.css need no cookie.
+  if (reply.file) {
+    return;
+  }
   // Other sites must not change the sheet with a forged form.
   if (isCrossSite(request)) {
     return crossSiteResponse();
   }
   if (request.method === "POST") {
-    const body = request.body && typeof request.body === "object" ? request.body : {};
-    // The cookie helpers store lists, so the cells are the only item, e.g. [{ "A1": "Trip budget" }].
-    const cells = toCells(/** @type {Record<string, unknown>} */ (body));
-    writeListCookie(reply, "spreadsheet", [cells], "/spreadsheet");
-    // The background save with fetch only needs to know it worked. Browsers send
-    // "Sec-Fetch-Mode: cors" for fetch and "navigate" for forms (old ones send neither).
-    const mode = request.headers["sec-fetch-mode"];
-    if (mode && mode !== "navigate") {
-      return new Response(null, { status: 204 });
+    // The cells are stored as one object, e.g. { "A1": "Trip budget" }.
+    const cells = toCells(formBody(request));
+    reply.setCookie("spreadsheet", JSON.stringify(cells), { path: PATH, signed: true });
+    // The background save with fetch only needs to know it worked.
+    if (request.headers.accept?.includes("application/json")) {
+      return reply.status(204).send();
     }
     // A form sent without JavaScript is answered with 303, which makes the browser load
     // the sheet with GET, so a reload doesn't send the form again.
-    return reply.redirect("/spreadsheet", 303);
+    return reply.redirect(PATH, 303);
   }
-  const saved = readListCookie(request, "spreadsheet")?.[0];
+  const saved = readObjectCookie(request, "spreadsheet");
+
+  // The page depends on the cookie, so caches must not hand it to other visitors.
+  reply.header("cache-control", "private, no-store");
   return { cells: saved ? toCells(saved) : DEFAULT_CELLS };
 }

@@ -1,3 +1,4 @@
+import formBody from "../@helpers/formBody";
 import Layout from "../Layout";
 import JokePicker from "./JokePicker";
 import { pick } from "./jokes";
@@ -7,10 +8,7 @@ import { INITIAL, clamp, reduce } from "./state";
  * @param {import("../types").RouteProps} props
  */
 export default async function ({ request }) {
-  // A JSON body can also be a number or string, which the reducer can't handle.
-  const body = /** @type {Record<string, unknown>} */ (
-    request.body && typeof request.body === "object" ? request.body : {}
-  );
+  const body = formBody(request);
   const { counter, category, jokes } = await reduce(
     { ...INITIAL, counter: clamp(body["counter"]) },
     body,

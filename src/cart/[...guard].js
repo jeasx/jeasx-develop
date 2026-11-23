@@ -1,3 +1,4 @@
+import formBody from "../@helpers/formBody";
 import { readListCookie, readSignedCookie, writeListCookie } from "../@helpers/cookies";
 import isCrossSite, { crossSiteResponse } from "../@helpers/crossSite";
 import { checkout, findDiscount } from "./checkout";
@@ -9,6 +10,10 @@ const PATH = "/cart";
  * @param {import("../types").RouteProps} props
  */
 export default function ({ request, reply }) {
+  // Static files like index.css need no cookie.
+  if (reply.file) {
+    return;
+  }
   // Other sites must not fill your cart with a forged form.
   if (isCrossSite(request)) {
     return crossSiteResponse();
@@ -22,12 +27,8 @@ export default function ({ request, reply }) {
     discount: findDiscount(readSignedCookie(request, "cart-code")),
   };
 
-  // The guard also runs for static files like index.css, which shouldn't carry a cookie.
   if (request.method === "POST") {
-    // A JSON body can also be a number or string, which the reducer can't handle.
-    const body = /** @type {Record<string, unknown>} */ (
-      request.body && typeof request.body === "object" ? request.body : {}
-    );
+    const body = formBody(request);
     // The browser sends its cart along with a code or an order, as the background save of
     // an earlier click may still be on its way. It only says which products, never a price.
     if (typeof body["cart"] === "string") {
@@ -55,5 +56,7 @@ export default function ({ request, reply }) {
     return reply.redirect(PATH, 303);
   }
 
+  // The page depends on the cookie, so caches must not hand it to other visitors.
+  reply.header("cache-control", "private, no-store");
   return state;
 }

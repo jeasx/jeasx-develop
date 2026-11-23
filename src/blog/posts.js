@@ -12,6 +12,9 @@ export const FIELDS = {
 /** Fields which must not be empty. Without a slug, it is created from the title. */
 export const REQUIRED_FIELDS = ["title", "author", "description", "body"];
 // Slugs end up in links, so only allow safe characters (no "javascript:" etc.).
+/** The cookie with the posts is only sent to the blog. */
+export const PATH = "/blog";
+
 const SLUG_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 // "/blog/post" is the form for new posts and "/blog/404" is answered by "[404].jsx",
 // so posts with these slugs could never be opened.
@@ -71,7 +74,7 @@ export function canStore(reply, post) {
  * @param {Post[]} posts
  */
 export function writePosts(reply, posts) {
-  writeListCookie(reply, "posts", posts, "/blog");
+  writeListCookie(reply, "posts", posts, PATH);
 }
 
 /**
@@ -89,7 +92,7 @@ export function hasOwnPosts(request) {
  * @param {import("fastify").FastifyReply} reply
  */
 export function clearPosts(reply) {
-  reply.clearCookie("posts", { path: "/blog" });
+  reply.clearCookie("posts", { path: PATH });
 }
 
 /**

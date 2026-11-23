@@ -2,7 +2,7 @@
 // (see "../@helpers/cookies.js"). Nothing is stored on the server.
 import { randomBytes } from "node:crypto";
 import type { FastifyReply, FastifyRequest } from "fastify";
-import { fitsCookie, readSignedCookie } from "../@helpers/cookies";
+import { fitsCookie, readObjectCookie } from "../@helpers/cookies";
 import type { Data } from "./domain/types";
 
 export type Booking = { ref: string; bookedAt: string; data: Data };
@@ -11,7 +11,7 @@ export type Booking = { ref: string; bookedAt: string; data: Data };
 const COOKIE = { path: "/wizard", signed: true };
 
 export function loadAnswers(request: FastifyRequest): Data {
-  return (readCookie(request, "data") as Data) ?? {};
+  return (readObjectCookie(request, "data") as Data) ?? {};
 }
 
 /**
@@ -41,22 +41,8 @@ export function book(reply: FastifyReply, data: Data) {
 }
 
 export function loadBooking(request: FastifyRequest): Booking | undefined {
-  const booking = readCookie(request, "booking");
+  const booking = readObjectCookie(request, "booking");
   return typeof booking?.ref === "string" ? (booking as Booking) : undefined;
-}
-
-/**
- * Reads a JSON object from a signed cookie. A broken or edited cookie is ignored.
- * Only plain objects are accepted, as the signature covers the value, not the cookie name.
- */
-function readCookie(request: FastifyRequest, name: string): Record<string, any> | undefined {
-  try {
-    const value = JSON.parse(readSignedCookie(request, name) ?? "null");
-    if (value && typeof value === "object" && !Array.isArray(value)) {
-      return value;
-    }
-  } catch {}
-  return undefined;
 }
 
 /** A booking reference like "JX7K2QF", without easily confused characters like 0/O or 1/I. */

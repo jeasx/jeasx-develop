@@ -1,3 +1,4 @@
+import formBody from "../@helpers/formBody";
 import { readListCookie, writeListCookie } from "../@helpers/cookies";
 import isCrossSite, { crossSiteResponse } from "../@helpers/crossSite";
 import { DEFAULT_TODOS, reduce, toStatus, toTodo } from "./state";
@@ -8,6 +9,10 @@ const PATH = "/todos";
  * @param {import("../types").RouteProps} props
  */
 export default function ({ request, reply }) {
+  // Static files like index.css need no cookie.
+  if (reply.file) {
+    return;
+  }
   // Other sites must not overwrite the todos cookie with a forged form.
   if (isCrossSite(request)) {
     return crossSiteResponse();
@@ -19,12 +24,9 @@ export default function ({ request, reply }) {
     status,
   };
 
-  // Only form submissions change todos. The guard also runs for static files
-  // like index.css, which shouldn't carry a cookie.
+  // Only form submissions change todos.
   if (request.method === "POST") {
-    // A JSON body can also be a number or string, which the reducer can't handle.
-    const body = request.body && typeof request.body === "object" ? request.body : {};
-    const { todos } = reduce(state, /** @type {Record<string, unknown>} */ (body));
+    const { todos } = reduce(state, formBody(request));
     // Drop the oldest todos until the cookie fits.
     writeListCookie(reply, "todos", todos, PATH);
     // The browser already rendered the change itself, it only needs the cookie.
@@ -36,5 +38,7 @@ export default function ({ request, reply }) {
     return reply.redirect(status ? `${PATH}?status=${status}` : PATH, 303);
   }
 
+  // The page depends on the cookie, so caches must not hand it to other visitors.
+  reply.header("cache-control", "private, no-store");
   return state;
 }

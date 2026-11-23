@@ -27,6 +27,9 @@ export default function ({ request, reply }) {
     return reply.redirect("/htmx", 303);
   }
 
+  // The page depends on the cookie, so caches must not hand it to other visitors.
+  reply.header("cache-control", "private, no-store");
+
   let contacts = loadContacts(request);
   let contact = contacts.find((c) => c.id === input.id);
   if (!post || !contact) {

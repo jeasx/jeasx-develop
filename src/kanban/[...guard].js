@@ -9,6 +9,10 @@ import { createServerStore } from "./store/server";
  * @param {import("../types").RouteProps} props
  */
 export default function ({ request, reply }) {
+  // Static files like index.css need no cookie.
+  if (reply.file) {
+    return;
+  }
   // Other sites must not change the board with a forged form.
   if (isCrossSite(request)) {
     return crossSiteResponse();

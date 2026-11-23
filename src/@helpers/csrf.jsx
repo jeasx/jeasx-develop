@@ -1,3 +1,4 @@
+import formBody from "./formBody";
 import { randomBytes, timingSafeEqual } from "node:crypto";
 import Layout from "../Layout";
 import { readSignedCookie } from "./cookies";
@@ -25,7 +26,7 @@ export default function csrf({ request, reply }, path) {
   }
 
   if (request.method === "POST") {
-    const body = request.body && typeof request.body === "object" ? request.body : {};
+    const body = formBody(request);
     if (!isSameToken(String(body["_csrf"] ?? ""), token)) {
       reply.status(403);
       return {

@@ -1,4 +1,4 @@
-import { readSignedCookie } from "../../@helpers/cookies";
+import { readObjectCookie } from "../../@helpers/cookies";
 import {
   MAX_SEATS,
   ROWS,
@@ -172,10 +172,7 @@ function hash(text) {
  */
 function readState(request) {
   /** @type {any} */
-  let raw = {};
-  try {
-    raw = JSON.parse(readSignedCookie(request, "cinema")) ?? {};
-  } catch {}
+  const raw = readObjectCookie(request, "cinema") ?? {};
   /** @param {unknown} lists */
   const seatLists = (lists) =>
     Object.fromEntries(

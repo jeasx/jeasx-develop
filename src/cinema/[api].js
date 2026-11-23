@@ -1,3 +1,4 @@
+import formBody from "../@helpers/formBody";
 /**
  * GET returns one part of the page as JSON for the browser store.
  * POST applies a form: plain form submissions (without JavaScript) are redirected
@@ -8,8 +9,7 @@
  */
 export default async function ({ request, reply }) {
   if (request.method === "POST") {
-    const body = request.body && typeof request.body === "object" ? request.body : {};
-    const changed = this.store.apply(/** @type {Record<string, unknown>} */ (body));
+    const changed = this.store.apply(formBody(request));
     if (request.headers.accept?.includes("application/json")) {
       return { changed };
     }

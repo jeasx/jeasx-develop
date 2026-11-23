@@ -9,27 +9,18 @@ import {
   STRATEGIES,
 } from "./convert";
 
-const percent = new Intl.NumberFormat("en-US", {
-  style: "percent",
-  maximumFractionDigits: 1,
-});
-const bytes = new Intl.NumberFormat("en-US", {
-  style: "unit",
-  unit: "kilobyte",
-  maximumFractionDigits: 1,
-});
-
 /**
  * Shows the form and, after a POST, the converted image right below it.
  *
  * @param {import("../types").RouteProps} props
  */
 export default async function ({ request, reply }) {
-  const posted = request.method === "POST";
   let form = new FormData();
   let result;
   let error;
-  if (posted) {
+  if (request.method === "POST") {
+    // The result contains the visitor's image, so caches must not keep it.
+    reply.header("cache-control", "private, no-store");
     try {
       form = await readForm(request);
       result = await convert(form);
@@ -43,10 +34,6 @@ export default async function ({ request, reply }) {
         reply.header("retry-after", "10");
       }
     }
-  }
-  // The result contains the visitor's image, so caches must not keep it.
-  if (posted) {
-    reply.header("cache-control", "private, no-store");
   }
 
   // Keep the chosen options after a POST, so trying another one is quick.
@@ -66,9 +53,10 @@ export default async function ({ request, reply }) {
       </p>
       <p>
         The form is sent as <code>multipart/form-data</code>, so the route reads it with{" "}
-        <code>formData()</code> and gets the image as a <code>File</code>. Jeasx doesn't ship an image processor, so
-        the conversion is done in userland with <a href="https://sharp.pixelplumbing.com">sharp</a>.
-        The result is embedded as a <code>data:</code> URI, so your image is never stored.
+        <code>formData()</code> and gets the image as a <code>File</code>. Jeasx doesn't ship an
+        image processor, so the conversion is done in userland with{" "}
+        <a href="https://sharp.pixelplumbing.com">sharp</a>. The result is embedded as a{" "}
+        <code>data:</code> URI, so your image is never stored.
       </p>
       <form method="post" enctype="multipart/form-data">
         <div class="row">
@@ -102,79 +90,9 @@ export default async function ({ request, reply }) {
         </article>
       )}
 
-      {result && (
-        <article>
-          <figure class="center">
-            <img
-              src={result.dataUri}
-              width={result.result.width}
-              height={result.result.height}
-              alt="Your converted image"
-            />
-            <figcaption>
-              <a href={result.dataUri} download={`converted.${result.format}`}>
-                Download {result.format.toUpperCase()}
-              </a>
-            </figcaption>
-          </figure>
-          <table>
-            <thead>
-              <tr>
-                <th scope="col"></th>
-                <th scope="col">Format</th>
-                <th scope="col">Dimensions</th>
-                <th scope="col">File size</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th scope="row">Upload</th>
-                <td>{result.original.format.toUpperCase()}</td>
-                <td>
-                  {result.original.width} × {result.original.height}
-                </td>
-                <td>{bytes.format(result.original.bytes / 1000)}</td>
-              </tr>
-              <tr>
-                <th scope="row">Result</th>
-                <td>{result.format.toUpperCase()}</td>
-                <td>
-                  {result.result.width} × {result.result.height}
-                  {result.rotate % 90 !== 0 && " (rotated, so the canvas grew)"}
-                </td>
-                <td>
-                  {bytes.format(result.result.bytes / 1000)} (
-                  {percent.format(result.result.bytes / result.original.bytes)} of the upload)
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </article>
-      )}
+      {result && <Result {...result} />}
     </Layout>
   );
-}
-
-/**
- * Reads the posted form with the Web FormData API (jeasx.config.js leaves the body unread).
- * Node reads no more than the Content-Length, so checking it first limits the memory used.
- *
- * @param {import("fastify").FastifyRequest} request
- */
-async function readForm(request) {
-  if (!(Number(request.headers["content-length"]) <= MAX_UPLOAD_MB * 1024 * 1024 + 64 * 1024)) {
-    throw new ConvertError(
-      413,
-      `The image is larger than ${MAX_UPLOAD_MB} MB. Please choose a smaller one.`,
-    );
-  }
-  try {
-    const headers = { "content-type": String(request.headers["content-type"]) };
-    return await new Response(/** @type {any} */ (request.raw), { headers }).formData();
-  } catch {
-    // Not a multipart/form-data body, so convert reports the missing fields.
-    return new FormData();
-  }
 }
 
 /**
@@ -191,4 +109,93 @@ function Select({ name, label, options, value }) {
       </select>
     </label>
   );
+}
+
+const percent = new Intl.NumberFormat("en-US", {
+  style: "percent",
+  maximumFractionDigits: 1,
+});
+
+const bytes = new Intl.NumberFormat("en-US", {
+  style: "unit",
+  unit: "kilobyte",
+  maximumFractionDigits: 1,
+});
+
+/**
+ * Shows the converted image and compares it with the upload.
+ *
+ * @param {Awaited<ReturnType<typeof convert>>} props
+ */
+function Result({ original, result, rotated, dataUri }) {
+  return (
+    <article>
+      <figure class="center">
+        <img src={dataUri} width={result.width} height={result.height} alt="Your converted image" />
+        <figcaption>
+          <a href={dataUri} download={`converted.${result.format}`}>
+            Download {result.format.toUpperCase()}
+          </a>
+        </figcaption>
+      </figure>
+      <table>
+        <thead>
+          <tr>
+            <th scope="col"></th>
+            <th scope="col">Format</th>
+            <th scope="col">Dimensions</th>
+            <th scope="col">File size</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Upload</th>
+            <td>{original.format.toUpperCase()}</td>
+            <td>
+              {original.width} × {original.height}
+            </td>
+            <td>{bytes.format(original.bytes / 1000)}</td>
+          </tr>
+          <tr>
+            <th scope="row">Result</th>
+            <td>{result.format.toUpperCase()}</td>
+            <td>
+              {result.width} × {result.height}
+              {rotated && " (rotated, so the canvas grew)"}
+            </td>
+            <td>
+              {bytes.format(result.bytes / 1000)} ({percent.format(result.bytes / original.bytes)}{" "}
+              of the upload)
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </article>
+  );
+}
+
+/**
+ * Reads the posted form with the Web FormData API (jeasx.config.js leaves the body unread).
+ * Node reads no more than the Content-Length, so checking it first limits the memory used.
+ *
+ * @param {import("fastify").FastifyRequest} request
+ */
+async function readForm(request) {
+  // A missing header (e.g. a chunked upload) gives NaN, which is rejected as well.
+  const length = Number(request.headers["content-length"]);
+  if (!Number.isFinite(length) || length > MAX_UPLOAD_MB * 1024 * 1024 + 64 * 1024) {
+    throw new ConvertError(
+      413,
+      `The image is larger than ${MAX_UPLOAD_MB} MB. Please choose a smaller one.`,
+    );
+  }
+  try {
+    const headers = { "content-type": String(request.headers["content-type"]) };
+    return await new Response(/** @type {any} */ (request.raw), {
+      headers,
+    }).formData();
+  } catch {
+    // Not a multipart/form-data body, so convert reports the missing fields.
+    return new FormData();
+  }
 }

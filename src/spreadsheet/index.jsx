@@ -29,6 +29,7 @@ form.addEventListener("input", async () => {
 form.addEventListener("change", () => {
   fetch("/spreadsheet", {
     method: "POST",
+    headers: { accept: "application/json" },
     body: new URLSearchParams(/** @type {any} */ (new FormData(form))),
   });
 });

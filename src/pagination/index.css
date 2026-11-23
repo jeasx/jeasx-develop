@@ -177,7 +177,7 @@
   flex-wrap: wrap;
   gap: 0.5rem 1rem;
   justify-content: center;
-  margin: 0 0 2rem;
+  margin: 0 0 1.5rem;
   padding: 0;
   list-style: none;
   color: var(--muted);

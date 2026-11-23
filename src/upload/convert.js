@@ -2,20 +2,27 @@ import sharp from "sharp";
 import limiter, { QueueFullError } from "../sharp/limiter";
 
 export const FORMATS = ["avif", "webp"];
+
 // The image formats sharp can read from a buffer. "raw" is bare pixel data, and SVG
 // is skipped because rendering it can be costly and exposes the SVG parser.
 // "heif" covers AVIF, as the prebuilt sharp binaries don't decode HEIC.
-export const INPUT_FORMATS = Object.values(sharp.format)
+const INPUT_FORMATS = Object.values(sharp.format)
   .filter((f) => f.input.buffer && !["raw", "svg"].includes(f.id))
   .map((f) => f.id);
+
 export const SIZES = [160, 320, 640];
+
 // How sharp picks the part to keep when cropping to a square.
 export const STRATEGIES = ["entropy", "attention", "centre", "north", "south", "east", "west"];
+
 export const ROTATIONS = [0, 30, 45, 60, 75, 90, 180];
+
 export const MAX_UPLOAD_MB = 8;
+
 // A small file can still decode to a huge image (a "decompression bomb"),
 // so limit the pixels (sharp's default is 268 megapixels) and the parallel work.
 const MAX_INPUT_PIXELS = 25_000_000;
+
 // Waiting uploads keep their file in memory (up to MAX_UPLOAD_MB each), so limit the line too.
 const limit = limiter(2, 8);
 
@@ -43,13 +50,6 @@ export async function convert(form) {
   const size = Number(form.get("size"));
   const rotate = Number(form.get("rotate"));
   const strategy = String(form.get("strategy"));
-
-  if (upload instanceof File && upload.size > MAX_UPLOAD_MB * 1024 * 1024) {
-    throw new ConvertError(
-      413,
-      `The image is larger than ${MAX_UPLOAD_MB} MB. Please choose a smaller one.`,
-    );
-  }
 
   // Only accept the values the form offers.
   if (
@@ -81,15 +81,19 @@ export async function convert(form) {
         .toFormat(/** @type {"avif" | "webp"} */ (format), { quality: 70 })
         .toBuffer({ resolveWithObject: true });
       return {
-        format,
-        rotate,
         original: {
           format: original.format,
           bytes: upload.size,
           width: original.width,
           height: original.height,
         },
-        result: { bytes: data.length, width: info.width, height: info.height },
+        result: {
+          format,
+          bytes: data.length,
+          width: info.width,
+          height: info.height,
+        },
+        rotated: rotate % 90 !== 0,
         dataUri: `data:image/${format};base64,${data.toString("base64")}`,
       };
     });

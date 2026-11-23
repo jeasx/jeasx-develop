@@ -9,6 +9,8 @@ const LAST = 100000;
 /**
  * Streams the course from the requested chunk on, one chunk per line. Thanks
  * to backpressure, the next chunk is only rendered when the browser reads on.
+ *
+ * @param {import("../types").RouteProps} props
  */
 export default function ({ request, reply }) {
   const query = /** @type {Record<string, string>} */ (request.query);

@@ -8,8 +8,10 @@ const SLUG_PATTERN = new URLPattern({ pathname: "/blog/:slug{/}?" });
 /**
  * @param {import("../types").RouteProps} props
  */
-export default function ({ request }) {
+export default function ({ request, reply }) {
   const slug = SLUG_PATTERN.exec({ pathname: request.path })?.pathname.groups.slug;
+  // The page depends on the cookie, so caches must not hand it to other visitors.
+  reply.header("cache-control", "private, no-store");
   const posts = readPosts(request);
   const index = slug ? posts.findIndex((post) => post.slug === slug) : -1;
 
