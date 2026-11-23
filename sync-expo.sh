@@ -11,28 +11,29 @@ TARGET="$(cd "$(dirname "$0")" && pwd)"
 SOURCE="$(cd "${1:-$TARGET/../jeasx-expo}" && pwd)"
 
 KEEP=(
-  # differ from jeasx-expo
   .dockerignore
   .gitignore
   api/vercel.js
   src/types.d.ts
+  build-bun.js
+  build-esbuild.js
+  build-meta.js
+  cli.js
   Dockerfile
+  env.d.ts
+  env.js
+  jeasx.config.js
+  LICENSE.txt
   package-lock.json
   package.json
   README.md
-  tsconfig.json
-  vercel.json
-  # only exist in this repo
-  build.js
-  cli.js
-  env.d.ts
-  env.js
-  LICENSE.txt
   serverless.js
   serverless.js.map
   serverless.ts
   start.js
   sync-expo.sh
+  tsconfig.json
+  vercel.json
 )
 
 cd "$TARGET"

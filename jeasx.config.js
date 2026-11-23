@@ -41,6 +41,35 @@ export default {
     };
   },
 
+  /** @type {() => Promise<import("bun").BuildConfig>} */
+  BUN_SERVER_OPTIONS: async () => {
+    const [{ default: vuePlugin }, { default: rehypePrismPlus }] = await Promise.all([
+      import("unplugin-vue"),
+      import("rehype-prism-plus"),
+    ]);
+    return {
+      define: {
+        "process.env.BUILD_ID": `"${Date.now().toString(36)}"`,
+      },
+      sourcemap: NODE_ENV_IS_DEVELOPMENT ? "inline" : "none",
+      loader: { ".svg": "file" },
+      plugins: [
+        // Component styles end up in a CSS file (e.g. "/svelte/index.css" from the browser build),
+        // so they apply before hydration and without JavaScript. The server build's copy is unused.
+        await sveltePlugin({ generate: "server", css: "external" }),
+        // Same for the styles of Vue single-file components (e.g. "/vue/index.css").
+        vuePlugin.bun({ ssr: true, sourceMap: false }),
+        await mdxPlugin({
+          development: NODE_ENV_IS_DEVELOPMENT,
+          jsxImportSource: "jsx-async-runtime",
+          elementAttributeNameCase: "html",
+          stylePropertyNameCase: "css",
+          rehypePlugins: [rehypePrismPlus],
+        }),
+      ],
+    };
+  },
+
   /** @type {() => Promise<import("esbuild").BuildOptions>} */
   ESBUILD_BROWSER_OPTIONS: async () => {
     const [{ default: sveltePlugin }, { default: vuePlugin }] = await Promise.all([
@@ -59,6 +88,25 @@ export default {
       plugins: [
         sveltePlugin({ compilerOptions: { generate: "client", css: "external" } }),
         vuePlugin({ sourceMap: false }),
+      ],
+    };
+  },
+
+  /** @type {() => Promise<import("bun").BuildConfig>} */
+  BUN_BROWSER_OPTIONS: async () => {
+    const { default: vuePlugin } = await import("unplugin-vue");
+    return {
+      // Vue's compile-time feature flags: setting them avoids a console warning
+      // and drops unused code (e.g. the Options API) from the bundle.
+      define: {
+        __VUE_OPTIONS_API__: "false",
+        __VUE_PROD_DEVTOOLS__: "false",
+        __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: "false",
+      },
+      loader: { ".svg": "file" },
+      plugins: [
+        await sveltePlugin({ generate: "client", css: "external" }),
+        vuePlugin.bun({ sourceMap: false }),
       ],
     };
   },
@@ -104,7 +152,66 @@ export default {
         { parseAs: "string" },
         async (_request, body) => querystring.parse(body),
       )
-      // Accepts multipart/form-data without reading the body, so routes can parse it themselves
-      // where needed (see "src/upload"). Without a parser, Fastify answers with 415.
       .addContentTypeParser("multipart/form-data", async () => {}),
 };
+
+/**
+ * Compiles Svelte components with Bun. With css: "external", component styles become
+ * a CSS import, so Bun bundles them into the CSS file next to the bundle (e.g. "/svelte/index.css").
+ * @param {import("svelte/compiler").CompileOptions} compilerOptions
+ * @returns {Promise<import("bun").BunPlugin>}
+ */
+async function sveltePlugin(compilerOptions) {
+  const { compile, compileModule } = await import("svelte/compiler");
+  const styles = new Map();
+  return {
+    name: "svelte",
+    setup(build) {
+      build.onLoad({ filter: /\.svelte$/ }, async ({ path }) => {
+        const source = await Bun.file(path).text();
+        const { js, css } = compile(source, { ...compilerOptions, filename: path });
+        let contents = js.code;
+        if (css?.code) {
+          styles.set(path + ".css", css.code);
+          contents += `\nimport ${JSON.stringify(path + ".css")};`;
+        }
+        return { contents, loader: "js" };
+      });
+      // Runes in .svelte.js modules (e.g. shared state) need the compiler, too.
+      build.onLoad({ filter: /\.svelte\.[jt]s$/ }, async ({ path }) => {
+        const source = await Bun.file(path).text();
+        const { js } = compileModule(source, {
+          generate: compilerOptions.generate,
+          filename: path,
+        });
+        return { contents: js.code, loader: "js" };
+      });
+      build.onResolve({ filter: /\.svelte\.css$/ }, ({ path }) => ({
+        path,
+        namespace: "svelte-css",
+      }));
+      build.onLoad({ filter: /.*/, namespace: "svelte-css" }, ({ path }) => ({
+        contents: styles.get(path) ?? "",
+        loader: "css",
+      }));
+    },
+  };
+}
+
+/**
+ * Compiles MDX files to JSX with Bun.
+ * @param {import("@mdx-js/mdx").CompileOptions} options
+ * @returns {Promise<import("bun").BunPlugin>}
+ */
+async function mdxPlugin(options) {
+  const { compile } = await import("@mdx-js/mdx");
+  return {
+    name: "mdx",
+    setup(build) {
+      build.onLoad({ filter: /\.mdx?$/ }, async ({ path }) => {
+        const file = await compile({ path, value: await Bun.file(path).text() }, options);
+        return { contents: String(file), loader: "js" };
+      });
+    },
+  };
+}

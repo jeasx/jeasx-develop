@@ -1,7 +1,9 @@
 **
 !/public/
 !/src/
-!build.js
+!build-bun.js
+!build-esbuild.js
+!build-meta.js
 !cli.js
 !env.js
 !jeasx.config.js

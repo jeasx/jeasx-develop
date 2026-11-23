@@ -6,18 +6,22 @@
     "build": "node cli.js build",
     "dev": "node cli.js dev",
     "clean": "node cli.js clean",
-    "test": "node -e \"require('fs').rmSync('dist-test',{recursive:true,force:true})\" && esbuild \"src/**/*.test.*\" --bundle --platform=node --format=esm --packages=external --loader:.svg=file --outbase=src --outdir=dist-test --log-level=warning && node --test dist-test",
-    "compile": "esbuild --platform=node --format=esm --sourcemap=linked --outdir=. serverless.ts"
+    "test:bun": "bun test src",
+    "test:esbuild": "node -e \"require('fs').rmSync('dist-test',{recursive:true,force:true})\" && esbuild \"src/**/*.test.*\" --bundle --platform=node --format=esm --packages=external --loader:.svg=file --outbase=src --outdir=dist-test --log-level=warning && node --test dist-test",
+    "compile:bun": "bun build --target=node --packages=external --sourcemap=linked --define process.env.NODE_ENV=process.env.NODE_ENV --outdir=. serverless.ts",
+    "compile:esbuild": "esbuild --platform=node --format=esm --sourcemap=linked --outdir=. serverless.ts"
   },
   "dependencies": {
     "@fastify/cookie": "11.1.5",
     "@fastify/send": "4.2.1",
     "@lit-labs/motion": "1.1.0",
     "@mdx-js/esbuild": "3.1.1",
+    "@mdx-js/mdx": "3.1.1",
     "@preact/signals": "2.11.4",
     "alpinejs": "3.17.5",
-    "cap-widget": "0.1.63",
-    "capjs-core": "0.1.19",
+    "bun": "1.4.5",
+    "cap-widget": "0.1.64",
+    "capjs-core": "0.1.20",
     "cheerio": "1.2.0",
     "esbuild": "0.28.2",
     "esbuild-svelte": "0.9.5",
@@ -43,6 +47,7 @@
     "@types/react-dom": "19.3.0"
   },
   "allowScripts": {
+    "bun": true,
     "esbuild": true,
     "fsevents": true,
     "sharp": true
