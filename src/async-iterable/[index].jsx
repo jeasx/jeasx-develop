@@ -4,9 +4,6 @@ const PAGES = 5;
 const PAGE_SIZE = 3;
 const PAGE_DELAY = 700;
 
-/**
- * @this {import("../types").ThisContext}
- */
 export default function () {
   const start = Date.now();
 

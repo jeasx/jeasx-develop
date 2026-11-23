@@ -7,9 +7,6 @@ ReadableStream which emits one word every ${WORD_DELAY} ms. Text chunks are esca
 string, so <b>this markup</b> shows up as plain text. A fetch response body works the same way:
 response.body.pipeThrough(new TextDecoderStream()).`.replace(/\s+/g, " ");
 
-/**
- * @this {import("../types").ThisContext}
- */
 export default function () {
   const start = Date.now();
 

@@ -5,7 +5,6 @@ import Layout from "../Layout";
 const cached = cache({ ttl: 5 * 60_000 });
 
 /**
- * @this {import("../types").ThisContext}
  * @param {import("../types").RouteProps} props
  */
 export default async function ({ request }) {

@@ -2,9 +2,6 @@ import { jsxToString } from "jsx-async-runtime";
 import Layout from "../Layout";
 import avatarUrl from "./avatar.svg";
 
-/**
- * @this {import("../types").ThisContext}
- */
 export default function () {
   return (
     <Layout

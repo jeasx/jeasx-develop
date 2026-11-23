@@ -1,0 +1,75 @@
+@import "../@styles/card.css";
+@import "../@styles/forms.css";
+
+.toc ol {
+  columns: 2 16rem;
+  column-gap: 2rem;
+}
+.step {
+  scroll-margin-top: 1rem;
+}
+.step h2 {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+}
+.step-number {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #fff;
+  font-size: 1rem;
+}
+.step-label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+.step pre {
+  margin: 0 0 1rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.step-output {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  align-items: start;
+}
+.step-output > div {
+  min-width: 0;
+}
+.step-output pre {
+  margin: 0;
+}
+.step-result {
+  padding: 0.75rem;
+  border: 1px dashed color-mix(in srgb, currentColor 25%, transparent);
+  border-radius: 0.4rem;
+}
+.step-result > :last-child {
+  margin-bottom: 0;
+}
+.step-note {
+  opacity: 0.8;
+  font-size: 0.9rem;
+}
+@media (max-width: 640px) {
+  .step-output {
+    grid-template-columns: 1fr;
+  }
+}
+/* forms.css removes fieldset borders, but the children demo shows the box. */
+.step-result fieldset {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.5rem 1rem;
+}

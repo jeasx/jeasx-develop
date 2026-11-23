@@ -9,9 +9,6 @@ const SOURCES = [
   { id: "stocks", name: "Stock exchange" },
 ];
 
-/**
- * @this {import("../types").ThisContext}
- */
 export default function () {
   const start = Date.now();
 

@@ -9,8 +9,6 @@ const LAST = 100000;
 /**
  * Streams the course from the requested chunk on, one chunk per line. Thanks
  * to backpressure, the next chunk is only rendered when the browser reads on.
- *
- * @this {import("../types").ThisContext}
  */
 export default function ({ request, reply }) {
   const query = /** @type {Record<string, string>} */ (request.query);

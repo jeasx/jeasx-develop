@@ -1,0 +1,218 @@
+/* Fades between pages instead of flashing, in browsers with cross-document view transitions. */
+@view-transition {
+  navigation: auto;
+}
+
+/* Status line with a bar that shows where the page sits in the whole list. */
+.pg-status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  align-items: center;
+  margin-bottom: 1rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+.pg-status strong {
+  color: var(--heading);
+}
+.pg-progress {
+  position: relative;
+  flex: 1 1 10rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, currentColor 15%, transparent);
+  height: 0.4rem;
+  overflow: hidden;
+}
+.pg-progress::after {
+  position: absolute;
+  inset: 0 auto 0 calc(var(--from) * 100%);
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--primary), #a855f7);
+  width: calc((var(--to) - var(--from)) * 100%);
+  content: "";
+}
+
+/* Element tiles, tinted by family */
+.pg-grid {
+  display: grid;
+  /* 12 tiles per page fill complete rows of 6, 4, 3 or 2. */
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0.85rem;
+  margin: 0 0 1.5rem;
+  padding: 0;
+  list-style: none;
+}
+.pg-grid li {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  border: 1px solid color-mix(in srgb, var(--c) 35%, transparent);
+  border-radius: 0.75rem;
+  background:
+    radial-gradient(
+      120% 90% at 0% 0%,
+      color-mix(in srgb, var(--c) 22%, transparent),
+      transparent 70%
+    ),
+    #161a23;
+  padding: 0.6rem 0.8rem 0.8rem;
+  list-style: none;
+  overflow: hidden;
+  /* Tiles appear one after another (--i is set per tile). */
+  animation: pg-in 0.4s ease-out backwards;
+  animation-delay: calc(var(--i, 0) * 30ms);
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s,
+    border-color 0.2s;
+}
+.pg-grid li:hover {
+  transform: translateY(-4px);
+  border-color: var(--c);
+  box-shadow: 0 0.75rem 1.75rem color-mix(in srgb, var(--c) 25%, transparent);
+}
+.pg-grid small {
+  color: color-mix(in srgb, var(--c) 70%, #fff);
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.pg-grid strong {
+  color: var(--heading);
+  font-size: 2.2rem;
+  line-height: 1.15;
+  text-shadow: 0 0 1.5rem color-mix(in srgb, var(--c) 60%, transparent);
+}
+.pg-grid span {
+  overflow: hidden;
+  font-size: 0.85rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+@keyframes pg-in {
+  from {
+    transform: translateY(0.5rem);
+    opacity: 0;
+  }
+}
+
+/* Page links in a floating pill bar */
+.pg-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 2rem;
+  box-shadow: 0 0.75rem 2rem rgb(0 0 0 / 0.35);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: #161a23;
+  padding: 0.4rem;
+  width: fit-content;
+  max-width: 100%;
+}
+.pg-nav ol {
+  display: flex;
+  gap: 0.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.pg-nav li {
+  list-style: none;
+}
+.pg-nav a,
+.pg-step,
+.pg-gap {
+  display: inline-grid;
+  place-items: center;
+  border-radius: 999px;
+  min-width: 2.4rem;
+  height: 2.4rem;
+  padding: 0 0.8rem;
+  color: var(--color);
+  font-variant-numeric: tabular-nums;
+  text-decoration: none;
+}
+.pg-nav a {
+  transition:
+    background 0.15s,
+    color 0.15s;
+}
+.pg-nav a:hover {
+  background: color-mix(in srgb, var(--primary) 15%, transparent);
+  color: var(--heading);
+}
+.pg-nav a:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+.pg-nav a[aria-current="page"] {
+  background: linear-gradient(135deg, var(--primary), #a855f7);
+  box-shadow: 0 0.25rem 0.75rem color-mix(in srgb, var(--primary) 45%, transparent);
+  color: #fff;
+  font-weight: 700;
+}
+.pg-step {
+  font-weight: 600;
+}
+/* As wide as a page number, so the pager keeps its width on every page. */
+.pg-gap {
+  padding: 0;
+  color: var(--muted);
+}
+.pg-nav li > * {
+  padding: 0;
+  width: 2.4rem;
+}
+.pg-step[aria-disabled="true"] {
+  opacity: 0.35;
+}
+
+/* Legend of the families */
+.pg-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  justify-content: center;
+  margin: 0 0 2rem;
+  padding: 0;
+  list-style: none;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+.pg-legend li {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+  list-style: none;
+}
+.pg-legend li::before {
+  border-radius: 50%;
+  background: var(--c);
+  box-shadow: 0 0 0.5rem var(--c);
+  width: 0.6rem;
+  height: 0.6rem;
+  content: "";
+}
+
+@media (max-width: 900px) {
+  .pg-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+@media (max-width: 640px) {
+  .pg-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .pg-nav {
+    border-radius: 1.25rem;
+  }
+}
+@media (max-width: 420px) {
+  .pg-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

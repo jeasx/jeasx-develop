@@ -1,0 +1,131 @@
+/* A curl command as a terminal window, styled like the editor windows of the MDX code blocks. */
+.command {
+  margin: 1rem 0 2rem;
+  box-shadow: 0 0.75rem 2rem rgb(0 0 0 / 0.35);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  background: var(--code-bg);
+  overflow: hidden;
+}
+.command-bar {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  background: color-mix(in srgb, var(--secondary) 10%, var(--code-bg));
+  padding: 0.45rem 0.75rem 0.45rem 1rem;
+}
+/* Traffic lights */
+.command-dots {
+  flex: none;
+  width: 2.1rem;
+  height: 0.6rem;
+  background:
+    radial-gradient(circle at 0.3rem 50%, #ff5f57 0.3rem, transparent 0.33rem),
+    radial-gradient(circle at 1.05rem 50%, #febc2e 0.3rem, transparent 0.33rem),
+    radial-gradient(circle at 1.8rem 50%, #28c840 0.3rem, transparent 0.33rem);
+}
+.command-title {
+  color: var(--muted);
+  font: 0.75rem var(--mono);
+}
+.command-method {
+  margin-left: auto;
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--method) 22%, transparent);
+  padding: 0.15rem 0.5rem;
+  color: color-mix(in srgb, var(--method) 55%, #fff);
+  font: 700 0.75rem/1.4 var(--mono);
+}
+.command-get {
+  --method: var(--info);
+}
+.command-post {
+  --method: var(--success);
+}
+.command-delete {
+  --method: var(--error);
+}
+.command-title {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+.command-bar button {
+  border: 0;
+  border-radius: 999px;
+  background: var(--primary);
+  padding: 0.35rem 1.1rem;
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 0.25rem 0.75rem color-mix(in srgb, var(--primary) 35%, transparent);
+  transition:
+    background 0.15s,
+    transform 0.15s;
+}
+.command-bar button:hover {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+}
+.command-bar button:focus-visible {
+  outline: 2px solid var(--primary-hover);
+  outline-offset: 2px;
+}
+.command-bar button:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+/* Prompt in front of the command */
+.command > pre > code::before {
+  color: #28c840;
+  content: "$ ";
+  user-select: none;
+}
+.command pre {
+  margin: 0;
+  border-radius: 0;
+}
+.command-output {
+  border-top: 1px dashed var(--border);
+  background: var(--bg);
+  --tone: var(--muted);
+}
+.command-output[data-status="2"] {
+  --tone: var(--success);
+}
+.command-output[data-status="4"] {
+  --tone: var(--warning);
+}
+.command-status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.75rem 1rem 0;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+}
+.command-status strong {
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--tone) 22%, transparent);
+  padding: 0.15rem 0.5rem;
+  color: color-mix(in srgb, var(--tone) 55%, #fff);
+}
+.command-status span {
+  color: var(--muted);
+}
+.command-output pre[class*="language-"] {
+  background: none;
+  padding: 0.75rem 1rem 1rem;
+  max-height: 18rem;
+  overflow: auto;
+  font-size: 0.8rem;
+}
+/* The global inline code style would indent the block. */
+.command-output pre[class*="language-"] {
+  margin: 0;
+}
+.command-output code {
+  background: none;
+  padding: 0;
+}

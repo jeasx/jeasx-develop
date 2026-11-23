@@ -10,11 +10,14 @@
     "topics": [
       {
         "title": "Server-side JSX",
-        "description": "Learn how JSX works on the server, where every component simply returns HTML. These examples show what you can put into JSX (text, numbers, arrays, even promises that resolve later), how to pass request data down to every component without prop drilling, how to reuse layouts with render props, how to tweak the generated HTML globally, how to build web components with Shadow DOM, and how to test your components like plain functions.",
+        "description": "Learn how JSX works on the server, where every component simply returns HTML. These examples show what you can put into JSX (text, numbers, arrays, even promises that resolve later), how to pass request data down to every component without prop drilling, how to reuse layouts with render props, how to cache the HTML of slow components, how to tweak the generated HTML globally, how to build web components with Shadow DOM, and how to test your components like plain functions.",
         "links": [
+          { "path": "/essentials", "title": "JSX essentials" },
           { "path": "/values", "title": "What JSX renders" },
           { "path": "/context", "title": "'this' as context" },
           { "path": "/render-props", "title": "Render props" },
+          { "path": "/slots", "title": "Named slots" },
+          { "path": "/component-cache", "title": "Component caching" },
           { "path": "/interceptor", "title": "Intercept JSX" },
           { "path": "/shadow-dom", "title": "Web components" },
           { "path": "/testing", "title": "Unit tests" }
@@ -76,6 +79,7 @@
         "links": [
           { "path": "/blog", "title": "Blog" },
           { "path": "/products", "title": "Products" },
+          { "path": "/pagination", "title": "Periodic table" },
           { "path": "/wizard", "title": "Flight booking" },
           { "path": "/mdx", "title": "Cookbook" },
           { "path": "/repositories", "title": "GitHub repos" },
@@ -96,12 +100,13 @@
           { "path": "/sse", "title": "Server-Sent Events" },
           { "path": "/websocket", "title": "WebSocket" },
           { "path": "/negotiation", "title": "Content negotiation" },
-          { "path": "/response", "title": "Response objects" }
+          { "path": "/response", "title": "Response objects" },
+          { "path": "/api-server", "title": "JSON API" }
         ]
       },
       {
         "title": "Security, errors and post-processing",
-        "description": "Everything a real site needs before going live. Learn how to restrict pages to logged-in users (with a simple password prompt or a full login with sessions), keep cookies tamper-proof, defend against injected scripts with a Content Security Policy, keep bots out with a captcha, and limit how often an API can be called. The remaining examples show how to show friendly error pages and how to clean up or adjust the final HTML just before it is sent to the browser.",
+        "description": "Everything a real site needs before going live. Learn how to restrict pages to logged-in users (with a simple password prompt or a full login with sessions), keep cookies tamper-proof, defend against injected scripts with a Content Security Policy, keep bots out with a captcha, and limit how often an API can be called. The remaining examples show how to catch errors with error boundaries, so a failing or slow part of a page shows a fallback instead of breaking the whole page, and how to clean up or adjust the final HTML just before it is sent to the browser.",
         "links": [
           { "path": "/login", "title": "Login and sessions" },
           { "path": "/basic-auth", "title": "Basic auth" },
@@ -109,7 +114,7 @@
           { "path": "/csp", "title": "Content Security Policy" },
           { "path": "/cap", "title": "Bot protection" },
           { "path": "/rate-limit", "title": "Rate limiting" },
-          { "path": "/error-handler", "title": "Catch errors" },
+          { "path": "/error-handler", "title": "Error boundaries" },
           { "path": "/prettier", "title": "Prettify HTML" },
           { "path": "/cheerio", "title": "Extract styles" },
           { "path": "/head", "title": "Merge head tags" }

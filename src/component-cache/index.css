@@ -1,0 +1,211 @@
+@import "../@styles/card.css";
+
+/* Toolbar: segmented region switch and reload button. */
+.cc-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+.cc-segments {
+  display: inline-flex;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: color-mix(in srgb, currentColor 5%, transparent);
+}
+.cc-segments a,
+.cc-reload {
+  border-radius: 999px;
+  padding: 0.45rem 1.1rem;
+  color: inherit;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition:
+    background 0.15s,
+    color 0.15s,
+    border-color 0.15s;
+}
+.cc-segments a:hover {
+  background: color-mix(in srgb, currentColor 10%, transparent);
+}
+.cc-segments a[aria-current] {
+  background: var(--primary);
+  color: #fff;
+  box-shadow: 0 0.25rem 0.75rem color-mix(in srgb, var(--primary) 40%, transparent);
+}
+.cc-reload {
+  display: inline-flex;
+  gap: 0.4rem;
+  align-items: center;
+  border: 1px solid var(--border);
+}
+.cc-reload:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+.cc-reload-icon {
+  display: inline-block;
+  font-size: 1.1rem;
+  line-height: 1;
+  transition: transform 0.4s ease;
+}
+.cc-reload:hover .cc-reload-icon {
+  transform: rotate(360deg);
+}
+.cc-segments a:focus-visible,
+.cc-reload:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Status header: render time and the countdown of the cached copy. */
+.cc-dashboard {
+  overflow: hidden;
+}
+.cc-status {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1rem 2rem;
+  align-items: end;
+  --tone: var(--error);
+}
+.cc-status.cc-hit {
+  --tone: var(--success);
+}
+.cc-label {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+.cc-ms {
+  display: block;
+  color: var(--tone);
+  font-size: 2.75rem;
+  font-weight: 700;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+.cc-ms small {
+  font-size: 1rem;
+  font-weight: 600;
+}
+.cc-verdict {
+  font-size: 0.9rem;
+}
+.cc-ttl {
+  height: 0.6rem;
+  margin-top: 0.5rem;
+  border-radius: 1rem;
+  background: color-mix(in srgb, currentColor 12%, transparent);
+  overflow: hidden;
+}
+.cc-ttl span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--tone), color-mix(in srgb, var(--tone) 50%, #fff));
+  transform-origin: left;
+  animation: cc-countdown var(--remaining) linear forwards;
+}
+@keyframes cc-countdown {
+  from {
+    transform: scaleX(var(--start));
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
+
+/* Report: KPI tiles and a bar chart. */
+.cc-report h3 {
+  margin-top: 0;
+  font-size: 1.1rem;
+}
+.cc-kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: 0.75rem;
+  margin: 0 0 1.5rem;
+}
+.cc-kpis > div {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--primary) 6%, transparent);
+}
+.cc-kpis dt {
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+.cc-kpis dd {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.cc-up {
+  color: var(--success);
+}
+.cc-down {
+  color: var(--error);
+}
+.cc-chart {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 0.4rem;
+  align-items: end;
+  height: 12rem;
+  margin: 0 0 0.75rem;
+  padding: 0;
+  list-style: none;
+}
+.cc-chart li {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 100%;
+  list-style: none;
+}
+.cc-bar {
+  height: var(--h);
+  border-radius: 0.3rem 0.3rem 0 0;
+  background: linear-gradient(180deg, var(--primary), color-mix(in srgb, var(--primary) 35%, transparent));
+  transform-origin: bottom;
+  animation: cc-grow 0.6s ease-out backwards;
+}
+.cc-chart li:hover .cc-bar {
+  filter: brightness(1.25);
+}
+.cc-month {
+  margin-top: 0.3rem;
+  text-align: center;
+  font-size: 0.7rem;
+  opacity: 0.6;
+}
+@keyframes cc-grow {
+  from {
+    transform: scaleY(0);
+  }
+}
+.cc-muted {
+  margin-bottom: 0;
+  opacity: 0.7;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 640px) {
+  .cc-status {
+    grid-template-columns: 1fr;
+  }
+  .cc-month {
+    font-size: 0.55rem;
+  }
+}

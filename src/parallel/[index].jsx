@@ -7,7 +7,6 @@ const DELAY = 1000;
 const SCALE = USERS.length * DELAY + 300;
 
 /**
- * @this {import("../types").ThisContext}
  * @param {import("../types").RouteProps} props
  */
 export default async function ({ request }) {

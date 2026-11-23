@@ -156,7 +156,6 @@ const SERVICES = [
 ];
 
 /**
- * @this {import("../types").ThisContext}
  * @param {import("../types").RouteProps} props
  */
 export default function ({ request }) {

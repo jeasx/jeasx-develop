@@ -28,7 +28,6 @@ const SCENARIOS = [
 ];
 
 /**
- * @this {import("../types").ThisContext}
  * @param {import("../types").RouteProps} props
  */
 export default async function (props) {
