@@ -1,13 +1,5 @@
 import { html } from "jsx-async-runtime";
 import GithubIcon from "./github.svg";
-import sitemap from "./sitemap.json";
-
-// Top-level folders of all examples, e.g. "blog" for "/blog".
-const EXAMPLES = new Set(
-  sitemap
-    .flatMap(({ topics }) => topics)
-    .flatMap(({ links }) => links.map(({ path }) => path.split(/[/?]/)[1])),
-);
 
 /**
  * @this {import("./types").ThisContext}
@@ -29,8 +21,7 @@ export default function Layout({
   const url = encodeURI(path).replace(/[?#]/g, encodeURIComponent);
 
   // Link to the source of the current example; unknown paths (e.g. 404 pages) get the repository.
-  const example = path.split("/")[1];
-  const sourcePath = EXAMPLES.has(example) ? `/tree/main/src/${example}` : "";
+  const sourcePath = `/tree/main/src/${path.split("/")[1]}`;
 
   return (
     <>
