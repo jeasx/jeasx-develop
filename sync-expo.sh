@@ -23,6 +23,7 @@ KEEP=(
   env.d.ts
   env.js
   jeasx.config.js
+  jeasx.plugins.js
   LICENSE.txt
   package-lock.json
   package.json
