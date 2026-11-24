@@ -11,7 +11,9 @@ const NODE_ENV_IS_DEVELOPMENT = process.env.NODE_ENV === "development";
 
 /** @type {Bun.BuildConfig} */
 const COMMON_OPTIONS = {
-  minify: !NODE_ENV_IS_DEVELOPMENT,
+  // Required: without it, Bun nests the output in "dist/src". esbuild has no "outbase" set and
+  // uses the common ancestor of the entry points instead, so if all of them are in one subfolder
+  // (e.g. "src/routes"), esbuild omits that folder in "dist" while Bun keeps it.
   root: "src",
   outdir: "dist",
   publicPath: "/",
@@ -19,6 +21,7 @@ const COMMON_OPTIONS = {
   format: "esm",
   // Bun doesn't reliably pick up "jsxImportSource" from tsconfig.json.
   jsx: { importSource: "jsx-async-runtime", development: NODE_ENV_IS_DEVELOPMENT },
+  minify: !NODE_ENV_IS_DEVELOPMENT,
 };
 
 /** @type {Bun.BuildConfig} */
