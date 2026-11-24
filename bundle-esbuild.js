@@ -16,6 +16,7 @@ const COMMON_OPTIONS = {
   bundle: true,
   outdir: "dist",
   publicPath: "/",
+  jsxDev: NODE_ENV_IS_DEVELOPMENT,
   assetNames: "[dir]/[name]-[hash]",
   format: "esm",
 };
