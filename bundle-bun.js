@@ -1,5 +1,5 @@
 import { watch } from "node:fs";
-import { join, relative } from "node:path";
+import { dirname, join, relative, sep } from "node:path";
 import { pathToFileURL } from "node:url";
 import env from "./env.js";
 
@@ -11,14 +11,11 @@ const NODE_ENV_IS_DEVELOPMENT = process.env.NODE_ENV === "development";
 
 /** @type {Bun.BuildConfig} */
 const COMMON_OPTIONS = {
-  // Required: without it, Bun nests the output in "dist/src". esbuild has no "outbase" set and
-  // uses the common ancestor of the entry points instead, so if all of them are in one subfolder
-  // (e.g. "src/routes"), esbuild omits that folder in "dist" while Bun keeps it.
-  root: "src",
   outdir: "dist",
   publicPath: "/",
   naming: { asset: "[dir]/[name]-[hash].[ext]" },
   format: "esm",
+  throw: false,
   // Bun doesn't reliably pick up "jsxImportSource" from tsconfig.json.
   jsx: { importSource: "jsx-async-runtime", development: NODE_ENV_IS_DEVELOPMENT },
   minify: !NODE_ENV_IS_DEVELOPMENT,
@@ -51,7 +48,14 @@ async function build() {
         options.entrypoints.map((glob) => Array.fromAsync(new Bun.Glob(glob).scan())),
       )
     ).flat();
-    const result = await Bun.build({ ...options, entrypoints, throw: false });
+    // Like esbuild without "outbase", use the lowest common ancestor of the entry points as root,
+    // so both bundlers write the same paths to "dist". Bun's own default differs and may nest
+    // the output in "dist/src". A root set in jeasx.config.js takes precedence.
+    const result = await Bun.build({
+      root: commonAncestor(entrypoints),
+      ...options,
+      entrypoints,
+    });
     result.logs
       .filter((log) => log.message !== "invalid @ rule encountered: '@view-transition'")
       .forEach((log) => console.warn(log));
@@ -69,6 +73,26 @@ async function build() {
     }
   }
   console.info(`⚡ Done in ${Math.round(performance.now() - start)}ms`);
+}
+
+/**
+ * Returns the lowest common ancestor directory of the given file paths.
+ * @param {string[]} paths
+ */
+function commonAncestor(paths) {
+  if (paths.length === 0) {
+    return ".";
+  }
+  let ancestor = dirname(paths[0]).split(sep);
+  for (const path of paths.slice(1)) {
+    const segments = dirname(path).split(sep);
+    let i = 0;
+    while (i < ancestor.length && ancestor[i] === segments[i]) {
+      i++;
+    }
+    ancestor = ancestor.slice(0, i);
+  }
+  return ancestor.join(sep) || ".";
 }
 
 await build();
