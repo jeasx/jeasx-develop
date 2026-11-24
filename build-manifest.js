@@ -2,7 +2,7 @@ import { readdir, writeFile } from "node:fs/promises";
 import { join, relative, sep } from "node:path";
 
 // Export path mappings for routes and files
-
+const MANIFEST = ".jeasx.manifest.js";
 const CWD = process.cwd();
 
 /** @type {Record<string,string>} */
@@ -38,13 +38,14 @@ for (const directory of ["dist", "public"]) {
 
     // Treat all other entries as static files.
     const key = path.slice(path.indexOf("/"));
-    if (!(directory === "public" && key in files)) {
-      files[key] = path;
+    if (key === `/${MANIFEST}` || (directory === "public" && key in files)) {
+      continue;
     }
+    files[key] = path;
   }
 }
 
 await writeFile(
-  join(CWD, "dist", ".jeasx.manifest.js"),
+  join(CWD, "dist", MANIFEST),
   `export default ${JSON.stringify({ routes, files })};`,
 );
