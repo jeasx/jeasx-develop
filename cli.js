@@ -30,7 +30,7 @@ switch (process.argv[2]) {
     break;
 
   default:
-    console.info(`💡 Usage: jeasx [dev|build|startclean]`);
+    console.info(`💡 Usage: jeasx [dev|build|start|clean]`);
     process.exit(1);
 }
 
