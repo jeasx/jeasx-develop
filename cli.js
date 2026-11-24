@@ -1,26 +1,28 @@
 #!/usr/bin/env node
-import fs from "node:fs/promises";
+import { rm } from "node:fs/promises";
 
-const START_JS = "./start.js";
-const BUILD_JS = `./build-${process.versions.bun ? "bun" : "esbuild"}.js`;
-const BUILD_META_JS = "./build-meta.js";
+const SCRIPTS = {
+  START: "./start.js",
+  BUNDLE: `./bundle-${process.versions.bun ? "bun" : "esbuild"}.js`,
+  BUILD_MANIFEST: "./build-manifest.js",
+};
 
 switch (process.argv[2]) {
   case "start":
-    await import(START_JS);
+    await import(SCRIPTS.START);
     break;
 
   case "build":
     await clean();
-    await import(BUILD_JS);
-    await import(BUILD_META_JS);
+    await import(SCRIPTS.BUNDLE);
+    await import(SCRIPTS.BUILD_MANIFEST);
     break;
 
   case "dev":
     process.env.NODE_ENV = "development";
     await clean();
-    await import(BUILD_JS);
-    await import(START_JS);
+    await import(SCRIPTS.BUNDLE);
+    await import(SCRIPTS.START);
     break;
 
   case "clean":
@@ -28,10 +30,10 @@ switch (process.argv[2]) {
     break;
 
   default:
-    console.info(`💡 Usage: jeasx [start|build|dev|clean]`);
+    console.info(`💡 Usage: jeasx [dev|build|startclean]`);
     process.exit(1);
 }
 
 async function clean() {
-  await fs.rm("dist", { recursive: true, force: true, maxRetries: 3 });
+  await rm("dist", { recursive: true, force: true, maxRetries: 3 });
 }

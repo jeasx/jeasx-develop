@@ -18,22 +18,22 @@ const CWD = process.cwd();
 const CONFIG = (await import(pathToFileURL(join(CWD, "jeasx.config.js")).href)).default;
 const NODE_ENV_IS_DEVELOPMENT = process.env.NODE_ENV === "development";
 
-// Map routes and files for non-development environments from metadata export.
+// Map routes and files for non-development environments from manifest.
 // Module paths are initialized at startup but overwritten
 // with resolved modules upon the first request.
-const METADATA: {
+const MANIFEST: {
   routes: Record<string, string | { default: Function }>;
   files: Record<string, string>;
 } = NODE_ENV_IS_DEVELOPMENT
   ? { routes: {}, files: {} }
-  : (await import(pathToFileURL(join(CWD, "dist", "[--metadata--].js")).href)).default;
+  : (await import(pathToFileURL(join(CWD, "dist", ".jeasx.manifest.js")).href)).default;
 
 // Without a prototype, lookups never return inherited keys like "constructor".
 const MODULE_BY_ROUTE = Object.assign(
   Object.create(null),
-  METADATA.routes,
-) as typeof METADATA.routes;
-const FILE_BY_PATH = Object.assign(Object.create(null), METADATA.files) as typeof METADATA.files;
+  MANIFEST.routes,
+) as typeof MANIFEST.routes;
+const FILE_BY_PATH = Object.assign(Object.create(null), MANIFEST.files) as typeof MANIFEST.files;
 
 declare module "fastify" {
   interface FastifyRequest {
@@ -229,9 +229,7 @@ async function handler(request: FastifyRequest, reply: FastifyReply) {
 }
 
 // Names of special routes which must not be requested as "/a/b/[c]".
-// "--metadata--" is the route and file mapping of a production build, which must
-// not be served if the server runs in development mode on a production build.
-const SPECIAL_SEGMENTS = new Set(["index", "...guard", "...path", "--metadata--"]);
+const SPECIAL_SEGMENTS = new Set(["index", "...guard", "...path", ".jeasx.manifest.js"]);
 
 /**
  * Generates all possible routes based on the given input path.
@@ -268,12 +266,11 @@ function* generateRoutes(path: string): Generator<string | typeof STATIC_FILE_RO
   yield STATIC_FILE_ROUTE;
 
   // "/a/b/c" => ["/a/b/[c]", "/a/b/c/[index]"]
-  // Special routes aren't reachable by name ("/index", "/...guard", "/...path", "/--metadata--"),
+  // Special routes aren't reachable by name,
   // except "/a/404", which is answered by "/a/[404]" on purpose.
   const lastSlash = edgeSegment.lastIndexOf("/") + 1;
   const lastSegment = edgeSegment.substring(lastSlash);
-  // Compared in lower case, as case-insensitive file systems (macOS, Windows) would
-  // otherwise resolve e.g. "/--METADATA--" to "[--metadata--].js" in development.
+  // Compared in lower case for case-insensitive file systems (macOS, Windows).
   if (lastSlash > 0 && !SPECIAL_SEGMENTS.has(lastSegment.toLowerCase())) {
     yield `${edgeSegment.substring(0, lastSlash)}[${lastSegment}]`;
   }

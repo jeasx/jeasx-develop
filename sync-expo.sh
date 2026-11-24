@@ -15,9 +15,9 @@ KEEP=(
   .gitignore
   api/vercel.js
   src/types.d.ts
-  build-bun.js
-  build-esbuild.js
-  build-meta.js
+  build-manifest.js
+  bundle-bun.js
+  bundle-esbuild.js
   cli.js
   Dockerfile
   env.d.ts

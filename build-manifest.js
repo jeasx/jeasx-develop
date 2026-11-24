@@ -50,6 +50,6 @@ for (const entry of entries) {
 }
 
 await writeFile(
-  join(CWD, "dist", "[--metadata--].js"),
+  join(CWD, "dist", ".jeasx.manifest.js"),
   `export default ${JSON.stringify({ routes, files })};`,
 );
