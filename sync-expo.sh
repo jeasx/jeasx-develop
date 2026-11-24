@@ -22,6 +22,9 @@ KEEP=(
   Dockerfile
   env.d.ts
   env.js
+  jeasx.config.bun.js
+  jeasx.config.esbuild.js
+  jeasx.config.fastify.js
   jeasx.config.js
   jeasx.plugins.js
   LICENSE.txt

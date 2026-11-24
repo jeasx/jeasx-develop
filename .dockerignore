@@ -6,6 +6,9 @@
 !bundle-esbuild.js
 !cli.js
 !env.js
+!jeasx.config.bun.js
+!jeasx.config.esbuild.js
+!jeasx.config.fastify.js
 !jeasx.config.js
 !jeasx.plugins.js
 !package-lock.json

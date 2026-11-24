@@ -6,8 +6,8 @@
     "build": "node cli.js build",
     "dev": "node cli.js dev",
     "clean": "node cli.js clean",
-    "test:bun": "bun test src",
-    "test:esbuild": "node -e \"require('fs').rmSync('dist-test',{recursive:true,force:true})\" && esbuild \"src/**/*.test.*\" --bundle --platform=node --format=esm --packages=external --loader:.svg=file --outbase=src --outdir=dist-test --log-level=warning && node --test dist-test",
+    "test": "bun test src",
+    "test:esbuild": "node -e \"fs.rmSync('dist-test',{recursive:true,force:true})\" && esbuild \"src/**/*.test.*\" --bundle --platform=node --format=esm --packages=external --loader:.svg=file --outbase=src --outdir=dist-test --log-level=warning && node --test dist-test",
     "compile:bun": "bun build --target=node --packages=external --sourcemap=linked --define process.env.NODE_ENV=process.env.NODE_ENV --outdir=. serverless.ts",
     "compile:esbuild": "esbuild --platform=node --format=esm --sourcemap=linked --outdir=. serverless.ts"
   },
