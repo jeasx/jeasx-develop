@@ -14,38 +14,33 @@ const files = {};
 // option of FASTIFY_SEND_OPTIONS decides about them like in development.
 // "dist" comes first: if a file exists in both directories, "dist" wins.
 // Only regular files are collected; symbolic links are skipped (unlike in development).
-const entries = [];
 for (const directory of ["dist", "public"]) {
   const dirents = await readdir(join(CWD, directory), {
     recursive: true,
     withFileTypes: true,
   }).catch(() => []);
   for (const dirent of dirents) {
-    const path = join(dirent.parentPath, dirent.name);
-    if (dirent.isFile()) {
-      entries.push(relative(CWD, path));
+    if (!dirent.isFile()) {
+      continue;
     }
-  }
-}
+    const path = relative(CWD, join(dirent.parentPath, dirent.name)).split(sep).join("/");
 
-for (const entry of entries) {
-  const path = entry.split(sep).join("/");
+    // Handle server routes.
+    if (/^dist\/.*\[[^/]+\]\.js$/.test(path)) {
+      routes[path.slice("dist".length, -".js".length)] = path;
+      continue;
+    }
 
-  // Handle server routes.
-  if (/^dist\/.*\[[^/]+\]\.js$/.test(path)) {
-    routes[path.slice("dist".length, -".js".length)] = path;
-    continue;
-  }
+    // Skip all other outputs of server routes, e.g. sourcemaps or CSS of components.
+    if (/^dist\/.*\[[^/]+\]\.[^/]+$/.test(path)) {
+      continue;
+    }
 
-  // Skip all other outputs of server routes, e.g. sourcemaps or CSS of components.
-  if (/^dist\/.*\[[^/]+\]\.[^/]+$/.test(path)) {
-    continue;
-  }
-
-  // Treat all other entries as static files.
-  const key = path.slice(path.indexOf("/"));
-  if (!(path.startsWith("public/") && key in files)) {
-    files[key] = path;
+    // Treat all other entries as static files.
+    const key = path.slice(path.indexOf("/"));
+    if (!(directory === "public" && key in files)) {
+      files[key] = path;
+    }
   }
 }
 

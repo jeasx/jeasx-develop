@@ -10,8 +10,7 @@ const CONFIG = (await import(pathToFileURL(join(CWD, "jeasx.config.js")).href)).
 const NODE_ENV_IS_DEVELOPMENT = process.env.NODE_ENV === "development";
 
 /** @type {Bun.BuildConfig} */
-const SERVER_OPTIONS = {
-  entrypoints: ["src/**/\\[*\\].*"],
+const COMMON_OPTIONS = {
   minify: !NODE_ENV_IS_DEVELOPMENT,
   root: "src",
   outdir: "dist",
@@ -20,23 +19,21 @@ const SERVER_OPTIONS = {
   format: "esm",
   // Bun doesn't reliably pick up "jsxImportSource" from tsconfig.json.
   jsx: { importSource: "jsx-async-runtime", development: NODE_ENV_IS_DEVELOPMENT },
+};
+
+/** @type {Bun.BuildConfig} */
+const SERVER_OPTIONS = {
+  ...COMMON_OPTIONS,
+  entrypoints: ["src/**/\\[*\\].*"],
   target: "node",
   packages: "external",
-  // Options may be async, so build-only plugins can be imported lazily (see jeasx.config.js).
   ...(await CONFIG.BUN_SERVER_OPTIONS?.()),
 };
 
 /** @type {Bun.BuildConfig} */
 const BROWSER_OPTIONS = {
+  ...COMMON_OPTIONS,
   entrypoints: ["src/**/index.*"],
-  minify: !NODE_ENV_IS_DEVELOPMENT,
-  root: "src",
-  outdir: "dist",
-  publicPath: "/",
-  naming: { asset: "[dir]/[name]-[hash].[ext]" },
-  format: "esm",
-  // Bun doesn't reliably pick up "jsxImportSource" from tsconfig.json.
-  jsx: { importSource: "jsx-async-runtime", development: NODE_ENV_IS_DEVELOPMENT },
   target: "browser",
   packages: "bundle",
   ...(await CONFIG.BUN_BROWSER_OPTIONS?.()),
@@ -75,10 +72,29 @@ await build();
 
 if (NODE_ENV_IS_DEVELOPMENT) {
   // Bun.build has no watch mode, so rebuild on changes. Build errors are logged, so don't stop on them.
-  watch("src", { recursive: true }, (event, filename) => {
+  // A single save often fires several events, so debounce them and never run builds concurrently:
+  // changes during a build trigger exactly one rebuild afterwards.
+  let timer;
+  let building = false;
+  let pending = false;
+  const rebuild = async () => {
+    if (building) {
+      pending = true;
+      return;
+    }
+    building = true;
+    try {
+      do {
+        pending = false;
+        await build().catch(console.error);
+      } while (pending);
+    } finally {
+      building = false;
+    }
+  };
+  watch("src", { recursive: true }, (_event, filename) => {
     console.info(`Changed: ${join("src", filename ?? "")}`);
-    build().catch(console.error);
+    clearTimeout(timer);
+    timer = setTimeout(rebuild, 50);
   });
-  // Stop watching when "jeasx dev" is gone, however it ended (e.g. SIGHUP or SIGKILL).
-  process.on("disconnect", () => process.exit());
 }

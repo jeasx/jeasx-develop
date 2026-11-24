@@ -10,8 +10,7 @@ const CONFIG = (await import(pathToFileURL(join(CWD, "jeasx.config.js")).href)).
 const NODE_ENV_IS_DEVELOPMENT = process.env.NODE_ENV === "development";
 
 /** @type {esbuild.BuildOptions} */
-const SERVER_OPTIONS = {
-  entryPoints: ["src/**/[*].*"],
+const COMMON_OPTIONS = {
   minify: !NODE_ENV_IS_DEVELOPMENT,
   logLevel: "info",
   bundle: true,
@@ -19,22 +18,21 @@ const SERVER_OPTIONS = {
   publicPath: "/",
   assetNames: "[dir]/[name]-[hash]",
   format: "esm",
+};
+
+/** @type {esbuild.BuildOptions} */
+const SERVER_OPTIONS = {
+  ...COMMON_OPTIONS,
+  entryPoints: ["src/**/[*].*"],
   platform: "neutral",
   packages: "external",
-  // Options may be async, so build-only plugins can be imported lazily (see jeasx.config.js).
   ...(await CONFIG.ESBUILD_SERVER_OPTIONS?.()),
 };
 
 /** @type {esbuild.BuildOptions} */
 const BROWSER_OPTIONS = {
+  ...COMMON_OPTIONS,
   entryPoints: ["src/**/index.*"],
-  minify: !NODE_ENV_IS_DEVELOPMENT,
-  logLevel: "info",
-  bundle: true,
-  outdir: "dist",
-  publicPath: "/",
-  assetNames: "[dir]/[name]-[hash]",
-  format: "esm",
   platform: "browser",
   packages: "bundle",
   ...(await CONFIG.ESBUILD_BROWSER_OPTIONS?.()),
