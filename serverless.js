@@ -114,7 +114,7 @@ async function handler(request, reply) {
   }
   return await renderResponse(context, response);
 }
-const SPECIAL_SEGMENTS = /* @__PURE__ */ new Set(["index", "...guard", "...path", MANIFEST_FILE]);
+const SPECIAL_SEGMENTS = /* @__PURE__ */ new Set(["index", "...guard", "...path"]);
 function* generateRoutes(path) {
   const segments = [""];
   let edgeSegment = "";
