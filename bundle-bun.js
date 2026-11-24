@@ -55,14 +55,16 @@ async function build() {
     result.logs
       .filter((log) => log.message !== "invalid @ rule encountered: '@view-transition'")
       .forEach((log) => console.warn(log));
-    if (!result.success && !NODE_ENV_IS_DEVELOPMENT) {
-      process.exit(1);
-    }
+
     if (!NODE_ENV_IS_DEVELOPMENT) {
-      for (const output of result.outputs) {
-        const size =
-          output.size < 1024 ? `${output.size}b ` : `${(output.size / 1024).toFixed(1)}kb`;
-        console.info(`  ${relative(CWD, output.path).padEnd(48)} ${size.padStart(8)}`);
+      if (result.success) {
+        for (const output of result.outputs) {
+          const size =
+            output.size < 1024 ? `${output.size}b ` : `${(output.size / 1024).toFixed(1)}kb`;
+          console.info(`  ${relative(CWD, output.path).padEnd(48)} ${size.padStart(8)}`);
+        }
+      } else {
+        process.exit(1);
       }
     }
   }
