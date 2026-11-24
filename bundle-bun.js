@@ -53,19 +53,11 @@ async function build() {
     ).flat();
     const result = await Bun.build({ ...options, entrypoints, throw: false });
     result.logs
-      .filter((log) => ["warn: invalid @ rule encountered: '@view-transition'"].includes(log))
+      .filter((log) => log.message !== "invalid @ rule encountered: '@view-transition'")
       .forEach((log) => console.warn(log));
     if (!result.success && !NODE_ENV_IS_DEVELOPMENT) {
       process.exit(1);
     }
-    // Bun names assets in the root of "src" "/./name-hash.ext", so remove the "./".
-    // for (const output of result.outputs.filter((output) => output.kind !== "asset")) {
-    //   const text = await output.text();
-    //   if (text.includes('"/./')) {
-    //     await Bun.write(output.path, text.replaceAll('"/./', '"/'));
-    //   }
-    // }
-    // List the output files with their sizes, like esbuild does.
     if (!NODE_ENV_IS_DEVELOPMENT) {
       for (const output of result.outputs) {
         const size =
