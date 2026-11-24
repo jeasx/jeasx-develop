@@ -1,9 +1,8 @@
 import { readdir, writeFile } from "node:fs/promises";
 import { join, relative, sep } from "node:path";
 
-// Export path mappings for routes and files
-const MANIFEST = ".jeasx.manifest.js";
 const CWD = process.cwd();
+const MANIFEST_FILE = ".jeasx.manifest.js";
 
 /** @type {Record<string,string>} */
 const routes = {};
@@ -38,7 +37,7 @@ for (const directory of ["dist", "public"]) {
 
     // Treat all other entries as static files.
     const key = path.slice(path.indexOf("/"));
-    if (key === `/${MANIFEST}` || (directory === "public" && key in files)) {
+    if (key === `/${MANIFEST_FILE}` || (directory === "public" && key in files)) {
       continue;
     }
     files[key] = path;
@@ -46,6 +45,6 @@ for (const directory of ["dist", "public"]) {
 }
 
 await writeFile(
-  join(CWD, "dist", MANIFEST),
+  join(CWD, "dist", MANIFEST_FILE),
   `export default ${JSON.stringify({ routes, files })};`,
 );

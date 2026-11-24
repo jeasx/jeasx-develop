@@ -15,6 +15,7 @@ import env from "./env.js";
 env();
 
 const CWD = process.cwd();
+const MANIFEST_FILE = ".jeasx.manifest.js";
 const CONFIG = (await import(pathToFileURL(join(CWD, "jeasx.config.js")).href)).default;
 const NODE_ENV_IS_DEVELOPMENT = process.env.NODE_ENV === "development";
 
@@ -26,7 +27,7 @@ const MANIFEST: {
   files: Record<string, string>;
 } = NODE_ENV_IS_DEVELOPMENT
   ? { routes: {}, files: {} }
-  : (await import(pathToFileURL(join(CWD, "dist", ".jeasx.manifest.js")).href)).default;
+  : (await import(pathToFileURL(join(CWD, "dist", MANIFEST_FILE)).href)).default;
 
 // Without a prototype, lookups never return inherited keys like "constructor".
 const MODULE_BY_ROUTE = Object.assign(
@@ -229,7 +230,7 @@ async function handler(request: FastifyRequest, reply: FastifyReply) {
 }
 
 // Names of special routes which must not be requested as "/a/b/[c]".
-const SPECIAL_SEGMENTS = new Set(["index", "...guard", "...path", ".jeasx.manifest.js"]);
+const SPECIAL_SEGMENTS = new Set(["index", "...guard", "...path", MANIFEST_FILE]);
 
 /**
  * Generates all possible routes based on the given input path.

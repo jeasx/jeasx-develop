@@ -8,9 +8,10 @@ import { pathToFileURL } from "node:url";
 import env from "./env.js";
 env();
 const CWD = process.cwd();
+const MANIFEST_FILE = ".jeasx.manifest.js";
 const CONFIG = (await import(pathToFileURL(join(CWD, "jeasx.config.js")).href)).default;
 const NODE_ENV_IS_DEVELOPMENT = process.env.NODE_ENV === "development";
-const MANIFEST = NODE_ENV_IS_DEVELOPMENT ? { routes: {}, files: {} } : (await import(pathToFileURL(join(CWD, "dist", ".jeasx.manifest.js")).href)).default;
+const MANIFEST = NODE_ENV_IS_DEVELOPMENT ? { routes: {}, files: {} } : (await import(pathToFileURL(join(CWD, "dist", MANIFEST_FILE)).href)).default;
 const MODULE_BY_ROUTE = Object.assign(
   /* @__PURE__ */ Object.create(null),
   MANIFEST.routes
@@ -113,7 +114,7 @@ async function handler(request, reply) {
   }
   return await renderResponse(context, response);
 }
-const SPECIAL_SEGMENTS = /* @__PURE__ */ new Set(["index", "...guard", "...path", ".jeasx.manifest.js"]);
+const SPECIAL_SEGMENTS = /* @__PURE__ */ new Set(["index", "...guard", "...path", MANIFEST_FILE]);
 function* generateRoutes(path) {
   const segments = [""];
   let edgeSegment = "";
