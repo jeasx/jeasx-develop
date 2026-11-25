@@ -342,7 +342,7 @@ async function tryFile(request: FastifyRequest): Promise<BaseSendResult | undefi
   if (NODE_ENV_IS_DEVELOPMENT) {
     for (const directory of ["dist", "public"]) {
       // Don't expose compiled server routes and their other outputs (sourcemaps, CSS).
-      // Only the last segment counts, like in the production build (see build-manifest.js).
+      // Only the last segment counts, like in the production build.
       // The suffix after "]." is not anchored, as some file systems ignore trailing
       // dots and stream names (Windows: "[index].js.", "[index].js::$DATA").
       if (directory === "dist" && /\[[^/]+\]\.[^/]*$/u.test(request.path)) {
