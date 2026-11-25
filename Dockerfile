@@ -20,7 +20,7 @@ FROM runtime AS build
 
 COPY --chown=node:node package.json package-lock.json ./
 # NODE_ENV=production would skip the dev dependencies.
-RUN npm ci --include=dev
+RUN npm ci --include=dev && npm cache clean --force
 COPY --chown=node:node . ./
 RUN "$RUNTIME" cli.js build && npm prune --omit=dev && find node_modules -type d -empty -delete
 
