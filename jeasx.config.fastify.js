@@ -3,8 +3,6 @@ import querystring from "node:querystring";
 
 const NODE_ENV_IS_DEVELOPMENT = process.env.NODE_ENV === "development";
 
-// The server imports this config at startup, so build-only plugins are imported lazily:
-// loading them (e.g. the Svelte and Vue compilers) would add about 200 ms to every server start.
 export default {
   /** @type {() => import("@fastify/send").SendOptions} */
   FASTIFY_SEND_OPTIONS: () => ({
