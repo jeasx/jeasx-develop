@@ -1,6 +1,7 @@
 import { watch } from "node:fs";
 import { dirname, join, relative, sep } from "node:path";
 import { pathToFileURL } from "node:url";
+import { styleText } from "node:util";
 import env from "./env.js";
 
 env();
@@ -8,6 +9,9 @@ env();
 const CWD = process.cwd();
 const CONFIG = (await import(pathToFileURL(join(CWD, "jeasx.config.js")).href)).default;
 const NODE_ENV_IS_DEVELOPMENT = process.env.NODE_ENV === "development";
+
+// Max output files listed in the build summary.
+const MAX_LISTED_OUTPUTS = 10;
 
 /** @type {Bun.BuildConfig} */
 const COMMON_OPTIONS = {
@@ -40,8 +44,8 @@ const BROWSER_OPTIONS = {
 };
 
 async function build() {
-  const start = performance.now();
   for (const options of [SERVER_OPTIONS, BROWSER_OPTIONS]) {
+    const start = performance.now();
     // Bun.build doesn't expand globs. Expand them on every build, so new files are picked up while watching.
     const entrypoints = (
       await Promise.all(
@@ -62,17 +66,23 @@ async function build() {
 
     if (!NODE_ENV_IS_DEVELOPMENT) {
       if (result.success) {
-        for (const output of result.outputs) {
-          const size =
-            output.size < 1024 ? `${output.size}b ` : `${(output.size / 1024).toFixed(1)}kb`;
-          console.info(`  ${relative(CWD, output.path).padEnd(48)} ${size.padStart(8)}`);
+        const outputs = result.outputs.toSorted((a, b) => b.size - a.size);
+        console.info();
+        for (const output of outputs.slice(0, MAX_LISTED_OUTPUTS)) {
+          console.info(
+            `  ${relative(CWD, output.path).padEnd(48)} ${styleText("cyan", `${(output.size / 1024).toFixed(1).padStart(10)}kb`)}`,
+          );
         }
+        if (outputs.length > MAX_LISTED_OUTPUTS) {
+          console.info(`  ... and ${outputs.length - MAX_LISTED_OUTPUTS} more output files`);
+        }
+        console.info();
       } else {
         process.exit(1);
       }
     }
+    console.info(`⚡ ${styleText("green", `Done in ${Math.round(performance.now() - start)}ms`)}`);
   }
-  console.info(`⚡ Done in ${Math.round(performance.now() - start)}ms`);
 }
 
 /**

@@ -11,7 +11,6 @@ export default {
       "process.env.BUILD_ID": `"${Date.now().toString(36)}"`,
     },
     sourcemap: NODE_ENV_IS_DEVELOPMENT ? "inline" : "none",
-    loader: { ".svg": "file" },
     plugins: [
       (await import("unplugin-vue")).default.bun({ ssr: true, sourceMap: false }),
       // Component styles end up in a CSS file (e.g. "/svelte/index.css" from the browser build),
@@ -36,7 +35,6 @@ export default {
       __VUE_PROD_DEVTOOLS__: "false",
       __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: "false",
     },
-    loader: { ".svg": "file" },
     plugins: [
       (await import("unplugin-vue")).default.bun({ sourceMap: false }),
       await sveltePlugin({ generate: "client", css: "external" }),
