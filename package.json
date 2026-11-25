@@ -17,6 +17,7 @@
     "@lit-labs/motion": "1.1.0",
     "@mdx-js/esbuild": "3.1.1",
     "@preact/signals": "2.11.4",
+    "@types/bun": "1.4.5",
     "alpinejs": "3.17.5",
     "cap-widget": "0.1.64",
     "capjs-core": "0.1.20",
@@ -41,7 +42,7 @@
   },
   "devDependencies": {
     "@types/node": "26.6.10",
-    "@types/react": "19.3.2",
+    "@types/react": "19.3.3",
     "@types/react-dom": "19.3.0"
   },
   "allowScripts": {
