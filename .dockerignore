@@ -4,6 +4,7 @@
 !build-manifest.js
 !bundle-bun.js
 !bundle-esbuild.js
+!bunfig.toml
 !cli.js
 !env.js
 !jeasx.config.bun.js

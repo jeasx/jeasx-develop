@@ -18,6 +18,7 @@ KEEP=(
   build-manifest.js
   bundle-bun.js
   bundle-esbuild.js
+  bunfig.toml
   cli.js
   Dockerfile
   env.d.ts
