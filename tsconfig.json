@@ -4,7 +4,7 @@
     "moduleResolution": "bundler",
     "target": "esnext",
     "strict": false,
-    "types": ["node", "bun"],
+    "types": ["bun"],
     "rootDirs": [".", "./src"],
     "outDir": "./dist",
     "allowJs": true,

@@ -16,12 +16,13 @@ WORKDIR /home/node
 
 # npm installs the dependencies for both runtimes, so package-lock.json stays the only lockfile.
 COPY --chown=node:node package.json package-lock.json ./
-RUN npm ci --omit=dev && npm cache clean --force
+# Dev dependencies (e.g. esbuild) are needed for the build and pruned afterwards.
+RUN npm ci && npm cache clean --force
 COPY --chown=node:node . ./
 
 # Libraries like React check NODE_ENV and otherwise load their slower development builds.
 ENV NODE_ENV=production
-RUN "$RUNTIME" cli.js build
+RUN "$RUNTIME" cli.js build && npm prune --omit=dev
 
 # Uses the health route of the examples ("src/[health].json"): keep that route or remove this check. wget is part of Alpine.
 HEALTHCHECK --interval=30s --timeout=5s CMD wget -qO- "http://localhost:${PORT:-3000}/health" > /dev/null || exit 1
