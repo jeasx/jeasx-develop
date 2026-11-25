@@ -1,13 +1,12 @@
 import Layout from "../Layout";
 
 export default function () {
-  const bun = process.versions.bun;
   return (
     <Layout
       title="Live cursors with WebSockets"
       description="Share the cursors of all visitors in real time with a WebSocket served by a plain Jeasx route, without any dependency."
       css="/websocket/index.css"
-      script={bun ? undefined : "/websocket/index.js"}
+      script={process.isBun ? undefined : "/websocket/index.js"}
     >
       <h1>Live cursors with WebSockets</h1>
       <p class="lead">
@@ -22,7 +21,7 @@ export default function () {
         connection with <code>reply.hijack()</code> and speaks the WebSocket protocol in about 150
         lines. Open this page in a second window and move your mouse in the room below.
       </p>
-      {bun ? (
+      {process.isBun ? (
         <div class="alert alert-warning" role="alert">
           <strong class="alert-title">
             This example doesn't work with Bun as JavaScript runtime

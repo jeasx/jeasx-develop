@@ -9,6 +9,6 @@ export default function ({ request }) {
     route,
     query,
     method,
-    runtime: process.versions.bun ? `Bun@${process.versions.bun}` : `Node@${process.versions.node}`,
+    runtime: process.isBun ? `Bun@${process.versions.bun}` : `Node@${process.versions.node}`,
   });
 }

@@ -89,9 +89,7 @@ export default function Layout({
             </p>
             <p>
               &copy; {new Date().getFullYear()} · powered by Jeasx on{" "}
-              {process.versions.bun
-                ? `Bun@${process.versions.bun}`
-                : `Node@${process.versions.node}`}
+              {process.isBun ? `Bun@${process.versions.bun}` : `Node@${process.versions.node}`}
             </p>
           </footer>
         </body>
