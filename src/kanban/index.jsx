@@ -29,17 +29,28 @@ function send(data) {
       throw new Error(`Saving failed: ${response.status}`);
     }
     const { changed } = await response.json();
-    await Promise.all(changed.map(render));
+    // Render first, then swap the columns inside a view transition, so cards slide to their new place.
+    const markup = await Promise.all(changed.map(render));
+    const swap = () => markup.forEach(([column, html]) => (column.outerHTML = html));
+    if (document.startViewTransition) {
+      await document.startViewTransition(swap).finished;
+    } else {
+      swap();
+    }
   });
   // A failed change must not block the ones after it.
   queue = task.catch(() => {});
   return task;
 }
 
-/** @param {string} status */
+/**
+ * Renders a column and returns it with its new markup.
+ * @param {string} status
+ * @returns {Promise<[Element, string]>}
+ */
 async function render(status) {
   const column = document.querySelector(`.kanban-column[data-status="${status}"]`);
-  column.outerHTML = await jsxToString.call(context, <Column status={status} />);
+  return [column, await jsxToString.call(context, <Column status={status} />)];
 }
 
 document.addEventListener("submit", (event) => {

@@ -177,7 +177,11 @@
 .cc-bar {
   height: var(--h);
   border-radius: 0.3rem 0.3rem 0 0;
-  background: linear-gradient(180deg, var(--primary), color-mix(in srgb, var(--primary) 35%, transparent));
+  background: linear-gradient(
+    180deg,
+    var(--primary),
+    color-mix(in srgb, var(--primary) 35%, transparent)
+  );
   transform-origin: bottom;
   animation: cc-grow 0.6s ease-out backwards;
 }
@@ -207,5 +211,59 @@
   }
   .cc-month {
     font-size: 0.55rem;
+  }
+}
+
+/* Skeleton: shown until the streamed report arrives after it.
+   Don't use :last-child here: browsers don't match it while the parent is still being parsed. */
+.cc-skeleton {
+  display: grid;
+  gap: 1rem;
+}
+.cc-skeleton:has(~ *) {
+  display: none;
+}
+.cc-sk {
+  border-radius: var(--radius);
+  background:
+    linear-gradient(
+        90deg,
+        transparent,
+        color-mix(in srgb, currentColor 10%, transparent),
+        transparent
+      )
+      0 0 / 200% 100%,
+    color-mix(in srgb, currentColor 8%, transparent);
+  animation: cc-shimmer 1.2s linear infinite;
+}
+.cc-sk-meter {
+  height: 4.5rem;
+  width: 14rem;
+}
+.cc-sk-title {
+  height: 1.3rem;
+  width: 10rem;
+}
+.cc-sk-kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: 0.75rem;
+}
+.cc-sk-kpis .cc-sk {
+  height: 4.25rem;
+}
+.cc-sk-chart {
+  height: 12rem;
+}
+@keyframes cc-shimmer {
+  to {
+    background-position:
+      -200% 0,
+      0 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cc-sk {
+    animation: none;
   }
 }

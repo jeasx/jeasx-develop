@@ -229,8 +229,8 @@ function Greeting({ name }) {
     intro: (
       <>
         Everything between the opening and closing tag of a component arrives as the{" "}
-        <code>children</code> prop. Use a fragment <code>&lt;&gt;…&lt;/&gt;</code> to return
-        several elements without a wrapper.
+        <code>children</code> prop. Use a fragment <code>&lt;&gt;…&lt;/&gt;</code> to return several
+        elements without a wrapper.
       </>
     ),
     code: `
@@ -365,8 +365,8 @@ const input = "<b>bold</b>";
     intro: (
       <>
         Here comes the twist: components can be <code>async</code>. Fetch data right where you need
-        it, with no loaders, effects or suspense boundaries. The runtime waits for the component
-        and renders the result in place.
+        it, with no loaders, effects or suspense boundaries. The runtime waits for the component and
+        renders the result in place.
       </>
     ),
     code: `
@@ -385,8 +385,8 @@ async function Weather({ city }) {
     note: (
       <>
         Promises work anywhere, as children and as attribute values, e.g.{" "}
-        <code>&lt;img src=&#123;loadAvatarUrl()&#125; /&gt;</code>. If a component throws, the
-        whole render fails; wrap risky parts in an error boundary to show a fallback instead (see{" "}
+        <code>&lt;img src=&#123;loadAvatarUrl()&#125; /&gt;</code>. If a component throws, the whole
+        render fails; wrap risky parts in an error boundary to show a fallback instead (see{" "}
         <a href="/error-handler">Error boundaries</a>).
       </>
     ),
@@ -397,8 +397,8 @@ async function Weather({ city }) {
     intro: (
       <>
         Async components run one after another, in the order they appear. To load data at the same
-        time, start the requests first and pass the promises as props. Each component awaits its
-        own promise, the requests run in parallel, and the output keeps the order of your JSX.
+        time, start the requests first and pass the promises as props. Each component awaits its own
+        promise, the requests run in parallel, and the output keeps the order of your JSX.
       </>
     ),
     code: `
@@ -477,9 +477,9 @@ const markup = await jsxToString(<Weather city="Paris" />);
     note: (
       <>
         The result is plain text, so <code>&lt;pre&gt;</code> shows the escaped tags. Wrap it in{" "}
-        <code>html()</code> only to insert trusted, pre-rendered markup, e.g. from a cache. To
-        send markup while slow components are still loading, use <code>jsxToStream</code> instead
-        (see <a href="/streaming">Streaming HTML</a>).
+        <code>html()</code> only to insert trusted, pre-rendered markup, e.g. from a cache. To send
+        markup while slow components are still loading, use <code>jsxToStream</code> instead (see{" "}
+        <a href="/streaming">Streaming HTML</a>).
       </>
     ),
   },

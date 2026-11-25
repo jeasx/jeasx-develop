@@ -52,7 +52,10 @@ export default function ({ request }) {
           Reload
         </a>
       </div>
+      {/* The page streams up to here, so the skeleton shows while the report renders.
+          CSS hides it as soon as the report arrives after it. */}
       <article class="cc-dashboard">
+        <Skeleton />
         <Cached cacheKey={`report:${region}`} status={CacheStatus}>
           <Report region={region} />
         </Cached>
@@ -119,6 +122,24 @@ function CacheStatus({ hit, ms, expiresIn, ttl }) {
         </div>
       </div>
     </header>
+  );
+}
+
+/**
+ * Placeholder in the shape of the dashboard, shown while the next report is rendered.
+ */
+function Skeleton() {
+  return (
+    <div class="cc-skeleton" aria-hidden="true">
+      <div class="cc-sk cc-sk-meter"></div>
+      <div class="cc-sk cc-sk-title"></div>
+      <div class="cc-sk-kpis">
+        <div class="cc-sk"></div>
+        <div class="cc-sk"></div>
+        <div class="cc-sk"></div>
+      </div>
+      <div class="cc-sk cc-sk-chart"></div>
+    </div>
   );
 }
 

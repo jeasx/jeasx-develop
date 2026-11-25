@@ -266,6 +266,16 @@
   }
 }
 
+/* With view transitions, the browser animates the cards, so they don't fade in on every render. */
+@supports (view-transition-name: none) {
+  .kanban-card {
+    animation: none;
+  }
+}
+::view-transition-group(*) {
+  animation-duration: 0.3s;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .kanban-card,
   .kanban-column {

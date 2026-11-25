@@ -5,7 +5,7 @@
 
 /* The examples always use the dark theme, so only the dark steps of the palette are needed. */
 .charts {
-  --surface: #1a1a19;
+  --surface: var(--input-bg);
   --text-secondary: #c3c2b7;
   --text-muted: #898781;
   --gridline: #2c2c2a;
@@ -21,6 +21,11 @@
   padding: 1rem;
   border-radius: 0.5rem;
   background: var(--surface);
+}
+
+/* Tables inside a panel share its background instead of the page background. */
+.chart-figure :is(th, td) {
+  background: transparent;
 }
 
 .chart-figure figcaption {

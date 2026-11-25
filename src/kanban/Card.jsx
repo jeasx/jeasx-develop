@@ -12,7 +12,13 @@ export default function Card({ task }) {
   const prev = COLUMNS[index - 1];
   const next = COLUMNS[index + 1];
   return (
-    <li class="kanban-card" draggable="true" data-id={task.id}>
+    // A unique view-transition-name lets the browser slide the card to its new place.
+    <li
+      class="kanban-card"
+      draggable="true"
+      data-id={task.id}
+      style={`view-transition-name: card-${task.id}`}
+    >
       <form method="post" action="/kanban/api">
         <input type="hidden" name="id" value={task.id} />
         <button

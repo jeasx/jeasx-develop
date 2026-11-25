@@ -109,45 +109,49 @@ export default function ({ request }) {
         </figure>
 
         <h2>Sparklines</h2>
-        <p>Small charts fit into a table cell. The dots mark the warmest and the coldest month.</p>
-        <table>
-          <thead>
-            <tr>
-              <th scope="col">City</th>
-              <th scope="col">Year</th>
-              <th scope="col" class="number">
-                Coldest
-              </th>
-              <th scope="col" class="number">
-                Warmest
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {CITIES.map((city) => {
-              const min = Math.min(...city.values);
-              const max = Math.max(...city.values);
-              return (
-                <tr>
-                  <th scope="row">{city.name}</th>
-                  <td>
-                    <Sparkline
-                      values={city.values}
-                      color={city.color}
-                      label={`Temperatures in ${city.name} from January to December`}
-                    />
-                  </td>
-                  <td class="number">
-                    {format.format(min)}° ({MONTHS[city.values.indexOf(min)]})
-                  </td>
-                  <td class="number">
-                    {format.format(max)}° ({MONTHS[city.values.indexOf(max)]})
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+        <figure class="chart-figure">
+          <figcaption>
+            Small charts fit into a table cell. The dots mark the warmest and the coldest month.
+          </figcaption>
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">City</th>
+                <th scope="col">Year</th>
+                <th scope="col" class="number">
+                  Coldest
+                </th>
+                <th scope="col" class="number">
+                  Warmest
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {CITIES.map((city) => {
+                const min = Math.min(...city.values);
+                const max = Math.max(...city.values);
+                return (
+                  <tr>
+                    <th scope="row">{city.name}</th>
+                    <td>
+                      <Sparkline
+                        values={city.values}
+                        color={city.color}
+                        label={`Temperatures in ${city.name} from January to December`}
+                      />
+                    </td>
+                    <td class="number">
+                      {format.format(min)}° ({MONTHS[city.values.indexOf(min)]})
+                    </td>
+                    <td class="number">
+                      {format.format(max)}° ({MONTHS[city.values.indexOf(max)]})
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </figure>
       </div>
     </Layout>
   );

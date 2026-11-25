@@ -167,7 +167,6 @@
     border-bottom: 1px solid var(--todo-line);
     padding: 0.4rem 0.25rem;
     list-style: none;
-    animation: todo-in 0.3s ease-out;
 
     &:last-child {
       border-bottom: 0;
@@ -254,13 +253,6 @@
 
   & .destroy:hover {
     transform: scale(1.15) rotate(8deg);
-  }
-}
-
-@keyframes todo-in {
-  from {
-    transform: translateY(-4px);
-    opacity: 0;
   }
 }
 
