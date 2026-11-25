@@ -1,12 +1,12 @@
 FROM node:lts-alpine
 
-# Runtime for building and running the server: "node" (default) or "bun".
-# Example: docker build --build-arg RUNTIME=bun .
-ARG RUNTIME=node
-ENV RUNTIME=${RUNTIME}
-
 # Alpine has no fonts, so sharp would draw SVG text as empty boxes (see "src/og").
 RUN apk add --no-cache fontconfig font-liberation
+
+# Runtime for building and running the server: "node" (default) or "bun".
+# Example: docker build --build-arg RUNTIME=bun -t jeasx .
+ARG RUNTIME=node
+ENV RUNTIME=${RUNTIME}
 
 # Bun is only installed when requested, so Node images don't grow. npm picks the musl build for Alpine.
 RUN if [ "$RUNTIME" = "bun" ]; then npm install --global bun && npm cache clean --force; fi
