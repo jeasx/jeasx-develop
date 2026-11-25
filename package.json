@@ -44,7 +44,6 @@
     "@types/react-dom": "19.3.0"
   },
   "allowScripts": {
-    "bun": true,
     "esbuild": true,
     "fsevents": true,
     "sharp": true
