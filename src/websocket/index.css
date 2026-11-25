@@ -100,3 +100,9 @@
     opacity: 0;
   }
 }
+
+/* Brighter warning for the Bun note */
+.alert-warning {
+  border: 1px solid var(--warning-hover);
+  color: var(--warning-hover);
+}
