@@ -67,6 +67,18 @@ export default function () {
  * @param {{ category: string, amount: number, children: (jokes: Joke[]) => JSX.Element }} props
  */
 async function Jokes({ category, amount, children }) {
-  const data = pick(category, amount);
+  const data = await loadJokes(category, amount);
   return children(data);
+}
+
+/**
+ * Simulates a slow API call.
+ *
+ * @param {string} category
+ * @param {number} amount
+ * @returns {Promise<Joke[]>}
+ */
+async function loadJokes(category, amount) {
+  await new Promise((resolve) => setTimeout(resolve, 500));
+  return pick(category, amount);
 }
