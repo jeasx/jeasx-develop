@@ -9,19 +9,18 @@ const CWD = process.cwd();
 const CONFIG = (await import(pathToFileURL(join(CWD, "jeasx.config.js")).href)).default;
 const NODE_ENV_IS_DEVELOPMENT = process.env.NODE_ENV === "development";
 
-/** @type {esbuild.BuildOptions} */
+/** @type {import("esbuild").BuildOptions}} */
 const COMMON_OPTIONS = {
   minify: !NODE_ENV_IS_DEVELOPMENT,
   logLevel: "info",
   bundle: true,
   outdir: "dist",
   publicPath: "/",
-  jsxDev: NODE_ENV_IS_DEVELOPMENT,
   assetNames: "[dir]/[name]-[hash]",
   format: "esm",
 };
 
-/** @type {esbuild.BuildOptions} */
+/** @type {import("esbuild").BuildOptions}} */
 const SERVER_OPTIONS = {
   ...COMMON_OPTIONS,
   entryPoints: ["src/**/[*].*"],
@@ -30,7 +29,7 @@ const SERVER_OPTIONS = {
   ...(await CONFIG.ESBUILD_SERVER_OPTIONS?.()),
 };
 
-/** @type {esbuild.BuildOptions} */
+/** @type {import("esbuild").BuildOptions}} */
 const BROWSER_OPTIONS = {
   ...COMMON_OPTIONS,
   entryPoints: ["src/**/index.*"],

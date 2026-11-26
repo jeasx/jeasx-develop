@@ -13,7 +13,7 @@ const NODE_ENV_IS_DEVELOPMENT = process.env.NODE_ENV === "development";
 // Max output files listed in the build summary.
 const MAX_LISTED_OUTPUTS = process.stdout.rows ? Math.floor(process.stdout.rows / 2) : Infinity;
 
-/** @type {Bun.BuildConfig} */
+/** @type {import("bun").BuildConfig} */
 const COMMON_OPTIONS = {
   outdir: "dist",
   publicPath: "/",
@@ -21,11 +21,11 @@ const COMMON_OPTIONS = {
   format: "esm",
   throw: false,
   // Bun doesn't reliably pick up "jsxImportSource" from tsconfig.json.
-  jsx: { importSource: "jsx-async-runtime", development: NODE_ENV_IS_DEVELOPMENT },
+  jsx: { importSource: "jsx-async-runtime" },
   minify: !NODE_ENV_IS_DEVELOPMENT,
 };
 
-/** @type {Bun.BuildConfig} */
+/** @type {import("bun").BuildConfig} */
 const SERVER_OPTIONS = {
   ...COMMON_OPTIONS,
   entrypoints: ["src/**/[[]*[]].*"],
@@ -34,7 +34,7 @@ const SERVER_OPTIONS = {
   ...(await CONFIG.BUN_SERVER_OPTIONS?.()),
 };
 
-/** @type {Bun.BuildConfig} */
+/** @type {import("bun").BuildConfig} */
 const BROWSER_OPTIONS = {
   ...COMMON_OPTIONS,
   entrypoints: ["src/**/index.*"],
