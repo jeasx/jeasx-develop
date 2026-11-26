@@ -6,11 +6,11 @@ RUN apk add --no-cache fontconfig font-liberation
 WORKDIR /home/bun/app
 
 COPY package.json package-lock.json ./
-RUN bun install
+RUN bun install && rm -rf ~/.bun/install/cache
 COPY . ./
 
 ENV NODE_ENV=production
-RUN bun cli.js build && rm -rf ~/.bun/install/cache
+RUN bun cli.js build
 
 HEALTHCHECK --interval=30s --timeout=5s CMD wget -qO- "http://localhost:${PORT:-3000}/health" > /dev/null || exit 1
 
