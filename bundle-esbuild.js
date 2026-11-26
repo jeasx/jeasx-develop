@@ -1,9 +1,7 @@
+import * as esbuild from "esbuild";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import env from "./env.js";
-
-/** @type {typeof import("esbuild")} */
-const esbuild = await import("esbuild");
 
 env();
 
@@ -11,7 +9,7 @@ const CWD = process.cwd();
 const CONFIG = (await import(pathToFileURL(join(CWD, "jeasx.config.js")).href)).default;
 const NODE_ENV_IS_DEVELOPMENT = process.env.NODE_ENV === "development";
 
-/** @type {import("esbuild").BuildOptions} */
+/** @type {esbuild.BuildOptions} */
 const COMMON_OPTIONS = {
   minify: !NODE_ENV_IS_DEVELOPMENT,
   logLevel: "info",
@@ -23,7 +21,7 @@ const COMMON_OPTIONS = {
   format: "esm",
 };
 
-/** @type {import("esbuild").BuildOptions} */
+/** @type {esbuild.BuildOptions} */
 const SERVER_OPTIONS = {
   ...COMMON_OPTIONS,
   entryPoints: ["src/**/[*].*"],
@@ -32,7 +30,7 @@ const SERVER_OPTIONS = {
   ...(await CONFIG.ESBUILD_SERVER_OPTIONS?.()),
 };
 
-/** @type {import("esbuild").BuildOptions} */
+/** @type {esbuild.BuildOptions} */
 const BROWSER_OPTIONS = {
   ...COMMON_OPTIONS,
   entryPoints: ["src/**/index.*"],
