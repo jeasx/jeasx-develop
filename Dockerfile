@@ -5,7 +5,7 @@ RUN apk add --no-cache fontconfig font-liberation
 
 WORKDIR /home/bun/app
 
-COPY package.json package-lock.json ./
+COPY package.json bun.lock ./
 RUN bun install && rm -rf ~/.bun/install/cache
 COPY . ./
 

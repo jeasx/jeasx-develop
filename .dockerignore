@@ -1,6 +1,7 @@
 **
 !/public/
 !/src/
+!bun.lock
 !build-manifest.js
 !bundle-bun.js
 !bundle-esbuild.js
@@ -8,7 +9,6 @@
 !cli.js
 !env.js
 !jeasx.config.js
-!package-lock.json
 !package.json
 !serverless.js
 !serverless.js.map
