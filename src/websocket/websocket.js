@@ -31,8 +31,8 @@ export function isUpgrade(request) {
  * needs for small JSON messages. Use a library like "ws" for binary data, fragmented
  * or compressed messages.
  *
- * Since Node 24.9, an upgrade request reaches the normal request handler (and so a
- * Jeasx route) if the server has no "upgrade" listener.
+ * Upgrade requests reach a Jeasx route via the "upgrade" listener in jeasx.config.js
+ * (FASTIFY_SERVER), with Node and Bun alike.
  *
  * @param {import("../types").RouteProps} props
  * @param {{ onMessage?: (text: string) => void, onClose?: () => void, maxPayload?: number }} handlers

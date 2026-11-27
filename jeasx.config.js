@@ -1,4 +1,5 @@
 import { randomBytes } from "node:crypto";
+import { ServerResponse } from "node:http";
 import querystring from "node:querystring";
 
 const NODE_ENV_IS_DEVELOPMENT = process.env.NODE_ENV === "development";
@@ -87,12 +88,27 @@ export default {
     logger: { level: NODE_ENV_IS_DEVELOPMENT ? "error" : "info" },
     bodyLimit: 2 * 1024 * 1024,
     trustProxy: process.env.VERCEL === "1" || process.env.TRUST_PROXY === "true",
+    // Close open connections on shutdown, otherwise long-lived responses
+    // like Server-Sent Events keep the server from stopping.
     forceCloseConnections: true,
   }),
 
   /** @type {(fastify: import("fastify").FastifyInstance) => import("fastify").FastifyInstance} */
-  FASTIFY_SERVER: (fastify) =>
-    fastify
+  FASTIFY_SERVER: (fastify) => {
+    // Route upgrade requests (e.g. WebSocket) through Fastify, so a route can take over
+    // the socket with reply.hijack(). Bun never passes them to the request handler, and Node
+    // only does since 24.9 if no "upgrade" listener exists, so this works the same everywhere.
+    fastify.server.on("upgrade", (request, socket, head) => {
+      // Give back bytes the client sent right after the handshake.
+      if (head?.length) socket.unshift(head);
+      Object.defineProperty(request, "socket", { value: socket });
+      // Attach the socket, so routes which don't hijack still send a normal response.
+      const response = new ServerResponse(request);
+      response.assignSocket(socket);
+      response.shouldKeepAlive = false;
+      fastify.routing(request, response);
+    });
+    return fastify
       .register(import("@fastify/cookie"), {
         secret: process.env.COOKIE_SECRET || randomBytes(32).toString("hex"),
         parseOptions: {
@@ -107,5 +123,6 @@ export default {
         { parseAs: "string" },
         async (_request, body) => querystring.parse(body),
       )
-      .addContentTypeParser("multipart/form-data", async () => {}),
+      .addContentTypeParser("multipart/form-data", async () => {});
+  },
 };
