@@ -3,6 +3,11 @@
 @import "../@styles/forms.css";
 @import "../@styles/table.css";
 
+/* Jump straight to the anchored row after a redirect, instead of scrolling there from the top. */
+html {
+  scroll-behavior: auto;
+}
+
 /* Card headers: title on the left, count on the right. */
 article > header {
   display: flex;
