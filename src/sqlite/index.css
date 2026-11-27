@@ -62,11 +62,20 @@ article > header h2 {
 .actions button {
   margin: 0;
 }
-/* One width for all row buttons, so Edit/Delete and Save/Cancel line up. */
-.actions :is(.btn, button) {
-  justify-content: center;
-  min-width: 4.5rem;
-  text-align: center;
+/* All row buttons are square icon buttons, so the row stays narrow on phones. */
+.actions .icon {
+  display: inline-grid;
+  place-items: center;
+  padding: 0;
+  width: 2rem;
+  height: 2rem;
+}
+.icon-svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 /* The row being edited stands out with a neutral tint,
@@ -128,4 +137,182 @@ article > header h2 {
 }
 .movies tbody tr:not(.editing):hover td {
   background: color-mix(in srgb, var(--primary) 6%, transparent);
+}
+
+/* Phones: each row becomes a small two-line grid instead of four columns.
+   Title on top, year and rating below, the buttons on the right, centered across both lines. */
+@media (max-width: 640px) {
+  /* Hidden visually, but still read by screen readers. */
+  .movies thead {
+    position: absolute;
+    clip-path: inset(50%);
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+  .movies tbody tr {
+    display: grid;
+    grid-template-areas:
+      "title title actions"
+      "year rating actions";
+    grid-template-columns: auto 1fr auto;
+    align-items: start;
+    column-gap: 0.75rem;
+    border-bottom: var(--border-width) solid var(--border);
+    padding: 0.6rem 1rem;
+  }
+  /* Also beats the edge padding of the first and last cell set above. */
+  .movies tbody td,
+  .movies tbody td:is(:first-child, :last-child) {
+    border: 0;
+    background: none;
+    padding: 0;
+  }
+  .movies tbody .title {
+    grid-area: title;
+  }
+  .movies tbody .year {
+    grid-area: year;
+  }
+  .movies tbody .rating {
+    grid-area: rating;
+  }
+  /* The buttons sit centered across both lines; everything else stays at the top. */
+  .movies tbody .row-actions {
+    grid-area: actions;
+    align-self: center;
+  }
+  .movies tbody .empty {
+    grid-column: 1 / -1;
+  }
+
+  /* The row background moves from the cells to the row itself. */
+  .movies tbody tr.editing {
+    row-gap: 0.5rem;
+    background: var(--input-bg);
+  }
+  .movies tbody tr:not(.editing):hover {
+    background: color-mix(in srgb, var(--primary) 6%, transparent);
+  }
+  .movies tbody tr:not(.editing):hover td {
+    background: none;
+  }
+}
+
+/* ---- Look and feel ---- */
+
+/* Cards: a soft glow in the corner. */
+article {
+  border-radius: 1rem;
+  background:
+    radial-gradient(
+      120% 60% at 0% 0%,
+      color-mix(in srgb, var(--primary) 9%, transparent),
+      transparent 60%
+    ),
+    #181c25;
+  overflow: hidden;
+}
+article > header {
+  border-bottom: var(--border-width) solid var(--border);
+  background: transparent;
+}
+article > header h2 {
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* "Live" note: a green dot that pulses like a running server. */
+.live {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.live::before {
+  /* Never squeezed by the text next to it, so it stays round. */
+  flex: none;
+  border-radius: 50%;
+  box-shadow: 0 0 0.5rem var(--success);
+  background: var(--success);
+  width: 0.5rem;
+  height: 0.5rem;
+  content: "";
+  animation: live-pulse 2s ease-in-out infinite;
+}
+@keyframes live-pulse {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+/* Table: transparent cells on the card, a quiet header and soft stripes. */
+.movies :is(th, td) {
+  background: transparent;
+}
+.movies thead th {
+  border-bottom-width: var(--border-width);
+  color: var(--muted);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.movies tbody tr:nth-child(even):not(.editing) td {
+  background: rgb(255 255 255 / 0.015);
+}
+.movies tbody tr:last-child td {
+  border-bottom: 0;
+}
+/* Declared after the stripes, so hover and the edited row still win. */
+.movies tbody tr:not(.editing):hover td {
+  background: color-mix(in srgb, var(--primary) 6%, transparent);
+}
+.movies tbody tr.editing td {
+  background: var(--input-bg);
+}
+.year-pill {
+  border-radius: 999px;
+  background: var(--secondary-bg);
+  padding: 0.1rem 0.6rem;
+  font-size: 0.8rem;
+}
+.stars {
+  text-shadow: 0 0 0.5rem color-mix(in srgb, var(--warning-hover) 40%, transparent);
+}
+
+/* The add button gets the gradient, as the main action of the page. */
+.movie-form button[value="create"] {
+  border: 0;
+  background: linear-gradient(
+    120deg,
+    var(--primary),
+    color-mix(in srgb, var(--primary) 50%, var(--info))
+  );
+  font-weight: 600;
+}
+.movie-form button[value="create"]:hover {
+  filter: brightness(1.1);
+}
+
+/* Phones: rows are grids there, so stripes, hover and the edited row color the whole row,
+   never the single cells (which would show up as patches). */
+@media (max-width: 640px) {
+  .movies tbody tr td,
+  .movies tbody tr:nth-child(even):not(.editing) td,
+  .movies tbody tr:not(.editing):hover td,
+  .movies tbody tr.editing td {
+    background: none;
+  }
+  .movies tbody tr:nth-child(even):not(.editing) {
+    background: rgb(255 255 255 / 0.015);
+  }
+  .movies tbody tr:not(.editing):hover {
+    background: color-mix(in srgb, var(--primary) 6%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .live::before {
+    animation: none;
+  }
 }

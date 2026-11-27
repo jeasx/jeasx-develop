@@ -64,6 +64,7 @@ export default function ({ request, reply }) {
       title="SQLite CRUD"
       description="Create, read, update and delete rows of an in-memory SQLite database with plain HTML forms."
       css="/sqlite/index.css"
+      script="/sqlite/index.js"
     >
       <h1>SQLite CRUD</h1>
       <p class="lead">
@@ -77,7 +78,7 @@ export default function ({ request, reply }) {
       </p>
 
       <form method="post" action={PATH} class="toolbar">
-        <small>In-memory database, shared by all visitors.</small>
+        <small class="live">In-memory database, shared by all visitors.</small>
         <button type="submit" name="action" value="reset" class="btn-sm outline secondary">
           Reset to seed data
         </button>
@@ -122,24 +123,37 @@ export default function ({ request, reply }) {
               ) : (
                 <tr id={`movie-${movie.id}`}>
                   <td class="title">{movie.title}</td>
-                  <td class="year">{movie.year}</td>
-                  <td>
+                  <td class="year">
+                    <span class="year-pill">{movie.year}</span>
+                  </td>
+                  <td class="rating">
                     <Stars rating={movie.rating} />
                   </td>
-                  <td>
+                  <td class="row-actions">
                     <div class="actions">
-                      <a href={`?edit=${movie.id}#movie-${movie.id}`} class="btn btn-sm outline">
-                        Edit
+                      <a
+                        href={`?edit=${movie.id}#movie-${movie.id}`}
+                        class="btn btn-sm outline icon"
+                        aria-label={`Edit ${movie.title}`}
+                        title="Edit"
+                      >
+                        <EditIcon />
                       </a>
-                      <form method="post" action={PATH}>
+                      <form
+                        method="post"
+                        action={PATH}
+                        data-confirm={`Delete “${movie.title}”? This can't be undone.`}
+                      >
                         <input type="hidden" name="id" value={movie.id} />
                         <button
                           type="submit"
                           name="action"
                           value="delete"
-                          class="btn-sm outline secondary delete"
+                          class="btn-sm outline secondary delete icon"
+                          aria-label={`Delete ${movie.title}`}
+                          title="Delete"
                         >
-                          Delete
+                          <DeleteIcon />
                         </button>
                       </form>
                     </div>
@@ -169,7 +183,7 @@ function EditRow({ movie }) {
   const form = `edit-${movie.id}`;
   return (
     <tr class="editing" id={`movie-${movie.id}`}>
-      <td>
+      <td class="title">
         <input
           type="text"
           name="title"
@@ -180,7 +194,7 @@ function EditRow({ movie }) {
           form={form}
         />
       </td>
-      <td>
+      <td class="year">
         <input
           type="number"
           name="year"
@@ -192,19 +206,31 @@ function EditRow({ movie }) {
           form={form}
         />
       </td>
-      <td>
+      <td class="rating">
         <RatingSelect rating={movie.rating} form={form} />
       </td>
-      <td>
+      <td class="row-actions">
         <div class="actions">
           <form method="post" action={PATH} id={form}>
             <input type="hidden" name="id" value={movie.id} />
-            <button type="submit" name="action" value="update" class="btn-sm">
-              Save
+            <button
+              type="submit"
+              name="action"
+              value="update"
+              class="btn-sm icon"
+              aria-label={`Save ${movie.title}`}
+              title="Save"
+            >
+              <SaveIcon />
             </button>
           </form>
-          <a href={`${PATH}#movie-${movie.id}`} class="btn btn-sm outline secondary">
-            Cancel
+          <a
+            href={`${PATH}#movie-${movie.id}`}
+            class="btn btn-sm outline secondary icon"
+            aria-label="Cancel editing"
+            title="Cancel"
+          >
+            <CancelIcon />
           </a>
         </div>
       </td>
@@ -277,5 +303,41 @@ function RatingSelect({ rating, form = undefined }) {
         </option>
       ))}
     </select>
+  );
+}
+
+/** A pencil, drawn in the current text color. */
+function EditIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" class="icon-svg">
+      <path d="M4 20h4L19 9l-4-4L4 16v4zM13.5 6.5l4 4" />
+    </svg>
+  );
+}
+
+/** A trash can, drawn in the current text color. */
+function DeleteIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" class="icon-svg">
+      <path d="M4 7h16M10 11v6M14 11v6M5 7l1 13h12l1-13M9 7V4h6v3" />
+    </svg>
+  );
+}
+
+/** A check mark, drawn in the current text color. */
+function SaveIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" class="icon-svg">
+      <path d="M5 12l5 5L19 7" />
+    </svg>
+  );
+}
+
+/** A cross, drawn in the current text color. */
+function CancelIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" class="icon-svg">
+      <path d="M6 6l12 12M18 6L6 18" />
+    </svg>
   );
 }
