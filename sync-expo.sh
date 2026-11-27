@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Mirror ../jeasx-expo into this repo, except for the files in KEEP.
 #  1. delete all git-tracked files here (node_modules, dist, .env etc. survive)
-#  2. copy all files from jeasx-expo (tracked + untracked, not ignored)
+#  2. copy all files from jeasx-expo (tracked + untracked, not ignored), except SKIP
 #  3. restore KEEP files from git HEAD
 #  4. remove empty folders
 set -euo pipefail
@@ -36,6 +36,11 @@ KEEP=(
   vercel.json
 )
 
+# files from jeasx-expo that are never copied
+SKIP=(
+  package-lock.json
+)
+
 cd "$TARGET"
 
 if [[ -n "$(git status --porcelain)" ]]; then
@@ -50,6 +55,7 @@ git ls-files -z | xargs -0 rm -f
 git -C "$SOURCE" ls-files -z --cached --others --exclude-standard |
   while IFS= read -r -d '' file; do
     [[ -f "$SOURCE/$file" ]] || continue
+    [[ " ${SKIP[*]} " == *" $file "* ]] && continue
     mkdir -p "$(dirname "$file")"
     cp "$SOURCE/$file" "$file"
   done
