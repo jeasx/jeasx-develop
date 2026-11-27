@@ -30,6 +30,8 @@ function change(id, delta) {
         </button>
       </span>
     </div>
-    <p class="tickets-total">Total <strong>{{ total }} €</strong></p>
+    <p class="tickets-total">
+      Total <strong>{{ total }} €</strong>
+    </p>
   </div>
 </template>
