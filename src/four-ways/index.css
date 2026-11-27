@@ -27,6 +27,11 @@ html {
   color: transparent;
 }
 
+.fw-nojs-on {
+  --btn: var(--warning);
+  --btn-hover: var(--warning-hover);
+}
+
 .fw-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);

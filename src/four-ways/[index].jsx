@@ -5,29 +5,33 @@ import Layout from "../Layout";
 import ShoppingList from "./react/ShoppingList";
 import ServerList from "./ServerList";
 import { INITIAL } from "./shopping";
-import { loadItems } from "./store";
+import { loadItems, NO_JS_COOKIE } from "./store";
 
 const WAYS = [
   {
     id: "jeasx",
+    withoutJs: "works",
     name: "Jeasx",
     how: "Isomorphic JSX: the browser renders the same component as the server and saves in the background. Without JavaScript, the forms post to the server.",
     state: "server",
   },
   {
     id: "lit",
+    withoutJs: "empty",
     name: "Lit",
     how: "A web component which renders in the browser. Until its bundle runs, the card is empty.",
     state: "browser",
   },
   {
     id: "htmx",
+    withoutJs: "works",
     name: "HTMX",
     how: "The same forms, sent in the background. The server answers with the new list only.",
     state: "server",
   },
   {
     id: "react",
+    withoutJs: "view only",
     name: "React",
     how: "Rendered on the server, then hydrated. Clicks only work once React has loaded.",
     state: "browser",
@@ -40,6 +44,9 @@ const WAYS = [
 export default function ({ request, reply }) {
   // The server lists depend on the cookies, so caches must not hand them to other visitors.
   reply.header("cache-control", "private, no-store");
+
+  // Simulates a browser without JavaScript: the page leaves out the loader of the cards.
+  const noJs = Boolean(request.cookies[NO_JS_COOKIE]);
 
   const lists = {
     jeasx: <ServerList way="jeasx" items={loadItems(request, "jeasx")} />,
@@ -57,7 +64,7 @@ export default function ({ request, reply }) {
       title="Same app, four ways"
       description="One shopping list built with Jeasx, Lit, HTMX and React, with the JavaScript and time to interactive of each measured side by side."
       css="/four-ways/index.css"
-      script="/four-ways/index.js"
+      script={noJs ? "" : "/four-ways/index.js"}
     >
       <h1 class="fw-title">
         Same app, <span>four ways</span>
@@ -69,8 +76,13 @@ export default function ({ request, reply }) {
       </p>
       <p>
         Each card measures the JavaScript it downloaded and when it became usable. To see the
-        difference, turn off JavaScript in your browser or throttle the network in the dev tools.
+        difference, throttle the network in the dev tools, or see what is left without JavaScript.
       </p>
+      <form method="post" action="/four-ways/nojs">
+        <button class={`btn fw-nojs${noJs ? " fw-nojs-on" : ""}`}>
+          {noJs ? "✕ Turn JavaScript back on" : "Simulate no JavaScript"}
+        </button>
+      </form>
       <div class="fw-grid">
         {WAYS.map((way) => (
           <section class="fw-card" id={way.id} data-way={way.id}>
@@ -79,11 +91,11 @@ export default function ({ request, reply }) {
             <dl class="fw-stats">
               <div>
                 <dt>JavaScript</dt>
-                <dd data-size>…</dd>
+                <dd data-size>{noJs ? "none" : "…"}</dd>
               </div>
               <div>
-                <dt>Interactive</dt>
-                <dd data-ready>…</dd>
+                <dt>{noJs ? "Without JS" : "Interactive"}</dt>
+                <dd data-ready>{noJs ? way.withoutJs : "…"}</dd>
               </div>
               <div>
                 <dt>State</dt>

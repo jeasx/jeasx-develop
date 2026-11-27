@@ -35,3 +35,6 @@ export function loadItems(request, way) {
 export function saveItems(reply, way, items) {
   writeListCookie(reply, cookieName(way), items, PATH);
 }
+
+/** Set while the page simulates a browser without JavaScript (see "./[nojs].js"). */
+export const NO_JS_COOKIE = "four-ways-nojs";
