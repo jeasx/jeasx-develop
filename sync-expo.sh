@@ -25,6 +25,7 @@ KEEP=(
   env.js
   jeasx.config.js
   LICENSE.txt
+  package-lock.json
   package.json
   README.md
   serverless.js
