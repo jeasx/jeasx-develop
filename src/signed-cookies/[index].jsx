@@ -1,3 +1,4 @@
+import formBody from "../@helpers/formBody";
 import Layout from "../Layout";
 
 const PATH = "/signed-cookies";
@@ -15,7 +16,7 @@ export default function ({ request, reply, csrfToken }) {
 
   // The guard has already checked the CSRF token of every POST.
   if (request.method === "POST") {
-    const body = /** @type {Record<string, unknown>} */ (request.body);
+    const body = formBody(request);
     switch (body["action"]) {
       case "add": {
         const note = String(body["note"] ?? "")

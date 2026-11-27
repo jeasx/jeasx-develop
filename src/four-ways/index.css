@@ -1,0 +1,265 @@
+@import "../@styles/buttons.css";
+@import "../@styles/forms.css";
+
+/* Jump straight to the card after a form redirect, instead of scrolling there from the top. */
+html {
+  scroll-behavior: auto;
+}
+
+/* One colour per version, used by its card, checkboxes and buttons. */
+[data-way="jeasx"] {
+  --fw: #00e8ff;
+}
+[data-way="htmx"] {
+  --fw: #6d8bff;
+}
+[data-way="react"] {
+  --fw: #f472b6;
+}
+[data-way="lit"] {
+  --fw: #fbbf24;
+}
+
+.fw-title span {
+  background: linear-gradient(90deg, #00e8ff, #fbbf24, #6d8bff, #f472b6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.fw-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+  margin: 2rem 0;
+
+  @media (max-width: 40rem) {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Each card spans four rows of the grid (heading, description, stats, list) and shares them
+   with its neighbours, so the input fields, counts and buttons of all cards line up. */
+.fw-card {
+  display: grid;
+  grid-row: span 4;
+  grid-template-rows: subgrid;
+  row-gap: 1rem;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--fw) 25%, var(--border));
+  border-radius: 1rem;
+  background:
+    radial-gradient(
+      circle at 100% 0,
+      color-mix(in srgb, var(--fw) 16%, transparent),
+      transparent 60%
+    ),
+    color-mix(in srgb, var(--fw) 3%, var(--bg));
+  padding: 1.5rem;
+  scroll-margin-top: 5rem;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+
+  &:hover,
+  &:focus-within {
+    border-color: color-mix(in srgb, var(--fw) 60%, transparent);
+    box-shadow: 0 0.75rem 2.5rem -1rem color-mix(in srgb, var(--fw) 45%, transparent);
+  }
+
+  & h2 {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 0;
+    font-size: 1.5rem;
+
+    &::before {
+      content: "";
+      width: 0.7rem;
+      height: 0.7rem;
+      border-radius: 50%;
+      background: var(--fw);
+      box-shadow: 0 0 0.75rem var(--fw);
+    }
+  }
+}
+
+.fw-how {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.fw-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  margin: 0;
+
+  & > div {
+    border-radius: 0.6rem;
+    background: color-mix(in srgb, var(--fw) 8%, transparent);
+    padding: 0.5rem 0.75rem;
+  }
+  & dt {
+    color: var(--muted);
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  & dd {
+    margin: 0;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* The wrappers of the React and Lit lists pass the full height on to the list. */
+.fw-card [data-root] {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Reserve the space of the Lit list until its bundle defines the element. */
+shopping-list {
+  min-height: 18rem;
+}
+
+/* The items take the remaining space, so "Clear done" sits at the bottom of every card. */
+.fw-list {
+  display: grid;
+  flex: 1;
+  grid-template-rows: auto auto 1fr auto;
+  align-content: start;
+  gap: 0.75rem;
+  margin: 0;
+
+  & ul {
+    display: grid;
+    align-content: start;
+    gap: 0.35rem;
+    margin: 0;
+    padding: 0;
+  }
+  & li {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    border-radius: 0.6rem;
+    list-style: none;
+    transition: background-color 0.15s;
+
+    &:hover {
+      background: color-mix(in srgb, var(--fw) 8%, transparent);
+    }
+  }
+  & button {
+    font-size: 0.95rem;
+  }
+}
+
+.fw-add {
+  display: flex;
+  gap: 0.5rem;
+
+  & input {
+    flex: 1;
+    min-width: 0;
+    margin: 0;
+  }
+  & input:focus {
+    border-color: var(--fw);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--fw) 25%, transparent);
+  }
+  & button {
+    --btn: var(--fw);
+    --btn-hover: color-mix(in srgb, var(--fw) 80%, white);
+    --btn-text: #0b0f19;
+    font-weight: 700;
+  }
+}
+
+.fw-count {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* The item is a toggle button with a round checkbox in front. */
+.fw-list button.fw-check {
+  flex: 1;
+  justify-content: flex-start;
+  gap: 0.75rem;
+  border: 0;
+  background: transparent;
+  padding: 0.5rem 0.6rem;
+  color: inherit;
+  text-align: left;
+
+  &::before {
+    content: "";
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 1.25rem;
+    height: 1.25rem;
+    border: 2px solid color-mix(in srgb, var(--fw) 60%, transparent);
+    border-radius: 50%;
+    transition:
+      background-color 0.15s,
+      border-color 0.15s;
+  }
+}
+
+.fw-list li.fw-done button.fw-check {
+  color: var(--muted);
+  text-decoration: line-through;
+
+  &::before {
+    content: "✓";
+    border-color: var(--fw);
+    background: var(--fw);
+    color: #0b0f19;
+    font-weight: 900;
+    font-size: 0.75rem;
+  }
+}
+
+.fw-list button.fw-remove {
+  border: 0;
+  background: transparent;
+  padding: 0.35rem 0.7rem;
+  color: var(--muted);
+  font-size: 1.2rem;
+  opacity: 0.4;
+
+  &:hover,
+  &:focus-visible {
+    color: var(--error);
+    opacity: 1;
+  }
+}
+
+.fw-list li:hover button.fw-remove {
+  opacity: 1;
+}
+
+.fw-list button.fw-clear {
+  justify-self: end;
+  border: 0;
+  background: transparent;
+  padding: 0.25rem 0.5rem;
+  color: var(--fw);
+  font-size: 0.85rem;
+
+  &:disabled {
+    color: var(--muted);
+    opacity: 0.5;
+    cursor: default;
+  }
+}

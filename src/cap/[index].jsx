@@ -1,3 +1,4 @@
+import formBody from "../@helpers/formBody";
 import Layout from "../Layout";
 import { validateToken } from "./cap";
 
@@ -7,7 +8,8 @@ import { validateToken } from "./cap";
 export default async function ({ request, reply }) {
   let error = "";
   if (request.method === "POST") {
-    const token = request.body?.["cap-token"];
+    const body = formBody(request);
+    const token = body["cap-token"];
     // A repeated field arrives as array, which the Cap library can't handle.
     if (typeof token !== "string" || !token) {
       // E.g. submitted before the captcha was solved.
@@ -17,7 +19,7 @@ export default async function ({ request, reply }) {
       const { success } = validateToken(token);
       if (success) {
         // An empty name would read "Thank you, !".
-        const name = String(request.body?.["name"] ?? "").trim() || "stranger";
+        const name = String(body["name"] ?? "").trim() || "stranger";
         return (
           <Layout title="Thank you" css="/cap/index.css">
             <article class="card-success result">
@@ -100,7 +102,7 @@ export default async function ({ request, reply }) {
               name="name"
               autocomplete="name"
               placeholder="Jane Doe"
-              value={String(request.body?.["name"] ?? "")}
+              value={String(formBody(request)["name"] ?? "")}
             />
           </label>
           <cap-widget data-cap-api-endpoint={`${request.path.replace(/\/$/, "")}/`}></cap-widget>

@@ -31,11 +31,3 @@ export default function isCrossSite(request) {
     return true;
   }
 }
-
-/** The answer for a rejected cross-site request. */
-export function crossSiteResponse() {
-  return new Response("Forms of this site can only be sent from this site.", {
-    status: 403,
-    headers: { "content-type": "text/plain; charset=utf-8" },
-  });
-}

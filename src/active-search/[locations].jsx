@@ -1,3 +1,4 @@
+import formBody from "../@helpers/formBody";
 import cache from "../@helpers/cache";
 
 const MIN_LENGTH = 3;
@@ -19,7 +20,7 @@ class BusyError extends Error {}
  * @param {import("../types").RouteProps} props
  */
 export default async function ({ request }) {
-  const search = String(request.body?.["search"] ?? "")
+  const search = String(formBody(request)["search"] ?? "")
     .trim()
     .slice(0, MAX_LENGTH);
   if (search === "") {

@@ -1,3 +1,4 @@
+import formBody from "../@helpers/formBody";
 import { loadContacts, pick, resetContacts, saveContacts, validate } from "./contacts";
 
 /**
@@ -13,9 +14,9 @@ export default function ({ request, reply }) {
     return;
   }
   const post = request.method === "POST";
-  const input = /** @type {Record<string, unknown>} */ (
-    (post ? request.body : request.query) ?? {}
-  );
+  const input = post
+    ? formBody(request)
+    : /** @type {Record<string, unknown>} */ (request.query ?? {});
   if (post && input.reset !== undefined) {
     resetContacts(reply);
     return reply.redirect("/htmx", 303);
