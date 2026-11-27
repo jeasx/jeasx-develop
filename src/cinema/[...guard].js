@@ -1,4 +1,3 @@
-import isCrossSite, { crossSiteResponse } from "../@helpers/crossSite";
 import { createServerStore } from "./store/server";
 
 /**
@@ -12,10 +11,6 @@ export default function ({ request, reply }) {
   // Static files like index.css need no cookie.
   if (reply.file) {
     return;
-  }
-  // Other sites must not change your selection with a forged form.
-  if (isCrossSite(request)) {
-    return crossSiteResponse();
   }
   this.store = createServerStore(request, reply);
 }

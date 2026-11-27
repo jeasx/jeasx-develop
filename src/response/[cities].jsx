@@ -1,6 +1,6 @@
 import Layout from "../Layout";
 import { negotiate } from "./negotiate";
-import { OFFERS, PLANETS } from "./planets";
+import { CITIES, OFFERS, toCsv } from "./cities";
 
 // The answer depends on the Accept header, so caches must store one copy per header value.
 const VARY = { vary: "accept" };
@@ -14,10 +14,10 @@ export default function ({ request, reply }) {
   switch (negotiate(request.headers.accept, OFFERS)) {
     case "text/html":
       reply.headers(VARY);
-      return <PlanetsPage />;
+      return <CitiesPage />;
 
     case "application/json":
-      return Response.json(PLANETS, { headers: VARY });
+      return Response.json(CITIES, { headers: VARY });
 
     case "text/csv":
       return new Response(toCsv(), {
@@ -38,13 +38,13 @@ export default function ({ request, reply }) {
   }
 }
 
-function PlanetsPage() {
+function CitiesPage() {
   return (
     <Layout
-      title="Planets"
-      description="The planets of our solar system as HTML, JSON, CSV or plain text."
+      title="Cities"
+      description="Average temperatures of four cities as HTML, JSON, CSV or plain text."
     >
-      <h1>Planets</h1>
+      <h1>Cities</h1>
       <p class="center">
         Your browser asked for HTML.{" "}
         <a href="/response#content-negotiation">Try the other formats</a>.
@@ -52,17 +52,17 @@ function PlanetsPage() {
       <table>
         <thead>
           <tr>
-            <th scope="col">Planet</th>
-            <th scope="col">Diameter (km)</th>
-            <th scope="col">Moons</th>
+            <th scope="col">City</th>
+            <th scope="col">Coldest month (°C)</th>
+            <th scope="col">Warmest month (°C)</th>
           </tr>
         </thead>
         <tbody>
-          {PLANETS.map(({ name, diameter, moons }) => (
+          {CITIES.map(({ name, coldest, warmest }) => (
             <tr>
               <td>{name}</td>
-              <td>{diameter.toLocaleString("en-US")}</td>
-              <td>{moons}</td>
+              <td>{coldest}</td>
+              <td>{warmest}</td>
             </tr>
           ))}
         </tbody>
@@ -71,15 +71,10 @@ function PlanetsPage() {
   );
 }
 
-function toCsv() {
-  const rows = PLANETS.map(({ name, diameter, moons }) => [name, diameter, moons].join(","));
-  return ["name,diameter,moons", ...rows].join("\n") + "\n";
-}
-
 function toText() {
-  const rows = PLANETS.map(
-    ({ name, diameter, moons }) =>
-      `${name.padEnd(8)} ${String(diameter).padStart(8)} km ${String(moons).padStart(4)} moons`,
+  const rows = CITIES.map(
+    ({ name, coldest, warmest }) =>
+      `${name.padEnd(8)} ${String(coldest).padStart(5)} °C ${String(warmest).padStart(5)} °C`,
   );
   return rows.join("\n") + "\n";
 }

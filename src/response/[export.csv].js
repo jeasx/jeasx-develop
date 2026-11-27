@@ -1,15 +1,10 @@
-import { PLANETS } from "../@helpers/planets";
+import { toCsv } from "./cities";
 
 export default function () {
-  const rows = [
-    ["name", "diameter", "moons"],
-    ...PLANETS.map(({ name, diameter, moons }) => [name, diameter, moons]),
-  ];
-  const csv = rows.map((row) => row.join(",")).join("\n") + "\n";
-  return new Response(csv, {
+  return new Response(toCsv(), {
     headers: {
       "content-type": "text/csv; charset=utf-8",
-      "content-disposition": 'attachment; filename="planets.csv"',
+      "content-disposition": 'attachment; filename="cities.csv"',
     },
   });
 }

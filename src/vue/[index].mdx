@@ -1,4 +1,3 @@
-import { PLANETS } from "../@helpers/planets";
 import Layout from "../Layout";
 import Vue from "./Vue";
 
@@ -54,11 +53,11 @@ Have a look at the [source code of this page](https://github.com/jeasx/jeasx-exp
 
 <section>
 
-## Planet explorer
+## Temperature converter
 
-Search, filter and sort the planets. `computed` derives the visible list, and `<TransitionGroup>` animates the cards to their new positions. Click a planet to reveal a fact.
+Type into either field. `v-model` binds both inputs, and a writable `computed` converts in both directions. The starting value comes from the page as a prop.
 
-<Vue component="Planets" planets={PLANETS} />
+<Vue component="Converter" celsius={21} />
 
 </section>
 

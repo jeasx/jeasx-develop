@@ -1,6 +1,5 @@
 import { readObjectCookie } from "../@helpers/cookies";
 import formBody from "../@helpers/formBody";
-import isCrossSite, { crossSiteResponse } from "../@helpers/crossSite";
 import { DEFAULT_CELLS, toCells } from "./grid";
 
 const PATH = "/spreadsheet";
@@ -16,10 +15,6 @@ export default function ({ request, reply }) {
   // Static files like index.css need no cookie.
   if (reply.file) {
     return;
-  }
-  // Other sites must not change the sheet with a forged form.
-  if (isCrossSite(request)) {
-    return crossSiteResponse();
   }
   if (request.method === "POST") {
     // The cells are stored as one object, e.g. { "A1": "Trip budget" }.

@@ -10,7 +10,7 @@ for (const button of buttons) {
 }
 
 /**
- * Requests the planets with the given Accept header and shows the answer.
+ * Requests the cities with the given Accept header and shows the answer.
  *
  * @param {string} accept
  */

@@ -1,5 +1,4 @@
 import { readSignedCookie } from "../@helpers/cookies";
-import csrf from "../@helpers/csrf";
 import Layout from "../Layout";
 import { countAttempt } from "./attempts";
 import { PATH } from "./session";
@@ -7,14 +6,13 @@ import { getSession } from "./store";
 
 /**
  * Runs before every route of this example:
- * - checks the CSRF token of every POST (see "../@helpers/csrf.jsx"),
  * - limits the number of POSTs per IP address, as each one may hash a password,
  * - looks up the session of the visitor.
  *
  * @param {import("../types").RouteProps} props
  */
 export default function ({ request, reply }) {
-  // Static files need neither token nor session.
+  // Static files need no session.
   if (reply.file) {
     return;
   }
@@ -22,10 +20,8 @@ export default function ({ request, reply }) {
   // Pages with a login form or personal data must not end up in a shared cache.
   reply.header("cache-control", "no-store");
 
-  const { token: csrfToken, rejection } = csrf({ request, reply }, PATH);
-  if (rejection) {
-    return rejection;
-  }
+  // Forms from other sites, including "login CSRF" (another site signing the visitor in
+  // to an account of its own), are rejected by the root guard (src/[...guard].js).
 
   if (request.method === "POST") {
     const wait = countAttempt(request.ip);
@@ -48,5 +44,5 @@ export default function ({ request, reply }) {
   const session = getSession(readSignedCookie(request, "session"));
 
   // Routes below receive these as props.
-  return { csrfToken, session };
+  return { session };
 }

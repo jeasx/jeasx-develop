@@ -1,6 +1,5 @@
 import { randomBytes } from "node:crypto";
 import { readSignedCookie } from "../@helpers/cookies";
-import isCrossSite, { crossSiteResponse } from "../@helpers/crossSite";
 import { FLAGS, PATH, flagsOf, variantOf } from "./flags";
 
 /**
@@ -13,11 +12,6 @@ import { FLAGS, PATH, flagsOf, variantOf } from "./flags";
 export default function ({ request, reply }) {
   if (reply.file) {
     return;
-  }
-
-  // A form of another site comes without the cookie, so it would replace the visitor.
-  if (isCrossSite(request)) {
-    return crossSiteResponse();
   }
 
   const query = /** @type {Record<string, unknown>} */ (request.query ?? {});

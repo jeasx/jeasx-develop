@@ -17,11 +17,10 @@ const LABELS = {
  * entered values (except passwords), a summary of all errors and a message at each field.
  *
  * @param {import("../types").RouteProps & {
- *   csrfToken: string,
  *   session?: ReturnType<typeof import("./store").getSession>
  * }} props
  */
-export default async function ({ request, reply, csrfToken, session }) {
+export default async function ({ request, reply, session }) {
   /** @type {ReturnType<typeof validateRegistration>} */
   let form = {
     values: {
@@ -34,7 +33,7 @@ export default async function ({ request, reply, csrfToken, session }) {
     errors: {},
   };
 
-  // The guard has already checked the CSRF token of every POST.
+  // The guard has already rejected forms sent from other sites.
   if (request.method === "POST") {
     form = validateRegistration(request.body);
     if (Object.keys(form.errors).length === 0) {
@@ -91,7 +90,6 @@ export default async function ({ request, reply, csrfToken, session }) {
 
       <article class="auth-card">
         <form method="post">
-          <input type="hidden" name="_csrf" value={csrfToken} />
           <Field
             label="Username"
             name="username"

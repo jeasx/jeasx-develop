@@ -2,7 +2,7 @@ import { PATH, endSession } from "./session";
 
 /**
  * Signs out with POST only: a GET link could be triggered by other sites or by prefetching.
- * The guard has already checked the CSRF token.
+ * The guard has already rejected forms sent from other sites.
  *
  * @param {import("../types").RouteProps & {
  *   session?: ReturnType<typeof import("./store").getSession>

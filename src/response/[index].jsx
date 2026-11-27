@@ -1,5 +1,5 @@
 import Layout from "../Layout";
-import { OFFERS } from "./planets";
+import { OFFERS } from "./cities";
 
 const PRESETS = [...OFFERS, "image/png"];
 
@@ -49,8 +49,8 @@ export default function () {
       </p>
       <p>
         The route{" "}
-        <a href="/response/planets">
-          <code>/response/planets</code>
+        <a href="/response/cities">
+          <code>/response/cities</code>
         </a>{" "}
         reads the header and returns a <code>Response</code> in the best matching format, or{" "}
         <code>406 Not Acceptable</code>. It also sends <code>Vary: Accept</code>, so caches keep one
@@ -60,7 +60,7 @@ export default function () {
         Pick an <code>Accept</code> header below. The request is sent with <code>fetch()</code>, as
         browsers always send their own <code>Accept</code> header when you follow a link.
       </p>
-      <p class="presets" data-url="/response/planets">
+      <p class="presets" data-url="/response/cities">
         {PRESETS.map((accept) => (
           <button
             type="button"
@@ -86,7 +86,7 @@ export default function () {
       <pre>
         <code>
           {OFFERS.map(
-            (type) => `curl -H "Accept: ${type}" https://expo.jeasx.dev/response/planets\n`,
+            (type) => `curl -H "Accept: ${type}" https://expo.jeasx.dev/response/cities\n`,
           )}
         </code>
       </pre>

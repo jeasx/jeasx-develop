@@ -1,6 +1,5 @@
 import formBody from "../@helpers/formBody";
 import { readListCookie, writeListCookie } from "../@helpers/cookies";
-import isCrossSite, { crossSiteResponse } from "../@helpers/crossSite";
 import { DEFAULT_TODOS, reduce, toStatus, toTodo } from "./state";
 
 const PATH = "/todos";
@@ -13,10 +12,7 @@ export default function ({ request, reply }) {
   if (reply.file) {
     return;
   }
-  // Other sites must not overwrite the todos cookie with a forged form.
-  if (isCrossSite(request)) {
-    return crossSiteResponse();
-  }
+  // Forms from other sites are rejected by the root guard (src/[...guard].js).
 
   const status = toStatus(request.query["status"]);
   const state = {

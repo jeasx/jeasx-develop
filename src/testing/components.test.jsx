@@ -1,7 +1,7 @@
 import { jsxToString } from "jsx-async-runtime";
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import Planets from "../response/[planets]";
+import Cities from "../response/[cities]";
 import { Greeting, Price, UserCard } from "./components";
 
 describe("Greeting", () => {
@@ -51,22 +51,22 @@ describe("UserCard", () => {
   });
 });
 
-describe("Route /response/planets", () => {
+describe("Route /response/cities", () => {
   // A route is a function: call it with fake request and reply objects.
   const call = (accept) => {
     const headers = {};
     const reply = { headers: (values) => Object.assign(headers, values) };
-    const request = { path: "/response/planets", headers: { accept } };
+    const request = { path: "/response/cities", headers: { accept } };
     const context = { request, reply };
-    return { response: Planets.call(context, { request, reply }), context, headers };
+    return { response: Cities.call(context, { request, reply }), context, headers };
   };
 
   it("answers JSON requests with a Response", async () => {
     const { response } = call("application/json");
     assert.ok(response instanceof Response);
     assert.equal(response.headers.get("vary"), "accept");
-    const planets = await response.json();
-    assert.equal(planets.length, 8);
+    const cities = await response.json();
+    assert.equal(cities.length, 4);
   });
 
   it("renders the HTML page with the layout", async () => {
@@ -74,7 +74,7 @@ describe("Route /response/planets", () => {
     // The layout reads the request from "this", as the root guard puts it there.
     const html = await jsxToString.call(context, response);
     assert.match(html, /^<!DOCTYPE html>/);
-    assert.match(html, /<td>Jupiter<\/td>/);
+    assert.match(html, /<td>Oslo<\/td>/);
     assert.equal(headers["vary"], "accept");
   });
 

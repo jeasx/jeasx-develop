@@ -1,4 +1,3 @@
-import isCrossSite, { crossSiteResponse } from "../@helpers/crossSite";
 import type { RouteProps } from "../types";
 import { toAnswers, toStorable } from "./domain/answers";
 import { STEP_IDS, firstIncomplete, href, nextStep, previousStep } from "./domain/steps";
@@ -15,11 +14,6 @@ export default function ({ request, reply }: RouteProps) {
   if (reply.file) {
     return;
   }
-  // Other sites must not overwrite the answers with a forged form.
-  if (isCrossSite(request)) {
-    return crossSiteResponse();
-  }
-
   const step = request.path.replace(/\/+$/, "").slice("/wizard/".length);
   if (step === "done") {
     const booking = loadBooking(request);

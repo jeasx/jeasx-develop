@@ -1,5 +1,4 @@
 import Layout from "../Layout";
-import { readSigned } from "../@helpers/cookies";
 
 const PATH = "/signed-cookies";
 // Small limits keep the cookie well below 4 KB, even for characters like "€"
@@ -157,4 +156,21 @@ function parseNotes(value) {
   } catch {
     return [];
   }
+}
+
+/**
+ * Reads the signed cookie and tells why there is no value: "missing" without cookie,
+ * "invalid" if the value doesn't match its signature, e.g. because it was edited in the browser.
+ *
+ * @param {import("fastify").FastifyRequest} request
+ * @param {string} name
+ * @returns {{ status: "missing" | "invalid" | "valid", value?: string }}
+ */
+function readSigned(request, name) {
+  const cookie = request.cookies[name];
+  if (cookie === undefined) {
+    return { status: "missing" };
+  }
+  const { valid, value } = request.unsignCookie(cookie);
+  return valid ? { status: "valid", value } : { status: "invalid" };
 }

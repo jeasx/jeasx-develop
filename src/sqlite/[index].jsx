@@ -1,4 +1,3 @@
-import isCrossSite, { crossSiteResponse } from "../@helpers/crossSite";
 import formBody from "../@helpers/formBody";
 import Layout from "../Layout";
 import {
@@ -19,10 +18,6 @@ const PATH = "/sqlite";
  */
 export default function ({ request, reply }) {
   if (request.method === "POST") {
-    // Other sites must not change the database with a forged form.
-    if (isCrossSite(request)) {
-      return crossSiteResponse();
-    }
     const body = formBody(request);
     const id = Number(body["id"]);
     // The anchor the browser scrolls to after the redirect, so the page doesn't jump to the top.

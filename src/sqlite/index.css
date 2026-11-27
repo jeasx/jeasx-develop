@@ -169,6 +169,8 @@ article > header h2 {
   /* Also beats the edge padding of the first and last cell set above. */
   .movies tbody td,
   .movies tbody td:is(:first-child, :last-child) {
+    /* Plain grid items: Safari otherwise keeps them as table cells and indents the first one. */
+    display: block;
     border: 0;
     background: none;
     padding: 0;

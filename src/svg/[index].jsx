@@ -1,6 +1,6 @@
 import Layout from "../Layout";
 import { BarChart, LineChart, Sparkline } from "./charts";
-import { CITIES, MONTHS, PLANETS } from "./data";
+import { CITIES, MONTHS } from "./data";
 
 const format = new Intl.NumberFormat("en-US", { maximumFractionDigits: 1 });
 
@@ -13,8 +13,13 @@ export default function ({ request }) {
   const selected = CITIES.filter((city) => ids.includes(city.id));
   const cities = selected.length > 0 ? selected : CITIES;
 
-  const sortByMoons = request.query["sort"] === "moons";
-  const planets = sortByMoons ? PLANETS.toSorted((a, b) => b.moons - a.moons) : PLANETS;
+  // The bar chart compares the yearly average of the same cities.
+  const averages = cities.map(({ name, values }) => ({
+    label: name,
+    value: values.reduce((sum, value) => sum + value, 0) / values.length,
+  }));
+  const sortByWarmth = request.query["sort"] === "warmest";
+  const bars = sortByWarmth ? averages.toSorted((a, b) => b.value - a.value) : averages;
 
   return (
     <Layout
@@ -53,7 +58,7 @@ export default function ({ request }) {
                 {city.name}
               </label>
             ))}
-            {sortByMoons && <input type="hidden" name="sort" value="moons" />}
+            {sortByWarmth && <input type="hidden" name="sort" value="warmest" />}
             <button type="submit" class="btn-sm">
               Update chart
             </button>
@@ -94,18 +99,14 @@ export default function ({ request }) {
         <h2>Bar chart</h2>
         <figure class="chart-figure">
           <figcaption>
-            Known moons per planet (as of March 2026) ·{" "}
-            {sortByMoons ? (
-              <a href={withQuery(ids, false)}>sort by distance from the sun</a>
+            Average temperature per year (°C) ·{" "}
+            {sortByWarmth ? (
+              <a href={withQuery(ids, false)}>show in original order</a>
             ) : (
-              <a href={withQuery(ids, true)}>sort by number of moons</a>
+              <a href={withQuery(ids, true)}>sort from warmest to coldest</a>
             )}
           </figcaption>
-          <BarChart
-            items={planets.map(({ name, moons }) => ({ label: name, value: moons }))}
-            color="var(--series-1)"
-            title="Known moons per planet"
-          />
+          <BarChart items={bars} color="var(--series-1)" title="Average temperature per year" />
         </figure>
 
         <h2>Sparklines</h2>
@@ -161,12 +162,12 @@ export default function ({ request }) {
  * Builds a link which keeps the selected cities and changes the sort order.
  *
  * @param {string[]} ids
- * @param {boolean} sortByMoons
+ * @param {boolean} sortByWarmth
  */
-function withQuery(ids, sortByMoons) {
+function withQuery(ids, sortByWarmth) {
   const params = new URLSearchParams(ids.map((id) => ["city", id]));
-  if (sortByMoons) {
-    params.set("sort", "moons");
+  if (sortByWarmth) {
+    params.set("sort", "warmest");
   }
   return `?${params}`;
 }

@@ -1,8 +1,8 @@
-import csrf from "../@helpers/csrf";
+import csrf from "./csrf";
 
 /**
  * Protects all forms of this example against cross-site request forgery (CSRF)
- * with a "signed double-submit cookie" (see "../@helpers/csrf.jsx" for how it works).
+ * with a "signed double-submit cookie" (see "./csrf.jsx" for how it works).
  *
  * @param {import("../types").RouteProps} props
  */

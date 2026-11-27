@@ -1,4 +1,3 @@
-import isCrossSite, { crossSiteResponse } from "../@helpers/crossSite";
 import { loadContacts, pick, resetContacts, saveContacts, validate } from "./contacts";
 
 /**
@@ -13,11 +12,6 @@ export default function ({ request, reply }) {
   if (reply.file) {
     return;
   }
-  // Other sites must not overwrite the contacts with a forged form.
-  if (isCrossSite(request)) {
-    return crossSiteResponse();
-  }
-
   const post = request.method === "POST";
   const input = /** @type {Record<string, unknown>} */ (
     (post ? request.body : request.query) ?? {}

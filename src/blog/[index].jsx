@@ -1,4 +1,3 @@
-import isCrossSite, { crossSiteResponse } from "../@helpers/crossSite";
 import Layout from "../Layout";
 import PostMeta from "./PostMeta";
 import { PATH, clearPosts, hasOwnPosts, hue, readPosts } from "./posts";
@@ -9,9 +8,6 @@ import { PATH, clearPosts, hasOwnPosts, hue, readPosts } from "./posts";
 export default function ({ request, reply }) {
   // The "Clear cookie" form posts here.
   if (request.method === "POST") {
-    if (isCrossSite(request)) {
-      return crossSiteResponse();
-    }
     clearPosts(reply);
     // 303 makes the browser load the blog with GET, so a reload doesn't resubmit the form.
     return reply.redirect(PATH, 303);

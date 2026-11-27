@@ -1,5 +1,3 @@
-import { PLANETS as ALL_PLANETS } from "../@helpers/planets";
-
 export const MONTHS = [
   "Jan",
   "Feb",
@@ -45,6 +43,3 @@ export const CITIES = [
     values: [23.5, 23.4, 22.1, 19.5, 16.6, 14.2, 13.4, 14.5, 17.0, 19.0, 20.4, 22.1],
   },
 ];
-
-/** Known moons per planet, in order of distance from the sun (shared with other examples). */
-export const PLANETS = ALL_PLANETS.map(({ name, moons }) => ({ name, moons }));

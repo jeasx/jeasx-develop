@@ -8,15 +8,14 @@ import { PASSWORD, field } from "./validate";
  * Shows the sign-in form or, with a session, the account of the user.
  *
  * @param {import("../types").RouteProps & {
- *   csrfToken: string,
  *   session?: ReturnType<typeof import("./store").getSession>
  * }} props
  */
-export default async function ({ request, reply, csrfToken, session }) {
+export default async function ({ request, reply, session }) {
   let username = "";
   let error = "";
 
-  // The guard has already checked the CSRF token of every POST.
+  // The guard has already rejected forms sent from other sites.
   if (request.method === "POST") {
     username = field(request.body, "username").toLowerCase();
     const password = field(request.body, "password", { trim: false });
@@ -51,7 +50,7 @@ export default async function ({ request, reply, csrfToken, session }) {
         are hashed with scrypt from <code>node:crypto</code>.
       </p>
       <p>
-        A guard checks the CSRF token of every form, limits the attempts per IP address and looks up
+        A guard rejects forms sent from other sites, limits the attempts per IP address and looks up
         the session for all routes below it. Users and sessions live in memory, so they are gone
         after a restart.
       </p>
@@ -84,7 +83,6 @@ export default async function ({ request, reply, csrfToken, session }) {
           </dl>
           <footer>
             <form method="post" action={`${PATH}/logout`}>
-              <input type="hidden" name="_csrf" value={csrfToken} />
               <button class="btn btn-secondary" type="submit">
                 Sign out
               </button>
@@ -105,7 +103,6 @@ export default async function ({ request, reply, csrfToken, session }) {
             </p>
           )}
           <form method="post">
-            <input type="hidden" name="_csrf" value={csrfToken} />
             <Field
               label="Username"
               name="username"

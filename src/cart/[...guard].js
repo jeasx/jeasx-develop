@@ -1,6 +1,5 @@
 import formBody from "../@helpers/formBody";
 import { readListCookie, readSignedCookie, writeListCookie } from "../@helpers/cookies";
-import isCrossSite, { crossSiteResponse } from "../@helpers/crossSite";
 import { checkout, findDiscount } from "./checkout";
 import { DEFAULT_ITEMS, isServerAction, toItems } from "./state";
 
@@ -14,11 +13,6 @@ export default function ({ request, reply }) {
   if (reply.file) {
     return;
   }
-  // Other sites must not fill your cart with a forged form.
-  if (isCrossSite(request)) {
-    return crossSiteResponse();
-  }
-
   const list = readListCookie(request, "cart");
   /** @type {import("./state").State} */
   const state = {

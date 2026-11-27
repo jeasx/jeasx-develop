@@ -23,31 +23,33 @@ export function fitsCookie(reply, value) {
 }
 
 /**
- * Reads a cookie set with { signed: true }.
- * Returns status "missing" without cookie and "invalid" if the value doesn't match its
- * signature, e.g. because it was edited in the browser. Only a "valid" cookie has a value.
- *
- * @param {import("fastify").FastifyRequest} request
- * @param {string} name
- * @returns {{ status: "missing" | "invalid" | "valid", value?: string }}
- */
-export function readSigned(request, name) {
-  const cookie = request.cookies[name];
-  if (cookie === undefined) {
-    return { status: "missing" };
-  }
-  const { valid, value } = request.unsignCookie(cookie);
-  return valid ? { status: "valid", value } : { status: "invalid" };
-}
-
-/**
  * Reads a signed cookie. Returns undefined if it is missing or was changed after signing.
  *
  * @param {import("fastify").FastifyRequest} request
  * @param {string} name
  */
 export function readSignedCookie(request, name) {
-  return readSigned(request, name).value;
+  const cookie = request.cookies[name];
+  if (cookie === undefined) {
+    return undefined;
+  }
+  const { valid, value } = request.unsignCookie(cookie);
+  return valid ? value : undefined;
+}
+
+/**
+ * Parses JSON from a signed cookie. Returns undefined if the cookie is missing, edited or no JSON.
+ *
+ * @param {import("fastify").FastifyRequest} request
+ * @param {string} name
+ * @returns {unknown}
+ */
+function readJsonCookie(request, name) {
+  try {
+    return JSON.parse(readSignedCookie(request, name));
+  } catch {
+    return undefined;
+  }
 }
 
 /**
@@ -59,13 +61,8 @@ export function readSignedCookie(request, name) {
  * @returns {Record<string, unknown>[] | undefined}
  */
 export function readListCookie(request, name) {
-  try {
-    const list = JSON.parse(readSignedCookie(request, name));
-    if (Array.isArray(list)) {
-      return list.filter((item) => item && typeof item === "object");
-    }
-  } catch {}
-  return undefined;
+  const list = readJsonCookie(request, name);
+  return Array.isArray(list) ? list.filter((item) => item && typeof item === "object") : undefined;
 }
 
 /**
@@ -77,13 +74,8 @@ export function readListCookie(request, name) {
  * @returns {Record<string, any> | undefined}
  */
 export function readObjectCookie(request, name) {
-  try {
-    const value = JSON.parse(readSignedCookie(request, name));
-    if (value && typeof value === "object" && !Array.isArray(value)) {
-      return value;
-    }
-  } catch {}
-  return undefined;
+  const value = readJsonCookie(request, name);
+  return value && typeof value === "object" && !Array.isArray(value) ? value : undefined;
 }
 
 /**
