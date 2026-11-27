@@ -14,6 +14,7 @@ KEEP=(
   .gitignore
   api/vercel.js
   src/types.d.ts
+  bun.lock
   build-manifest.js
   bundle-bun.js
   bundle-esbuild.js
@@ -24,7 +25,6 @@ KEEP=(
   env.js
   jeasx.config.js
   LICENSE.txt
-  package-lock.json
   package.json
   README.md
   serverless.js
