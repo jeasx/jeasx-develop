@@ -23,7 +23,6 @@ KEEP=(
   Dockerfile
   env.d.ts
   env.js
-  jeasx.config.js
   LICENSE.txt
   package.json
   README.md
