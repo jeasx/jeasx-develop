@@ -1,5 +1,6 @@
 @import "../@styles/card.css";
 @import "../@styles/forms.css";
+@import "../@styles/buttons.css";
 
 .toc ol {
   columns: 2 16rem;
@@ -72,4 +73,12 @@
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 0.5rem 1rem;
+}
+.sample header small {
+  display: block;
+  margin-top: 0.25rem;
+  opacity: 0.8;
+}
+.step h3 {
+  margin-top: 1.5rem;
 }

@@ -107,7 +107,7 @@ button[type="submit"] {
   background: transparent;
   color: var(--btn-text);
 }
-/* A pressed outline button, e.g. the selected preset in /negotiation. */
+/* A pressed outline button, e.g. the selected preset in /response. */
 .btn-outline[aria-pressed="true"] {
   border-color: var(--primary);
   background: var(--primary-bg);

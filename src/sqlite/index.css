@@ -1,0 +1,131 @@
+@import "../@styles/buttons.css";
+@import "../@styles/card.css";
+@import "../@styles/forms.css";
+@import "../@styles/table.css";
+
+/* Card headers: title on the left, count on the right. */
+article > header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+article > header h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+/* The table fills the card from edge to edge. */
+.movies table {
+  margin: 0 -1rem;
+  width: calc(100% + 2rem);
+}
+.movies :is(th, td):first-child {
+  padding-left: 1rem;
+}
+.movies :is(th, td):last-child {
+  padding-right: 1rem;
+}
+.movies td {
+  vertical-align: middle;
+}
+.title {
+  color: var(--heading);
+  font-weight: 600;
+}
+.year {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.stars {
+  color: var(--warning-hover);
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+}
+.stars-empty {
+  color: var(--border);
+}
+.empty {
+  padding: 2rem;
+  color: var(--muted);
+  text-align: center;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.5rem;
+}
+.actions form,
+.actions .btn,
+.actions button {
+  margin: 0;
+}
+/* One width for all row buttons, so Edit/Delete and Save/Cancel line up. */
+.actions :is(.btn, button) {
+  justify-content: center;
+  min-width: 4.5rem;
+  text-align: center;
+}
+
+/* The row being edited stands out with a neutral tint,
+   so the primary "Save" button keeps its contrast. */
+.editing td {
+  background: var(--input-bg);
+}
+/* Compact inputs that fit the table cells (the shared form styles set a fixed height). */
+.editing :is(input, select) {
+  margin: 0;
+  height: auto;
+  padding-block: 0.375rem;
+  font-size: 0.875rem;
+}
+.editing input[name="year"] {
+  width: 6rem;
+}
+
+/* Note and reset button above the cards. */
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  color: var(--muted);
+}
+.toolbar button {
+  margin: 0;
+}
+
+/* Fields in one row on wide screens, stacked on narrow ones. */
+.movie-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  align-items: end;
+  gap: 0.75rem 1rem;
+}
+.movie-form label {
+  margin: 0;
+}
+.movie-form :is(input, select, button, .btn) {
+  margin: 0;
+}
+
+/* Anchored rows land in the middle of the screen, not glued to its top edge. */
+.movies tr[id] {
+  scroll-margin-block: 40vh;
+}
+
+/* Delete looks like Edit and only turns red on hover, so it doesn't draw the eye. */
+.delete:is(:hover, :focus-visible) {
+  --btn: var(--error);
+  --btn-hover: var(--error-hover);
+}
+
+.movies tbody tr:not(.editing) {
+  transition: background 0.15s;
+}
+.movies tbody tr:not(.editing):hover td {
+  background: color-mix(in srgb, var(--primary) 6%, transparent);
+}

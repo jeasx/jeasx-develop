@@ -8,17 +8,14 @@ import extractStyles from "./extractStyles";
  * @this {import("../types").ThisContext}
  * @param {import("../types").RouteProps} props
  */
-export default function ({ request, reply }) {
-  if (request.query["text"] === "plain") {
-    reply.type("text/plain; charset=utf-8");
-  }
-
+export default function ({ request }) {
   this.responseHandler = async (payload) => {
     // Cheerio and Prettier need the complete markup, so a streamed payload is collected first.
     const html = await toText(this, payload);
     if (html === undefined) {
       return payload;
     }
+    // Cheerio: the page itself is always delivered with its inline styles extracted.
     const raw = request.query["source"] === "raw";
     const format = (markup) => prettier.format(markup, { parser: "html" });
     const markup = await format(raw ? html : extractStyles(html));
@@ -32,21 +29,27 @@ export default function ({ request, reply }) {
 
   return (
     <Layout
-      title="Extract inline styles with Cheerio"
-      description="Post-process the resulting HTML with Cheerio to move inline styles into the head."
-      css="/cheerio/index.css"
+      title="Post-process HTML with Prettier and Cheerio"
+      description="Rewrite the finished HTML in a response handler: move inline styles into the head with Cheerio and format the result with Prettier."
+      css="/post-processing/index.css"
     >
-      {/* The inline styles on this page are deliberate: they are what the handler rewrites. */}
-      <section class="cheerio-hero" style="--heading:orange; text-align:center">
-        <h1>Extract inline styles with Cheerio</h1>
+      {/* The inline styles on this page are deliberate: they are what the Cheerio step rewrites. */}
+      <section class="pp-hero" style="--heading:orange; text-align:center">
+        <h1>Post-process HTML with Prettier and Cheerio</h1>
         <p class="lead">
-          Jeasx lets you post-process the finished HTML with a{" "}
-          <a href="https://www.jeasx.dev/faq#response-handler">response handler</a>. This example
-          uses <a href="https://cheerio.js.org">Cheerio</a> to turn all inline styles into CSS
-          classes in the head of the page.
+          Jeasx lets you rewrite the finished HTML with a{" "}
+          <a href="https://www.jeasx.dev/faq#response-handler">response handler</a>. It is set on{" "}
+          <code>this.responseHandler</code>, receives the rendered payload and returns the new text.
+          This page rewrites its very own markup.
         </p>
       </section>
-      <ol class="cheerio-steps">
+
+      <h2>Extract inline styles with Cheerio</h2>
+      <p>
+        <a href="https://cheerio.js.org">Cheerio</a> turns all inline styles into CSS classes in the
+        head of the page.
+      </p>
+      <ol class="pp-steps">
         <li>
           <strong style="color:orange">Render</strong>
           <span>JSX produces HTML full of inline style attributes.</span>

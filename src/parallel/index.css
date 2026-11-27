@@ -1,12 +1,329 @@
 @import "../@styles/stream.css";
 @import "../@styles/card.css";
-@import "../@styles/busy.css";
 
-.px-axis {
+/* Fixed columns (at most three, at least 14.5rem wide) from the start: auto-fill keeps
+   empty tracks, so the first cards don't stretch and shrink while the others stream in. */
+.ag-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(max(14.5rem, calc((100% - 2rem) / 3)), 1fr));
+  gap: 0 1rem;
+  margin: 2rem 0;
+}
+
+/* Header, body and footer share rows across cards (subgrid), so all top bars align. */
+.ag-card {
+  --tone: var(--sx-ok);
+  display: grid;
+  position: relative;
+  grid-row: span 3;
+  grid-template-rows: subgrid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  /* Fade and slide in on arrival, without overshoot. */
+  animation: ag-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+  border: 1px solid color-mix(in srgb, var(--tone) 35%, transparent);
+  border-radius: 1rem;
+  background:
+    radial-gradient(
+      120% 80% at 0% 0%,
+      color-mix(in srgb, var(--tone) 18%, transparent),
+      transparent 60%
+    ),
+    linear-gradient(160deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.01));
+  padding: 1.1rem 1.2rem;
+  overflow: hidden;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px -12px color-mix(in srgb, var(--tone) 60%, transparent);
+  }
+
+  &[data-status="error"] {
+    --tone: var(--sx-error);
+  }
+
+  &[data-status="timeout"] {
+    --tone: var(--sx-warn);
+  }
+
+  /* Undo the global "article > header/footer" bar styles, which bleed out of these cards. */
+  & > header,
+  & > footer {
+    margin: 0;
+    border: none;
+    border-radius: 0;
+    background: none;
+    padding: 0;
+  }
+
+  & header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+
+    & div {
+      flex: 1;
+      min-width: 0;
+    }
+
+    & h2 {
+      margin: 0;
+      font-size: 0.95rem;
+      line-height: 1.2;
+      text-align: left;
+    }
+
+    & small {
+      display: block;
+      margin-top: 0.15rem;
+      color: var(--sx-muted);
+      font-size: 0.75rem;
+      line-height: 1.2;
+      overflow-wrap: anywhere;
+    }
+  }
+
+  & footer {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+}
+
+.ag-icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  border-radius: 0.75rem;
+  background: color-mix(in srgb, var(--tone) 20%, transparent);
+  width: 2.5rem;
+  height: 2.5rem;
+  font-size: 1.35rem;
+}
+
+.ag-pill {
+  flex: none;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--tone) 22%, transparent);
+  padding: 0.1rem 0.55rem;
+  color: var(--tone);
+  font-weight: 700;
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+
+  [data-status="ok"] &::before {
+    display: inline-block;
+    vertical-align: 0.05rem;
+    animation: sx-pulse 1.6s ease-in-out infinite;
+    margin-right: 0.35rem;
+    border-radius: 50%;
+    background: currentColor;
+    width: 0.45rem;
+    height: 0.45rem;
+    content: "";
+  }
+}
+
+.ag-body {
   display: flex;
-  justify-content: space-between;
-  margin: -0.5rem 0 0.75rem;
-  color: var(--sx-muted);
+  flex: 1;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.ag-figure {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  margin: 0;
+
+  & strong {
+    background: linear-gradient(120deg, #fff, var(--tone));
+    background-clip: text;
+    color: transparent;
+    font-size: 2.4rem;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+  }
+
+  & span {
+    color: var(--sx-muted);
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+}
+
+.ag-headline {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+
+  & a {
+    color: inherit;
+    text-decoration-color: color-mix(in srgb, var(--sx-accent) 60%, transparent);
+    text-underline-offset: 0.2em;
+
+    &:hover {
+      color: var(--sx-accent);
+    }
+  }
+}
+
+.ag-message {
+  margin: 0;
+  color: var(--tone);
+  font-size: 0.9rem;
+}
+
+.ag-details {
+  display: grid;
+  gap: 0.3rem;
+  margin: auto 0 0;
+  border-top: 1px dashed var(--sx-line);
+  padding-top: 0.6rem;
+
+  & div {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    font-size: 0.85rem;
+  }
+
+  & dt {
+    color: var(--sx-muted);
+  }
+
+  & dd {
+    margin: 0;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+    overflow-wrap: anywhere;
+  }
+}
+
+.ag-rank {
+  border-radius: 0.4rem;
+  background: color-mix(in srgb, var(--tone) 18%, transparent);
+  padding: 0 0.4rem;
+  color: var(--tone);
   font-size: 0.75rem;
+  font-weight: 800;
   font-variant-numeric: tabular-nums;
+}
+
+.ag-meter {
+  flex: 1;
+  border-radius: 999px;
+  background: var(--sx-line);
+  height: 0.35rem;
+  overflow: hidden;
+
+  &::after {
+    display: block;
+    transform-origin: left;
+    /* Grows once the card has faded in. */
+    animation: ag-grow 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--sx-accent), var(--tone));
+    width: calc(var(--to) * 100%);
+    height: 100%;
+    content: "";
+  }
+}
+
+.ag-time {
+  color: var(--sx-muted);
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.ag-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+  gap: 0.75rem;
+  animation: ag-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.ag-stat {
+  --tone: var(--sx-accent);
+  border: 1px solid var(--sx-line);
+  border-radius: 1rem;
+  background: var(--sx-soft);
+  padding: 0.9rem 1rem;
+  text-align: center;
+
+  &[data-status="ok"] {
+    --tone: var(--sx-ok);
+  }
+
+  &[data-status="error"] {
+    --tone: var(--sx-error);
+  }
+
+  &[data-status="timeout"] {
+    --tone: var(--sx-warn);
+  }
+
+  & strong {
+    display: block;
+    color: var(--tone);
+    font-size: 1.6rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  & small {
+    color: var(--sx-muted);
+    font-size: 0.75rem;
+  }
+}
+
+.ag-hero {
+  grid-column: span 2;
+  border: none;
+  background: var(--sx-gradient);
+
+  & strong,
+  & small {
+    color: #fff;
+  }
+
+  & strong {
+    font-size: 2rem;
+  }
+}
+
+@keyframes ag-in {
+  from {
+    transform: translateY(0.5rem);
+    opacity: 0;
+  }
+}
+
+@keyframes ag-grow {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ag-card,
+  .ag-summary,
+  .ag-meter::after,
+  .ag-card .ag-pill::before {
+    animation: none;
+  }
+
+  .ag-card:hover {
+    transform: none;
+  }
 }

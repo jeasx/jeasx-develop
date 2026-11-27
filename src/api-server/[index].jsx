@@ -55,7 +55,7 @@ export default function ({ request }) {
 
       <p>
         More on returning different kinds of responses in <a href="/response">Response objects</a>{" "}
-        and <a href="/negotiation">Content negotiation</a>.
+        and <a href="/response#content-negotiation">Content negotiation</a>.
       </p>
     </Layout>
   );

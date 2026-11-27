@@ -46,7 +46,8 @@ function PlanetsPage() {
     >
       <h1>Planets</h1>
       <p class="center">
-        Your browser asked for HTML. <a href="/negotiation">Try the other formats</a>.
+        Your browser asked for HTML.{" "}
+        <a href="/response#content-negotiation">Try the other formats</a>.
       </p>
       <table>
         <thead>

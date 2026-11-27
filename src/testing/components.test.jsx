@@ -1,7 +1,7 @@
 import { jsxToString } from "jsx-async-runtime";
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import Planets from "../negotiation/[planets]";
+import Planets from "../response/[planets]";
 import { Greeting, Price, UserCard } from "./components";
 
 describe("Greeting", () => {
@@ -51,12 +51,12 @@ describe("UserCard", () => {
   });
 });
 
-describe("Route /negotiation/planets", () => {
+describe("Route /response/planets", () => {
   // A route is a function: call it with fake request and reply objects.
   const call = (accept) => {
     const headers = {};
     const reply = { headers: (values) => Object.assign(headers, values) };
-    const request = { path: "/negotiation/planets", headers: { accept } };
+    const request = { path: "/response/planets", headers: { accept } };
     const context = { request, reply };
     return { response: Planets.call(context, { request, reply }), context, headers };
   };

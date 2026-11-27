@@ -29,6 +29,9 @@ export default function () {
               <a href={`#${id}`}>{title}</a>
             </li>
           ))}
+          <li>
+            <a href="#values">What else JSX renders</a>
+          </li>
         </ol>
       </nav>
 
@@ -36,11 +39,139 @@ export default function () {
         <Step number={index + 1} {...step} />
       ))}
 
+      <section id="values" class="step">
+        <h2>
+          <span class="step-number">{STEPS.length + 1}</span> What else JSX renders
+        </h2>
+        <p>
+          Besides strings, numbers and elements, the runtime renders many JavaScript values
+          directly, so you rarely have to convert data before putting it into markup.
+        </p>
+
+        <h3>Children</h3>
+
+        <Sample
+          title="Sets and other iterables"
+          render={() => (
+            <ul>
+              {new Set(["apple", "banana", "apple", "cherry"]).values().map((fruit) => (
+                <li>{fruit}</li>
+              ))}
+            </ul>
+          )}
+        >
+          Any iterable renders its items, e.g. a <code>Set</code>, a <code>Map</code> or an iterator
+          with helper methods like <code>.map()</code>. No need for <code>Array.from()</code>.
+        </Sample>
+
+        <Sample
+          title="Generators"
+          render={() => (
+            <ol>
+              <Fibonacci count={8} />
+            </ol>
+          )}
+        >
+          A generator function can be used as a component and yields its items one by one.
+        </Sample>
+
+        <Sample
+          title="Dates, URLs and errors"
+          render={() => (
+            <p>
+              Created at {new Date(Date.UTC(2026, 9, 30))}
+              <br />
+              Fetched from {new URL("https://www.jeasx.dev/?q=<jsx>")}
+              <br />
+              Failed with {new Error("Something went wrong")}
+            </p>
+          )}
+        >
+          Objects with their own <code>toString</code> render as escaped text.
+        </Sample>
+
+        <Sample
+          title="Bytes"
+          render={() => (
+            <pre>{Buffer.from("Bytes are decoded as UTF-8 text: ✓ <b>escaped</b>")}</pre>
+          )}
+        >
+          A <code>Uint8Array</code> or <code>Buffer</code> renders as UTF-8 text, e.g. a file read
+          with <code>fs.readFile()</code> or the bytes of a <code>fetch()</code> response.
+        </Sample>
+
+        <Sample
+          title="BigInts and zero"
+          render={() => (
+            <p>
+              {2n ** 64n} / {0}
+            </p>
+          )}
+        >
+          BigInts render as numbers, and <code>0</code> isn't swallowed like in other templating
+          languages.
+        </Sample>
+
+        <Sample
+          title="Functions and plain objects"
+          render={() => <p>{[[], () => "a function", { plain: "object" }]}</p>}
+        >
+          Like <code>null</code> and booleans, empty arrays, functions and plain objects render
+          nothing.
+        </Sample>
+
+        <h3>Attributes</h3>
+
+        <Sample
+          title="Objects and arrays as JSON"
+          render={() => (
+            <div data-config={{ theme: "dark", columns: 3 }} data-ids={[1, 2, 3]}>
+              Inspect me
+            </div>
+          )}
+        >
+          Plain objects and arrays are encoded as JSON, e.g. to pass data to client-side scripts.
+        </Sample>
+
+        <Sample
+          title="URLs and dates"
+          render={() => (
+            <a
+              // @ts-expect-error The runtime renders a URL via toString(), but the types expect a string.
+              href={new URL("/essentials", "https://expo.jeasx.dev")}
+              data-date={new Date(0)}
+            >
+              Download
+            </a>
+          )}
+        >
+          Values with their own <code>toString</code> use their string form.
+        </Sample>
+
+        <Sample
+          title="Skipped values"
+          render={() => (
+            <button
+              type="button"
+              // @ts-expect-error On purpose: functions are skipped, but the types expect a string.
+              onclick={() => alert("Hi")}
+              title={null}
+              disabled={false}
+              data-tags={new Set(["a", "b"])}
+            >
+              Click me
+            </button>
+          )}
+        >
+          Functions, <code>null</code>, <code>false</code> and objects without their own string form
+          (e.g. a <code>Set</code>) are skipped, so an event handler never prints its source code.
+        </Sample>
+      </section>
+
       <h2>Where to go next</h2>
       <p>
-        You now know the essentials. Dive deeper with <a href="/values">What JSX renders</a>,{" "}
-        <a href="/context">'this' as context</a>, <a href="/streaming">Streaming HTML</a> or{" "}
-        <a href="/testing">Unit tests</a>, or read the{" "}
+        You now know the essentials. Dive deeper with <a href="/context">'this' as context</a>,{" "}
+        <a href="/streaming">Streaming HTML</a> or <a href="/testing">Unit tests</a>, or read the{" "}
         <a href="https://github.com/jeasx/jsx-async-runtime">jsx-async-runtime documentation</a>.
       </p>
     </Layout>
@@ -491,6 +622,46 @@ const markup = await jsxToString(<Weather city="Paris" />);
  * @param {string} city
  */
 async function loadWeather(city) {
-  await new Promise((resolve) => setTimeout(resolve, 100));
+  await sleep(100);
   return { city, temperature: { Berlin: 12, Paris: 15 }[city] ?? 20 };
+}
+
+/**
+ * Renders the sample and shows the generated markup.
+ * `render` is called twice, as iterables like generators can be rendered only once.
+ */
+async function Sample({ title, render, children }) {
+  const markup = await jsxToString(render());
+  return (
+    <article class="sample">
+      <header>
+        <strong>{title}</strong>
+        <small>{children}</small>
+      </header>
+      <div class="step-output">
+        <div>
+          <span class="step-label">Result</span>
+          <div class="step-result">{render()}</div>
+        </div>
+        <div>
+          <span class="step-label">HTML</span>
+          <pre>
+            <code>{markup}</code>
+          </pre>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+function* Fibonacci({ count }) {
+  let [a, b] = [0, 1];
+  for (let i = 0; i < count; i++) {
+    yield <li>{a}</li>;
+    [a, b] = [b, a + b];
+  }
+}
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }

@@ -1,4 +1,6 @@
 @import "../@styles/card.css";
+@import "../@styles/buttons.css";
+@import "../@styles/table.css";
 
 /* Equal-height cards that wrap into as many columns as fit. */
 .response-grid {
@@ -60,4 +62,12 @@
   .response-card {
     transition: none;
   }
+}
+
+/* Presets wrap onto several lines with even spacing in both directions. */
+.presets {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
 }

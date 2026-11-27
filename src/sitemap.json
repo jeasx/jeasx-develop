@@ -10,13 +10,11 @@
     "topics": [
       {
         "title": "Server-side JSX",
-        "description": "Learn how JSX works on the server, where every component simply returns HTML. These examples show what you can put into JSX (text, numbers, arrays, even promises that resolve later), how to pass request data down to every component without prop drilling, how to reuse layouts with render props, how to cache the HTML of slow components, how to tweak the generated HTML globally, how to build web components with Shadow DOM, and how to test your components like plain functions.",
+        "description": "Learn how JSX works on the server, where every component simply returns HTML. These examples show what you can put into JSX (text, numbers, arrays, even promises that resolve later), how to pass request data down to every component without prop drilling, how to fill components with named slots and render props, how to cache the HTML of slow components, how to tweak the generated HTML globally, how to build web components with Shadow DOM, and how to test your components like plain functions.",
         "links": [
           { "path": "/essentials", "title": "JSX essentials" },
-          { "path": "/values", "title": "What JSX renders" },
           { "path": "/context", "title": "'this' as context" },
-          { "path": "/render-props", "title": "Render props" },
-          { "path": "/slots", "title": "Named slots" },
+          { "path": "/slots", "title": "Component slots" },
           { "path": "/component-cache", "title": "Component caching" },
           { "path": "/interceptor", "title": "Intercept JSX" },
           { "path": "/shadow-dom", "title": "Web components" },
@@ -28,12 +26,10 @@
         "description": "Slow data shouldn't make your visitors stare at a blank screen. With streaming, the browser receives and shows the parts of a page that are ready right away, while slower parts (like a sluggish API) follow as soon as they arrive. These examples show different strategies: loading several sources at once, filling placeholders in any order, loading content only when it scrolls into view, and streaming from async iterables or a ReadableStream.",
         "links": [
           { "path": "/parallel", "title": "Parallel loading" },
-          { "path": "/aggregator", "title": "API aggregator" },
           { "path": "/streaming", "title": "Streaming HTML" },
           { "path": "/out-of-order", "title": "Slotted streaming" },
           { "path": "/lazy-load", "title": "Lazy loading" },
-          { "path": "/readable-stream", "title": "ReadableStreams" },
-          { "path": "/async-iterable", "title": "Async iterables" },
+          { "path": "/async-iterable", "title": "Streams and iterables" },
           { "path": "/mandelbrot", "title": "Mandelbrot explorer" }
         ]
       },
@@ -83,6 +79,7 @@
           { "path": "/wizard", "title": "Flight booking" },
           { "path": "/mdx", "title": "Cookbook" },
           { "path": "/repositories", "title": "GitHub repos" },
+          { "path": "/sqlite", "title": "SQLite CRUD" },
           { "path": "/ab-testing", "title": "A/B testing" },
           { "path": "/i18n", "title": "Internationalization" }
         ]
@@ -99,7 +96,6 @@
           { "path": "/upload", "title": "Image upload" },
           { "path": "/sse", "title": "Server-Sent Events" },
           { "path": "/websocket", "title": "WebSocket" },
-          { "path": "/negotiation", "title": "Content negotiation" },
           { "path": "/response", "title": "Response objects" },
           { "path": "/api-server", "title": "JSON API" }
         ]
@@ -115,8 +111,7 @@
           { "path": "/cap", "title": "Bot protection" },
           { "path": "/rate-limit", "title": "Rate limiting" },
           { "path": "/error-handler", "title": "Error boundaries" },
-          { "path": "/prettier", "title": "Prettify HTML" },
-          { "path": "/cheerio", "title": "Extract styles" },
+          { "path": "/post-processing", "title": "Post-process HTML" },
           { "path": "/head", "title": "Merge head tags" }
         ]
       }

@@ -1,5 +1,5 @@
 /* Hero: a short pitch with a glowing backdrop. */
-.cheerio-hero {
+.pp-hero {
   position: relative;
   padding: 2.5rem 1.5rem;
   margin-bottom: 2rem;
@@ -18,11 +18,11 @@
     );
   border: var(--border-width) solid var(--border);
 }
-.cheerio-hero h1 {
+.pp-hero h1 {
   margin-bottom: 0.75rem;
 }
 /* Three steps of the pipeline, connected by arrows on wide screens. */
-.cheerio-steps {
+.pp-steps {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(14rem, 100%), 1fr));
   gap: 1rem;
@@ -31,7 +31,7 @@
   list-style: none;
   counter-reset: step;
 }
-.cheerio-steps li {
+.pp-steps li {
   position: relative;
   margin: 0;
   padding: 1.25rem;
@@ -43,11 +43,11 @@
     transform 0.2s,
     border-color 0.2s;
 }
-.cheerio-steps li:hover {
+.pp-steps li:hover {
   transform: translateY(-3px);
   border-color: var(--primary);
 }
-.cheerio-steps li::before {
+.pp-steps li::before {
   content: counter(step);
   display: inline-grid;
   place-items: center;
@@ -59,12 +59,12 @@
   color: var(--primary-inverse);
   font-weight: 700;
 }
-.cheerio-steps strong {
+.pp-steps strong {
   display: block;
   margin-bottom: 0.25rem;
   color: var(--heading);
 }
-.cheerio-steps span {
+.pp-steps span {
   color: var(--muted);
   font-size: 0.9rem;
 }
@@ -123,10 +123,10 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .cheerio-steps li {
+  .pp-steps li {
     transition: none;
   }
-  .cheerio-steps li:hover {
+  .pp-steps li:hover {
     transform: none;
   }
 }
