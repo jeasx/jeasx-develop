@@ -1,44 +1,35 @@
 /** @jsxImportSource react */
-import { useEffect, useState } from "react";
-import { loadSession, saveSession } from "../session";
-import { MAX_ITEMS, MAX_LENGTH, update } from "../shopping";
+import { useState } from "react";
+import { submitForm } from "../form";
+import { MAX_ITEMS, MAX_LENGTH, reduceForm } from "../shopping";
 
-/** The same list as React component: rendered on the server, then hydrated in the browser. */
+/**
+ * The same list as React component: rendered on the server from the cookie, then hydrated.
+ * Without JavaScript, the form posts to the server like the Jeasx version.
+ */
 export default function ShoppingList({ initial }) {
   const [items, setItems] = useState(initial);
-  const [text, setText] = useState("");
-  // Hydrate with the list of the server, then switch to the one saved in this session.
-  useEffect(() => {
-    const saved = loadSession("react");
-    if (saved) setItems(saved);
-  }, []);
-  // State updaters must be pure, so the list is saved here, not inside setItems.
-  const change = (action, id) => {
-    const next = update(items, { action, id, text });
-    setItems(next);
-    saveSession("react", next);
-  };
   const done = items.filter((item) => item.done).length;
 
   return (
     <form
       className="fw-list"
-      onSubmit={(event) => {
-        event.preventDefault();
-        change("add");
-        setText("");
-      }}
+      method="post"
+      action="/showdown/list"
+      onSubmit={(event) => setItems(reduceForm(items, submitForm(event)))}
     >
+      <input type="hidden" name="framework" value="react" />
       <div className="fw-add">
         <input
+          name="text"
           placeholder="Add an item"
           maxLength={MAX_LENGTH}
           aria-label="New item"
-          value={text}
-          onChange={(event) => setText(event.target.value)}
           disabled={items.length >= MAX_ITEMS}
         />
-        <button>Add</button>
+        <button name="add" value="1">
+          Add
+        </button>
       </div>
       <p className="fw-count">
         {done} of {items.length} done
@@ -46,31 +37,21 @@ export default function ShoppingList({ initial }) {
       <ul>
         {items.map((item) => (
           <li key={item.id} className={item.done ? "fw-done" : ""}>
-            <button
-              type="button"
-              className="fw-check"
-              aria-pressed={item.done}
-              onClick={() => change("toggle", item.id)}
-            >
+            <button name="toggle" value={item.id} className="fw-check" aria-pressed={item.done}>
               {item.text}
             </button>
             <button
-              type="button"
+              name="remove"
+              value={item.id}
               className="fw-remove"
               aria-label={`Remove ${item.text}`}
-              onClick={() => change("remove", item.id)}
             >
               ×
             </button>
           </li>
         ))}
       </ul>
-      <button
-        type="button"
-        className="fw-clear"
-        disabled={done === 0}
-        onClick={() => change("clear")}
-      >
+      <button name="clear" value="1" className="fw-clear" disabled={done === 0}>
         Clear done
       </button>
     </form>

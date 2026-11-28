@@ -1,26 +1,24 @@
 import Alpine from "alpinejs";
-import { loadSession, saveSession } from "../session";
-import { INITIAL, MAX_ITEMS, update } from "../shopping";
+import { submitForm } from "../form";
+import { MAX_ITEMS, reduceForm } from "../shopping";
 
-// The same list as Alpine component: the markup comes from the server ("./AlpineList.jsx"),
-// the state and the logic from here.
-Alpine.data("shoppingList", () => ({
-  items: loadSession("alpine") ?? INITIAL,
-  text: "",
+// The same list as Alpine component: the markup and the items of the cookie come from the
+// server ("./AlpineList.jsx"), the logic from here. Submits are taken over like for the
+// other versions ("../form.js").
+Alpine.data("shoppingList", (initial) => ({
+  items: initial,
+  init() {
+    // Alpine renders the items from its template, so the server copy has to go.
+    this.$el.querySelectorAll("[data-ssr]").forEach((element) => element.remove());
+  },
   get done() {
     return this.items.filter((item) => item.done).length;
   },
   get full() {
     return this.items.length >= MAX_ITEMS;
   },
-  change(action, id) {
-    this.items = update(this.items, { action, id, text: this.text });
-    saveSession("alpine", this.items);
-  },
-  add(event) {
-    event.preventDefault();
-    this.change("add");
-    this.text = "";
+  submit(event) {
+    this.items = reduceForm(this.items, submitForm(event));
   },
 }));
 

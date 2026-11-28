@@ -1,21 +1,19 @@
-// Loads the bundle of each card and measures it: its size and the time from navigation
-// until the list is handled in the browser.
+// Loads the bundle of each card and shows its size in the badge of the card.
 
 // Reuse the cache buster of this script (e.g. "?v=abc") for the bundles.
 const VERSION = new URL(import.meta.url).search;
 
-document.querySelectorAll(".fw-card[data-way]").forEach(async (card) => {
+document.querySelectorAll(".fw-card[data-framework]").forEach(async (card) => {
   if (!(card instanceof HTMLElement)) return;
   // A path in a variable, so esbuild doesn't inline the bundle into this loader.
-  const url = `/showdown/${card.dataset.way}/index.js${VERSION}`;
+  const url = `/showdown/${card.dataset.framework}/index.js${VERSION}`;
   try {
     const module = await import(url);
     module.start(card.querySelector("[data-root]") ?? card);
-    show(card, "[data-ready]", `${Math.round(performance.now())} ms`);
     show(card, "[data-size]", kb(await measure(url)));
   } catch (error) {
     console.error(error);
-    show(card, "[data-ready]", "failed to load");
+    show(card, "[data-size]", "failed");
   }
 });
 
@@ -35,7 +33,7 @@ async function measure(url) {
 
 /** @param {number} bytes */
 function kb(bytes) {
-  return `${(bytes / 1024).toFixed(0)} KB`;
+  return `${(bytes / 1024).toFixed(0)} KB JS`;
 }
 
 function show(card, selector, text) {

@@ -7,34 +7,29 @@ html {
 }
 
 /* One colour per version, used by its card, checkboxes and buttons. */
-[data-way="jeasx"] {
+[data-framework="jeasx"] {
   --fw: #00e8ff;
 }
-[data-way="htmx"] {
-  --fw: #6d8bff;
-}
-[data-way="react"] {
-  --fw: #f472b6;
-}
-[data-way="lit"] {
-  --fw: #fbbf24;
-}
-[data-way="preact"] {
+[data-framework="preact"] {
   --fw: #a78bfa;
 }
-[data-way="alpine"] {
+[data-framework="lit"] {
+  --fw: #fbbf24;
+}
+[data-framework="htmx"] {
+  --fw: #6d8bff;
+}
+[data-framework="alpine"] {
   --fw: #2dd4bf;
 }
-[data-way="vue"] {
+[data-framework="vue"] {
   --fw: #a3e635;
 }
-[data-way="svelte"] {
+[data-framework="svelte"] {
   --fw: #fb923c;
 }
-
-/* Hides the Alpine template until Alpine has filled it. */
-[x-cloak] {
-  display: none !important;
+[data-framework="react"] {
+  --fw: #f472b6;
 }
 
 .fw-title span {
@@ -70,11 +65,11 @@ html {
   }
 }
 
-/* Each card spans four rows of the grid (heading, description, stats, list) and shares them
+/* Each card spans three rows of the grid (heading, description, list) and shares them
    with its neighbours, so the input fields, counts and buttons of all cards line up. */
 .fw-card {
   display: grid;
-  grid-row: span 4;
+  grid-row: span 3;
   grid-template-rows: subgrid;
   row-gap: 1rem;
   position: relative;
@@ -125,16 +120,15 @@ html {
   gap: 0.5rem;
 }
 
-/* Where the list is saved: "cookie" or "session". */
-.fw-state {
-  border: 1px solid color-mix(in srgb, var(--fw) 40%, transparent);
+/* The JavaScript of the version, filled in by the loader ("./index.js"). */
+.fw-size {
   border-radius: 999px;
-  padding: 0.15rem 0.6rem;
+  background: color-mix(in srgb, var(--fw) 15%, transparent);
+  padding: 0.2rem 0.7rem;
   color: var(--fw);
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  font-size: 0.8rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
 
@@ -145,40 +139,10 @@ html {
   line-height: 1.5;
 }
 
-.fw-stats {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.5rem;
-  margin: 0;
-
-  & > div {
-    border-radius: 0.6rem;
-    background: color-mix(in srgb, var(--fw) 8%, transparent);
-    padding: 0.5rem 0.75rem;
-  }
-  & dt {
-    color: var(--muted);
-    font-size: 0.7rem;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-  }
-  & dd {
-    margin: 0;
-    font-weight: 700;
-    font-variant-numeric: tabular-nums;
-  }
-}
-
-/* The wrappers of the browser-rendered lists pass the full height on to the list. */
+/* The wrappers of the framework lists pass the full height on to the list. */
 .fw-card [data-root] {
   display: flex;
   flex-direction: column;
-}
-
-/* Reserve the space of the Lit and Alpine lists until their bundles render them. */
-shopping-list,
-[data-way="alpine"] [data-root] {
-  min-height: 18rem;
 }
 
 /* The items take the remaining space, so "Clear done" sits at the bottom of every card. */

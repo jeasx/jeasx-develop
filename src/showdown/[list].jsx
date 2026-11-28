@@ -1,12 +1,12 @@
 import formBody from "../@helpers/formBody";
 import ServerList from "./ServerList";
 import { reduceForm } from "./shopping";
-import { loadItems, saveItems } from "./store";
+import { loadItems, saveItems, FRAMEWORKS } from "./store";
 
 /**
- * Handles the forms of the Jeasx and HTMX versions. The pressed button names the action.
- * The Jeasx version renders in the browser and only needs the save, HTMX gets the updated
- * list as a fragment, and a plain form submit (without JavaScript) a redirect back to the page.
+ * Handles the forms of all versions. The pressed button names the action.
+ * Versions which render in the browser only need the save, HTMX gets the updated list as
+ * a fragment, and a plain form submit (without JavaScript) a redirect back to the page.
  *
  * @param {import("../types").RouteProps} props
  */
@@ -15,9 +15,12 @@ export default function ({ request, reply }) {
     return reply.redirect("/showdown", 303);
   }
   const body = formBody(request);
-  const way = body.way === "htmx" ? "htmx" : "jeasx";
-  const items = reduceForm(loadItems(request, way), body);
-  saveItems(reply, way, items);
+  const framework = FRAMEWORKS.find((name) => name === body.framework);
+  if (!framework) {
+    return reply.redirect("/showdown", 303);
+  }
+  const items = reduceForm(loadItems(request, framework), body);
+  saveItems(reply, framework, items);
 
   // The browser already rendered the change itself, it only needs the cookie.
   if (request.headers.accept?.includes("application/json")) {
@@ -25,7 +28,7 @@ export default function ({ request, reply }) {
   }
   if (request.headers["hx-request"]) {
     reply.header("cache-control", "private, no-store");
-    return <ServerList way={way} items={items} />;
+    return <ServerList framework="htmx" items={items} />;
   }
-  return reply.redirect(`/showdown#${way}`, 303);
+  return reply.redirect(`/showdown#${framework}`, 303);
 }

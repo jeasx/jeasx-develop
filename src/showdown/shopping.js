@@ -41,7 +41,7 @@ export function update(items, { action, id, text = "" }) {
 
 /**
  * Applies a submitted list form: the pressed button names the action, its value the item id.
- * The server runs it for posted forms, the Jeasx version also in the browser.
+ * The server runs it for posted forms, every version also in the browser for its own updates.
  *
  * @param {Item[]} items
  * @param {Record<string, unknown>} input

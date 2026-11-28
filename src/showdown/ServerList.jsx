@@ -4,24 +4,24 @@
 import { MAX_ITEMS, MAX_LENGTH } from "./shopping";
 
 /**
- * @param {{ way: "jeasx" | "htmx", items: import("./shopping").Item[] }} props
+ * @param {{ framework: "jeasx" | "htmx", items: import("./shopping").Item[] }} props
  */
-export default function ServerList({ way, items }) {
+export default function ServerList({ framework, items }) {
   const done = items.filter((item) => item.done).length;
-  const htmx = way === "htmx" ? { "hx-post": "/showdown/list", "hx-swap": "outerHTML" } : {};
+  const htmx = framework === "htmx" ? { "hx-post": "/showdown/list", "hx-swap": "outerHTML" } : {};
   return (
     <form
       class="fw-list"
-      id={`${way}-list`}
+      id={`${framework}-list`}
       method="post"
       action="/showdown/list"
-      data-state={way === "jeasx" ? JSON.stringify(items) : undefined}
+      data-state={framework === "jeasx" ? JSON.stringify(items) : undefined}
       {...htmx}
     >
-      <input type="hidden" name="way" value={way} />
+      <input type="hidden" name="framework" value={framework} />
       <div class="fw-add">
         <input
-          id={`${way}-text`}
+          id={`${framework}-text`}
           name="text"
           placeholder="Add an item"
           maxlength={MAX_LENGTH}
@@ -41,7 +41,7 @@ export default function ServerList({ way, items }) {
         {items.map((item) => (
           <li class={item.done ? "fw-done" : ""}>
             <button
-              id={`${way}-toggle-${item.id}`}
+              id={`${framework}-toggle-${item.id}`}
               name="toggle"
               value={item.id}
               class="fw-check"
@@ -50,7 +50,7 @@ export default function ServerList({ way, items }) {
               {item.text}
             </button>
             <button
-              id={`${way}-remove-${item.id}`}
+              id={`${framework}-remove-${item.id}`}
               name="remove"
               value={item.id}
               class="fw-remove"

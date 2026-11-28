@@ -8,7 +8,7 @@ import { reduceForm } from "../shopping";
 export function start() {
   mount({
     root: "#jeasx-list",
-    View: (items) => <ServerList way="jeasx" items={items} />,
+    View: (items) => <ServerList framework="jeasx" items={items} />,
     reduce: reduceForm,
     persist: postForm,
   });
