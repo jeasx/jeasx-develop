@@ -1,0 +1,123 @@
+/* Jump straight to the image after switching angle or quality, instead of animating. */
+html {
+  scroll-behavior: auto;
+}
+
+.rt-studio {
+  /* Clears the sticky site header. */
+  scroll-margin-top: 5rem;
+  --rt-line: rgb(255 255 255 / 0.08);
+  --progress: 0;
+
+  margin-bottom: 2rem;
+  border: 1px solid transparent;
+  border-radius: calc(var(--radius) * 4);
+  background:
+    linear-gradient(#0b0d15, #0b0d15) padding-box,
+    linear-gradient(135deg, var(--primary), #6d5dfc 50%, #22d3c5) border-box;
+  box-shadow: 0 1.5rem 4rem -1.5rem rgb(237 42 172 / 0.35);
+  overflow: hidden;
+}
+
+.rt-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.75rem;
+  border-bottom: 1px solid var(--rt-line);
+  padding: 0.6rem;
+}
+
+.rt-pills {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  border: 1px solid var(--rt-line);
+  border-radius: 999px;
+  padding: 0.2rem;
+
+  & a,
+  & span {
+    border-radius: 999px;
+    padding: 0.25rem 0.85rem;
+    color: var(--color);
+    font-size: 0.85rem;
+    font-variant-numeric: tabular-nums;
+    text-decoration: none;
+  }
+
+  & a:hover {
+    color: var(--heading);
+  }
+
+  & a[aria-current] {
+    background: linear-gradient(135deg, var(--primary), #6d5dfc);
+    color: #fff;
+  }
+}
+
+.rt-progress {
+  height: 2px;
+
+  & span {
+    display: block;
+    transform: scaleX(var(--progress));
+    transform-origin: left;
+    transition: transform 0.15s;
+    background: linear-gradient(90deg, var(--primary), #22d3c5);
+    height: 100%;
+  }
+}
+
+/* Tiles land in their grid cell in any order; empty cells show a faint pattern. */
+.rt-canvas {
+  display: grid;
+  grid-template-rows: repeat(var(--rows), 1fr);
+  grid-template-columns: repeat(var(--columns), 1fr);
+  background:
+    linear-gradient(var(--rt-line) 1px, transparent 1px) 0 0 / calc(100% / var(--columns))
+      calc(100% / var(--rows)),
+    linear-gradient(90deg, var(--rt-line) 1px, transparent 1px) 0 0 / calc(100% / var(--columns))
+      calc(100% / var(--rows)),
+    #07080d;
+
+  & img {
+    display: block;
+    animation: rt-reveal 0.35s ease-out;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+@keyframes rt-reveal {
+  from {
+    filter: brightness(2.5);
+  }
+}
+
+.rt-hud {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+  margin: 0;
+  border-top: 1px solid var(--rt-line);
+
+  & div {
+    padding: 0.6rem 0.9rem;
+  }
+
+  & dt {
+    opacity: 0.6;
+    font-size: 0.75rem;
+  }
+
+  & dd {
+    margin: 0;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* "tracing…" until the time arrives at the end of the stream. */
+.rt-busy:has(+ .rt-done) {
+  display: none;
+}

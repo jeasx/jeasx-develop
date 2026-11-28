@@ -30,7 +30,8 @@
           { "path": "/out-of-order", "title": "Slotted streaming" },
           { "path": "/lazy-load", "title": "Lazy loading" },
           { "path": "/async-iterable", "title": "Streams and iterables" },
-          { "path": "/mandelbrot", "title": "Mandelbrot explorer" }
+          { "path": "/mandelbrot", "title": "Mandelbrot explorer" },
+          { "path": "/raytracer", "title": "Live ray tracer" }
         ]
       },
       {
