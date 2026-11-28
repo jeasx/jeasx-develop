@@ -1,12 +1,23 @@
 /** @jsxImportSource react */
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { loadSession, saveSession } from "../session";
 import { MAX_ITEMS, MAX_LENGTH, update } from "../shopping";
 
 /** The same list as React component: rendered on the server, then hydrated in the browser. */
 export default function ShoppingList({ initial }) {
   const [items, setItems] = useState(initial);
   const [text, setText] = useState("");
-  const change = (action, id) => setItems((current) => update(current, { action, id, text }));
+  // Hydrate with the list of the server, then switch to the one saved in this session.
+  useEffect(() => {
+    const saved = loadSession("react");
+    if (saved) setItems(saved);
+  }, []);
+  // State updaters must be pure, so the list is saved here, not inside setItems.
+  const change = (action, id) => {
+    const next = update(items, { action, id, text });
+    setItems(next);
+    saveSession("react", next);
+  };
   const done = items.filter((item) => item.done).length;
 
   return (

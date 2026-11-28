@@ -12,7 +12,7 @@ import { loadItems, saveItems } from "./store";
  */
 export default function ({ request, reply }) {
   if (request.method !== "POST") {
-    return reply.redirect("/four-ways", 303);
+    return reply.redirect("/showdown", 303);
   }
   const body = formBody(request);
   const way = body.way === "htmx" ? "htmx" : "jeasx";
@@ -27,5 +27,5 @@ export default function ({ request, reply }) {
     reply.header("cache-control", "private, no-store");
     return <ServerList way={way} items={items} />;
   }
-  return reply.redirect(`/four-ways#${way}`, 303);
+  return reply.redirect(`/showdown#${way}`, 303);
 }

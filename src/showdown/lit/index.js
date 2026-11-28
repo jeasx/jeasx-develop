@@ -1,4 +1,6 @@
 import { LitElement, html } from "lit";
+import { repeat } from "lit/directives/repeat.js";
+import { loadSession, saveSession } from "../session";
 import { INITIAL, MAX_ITEMS, MAX_LENGTH, update } from "../shopping";
 
 /** The same list as Lit web component. It renders in the browser only. */
@@ -7,7 +9,7 @@ class ShoppingList extends LitElement {
 
   constructor() {
     super();
-    this.items = INITIAL;
+    this.items = loadSession("lit") ?? INITIAL;
   }
 
   // Render into the light DOM, so the page styles apply like for the other versions.
@@ -17,13 +19,14 @@ class ShoppingList extends LitElement {
 
   change(action, id, text) {
     this.items = update(this.items, { action, id, text });
+    saveSession("lit", this.items);
   }
 
   add(event) {
     event.preventDefault();
-    const input = this.querySelector("input");
-    this.change("add", undefined, input.value);
-    input.value = "";
+    const form = event.currentTarget;
+    this.change("add", undefined, String(new FormData(form).get("text") ?? ""));
+    form.reset();
   }
 
   render() {
@@ -32,6 +35,7 @@ class ShoppingList extends LitElement {
       <form class="fw-list" @submit=${this.add}>
         <div class="fw-add">
           <input
+            name="text"
             placeholder="Add an item"
             maxlength=${MAX_LENGTH}
             aria-label="New item"
@@ -41,7 +45,9 @@ class ShoppingList extends LitElement {
         </div>
         <p class="fw-count">${done} of ${this.items.length} done</p>
         <ul>
-          ${this.items.map(
+          ${repeat(
+            this.items,
+            (item) => item.id,
             (item) => html`
               <li class=${item.done ? "fw-done" : ""}>
                 <button

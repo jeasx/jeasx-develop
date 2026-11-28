@@ -8,19 +8,20 @@ import { MAX_ITEMS, MAX_LENGTH } from "./shopping";
  */
 export default function ServerList({ way, items }) {
   const done = items.filter((item) => item.done).length;
-  const htmx = way === "htmx" ? { "hx-post": "/four-ways/list", "hx-swap": "outerHTML" } : {};
+  const htmx = way === "htmx" ? { "hx-post": "/showdown/list", "hx-swap": "outerHTML" } : {};
   return (
     <form
       class="fw-list"
       id={`${way}-list`}
       method="post"
-      action="/four-ways/list"
+      action="/showdown/list"
       data-state={way === "jeasx" ? JSON.stringify(items) : undefined}
       {...htmx}
     >
       <input type="hidden" name="way" value={way} />
       <div class="fw-add">
         <input
+          id={`${way}-text`}
           name="text"
           placeholder="Add an item"
           maxlength={MAX_LENGTH}
@@ -32,6 +33,7 @@ export default function ServerList({ way, items }) {
           Add
         </button>
       </div>
+      {/* The ids of the controls let htmx restore the focus after a swap; Jeasx finds it by name. */}
       <p class="fw-count">
         {done} of {items.length} done
       </p>
@@ -39,6 +41,7 @@ export default function ServerList({ way, items }) {
         {items.map((item) => (
           <li class={item.done ? "fw-done" : ""}>
             <button
+              id={`${way}-toggle-${item.id}`}
               name="toggle"
               value={item.id}
               class="fw-check"
@@ -47,6 +50,7 @@ export default function ServerList({ way, items }) {
               {item.text}
             </button>
             <button
+              id={`${way}-remove-${item.id}`}
               name="remove"
               value={item.id}
               class="fw-remove"

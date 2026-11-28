@@ -144,7 +144,7 @@
           { "path": "/lit", "title": "Lit" },
           { "path": "/alpine", "title": "Alpine.js" },
           { "path": "/islands", "title": "Mixed islands" },
-          { "path": "/four-ways", "title": "Same app, 4 ways" }
+          { "path": "/showdown", "title": "Showdown" }
         ]
       }
     ]

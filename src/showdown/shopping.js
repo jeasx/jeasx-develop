@@ -1,5 +1,5 @@
-// The logic of the shopping list, shared by all four versions: the server runs it for
-// Jeasx and HTMX, the browser for React and Lit. It has no imports, so it fits everywhere.
+// The logic of the shopping list, shared by all eight versions: the server runs it for the
+// posted forms, the browser for every client-side update. It has no imports, so it fits everywhere.
 
 /** @typedef {{ id: number, text: string, done: boolean }} Item */
 

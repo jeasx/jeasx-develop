@@ -2,10 +2,10 @@
 import { readListCookie, writeListCookie } from "../@helpers/cookies";
 import { INITIAL, MAX_ITEMS, MAX_LENGTH } from "./shopping";
 
-const PATH = "/four-ways";
+const PATH = "/showdown";
 
 /** @param {"jeasx" | "htmx"} way */
-const cookieName = (way) => `four-ways-${way}`;
+const cookieName = (way) => `showdown-${way}`;
 
 /**
  * Only valid items are kept, as the cookie could hold a signed value of another example.
@@ -37,4 +37,4 @@ export function saveItems(reply, way, items) {
 }
 
 /** Set while the page simulates a browser without JavaScript (see "./[nojs].js"). */
-export const NO_JS_COOKIE = "four-ways-nojs";
+export const NO_JS_COOKIE = "showdown-nojs";

@@ -9,10 +9,10 @@ import { NO_JS_COOKIE } from "./store";
 export default function ({ request, reply }) {
   if (request.method === "POST") {
     if (request.cookies[NO_JS_COOKIE]) {
-      reply.clearCookie(NO_JS_COOKIE, { path: "/four-ways" });
+      reply.clearCookie(NO_JS_COOKIE, { path: "/showdown" });
     } else {
-      reply.setCookie(NO_JS_COOKIE, "1", { path: "/four-ways" });
+      reply.setCookie(NO_JS_COOKIE, "1", { path: "/showdown" });
     }
   }
-  return reply.redirect("/four-ways", 303);
+  return reply.redirect("/showdown", 303);
 }

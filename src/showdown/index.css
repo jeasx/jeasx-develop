@@ -19,9 +19,36 @@ html {
 [data-way="lit"] {
   --fw: #fbbf24;
 }
+[data-way="preact"] {
+  --fw: #a78bfa;
+}
+[data-way="alpine"] {
+  --fw: #2dd4bf;
+}
+[data-way="vue"] {
+  --fw: #a3e635;
+}
+[data-way="svelte"] {
+  --fw: #fb923c;
+}
+
+/* Hides the Alpine template until Alpine has filled it. */
+[x-cloak] {
+  display: none !important;
+}
 
 .fw-title span {
-  background: linear-gradient(90deg, #00e8ff, #fbbf24, #6d8bff, #f472b6);
+  background: linear-gradient(
+    90deg,
+    #00e8ff,
+    #a78bfa,
+    #fbbf24,
+    #6d8bff,
+    #2dd4bf,
+    #a3e635,
+    #fb923c,
+    #f472b6
+  );
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -34,12 +61,12 @@ html {
 
 .fw-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1fr;
   gap: 1.25rem;
   margin: 2rem 0;
 
-  @media (max-width: 40rem) {
-    grid-template-columns: 1fr;
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
@@ -91,6 +118,26 @@ html {
   }
 }
 
+.fw-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Where the list is saved: "cookie" or "session". */
+.fw-state {
+  border: 1px solid color-mix(in srgb, var(--fw) 40%, transparent);
+  border-radius: 999px;
+  padding: 0.15rem 0.6rem;
+  color: var(--fw);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
 .fw-how {
   margin: 0;
   color: var(--muted);
@@ -100,7 +147,7 @@ html {
 
 .fw-stats {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 0.5rem;
   margin: 0;
 
@@ -122,14 +169,15 @@ html {
   }
 }
 
-/* The wrappers of the React and Lit lists pass the full height on to the list. */
+/* The wrappers of the browser-rendered lists pass the full height on to the list. */
 .fw-card [data-root] {
   display: flex;
   flex-direction: column;
 }
 
-/* Reserve the space of the Lit list until its bundle defines the element. */
-shopping-list {
+/* Reserve the space of the Lit and Alpine lists until their bundles render them. */
+shopping-list,
+[data-way="alpine"] [data-root] {
   min-height: 18rem;
 }
 

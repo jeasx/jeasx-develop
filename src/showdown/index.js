@@ -7,11 +7,11 @@ const VERSION = new URL(import.meta.url).search;
 document.querySelectorAll(".fw-card[data-way]").forEach(async (card) => {
   if (!(card instanceof HTMLElement)) return;
   // A path in a variable, so esbuild doesn't inline the bundle into this loader.
-  const url = `/four-ways/${card.dataset.way}/index.js${VERSION}`;
+  const url = `/showdown/${card.dataset.way}/index.js${VERSION}`;
   try {
     const module = await import(url);
     module.start(card.querySelector("[data-root]") ?? card);
-    show(card, "[data-ready]", `after ${Math.round(performance.now())} ms`);
+    show(card, "[data-ready]", `${Math.round(performance.now())} ms`);
     show(card, "[data-size]", kb(await measure(url)));
   } catch (error) {
     console.error(error);
