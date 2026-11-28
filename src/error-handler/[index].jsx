@@ -1,3 +1,4 @@
+import { html } from "jsx-async-runtime";
 import Layout from "../Layout";
 import { ErrorBoundary } from "./ErrorBoundary";
 import Parallel from "./Parallel";
@@ -22,8 +23,8 @@ const SCENARIOS = [
     id: "uncaught",
     title: "Error while streaming, uncaught",
     description:
-      "The same component without a boundary. Status and headers are already sent, so the page simply ends where the error happened.",
-    result: "Truncated page",
+      "The same component without a boundary. Status and headers are already sent, so the page ends where the error happened. A small script notices the missing end of the page and shows a message.",
+    result: "Client-side notice",
   },
 ];
 
@@ -52,6 +53,21 @@ export default async function (props) {
       description="Catch errors at runtime: Fastify's error handler before streaming, error boundaries with fallbacks, retries and timeouts while the page streams on."
       css="/error-handler/index.css"
     >
+      {/*
+        Notices a page that broke off, e.g. after an uncaught error while streaming. It is an
+        inline script at the top, because Safari aborts a broken document: deferred and module
+        scripts never run there, but readystatechange still fires once parsing has stopped.
+      */}
+      <script>
+        {html(/*js*/ `document.addEventListener("readystatechange", () => {
+  if (document.readyState === "loading" || document.getElementById("eof")) return;
+  if (document.querySelector("[data-eof-alert]")) return;
+  document.querySelector("main")?.insertAdjacentHTML(
+    "beforeend",
+    '<p class="alert alert-warning eof-alert" role="alert" data-eof-alert><strong class="alert-title">Page incomplete</strong>The connection broke off before the page was fully loaded. <a href="">Reload</a></p>',
+  );
+});`)}
+      </script>
       <h1>Catch errors at runtime</h1>
       <p class="lead">
         Jeasx streams markup by default. Errors that happen before the first chunk is sent are
@@ -100,7 +116,7 @@ export default async function (props) {
                 <Comments />
               </ErrorBoundary>
               <p>
-                <a href="?">Reset</a>
+                <a href="">Reload</a>
               </p>
             </section>
           )}
@@ -183,6 +199,8 @@ export default async function (props) {
           </ErrorBoundary>
         </>
       )}
+      {/* End marker: the script above shows a notice if the page broke off before it. */}
+      <template id="eof"></template>
     </Layout>
   );
 }

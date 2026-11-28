@@ -77,3 +77,24 @@
 .eb-elapsed {
   margin-top: 1rem;
 }
+
+/* Client-side notice for a page that broke off: fixed at the bottom, apart from the page content. */
+.eof-alert {
+  position: fixed;
+  inset: auto 1rem 1rem;
+  max-width: 40rem;
+  margin: 0 auto;
+  padding-left: 3.25rem;
+  background: var(--warning-hover);
+  color: #1a1300;
+  box-shadow: 0 0.5rem 2rem rgb(0 0 0 / 0.5);
+}
+.eof-alert::before {
+  content: "⚠";
+  position: absolute;
+  top: 50%;
+  left: 1rem;
+  translate: 0 -50%;
+  font-size: 1.5rem;
+  line-height: 1;
+}
