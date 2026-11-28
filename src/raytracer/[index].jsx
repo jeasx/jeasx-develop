@@ -1,7 +1,7 @@
 import { html } from "jsx-async-runtime";
 import Layout from "../Layout";
-import { encodePng } from "./png";
-import { HEIGHT, TILE, WIDTH, parseView, renderTile, tiles } from "./tracer";
+import { THREADS, traceTile } from "./pool";
+import { HEIGHT, TILE, WIDTH, parseView, tiles } from "./tracer";
 
 const QUALITY = [
   { samples: 1, name: "Draft" },
@@ -14,11 +14,14 @@ const QUALITY = [
  * @param {import("../types").RouteProps} props
  */
 export default function ({ request }) {
-  const view = parseView(/** @type {Record<string, string>} */ (request.query));
+  const query = /** @type {Record<string, string>} */ (request.query);
+  const view = parseView(query);
+  // "browser" traces the image in Web Workers instead of on the server.
+  const workers = query.renderer === "browser";
   const link = (change) => {
-    const { angle, samples } = { ...view, ...change };
+    const { angle, samples, browser } = { ...view, browser: workers, ...change };
     // The anchor brings the reloaded page back to the image instead of the top.
-    return `?angle=${angle}&samples=${samples}#studio`;
+    return `?angle=${angle}&samples=${samples}${browser ? "&renderer=browser" : ""}#studio`;
   };
   const start = Date.now();
 
@@ -27,6 +30,7 @@ export default function ({ request }) {
       title="Live ray tracer"
       description="A ray tracer running on the server, streaming every finished tile as a PNG."
       css="/raytracer/index.css"
+      script="/raytracer/index.js"
     >
       <h1>Live ray tracer</h1>
       <p class="lead">
@@ -39,12 +43,19 @@ export default function ({ request }) {
         spheres and the sheet, and a lens flare with ghosts and streaks completes the view.
       </p>
       <p>
-        An <code>async function*</code> component traces the image in {TILE}×{TILE} pixel tiles,
-        spiralling outwards from the center. Every finished tile is encoded as a PNG with nothing
-        but <code>node:zlib</code> and streamed right away as an <code>&lt;img&gt;</code> with a
-        data URL. CSS grid puts each tile in place, no matter in which order it arrives. Apart
+        The image is traced in {TILE}×{TILE} pixel tiles, spiralling outwards from the center, by
+        a pool of worker threads on the server: one per CPU core, shared by all requests, so the
+        main thread stays free. Every finished tile is encoded as a PNG with nothing but{" "}
+        <code>node:zlib</code>, and an <code>async function*</code> component streams it right
+        away as an <code>&lt;img&gt;</code> with a data URL. CSS grid puts each tile in place, no matter in which order it arrives. Apart
         from a tiny inline script that keeps your scroll position when you change the view, no
         JavaScript runs in your browser.
+      </p>
+      <p>
+        Switch to <em>Web Workers</em> to move the work into your browser: the server only sends
+        an empty canvas, and a pool of workers (one per CPU core) runs the very same{" "}
+        <code>tracer.js</code>. Each worker traces one tile at a time and posts its pixels back,
+        so the main thread stays free while all cores compute in parallel.
       </p>
 
       <section class="rt-studio" id="studio" aria-label="Ray tracer">
@@ -68,6 +79,14 @@ export default function ({ request }) {
               </a>
             ))}
           </nav>
+          <nav class="rt-pills" aria-label="Rendered by">
+            <a href={link({ browser: false })} aria-current={workers ? undefined : "page"}>
+              Server
+            </a>
+            <a href={link({ browser: true })} aria-current={workers ? "page" : undefined}>
+              Web Workers
+            </a>
+          </nav>
         </header>
         <KeepScroll />
 
@@ -81,7 +100,18 @@ export default function ({ request }) {
           aria-label="Ray traced spheres on a checkered floor"
           style={`--columns: ${WIDTH / TILE}; --rows: ${HEIGHT / TILE}; aspect-ratio: ${WIDTH} / ${HEIGHT}`}
         >
-          <Tiles view={view} />
+          {workers ? (
+            // Filled by the Web Workers, see index.js.
+            <canvas
+              class="rt-paint"
+              width={WIDTH}
+              height={HEIGHT}
+              data-angle={view.angle}
+              data-samples={view.samples}
+            ></canvas>
+          ) : (
+            <Tiles view={view} />
+          )}
         </div>
 
         <dl class="rt-hud">
@@ -103,7 +133,7 @@ export default function ({ request }) {
             <dt>Rendered in</dt>
             <dd>
               <span class="rt-busy">tracing…</span>
-              <Done start={start} />
+              {!workers && <Done start={start} />}
             </dd>
           </div>
         </dl>
@@ -112,19 +142,35 @@ export default function ({ request }) {
   );
 }
 
-/** Traces tile after tile and yields each one as soon as it is ready. */
+/**
+ * Traces the tiles in the shared pool of worker threads and yields each one as soon as it is
+ * ready, in whatever order they finish. A request keeps at most one tile per thread in the
+ * pool, so concurrent requests take turns instead of waiting for each other's whole image.
+ */
 async function* Tiles({ view }) {
   const list = tiles();
+  /** @type {Map<number, Promise<{ key: number, column: number, row: number, png: string }>>} */
+  const running = new Map();
+  let next = 0;
+  const submit = () => {
+    const key = next;
+    const { column, row } = list[next++];
+    running.set(
+      key,
+      traceTile(view, column, row).then((png) => ({ key, column, row, png })),
+    );
+  };
+  while (next < Math.min(THREADS, list.length)) submit();
   let done = 0;
-  for (const { column, row } of list) {
-    // Tracing blocks the event loop, so give it a chance to flush the previous tile first.
-    await new Promise((resolve) => setImmediate(resolve));
-    const png = encodePng(renderTile(view, column * TILE, row * TILE), TILE, TILE);
+  while (running.size) {
+    const { key, column, row, png } = await Promise.race(running.values());
+    running.delete(key);
+    if (next < list.length) submit();
     done++;
     yield (
       <>
         <img
-          src={`data:image/png;base64,${png.toString("base64")}`}
+          src={`data:image/png;base64,${png}`}
           width={TILE}
           height={TILE}
           alt=""
@@ -138,7 +184,11 @@ async function* Tiles({ view }) {
 }
 
 function Done({ start }) {
-  return <span class="rt-done">{Date.now() - start} ms</span>;
+  return (
+    <span class="rt-done">
+      {Date.now() - start} ms · {THREADS} threads
+    </span>
+  );
 }
 
 /**
