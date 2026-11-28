@@ -42,7 +42,8 @@ export default function ({ request }) {
         An <code>async function*</code> component traces the image in {TILE}×{TILE} pixel tiles,
         spiralling outwards from the center. Every finished tile is encoded as a PNG with nothing
         but <code>node:zlib</code> and streamed right away as an <code>&lt;img&gt;</code> with a
-        data URL. CSS grid puts each tile in place, no matter in which order it arrives. No
+        data URL. CSS grid puts each tile in place, no matter in which order it arrives. Apart
+        from a tiny inline script that keeps your scroll position when you change the view, no
         JavaScript runs in your browser.
       </p>
 
@@ -68,6 +69,7 @@ export default function ({ request }) {
             ))}
           </nav>
         </header>
+        <KeepScroll />
 
         <div class="rt-progress" aria-hidden="true">
           <span></span>
@@ -137,6 +139,57 @@ async function* Tiles({ view }) {
 
 function Done({ start }) {
   return <span class="rt-done">{Date.now() - start} ms</span>;
+}
+
+/**
+ * Keeps the page where it was when a control is clicked. Without JavaScript, the "#studio"
+ * anchor brings the reloaded page back to the image instead.
+ *
+ * Inline on purpose: it runs while the image is still streaming, unlike a module script,
+ * which only runs once the whole page has arrived. Safari ignores a scroll position set
+ * before its first layout, and the streaming document may still be too short for it, so the
+ * position is reserved and applied on every frame until the page is loaded, unless the user
+ * starts scrolling.
+ */
+function KeepScroll() {
+  return html(`<script>
+(() => {
+  const key = "raytracer-scroll";
+  document.querySelector(".rt-bar").addEventListener("click", (event) => {
+    const link = event.target.closest("a[href]");
+    if (!link) return;
+    event.preventDefault();
+    try {
+      sessionStorage.setItem(key, String(scrollY));
+    } catch {}
+    location.href = link.href.split("#")[0];
+  });
+  let y = null;
+  try {
+    y = sessionStorage.getItem(key);
+    sessionStorage.removeItem(key);
+  } catch {}
+  if (y === null) return;
+  y = Number(y);
+  const root = document.documentElement;
+  root.style.minHeight = y + innerHeight + "px";
+  let active = true;
+  const events = ["wheel", "touchstart", "keydown"];
+  const stop = () => {
+    active = false;
+    root.style.minHeight = "";
+    events.forEach((type) => removeEventListener(type, stop));
+  };
+  events.forEach((type) => addEventListener(type, stop, { passive: true }));
+  const apply = () => {
+    if (!active) return;
+    if (Math.abs(scrollY - y) > 1) scrollTo(0, y);
+    requestAnimationFrame(apply);
+  };
+  apply();
+  addEventListener("load", () => setTimeout(() => active && stop(), 100));
+})();
+</script>`);
 }
 
 /** A small stroked icon (24 × 24 grid), styled in index.css. */
