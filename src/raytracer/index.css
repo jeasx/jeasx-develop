@@ -54,6 +54,16 @@ html {
     background: linear-gradient(135deg, var(--primary), #6d5dfc);
     color: #fff;
   }
+
+  /* Orbit icons: stroked like the other icons of the expo. */
+  & svg {
+    display: block;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
 }
 
 .rt-progress {

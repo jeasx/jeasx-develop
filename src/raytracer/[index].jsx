@@ -6,7 +6,7 @@ import { HEIGHT, TILE, WIDTH, parseView, renderTile, tiles } from "./tracer";
 const QUALITY = [
   { samples: 1, name: "Draft" },
   { samples: 2, name: "Good" },
-  { samples: 4, name: "Best" },
+  { samples: 4, name: "High" },
   { samples: 6, name: "Cinematic" },
 ];
 
@@ -50,11 +50,11 @@ export default function ({ request }) {
         <header class="rt-bar">
           <nav class="rt-pills" aria-label="Camera">
             <a href={link({ angle: view.angle - 30 })} title="Orbit left" aria-label="Orbit left">
-              ↶
+              <Icon d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8M3 3v5h5" />
             </a>
             <span>{view.angle}°</span>
             <a href={link({ angle: view.angle + 30 })} title="Orbit right" aria-label="Orbit right">
-              ↷
+              <Icon d="M21 12a9 9 0 1 1-9-9 9.75 9.75 0 0 1 6.74 2.74L21 8M21 3v5h-5" />
             </a>
           </nav>
           <nav class="rt-pills" aria-label="Quality">
@@ -137,4 +137,13 @@ async function* Tiles({ view }) {
 
 function Done({ start }) {
   return <span class="rt-done">{Date.now() - start} ms</span>;
+}
+
+/** A small stroked icon (24 × 24 grid), styled in index.css. */
+function Icon({ d }) {
+  return (
+    <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+      <path d={d} />
+    </svg>
+  );
 }

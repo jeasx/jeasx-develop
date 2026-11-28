@@ -111,7 +111,7 @@ export function parseView(query) {
   const samples = Number(query.samples);
   return {
     angle: Number.isFinite(angle) ? ((Math.round(angle) % 360) + 360) % 360 : 30,
-    samples: [1, 2, 4, 6].includes(samples) ? samples : 2,
+    samples: [1, 2, 4, 6].includes(samples) ? samples : 1,
   };
 }
 
@@ -210,6 +210,23 @@ const STREAKS = [
 ];
 
 /**
+ * Starburst: many thin streaks at irregular angles, each with its own brightness and length.
+ * Mixing waves with unrelated frequencies keeps any regular pattern from showing. It only
+ * depends on the angle around the sun, so it is computed once into a table.
+ */
+const BURST_SLOTS = 4096;
+const BURST = new Float32Array(BURST_SLOTS * 2);
+for (let slot = 0; slot < BURST_SLOTS; slot++) {
+  const angle = (slot / BURST_SLOTS) * 2 * Math.PI - Math.PI;
+  let streaks = 0;
+  for (const [k, phase, weight] of STREAKS) {
+    streaks += Math.max(0, Math.cos(angle * k + phase)) ** 30 * weight;
+  }
+  BURST[slot * 2] = streaks;
+  BURST[slot * 2 + 1] = 0.6 + 0.4 * Math.cos(angle * 5 + 1.3) * Math.cos(angle * 3 + 0.4);
+}
+
+/**
  * Where the sun appears on screen (-1..1, y up), or null if it is behind the camera or
  * hidden by a sphere. Then the camera sees no flare.
  */
@@ -232,58 +249,65 @@ function flare(sun, px, py) {
   const dx = (px - sun[0]) * aspect;
   const dy = py - sun[1];
   const r = Math.hypot(dx, dy);
-  // Starburst: many thin streaks at irregular angles, each with its own brightness and
-  // length. Mixing waves with unrelated frequencies keeps any regular pattern from showing.
-  const angle = Math.atan2(dy, dx);
-  let streaks = 0;
-  for (const [k, phase, weight] of STREAKS) {
-    streaks += Math.max(0, Math.cos(angle * k + phase)) ** 30 * weight;
-  }
-  const length = 0.6 + 0.4 * Math.cos(angle * 5 + 1.3) * Math.cos(angle * 3 + 0.4);
-  const rays = streaks * 0.45 / (1 + (r * 9) / length) + 0.05 / (1 + r * 40);
+  const slot = Math.round(((Math.atan2(dy, dx) + Math.PI) / (2 * Math.PI)) * BURST_SLOTS);
+  const index = (slot % BURST_SLOTS) * 2;
+  const rays = (BURST[index] * 0.45) / (1 + (r * 9) / BURST[index + 1]) + 0.05 / (1 + r * 40);
   // A faint ring around the sun.
   const halo = Math.exp(-(((r - 0.32) / 0.02) ** 2)) * 0.04;
-  let light = [rays + halo * 1.2, rays * 0.9 + halo, rays * 0.75 + halo * 0.7];
+  let red = rays + halo * 1.2;
+  let green = rays * 0.9 + halo;
+  let blue = rays * 0.75 + halo * 0.7;
   for (const { at, radius, tint } of GHOSTS) {
     const gx = (px - sun[0] * at) * aspect;
     const gy = py - sun[1] * at;
     const d = Math.hypot(gx, gy) / radius;
+    // Beyond 1.6 radii the soft edge has faded out.
+    if (d > 1.6) continue;
     // A disc with a slightly brighter rim and a soft edge.
-    const disc = d < 1 ? 0.35 + 0.65 * d ** 4 : Math.exp(-((d - 1) * 12));
-    light = add(light, mul(tint, disc * 0.35));
+    const disc = (d < 1 ? 0.35 + 0.65 * d ** 4 : Math.exp(-((d - 1) * 12))) * 0.35;
+    red += tint[0] * disc;
+    green += tint[1] * disc;
+    blue += tint[2] * disc;
   }
-  return light;
+  return [red, green, blue];
 }
 
 /**
  * Renders one tile to RGB bytes. Each pixel averages samples × samples rays (anti-aliasing).
+ * Draft quality (one sample) traces a single ray for every 2 × 2 pixels, four times faster.
  */
 export function renderTile(view, left, top) {
   const cam = camera(view.angle);
   const { samples } = view;
+  const block = samples === 1 ? 2 : 1;
   const aspect = WIDTH / HEIGHT;
   const rgb = new Uint8Array(TILE * TILE * 3);
   const sun = sunOnScreen(cam);
-  let i = 0;
-  for (let y = top; y < top + TILE; y++) {
-    for (let x = left; x < left + TILE; x++) {
+  for (let y = top; y < top + TILE; y += block) {
+    for (let x = left; x < left + TILE; x += block) {
       let sum = [0, 0, 0];
       for (let sy = 0; sy < samples; sy++) {
         for (let sx = 0; sx < samples; sx++) {
-          const u = ((2 * (x + (sx + 0.5) / samples)) / WIDTH - 1) * aspect * cam.scale;
-          const v = (1 - (2 * (y + (sy + 0.5) / samples)) / HEIGHT) * cam.scale;
+          const u = ((2 * (x + (block * (sx + 0.5)) / samples)) / WIDTH - 1) * aspect * cam.scale;
+          const v = (1 - (2 * (y + (block * (sy + 0.5)) / samples)) / HEIGHT) * cam.scale;
           const dir = norm(add(cam.forward, add(mul(cam.right, u), mul(cam.up, v))));
           sum = add(sum, trace(cam.eye, dir, 0));
         }
       }
-      const n = samples * samples;
-      let color = mul(sum, 1 / n);
-      if (sun) {
-        color = add(color, flare(sun, (2 * (x + 0.5)) / WIDTH - 1, 1 - (2 * (y + 0.5)) / HEIGHT));
-      }
-      for (let c = 0; c < 3; c++) {
-        // Gamma correction for a more natural look.
-        rgb[i++] = Math.min(255, Math.round(Math.sqrt(color[c]) * 255));
+      const traced = mul(sum, 1 / (samples * samples));
+      // Fill the block; the flare is cheap, so it stays sharp at full resolution.
+      for (let py = y; py < y + block; py++) {
+        for (let px = x; px < x + block; px++) {
+          let color = traced;
+          if (sun) {
+            color = add(color, flare(sun, (2 * (px + 0.5)) / WIDTH - 1, 1 - (2 * (py + 0.5)) / HEIGHT));
+          }
+          let i = ((py - top) * TILE + (px - left)) * 3;
+          for (let c = 0; c < 3; c++) {
+            // Gamma correction for a more natural look.
+            rgb[i++] = Math.min(255, Math.round(Math.sqrt(color[c]) * 255));
+          }
+        }
       }
     }
   }
